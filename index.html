@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark" data-lang="ko">
+
+<html data-lang="ko" data-theme="light" lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>SJ LABS — 고가 의약품 제조공정 원가 저감 연구</title>
-<meta name="description" content="AAV 유전자치료제 정제 공정을 물리 모델로 기술하고 현행 공정과 정량 비교하는 오픈 시뮬레이터. 이성진, 중앙대학교 약학대학.">
-<meta name="author" content="이성진 (중앙대학교 약학대학 약학과)">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<meta content="AAV 유전자치료제 정제 공정을 물리 모델로 기술하고 현행 공정과 정량 비교하는 오픈 시뮬레이터. 이성진, 중앙대학교 약학대학." name="description"/>
+<meta content="이성진 (중앙대학교 약학대학 약학과)" name="author"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans+KR:wght@200;300;400;500;600&amp;display=swap" rel="stylesheet"/>
 <style>
 /* ═══ 테마 토큰 ═══════════════════════════════════════════ */
 :root, [data-theme="dark"]{
@@ -16,6 +17,7 @@
   --steel:#2F4553; --steel-lt:#4A6577;
   --ink:#93AEBE; --ink-dim:#5C7688; --ink-hi:#DCEAF2;
   --fluid:#2BB3B0; --aex:#E0A34A; --genome:#E8404E; --polymer:#8B6FE8;
+  --waste:#5C7688;
   --rule:rgba(147,174,190,.14);
   --grid:rgba(147,174,190,.045);
   --shadow:rgba(0,0,0,.4);
@@ -25,6 +27,7 @@
   --steel:#C4D2DB; --steel-lt:#93A8B6;
   --ink:#39515F; --ink-dim:#6A828F; --ink-hi:#0E2028;
   --fluid:#0E8F8C; --aex:#B4791E; --genome:#C7362C; --polymer:#6B4FC4;
+  --waste:#93A8B6;
   --rule:rgba(46,69,83,.16);
   --grid:rgba(46,69,83,.05);
   --shadow:rgba(46,69,83,.12);
@@ -38,7 +41,7 @@ body{
   -webkit-font-smoothing:antialiased;
   transition:background .25s, color .25s;
 }
-.wrapg{max-width:1180px;margin:0 auto;padding:0 20px}
+.wrapg{max-width:min(1240px,92vw);margin:0 auto;padding:0 20px}
 
 /* 언어 전환: 기본은 CSS로 반대 언어 숨김 */
 [data-lang="ko"] .en-only{display:none}
@@ -51,7 +54,7 @@ body{
   backdrop-filter:blur(10px);position:sticky;top:0;z-index:80;
 }
 .topbar .in{
-  max-width:1180px;margin:0 auto;padding:0 20px;height:54px;
+  max-width:min(1240px,92vw);margin:0 auto;padding:0 20px;height:54px;
   display:flex;align-items:center;justify-content:space-between;gap:16px;
 }
 .mark{display:flex;align-items:center;gap:9px;text-decoration:none;background:none;border:0;padding:0;cursor:pointer}
@@ -105,7 +108,118 @@ body{
 h1{margin:0 0 20px;font-size:clamp(31px,5.2vw,48px);font-weight:200;
   letter-spacing:-.022em;line-height:1.13;color:var(--ink-hi)}
 h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
-.tagline{font-size:16px;font-weight:300;max-width:66ch;color:var(--ink);margin:0 0 28px}
+.tagline{font-size:16px;font-weight:300;line-height:1.75;max-width:66ch;color:var(--ink);margin:0 0 8px}
+
+/* ── 히어로 2단 레이아웃 + 캡시드 애니메이션 ── */
+.cover-top{display:grid;grid-template-columns:minmax(0,1fr) clamp(200px,26vw,460px);
+  gap:clamp(8px,1.5vw,24px);align-items:center;margin-bottom:26px}
+.cover-lead{min-width:0}
+.cover-lead h1{margin-bottom:16px}
+.cover-lead .author-line{margin-bottom:0}
+.cover-viz{justify-self:end;width:100%;max-width:460px;margin-right:clamp(8px,1.5vw,24px)}
+.capsid-anim{width:100%;height:auto;display:block;overflow:visible}
+.cap-float{transform-box:fill-box;transform-origin:center;
+  animation:capFloat 6s ease-in-out infinite}
+.cap-orbit{animation:capOrbit 6s ease-in-out infinite}
+.cap-genome{animation:capGenome 5s ease-in-out infinite}
+.cap-tags{animation:capFloat 6s ease-in-out infinite}
+@keyframes capFloat{
+  0%,100%{transform:translateY(-6px)}
+  50%{transform:translateY(6px)}
+}
+@keyframes capOrbit{
+  0%,100%{transform:scaleX(1);opacity:.18}
+  50%{transform:scaleX(1.04);opacity:.28}
+}
+@keyframes capGenome{
+  0%,100%{opacity:.82}
+  50%{opacity:1}
+}
+@media (max-width:560px){
+  .cover-top{grid-template-columns:1fr;gap:8px}
+  .cover-viz{max-width:240px;margin-top:4px;order:-1;justify-self:start}
+}
+@media (prefers-reduced-motion:reduce){
+  .cap-float,.cap-orbit,.cap-genome,.cap-tags{animation:none}
+}
+
+/* ── 프로젝트 선택 ── */
+.projsel{margin:52px 0 8px}
+.projsel-h h2{margin:0 0 10px}
+.projsel-h p{font-size:14px;line-height:1.7;color:var(--ink-dim);max-width:72ch;margin:0 0 26px}
+.projgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.projcard{display:flex;flex-direction:column;background:var(--plate);
+  border:1px solid var(--rule);border-radius:3px;padding:24px 26px;
+  text-decoration:none;color:inherit;transition:.15s}
+.projcard.active{cursor:default}
+.projcard.soon{opacity:.72;cursor:default;border-style:dashed}
+.pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.pc-no{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  color:var(--ink-dim);text-transform:uppercase}
+.pc-badge{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;
+  padding:3px 9px;border-radius:999px;text-transform:uppercase;font-weight:500}
+.pc-badge.live{color:var(--fluid);background:color-mix(in srgb,var(--fluid) 14%,transparent);
+  border:1px solid color-mix(in srgb,var(--fluid) 40%,transparent)}
+.pc-badge.prep{color:var(--ink-dim);background:color-mix(in srgb,var(--ink-dim) 10%,transparent);
+  border:1px solid var(--rule)}
+.projcard h3{margin:0 0 11px;font-size:17px;font-weight:500;color:var(--ink-hi);letter-spacing:-.01em}
+.projcard p{font-size:13.5px;color:var(--ink-dim);margin:0;flex:1;line-height:1.65}
+.pc-go{font-family:"IBM Plex Mono",monospace;font-size:11px;margin-top:18px;
+  color:var(--ink-dim);display:inline-block}
+@media (max-width:720px){.projgrid{grid-template-columns:1fr}}
+
+/* ── 저자 라인 ── */
+.author-line{font-size:13.5px;color:var(--ink-dim);margin:2px 0 26px;letter-spacing:.01em}
+.author-line b{color:var(--ink);font-weight:600}
+
+/* ── 시장 분석 (프로젝트 뒤) ── */
+.why-section{margin:8px 0 0;border-top:1px solid var(--rule);padding-top:40px}
+.why-head{margin-bottom:28px}
+.why-head .kicker{margin-bottom:10px;display:block}
+.why-head h2{margin:0}
+.why{display:flex;flex-direction:column;gap:40px}
+.why-block h3{font-size:16px;font-weight:600;color:var(--ink-hi);margin:0 0 12px;letter-spacing:-.01em;line-height:1.4}
+.why-block > p{font-size:14px;line-height:1.78;color:var(--ink);max-width:74ch;margin:0 0 20px}
+
+/* ── 시뮬레이터 요약 카드 (홈에서 이동) ── */
+#view-sim .sim-summary{max-width:1340px;margin:0 auto;padding:18px 18px 4px}
+#view-sim .sim-summary .ref-note{font-size:11px;color:var(--ink-dim);margin:12px 0 0;line-height:1.6}
+
+/* ── 그래프·콜아웃 ── */
+.mkt-fig{margin:0;border:1px solid var(--rule);border-radius:3px;
+  background:var(--plate);padding:20px 22px}
+.mkt-fig figcaption{font-size:12px;font-weight:600;color:var(--ink-dim);
+  letter-spacing:.02em;margin-bottom:16px;
+  font-family:"IBM Plex Mono",monospace;line-height:1.5}
+.barchart{display:flex;flex-direction:column;gap:11px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 62px;align-items:center;gap:12px}
+.bar-lbl{font-size:12.5px;color:var(--ink);display:flex;flex-direction:column;line-height:1.3;font-weight:500}
+.bar-lbl small{font-size:10px;color:var(--ink-dim);font-weight:400;margin-top:2px}
+.bar-track{height:20px;background:color-mix(in srgb,var(--ink-dim) 10%,transparent);
+  border-radius:3px;overflow:hidden}
+.bar-fill{display:block;height:100%;background:var(--fluid);border-radius:3px;
+  transition:width .5s ease}
+.bar-fill.lo{background:color-mix(in srgb,var(--fluid) 45%,var(--plate-2))}
+.bar-fill.mid{background:color-mix(in srgb,var(--fluid) 72%,transparent)}
+.bar-fill.hi{background:var(--fluid)}
+.bar-val{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  color:var(--ink-hi);text-align:right}
+.mkt-src{font-size:11px;color:var(--ink-dim);margin:16px 0 0;line-height:1.65}
+.mkt-src a{color:var(--fluid);text-decoration:none;font-weight:500;
+  border-bottom:1px solid color-mix(in srgb,var(--fluid) 45%,transparent);padding:0 1px}
+.mkt-src a::after{content:" ↗";font-size:.85em;opacity:.7}
+.mkt-src a:hover{color:var(--void);background:var(--fluid)}
+.mkt-callout{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 18px}
+.mc-item{border:1px solid var(--rule);border-radius:3px;background:var(--plate);padding:16px 18px}
+.mc-v{font-family:"IBM Plex Mono",monospace;font-size:24px;font-weight:600;
+  color:var(--fluid);line-height:1.05;margin-bottom:7px}
+.mc-k{font-size:11.5px;color:var(--ink-dim);line-height:1.55}
+.mkt-close{border-left:3px solid var(--fluid);padding:6px 0 6px 20px;margin-top:12px}
+.mkt-close p{font-size:14px;line-height:1.78;color:var(--ink);max-width:74ch;margin:0}
+@media (max-width:640px){
+  .bar-row{grid-template-columns:110px 1fr 56px;gap:8px}
+  .mkt-callout{grid-template-columns:1fr}
+}
 
 .metrics{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--rule);
   border-radius:2px;background:var(--plate);margin-bottom:16px;overflow:hidden}
@@ -227,36 +341,50 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
 .badge i{width:8px;height:8px;border-radius:50%;display:block;flex:none}
 .g3 i{background:var(--aex)} .g2 i{background:var(--aex);opacity:.45}
 .g1 i{background:transparent;border:1.5px dashed var(--fluid)}
+.grades-note{font-size:12.5px;line-height:1.7;color:var(--ink-dim);max-width:74ch;margin:14px 0 0}
 
-.terms{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.term{background:var(--plate);border:1px solid var(--rule);border-radius:2px;padding:18px 19px}
-.term h3{font-size:14px}
-.term p{font-size:12.8px;color:var(--ink-dim);margin:0}
+.terms-intro{font-size:14px;line-height:1.72;color:var(--ink);max-width:76ch;margin:0 0 22px}
+.terms{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.term{background:var(--plate);border:1px solid var(--rule);border-radius:2px;padding:18px 19px;
+  display:flex;flex-direction:column}
+.term h3{font-size:14px;margin:0 0 9px}
+.term p{font-size:12.8px;color:var(--ink-dim);margin:0;line-height:1.65}
 .term p + p{margin-top:9px}
 .term code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--fluid);
   background:var(--plate-2);padding:1px 5px;border-radius:2px}
 .term b{color:var(--ink)}
 .term a{color:var(--fluid);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--fluid) 40%,transparent)}
 .term a:hover{border-color:var(--fluid)}
-.dlbtn{display:inline-block;margin-top:11px;font-family:"IBM Plex Mono",monospace;
-  font-size:11px;color:var(--fluid);text-decoration:none;
-  border:1px solid color-mix(in srgb,var(--fluid) 35%,transparent);border-radius:2px;padding:6px 11px;transition:.13s}
-.dlbtn:hover{background:color-mix(in srgb,var(--fluid) 9%,transparent)}
+.lic-line{margin-top:11px !important}
+.term.contact{border-color:color-mix(in srgb,var(--fluid) 32%,transparent);
+  background:color-mix(in srgb,var(--fluid) 5%,var(--plate))}
+.dlbtn,.mailbtn{display:inline-block;margin-top:auto;font-family:"IBM Plex Mono",monospace;
+  font-size:11px;color:var(--fluid);text-decoration:none;border-bottom:none;
+  border:1px solid color-mix(in srgb,var(--fluid) 35%,transparent);border-radius:2px;
+  padding:8px 12px;transition:.13s;align-self:flex-start}
+.dlbtn{margin-top:13px}
+.mailbtn{margin-top:14px;font-weight:500}
+.dlbtn:hover,.mailbtn:hover{background:var(--fluid);color:var(--void);border-color:var(--fluid)}
+@media (max-width:860px){.terms{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.terms{grid-template-columns:1fr}}
 
 /* 프로젝트 뷰 헤더 */
-.viewhead{max-width:1180px;margin:0 auto;padding:22px 20px 0;
+.viewhead{max-width:min(1240px,92vw);margin:0 auto;padding:22px 20px 0;
   display:flex;justify-content:space-between;align-items:flex-start;gap:22px;flex-wrap:wrap}
 .crumb{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.11em;color:var(--ink-dim);text-transform:uppercase}
 .byline{font-size:11.5px;color:var(--ink-dim);text-align:right;line-height:1.6}
 .byline b{color:var(--ink);font-weight:500}
-.notice{max-width:1180px;margin:14px auto 0;padding:12px 15px;background:var(--plate);
+.notice{max-width:min(1240px,92vw);margin:14px auto 0;padding:12px 15px;background:var(--plate);
   border:1px solid var(--rule);border-left:3px solid var(--aex);border-radius:2px;
   font-size:12px;line-height:1.7;color:var(--ink-dim)}
 .notice b{color:var(--ink);font-weight:500}
+.notice.grade-note{border-left:1px solid var(--rule);padding:8px 14px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.notice.grade-note .badge{font-size:10px;padding:3px 9px}
 @media (max-width:1220px){.notice{margin:14px 20px 0;max-width:none}}
 
 .sitefoot{border-top:1px solid var(--rule);margin-top:40px}
-.sitefoot .in{max-width:1180px;margin:0 auto;padding:30px 20px 56px;
+.sitefoot .in{max-width:min(1240px,92vw);margin:0 auto;padding:30px 20px 56px;
   display:grid;grid-template-columns:1.4fr 1fr;gap:26px}
 .sitefoot p{margin:0 0 7px;font-size:12.5px;color:var(--ink-dim)}
 .sitefoot b{color:var(--ink-hi);font-weight:500}
@@ -383,7 +511,7 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
   font-family:"IBM Plex Sans KR","Pretendard",system-ui,-apple-system,sans-serif;
   font-weight:300; font-size:14px; line-height:1.62;
   -webkit-font-smoothing:antialiased;}
-#view-cmp .wrap{max-width:1180px;margin:0 auto;padding:26px 18px 64px}
+#view-cmp .wrap{max-width:min(1240px,92vw);margin:0 auto;padding:26px 18px 64px}
 #view-cmp h1{margin:0 0 6px;font-size:22px;font-weight:600;color:var(--ink-hi);letter-spacing:-.01em}
 #view-cmp .lede{font-size:14.5px;color:var(--ink);max-width:76ch;margin:0 0 4px}
 #view-cmp .verdict{margin:18px 0 26px;padding:15px 17px;background:var(--plate);
@@ -417,9 +545,9 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
 #view-cmp .step:hover, #view-cmp .step:focus-within{background:var(--plate-2);border-color:var(--rule)}
 #view-cmp .step .n{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-dim);
   padding-top:3px;min-width:15px;}
-#view-cmp .step .body{flex:1;min-width:0}
-#view-cmp .step .t{font-size:13px;color:var(--ink-hi);font-weight:400}
-#view-cmp .step .d{font-size:11.5px;color:var(--ink-dim);line-height:1.55;margin-top:2px}
+#view-cmp .step .body{flex:1;min-width:0;display:flex;flex-direction:column}
+#view-cmp .step .t{display:block;font-size:13px;color:var(--ink-hi);font-weight:500}
+#view-cmp .step .d{display:block;font-size:11.5px;color:var(--ink-dim);line-height:1.55;margin-top:6px}
 #view-cmp .step .y{font-family:"IBM Plex Mono",monospace;font-size:11px;white-space:nowrap;padding-top:2px;}
 #view-cmp .step.key{background:rgba(43,179,176,.05);border-color:var(--rule)}
 #view-cmp .cur .step.key{background:rgba(224,163,74,.06)}
@@ -465,570 +593,683 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
 #view-cmp .k.open{color:var(--ink-dim)}
 #view-cmp .src{font-size:12px;line-height:1.9;color:var(--ink-dim)}
 #view-cmp .src ol{padding-left:20px;margin:0}
-#view-cmp .src a{color:var(--steel-lt);text-decoration:none;border-bottom:1px solid var(--rule)}
-#view-cmp .src a:hover{color:var(--fluid);border-color:var(--fluid)}
+#view-cmp .src a{color:var(--fluid);text-decoration:none;font-weight:500;
+  border-bottom:1px solid color-mix(in srgb,var(--fluid) 45%, transparent);
+  padding:0 1px;border-radius:2px;transition:background .12s,color .12s,border-color .12s}
+#view-cmp .src a::after{content:" ↗";font-size:.85em;opacity:.7}
+#view-cmp .src a:hover{color:var(--void);background:var(--fluid);border-color:var(--fluid)}
 #view-cmp .src a:focus-visible{outline:2px solid var(--fluid);outline-offset:2px}
+#view-sim .src{font-size:12px;line-height:1.8;color:var(--ink-dim)}
+#view-sim .src ol{padding-left:20px;margin:0}
+#view-sim .src li{margin-bottom:8px}
+#view-sim .src a{color:var(--fluid);text-decoration:none;font-weight:500;
+  border-bottom:1px solid color-mix(in srgb,var(--fluid) 45%, transparent);
+  padding:0 1px;border-radius:2px;transition:background .12s,color .12s,border-color .12s}
+#view-sim .src a::after{content:" ↗";font-size:.85em;opacity:.7}
+#view-sim .src a:hover{color:var(--void);background:var(--fluid);border-color:var(--fluid)}
+#view-sim .src a:focus-visible{outline:2px solid var(--fluid);outline-offset:2px}
+#view-cmp .measure-list{margin:0}
+#view-cmp .measure-list span{display:block;margin:0 0 7px;padding-left:2px}
+#view-cmp .measure-list span:last-child{margin-bottom:0}
 @media (max-width:900px){#view-cmp .routes{grid-template-columns:1fr}
 #view-cmp .casc{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){#view-cmp, #view-cmp *{transition:none!important}}
 </style>
 </head>
 <body>
-
 <div class="topbar"><div class="in">
-  <button class="mark" data-go="home"><span class="glyph"></span><b>SJ LABS</b></button>
-  <div class="navwrap">
-    <div class="tabs" role="tablist">
-      <button role="tab" data-go="home" aria-selected="true" data-ko="홈" data-en="Home">홈</button>
-      <button role="tab" data-go="sim" aria-selected="false" data-ko="공정 시뮬레이터" data-en="Simulator">공정 시뮬레이터</button>
-      <button role="tab" data-go="cmp" aria-selected="false" data-ko="공정 비교" data-en="Comparison">공정 비교</button>
-      <button role="tab" data-go="terms" aria-selected="false" data-ko="이용 조건" data-en="Terms">이용 조건</button>
-    </div>
-    <div class="switches">
-      <div class="switch" role="group" aria-label="Language">
-        <button id="lang-ko" aria-pressed="true">KOR</button>
-        <button id="lang-en" aria-pressed="false">ENG</button>
-      </div>
-      <button class="themebtn" id="themeBtn" aria-label="테마 전환">
-        <span class="ic" id="themeIc"></span><span id="themeTxt">DARK</span>
-      </button>
-    </div>
-  </div>
+<button class="mark" data-go="home"><span class="glyph"></span><b>SJ LABS</b></button>
+<div class="navwrap">
+<div class="tabs" role="tablist">
+<button aria-selected="true" data-en="Home" data-go="home" data-ko="홈" role="tab">홈</button>
+<button aria-selected="false" data-en="Simulator" data-go="sim" data-ko="공정 시뮬레이터" role="tab">공정 시뮬레이터</button>
+<button aria-selected="false" data-en="Comparison" data-go="cmp" data-ko="공정 비교" role="tab">공정 비교</button>
+<button aria-selected="false" data-en="Terms" data-go="terms" data-ko="이용 조건" role="tab">이용 조건</button>
+</div>
+<div class="switches">
+<div aria-label="Language" class="switch" role="group">
+<button aria-pressed="true" id="lang-ko">KOR</button>
+<button aria-pressed="false" id="lang-en">ENG</button>
+</div>
+<button aria-label="테마 전환" class="themebtn" id="themeBtn">
+<span class="ic" id="themeIc"></span><span id="themeTxt">LIGHT</span>
+</button>
+</div>
+</div>
 </div></div>
-
 <!-- ══════════════════ 홈 ══════════════════ -->
 <div class="view active" id="view-home"><div class="wrapg">
-
-  <header class="cover">
-    <div class="kicker" data-ko="제조공정 원가 저감 연구" data-en="Manufacturing-cost reduction research">제조공정 원가 저감 연구</div>
-    <h1>
-      <span class="ko-only">치료법은 있는데,<br>비용이 <em>가로막지 않도록</em>.</span>
-      <span class="en-only">The therapy exists.<br>Let's not let <em>cost stand in the way</em>.</span>
-    </h1>
-    <p class="tagline"
-       data-ko="고가 치료제를 어떻게 하면 더 낮은 비용으로 만들 수 있을지, 정제 공정을 물리 모델로 처음부터 다시 들여다봅니다. 현행 공정과 나란히 놓고 비교하며, 계산 과정과 코드를 모두 공개합니다. 결과가 좋게 나오든 아니든 있는 그대로 보여드립니다."
-       data-en="We take a fresh look at how expensive therapies might be made for less, rebuilding the purification process from physical first principles. Everything is compared side by side with the current process, and all the calculations and code are open — shown as they are, whether the results flatter our approach or not.">
-      고가 치료제를 어떻게 하면 더 낮은 비용으로 만들 수 있을지, 정제 공정을 물리 모델로 처음부터 다시 들여다봅니다. 현행 공정과 나란히 놓고 비교하며, 계산 과정과 코드를 모두 공개합니다. 결과가 좋게 나오든 아니든 있는 그대로 보여드립니다.
+<header class="cover">
+<div class="cover-top">
+<div class="cover-lead">
+<div class="kicker" data-en="Cutting therapy cost through process innovation" data-ko="제조공정 혁신으로 치료제 원가를 낮춘다">제조공정 혁신으로 치료제 원가를 낮춘다</div>
+<h1>
+<span class="ko-only">치료법은 있는데,<br/>비용이 <em>가로막지 않도록</em>.</span>
+<span class="en-only">The therapy exists.<br/>Let's not let <em>cost stand in the way</em>.</span>
+</h1>
+<div class="author-line">
+<span class="ko-only">중앙대학교 약학대학 약학과 6학년 <b>이성진</b></span>
+<span class="en-only"><b>Sungjin Lee</b> · College of Pharmacy, Chung-Ang University</span>
+</div>
+</div>
+<div aria-hidden="true" class="cover-viz">
+<svg class="capsid-anim" role="img" viewbox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialgradient cx="42%" cy="38%" id="capFill" r="70%">
+<stop offset="0%" stop-color="var(--fluid)" stop-opacity="0.14"></stop>
+<stop offset="100%" stop-color="var(--fluid)" stop-opacity="0.03"></stop>
+</radialgradient>
+<radialgradient cx="42%" cy="38%" id="capGlow" r="72%">
+<stop offset="0%" stop-color="#ffffff" stop-opacity="0.92"></stop>
+<stop offset="62%" stop-color="#eef6f7" stop-opacity="0.82"></stop>
+<stop offset="100%" stop-color="#dbe9ec" stop-opacity="0.66"></stop>
+</radialgradient>
+<clippath id="capClip">
+<polygon points="160,44 246,94 246,194 160,244 74,194 74,94"></polygon>
+</clippath>
+</defs>
+<!-- 궤도 점선 (둥둥 뜨는 느낌의 기준) -->
+<ellipse class="cap-orbit" cx="160" cy="150" fill="none" rx="120" ry="40" stroke="var(--ink-dim)" stroke-dasharray="2 6" stroke-opacity="0.18" stroke-width="1"></ellipse>
+<g class="cap-float">
+<!-- 캡시드 외곽 (정이십면체 투영: 육각 실루엣 + 내부 패싯) -->
+<g clip-path="url(#capClip)">
+<!-- 다크모드에서도 밝게 유지되는 내부 채움 -->
+<polygon fill="url(#capGlow)" points="160,44 246,94 246,194 160,244 74,194 74,94"></polygon>
+<polygon fill="url(#capFill)" points="160,44 246,94 246,194 160,244 74,194 74,94"></polygon>
+<!-- 패싯 라인 -->
+<g fill="none" stroke="var(--fluid)" stroke-opacity="0.42" stroke-width="1">
+<path d="M160,44 L160,150 M74,94 L160,150 M246,94 L160,150 M74,194 L160,150 M246,194 L160,150 M160,244 L160,150"></path>
+<path d="M160,44 L110,120 L74,94 M160,44 L210,120 L246,94 M74,194 L110,120 M246,194 L210,120 M160,244 L110,180 L74,194 M160,244 L210,180 L246,194 M110,120 L210,120 M110,180 L210,180 M110,120 L110,180 M210,120 L210,180"></path>
+</g>
+</g>
+<!-- 캡시드 테두리 -->
+<polygon fill="none" points="160,44 246,94 246,194 160,244 74,194 74,94" stroke="var(--fluid)" stroke-linejoin="round" stroke-width="2"></polygon>
+<!-- 정점 노드 -->
+<g fill="var(--fluid)">
+<circle cx="160" cy="44" r="3.4"></circle><circle cx="246" cy="94" r="3.4"></circle>
+<circle cx="246" cy="194" r="3.4"></circle><circle cx="160" cy="244" r="3.4"></circle>
+<circle cx="74" cy="194" r="3.4"></circle><circle cx="74" cy="94" r="3.4"></circle>
+</g>
+<!-- 내부 유전체 (DNA 이중나선 코일) -->
+<g clip-path="url(#capClip)">
+<g class="cap-genome" fill="none" stroke="var(--genome)" stroke-linecap="round" stroke-width="2.4">
+<path d="M126,110 C150,96 170,124 194,110 C170,124 150,152 126,138 C150,152 170,180 194,166 C170,180 150,208 126,194"></path>
+<path d="M126,138 C150,124 170,96 194,110 M126,166 C150,152 170,124 194,138 M126,194 C150,180 170,152 194,166" stroke-opacity="0.5"></path>
+<!-- 염기쌍 러그 -->
+<g stroke-opacity="0.55" stroke-width="1.6">
+<line x1="133" x2="139" y1="118" y2="128"></line><line x1="152" x2="152" y1="108" y2="120"></line>
+<line x1="171" x2="177" y1="118" y2="108"></line><line x1="133" x2="139" y1="146" y2="156"></line>
+<line x1="152" x2="152" y1="136" y2="148"></line><line x1="171" x2="177" y1="146" y2="136"></line>
+<line x1="133" x2="139" y1="174" y2="184"></line><line x1="152" x2="152" y1="164" y2="176"></line>
+<line x1="171" x2="177" y1="174" y2="164"></line>
+</g>
+</g>
+</g>
+</g>
+<!-- 라벨 (공정 시뮬레이터 계장 태그와 동일한 모노 서체 느낌) -->
+<g class="cap-tags" fill="var(--ink-dim)" font-family="'IBM Plex Mono', monospace" font-size="9" letter-spacing="0.5">
+<text fill="var(--fluid)" text-anchor="middle" x="160" y="270">AAV CAPSID</text>
+<text text-anchor="middle" x="160" y="284">full · genome inside</text>
+</g>
+</svg>
+</div>
+</div>
+<p class="tagline" data-en="Therapies built on newer, more innovative technology tend to carry higher prices. Several factors lie behind this, but one that cannot be dismissed is the cost burden arising from technical limits in the manufacturing process. As more such therapies arrive, the strain on patients and insurance budgets grows with them — and that strain creates a blind spot where a therapy exists yet remains out of reach because of cost. The work here redesigns not the therapy but the process steps that make it, using physical models to examine quantitatively whether the producer's cost burden can be reduced. Lowering that cost means letting more patients reach a treatment that already exists — and that is the reason for taking on this problem." data-ko="혁신적 기술로 개발된 치료제일수록 약가가 높게 책정되는 경향이 있습니다. 그 배경에는 여러 요인이 있지만, 제조 공정 단계의 기술적 한계에서 비롯되는 원가 부담도 무시할 수 없는 한 축입니다. 신약이 쏟아질수록 고가 약제에 대한 환자와 보험 재정의 부담은 함께 커지고, 그 부담은 결국 “치료법은 존재하지만 비용 때문에 닿지 못하는” 사각지대를 만듭니다. 여기서는 치료제 자체가 아니라 그것을 만드는 공정 단계를 물리 모델로 다시 설계해, 생산자의 원가 부담을 줄일 여지가 있는지를 정량적으로 검토합니다. 원가를 낮추는 일은 곧 더 많은 환자가 이미 존재하는 치료에 닿게 하는 일이며, 이것이 이 문제를 다루는 이유입니다.">
+      혁신적 기술로 개발된 치료제일수록 약가가 높게 책정되는 경향이 있습니다. 그 배경에는 여러 요인이 있지만, 제조 공정 단계의 기술적 한계에서 비롯되는 원가 부담도 무시할 수 없는 한 축입니다. 신약이 쏟아질수록 고가 약제에 대한 환자와 보험 재정의 부담은 함께 커지고, 그 부담은 결국 "치료법은 존재하지만 비용 때문에 닿지 못하는" 사각지대를 만듭니다. 여기서는 치료제 자체가 아니라 그것을 만드는 공정 단계를 물리 모델로 다시 설계해, 생산자의 원가 부담을 줄일 여지가 있는지를 정량적으로 검토합니다. 원가를 낮추는 일은 곧 더 많은 환자가 이미 존재하는 치료에 닿게 하는 일이며, 이것이 이 문제를 다루는 이유입니다.
     </p>
-
-    <div class="metrics">
-      <div class="metric"><div class="v">11</div><div class="k" data-ko="지배 방정식" data-en="Governing equations">지배 방정식</div></div>
-      <div class="metric"><div class="v">26</div><div class="k" data-ko="독립변수" data-en="Independent variables">독립변수</div></div>
-      <div class="metric"><div class="v">6</div><div class="k" data-ko="공정 모듈" data-en="Process modules">공정 모듈</div></div>
-      <div class="metric"><div class="v">53</div><div class="k" data-ko="회귀 시험" data-en="Regression tests">회귀 시험</div></div>
-      <div class="metric"><div class="v">29</div><div class="k" data-ko="민감도 시나리오" data-en="Sensitivity scenarios">민감도 시나리오</div></div>
-      <div class="metric"><div class="v">11</div><div class="k" data-ko="참조 문헌" data-en="References">참조 문헌</div></div>
-    </div>
-
-    <div class="titleblock">
-      <div class="tb"><div class="k">Project No.</div><div class="v">SJL-2026-01</div></div>
-      <div class="tb"><div class="k">Title</div><div class="v"><span class="ko-only">AAV 벡터 정제 공정<small>Full / Empty 캡시드 분리</small></span><span class="en-only">AAV vector purification<small>Full / empty capsid separation</small></span></div></div>
-      <div class="tb"><div class="k">Drawn by</div><div class="v"><span class="ko-only">이성진<small>중앙대학교 약학대학 약학과 6학년</small></span><span class="en-only">Sungjin Lee<small>Chung-Ang University, College of Pharmacy</small></span></div></div>
-      <div class="tb"><div class="k">Date</div><div class="v">2026 – 07</div></div>
-      <div class="tb"><div class="k">Revision</div><div class="v">MVP
-        <div class="revbtns">
-          <button class="revbtn" id="btn-eq" aria-expanded="false" aria-controls="drw-eq"><span data-ko="수식 11" data-en="11 equations">수식 11</span><span class="caret">▾</span></button>
-          <button class="revbtn" id="btn-var" aria-expanded="false" aria-controls="drw-var"><span data-ko="독립변수 26" data-en="26 variables">독립변수 26</span><span class="caret">▾</span></button>
-        </div></div></div>
-      <div class="tb hi"><div class="k">Status</div><div class="v"><span class="ko-only">이론 검증 단계<small>습식 실험 데이터 확보 전</small></span><span class="en-only">Theoretical stage<small>No wet-lab data yet</small></span></div></div>
-    </div>
-
-    <div class="drawer" id="drw-eq">
-      <div class="drawer-h"><h3 data-ko="지배 방정식 11개" data-en="11 governing equations">지배 방정식 11개</h3>
-        <span data-ko="modules/common/equations.py · 순수 함수로 구현" data-en="modules/common/equations.py · pure functions">modules/common/equations.py · 순수 함수로 구현</span></div>
-      <div class="drawer-b">
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 1 / Eq. 1</span><span class="eq-nm">Multi-residue Charge</span>
-            <span class="eq-mod">SurfaceChemistry</span></div>
-          <div class="eq-f">Q = Σ zᵢnᵢ / (1 + 10^(zᵢ(pH − pKa,i)))</div>
-          <p class="eq-d" data-ko="아미노산 잔기 수천 개에 Henderson–Hasselbalch를 동시에 적용해 캡시드 총 전하와 등전점을 구합니다. Full과 Empty를 가르는 물리적 출발점입니다." data-en="Applies Henderson–Hasselbalch across thousands of residues to get the capsid's net charge and isoelectric point — the physical origin of the Full/Empty difference.">아미노산 잔기 수천 개에 Henderson–Hasselbalch를 동시에 적용해 캡시드 총 전하와 등전점을 구합니다. Full과 Empty를 가르는 물리적 출발점입니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 2 / Eq. 2</span><span class="eq-nm">Davies 이온 강도 / Davies ionic strength</span>
-            <span class="eq-mod">SurfaceChemistry · TFF2Polishing</span></div>
-          <div class="eq-f">I = ½Σcᵢzᵢ² · log γ± = −Az²(√I/(1+√I) − 0.3I) · κ⁻¹ = 0.304/√I</div>
-          <p class="eq-d" data-ko="염 농도가 높을수록 전하가 가려지는 정도(Debye 길이)를 계산합니다. 주사제 삼투압 계산과 같은 발상입니다." data-en="Computes how much charge is screened (Debye length) as salt rises — the same reasoning as tonicity calculations for injectables.">염 농도가 높을수록 전하가 가려지는 정도(Debye 길이)를 계산합니다. 주사제 삼투압 계산과 같은 발상입니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 3 / Eq. 3</span><span class="eq-nm">DLVO 결합 에너지 → Ka / DLVO binding energy → Ka</span>
-            <span class="eq-mod">BindingKinetics · TFF2Polishing</span></div>
-          <div class="eq-f">V = 2πε₀εr·R_eff·ψ₁ψ₂·ln(1+e^(−κd)) − A_H·R_eff/(6d) · Ka = exp(−ΔG/kT)</div>
-          <p class="eq-d" data-ko="정전기 인력과 반데르발스 인력을 더해 고분자–캡시드 결합 세기를 구합니다. 원 계획서의 점전하식이 발산하여 구–구 표면전위형(HHF)으로 교체했습니다." data-en="Sums electrostatic and van der Waals attraction to get polymer–capsid binding strength. The original point-charge form diverged, so it was replaced with the sphere–sphere (HHF) form.">정전기 인력과 반데르발스 인력을 더해 고분자–캡시드 결합 세기를 구합니다. 원 계획서의 점전하식이 발산하여 구–구 표면전위형(HHF)으로 교체했습니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 4 / Eq. 4</span><span class="eq-nm">Langmuir 경쟁 흡착 + 속도론 / Competitive Langmuir + kinetics</span>
-            <span class="eq-mod">BindingKinetics</span></div>
-          <div class="eq-f">dθ/dt = ka·C_free(1−θ) − kd·θ,  C_free = C_pol − n_sites(C_f θ_f + C_e θ_e)</div>
-          <p class="eq-d" data-ko="고분자가 유한하므로 Full과 Empty가 서로 뺏는 경쟁 문제로 풉니다. 약물–혈장단백 결합 경쟁과 같은 구조이며, 선택성이 여기서 발생합니다." data-en="Because polymer is finite, Full and Empty compete for it — the same structure as drug–plasma-protein competition. Selectivity emerges here.">고분자가 유한하므로 Full과 Empty가 서로 뺏는 경쟁 문제로 풉니다. 약물–혈장단백 결합 경쟁과 같은 구조이며, 선택성이 여기서 발생합니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 A / Eq. A</span><span class="eq-nm">복합체 크기 · 브리징 응집 / Complex size · bridging</span>
-            <span class="eq-mod">BindingKinetics</span></div>
-          <div class="eq-f">δ = l₀√(MW_p/MW_m) · r = r_AAV + δ√θ · r_floc = r·n^(1/df)</div>
-          <p class="eq-d" data-ko="고분자 코팅 두께와, 한 사슬이 캡시드 여럿을 묶는 응집체 크기를 계산합니다. 코팅과 응집을 별개 항으로 분리해 가정을 노출시켰습니다." data-en="Calculates coating thickness and the size of aggregates where one chain bridges several capsids. Coating and bridging are kept as separate terms to expose the assumption.">고분자 코팅 두께와, 한 사슬이 캡시드 여럿을 묶는 응집체 크기를 계산합니다. 코팅과 응집을 별개 항으로 분리해 가정을 노출시켰습니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 B / Eq. B</span><span class="eq-nm">온도–점도 / Temperature–viscosity</span>
-            <span class="eq-mod">TFF1Separation · TFF2Polishing</span></div>
-          <div class="eq-f">μ(T) = 2.414×10⁻⁵ · 10^(247.8/(T − 140))</div>
-          <p class="eq-d" data-ko="점도는 Flux 식의 분모에 직접 들어갑니다. 원 계획서의 Arrhenius형 상수가 25 °C에서 실측의 1/18을 주어 Vogel 식으로 교체했습니다." data-en="Viscosity enters the flux equation directly. The original Arrhenius constant gave 1/18 of the measured value at 25 °C, so it was replaced with the Vogel equation.">점도는 Flux 식의 분모에 직접 들어갑니다. 원 계획서의 Arrhenius형 상수가 25 °C에서 실측의 1/18을 주어 Vogel 식으로 교체했습니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 6 / Eq. 6</span><span class="eq-nm">Ferry 체거름 계수 / Ferry sieving coefficient</span>
-            <span class="eq-mod">TFF1Separation · TFF2Polishing</span></div>
-          <div class="eq-f">λ = d_particle / d_pore · S = (1 − λ²)²</div>
-          <p class="eq-d" data-ko="입자가 막을 통과할 확률입니다. S=1이면 통과, S=0이면 완전 차단. 투석막 MWCO와 같은 개념이며, 시뮬레이션에서 입자마다 이 확률로 통과 여부를 뽑습니다." data-en="The probability a particle passes the membrane. S=1 passes, S=0 fully retained — the same idea as a dialysis MWCO. Each particle's fate is drawn from this probability.">입자가 막을 통과할 확률입니다. S=1이면 통과, S=0이면 완전 차단. 투석막 MWCO와 같은 개념이며, 시뮬레이션에서 입자마다 이 확률로 통과 여부를 뽑습니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 7 / Eq. 7</span><span class="eq-nm">저항–직렬 Flux · 파울링 / Resistance-in-series flux · fouling</span>
-            <span class="eq-mod">TFF1Separation · TFF2Polishing</span></div>
-          <div class="eq-f">J = TMP / (μ(Rm + Rcp + Rf)) · dRf/dt = kc·J·C_wall</div>
-          <p class="eq-d" data-ko="옴의 법칙과 같은 형태입니다. TMP가 전압, J가 전류, 저항이 막의 오염도입니다. 시간에 따라 누적되는 파울링을 수치적분합니다." data-en="The same form as Ohm's law: TMP is voltage, J is current, resistance is membrane fouling. Fouling accumulation is integrated over time.">옴의 법칙과 같은 형태입니다. TMP가 전압, J가 전류, 저항이 막의 오염도입니다. 시간에 따라 누적되는 파울링을 수치적분합니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 9 / Eq. 9</span><span class="eq-nm">Arrhenius 열 변성 / Arrhenius thermal denaturation</span>
-            <span class="eq-mod">TFF1Separation · TFF2Polishing</span></div>
-          <div class="eq-f">k_den = A·exp(−Ea/RT) · [intact](t) = exp(−k_den·t)</div>
-          <p class="eq-d" data-ko="공정 온도와 체류시간에 따른 캡시드 손실입니다. 의약품 가속안정성 시험과 같은 식입니다." data-en="Capsid loss as a function of process temperature and residence time — the same equation as accelerated stability testing.">공정 온도와 체류시간에 따른 캡시드 손실입니다. 의약품 가속안정성 시험과 같은 식입니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 C / Eq. C</span><span class="eq-nm">고분자 잔류율 / Residual polymer</span>
-            <span class="eq-mod">TFF2Polishing</span></div>
-          <div class="eq-f">Rs = 0.0145·MW^0.571 · [PLL] = [PLL]₀·exp(−S·N_DV)</div>
-          <p class="eq-d" data-ko="정용여과 후 남는 고분자 농도입니다. 이 계산으로 2차 여과가 고분자를 크기로 제거하지 못한다는 사실이 드러났습니다." data-en="Residual polymer concentration after diafiltration. This calculation revealed that the second filtration cannot remove the polymer by size.">정용여과 후 남는 고분자 농도입니다. 이 계산으로 2차 여과가 고분자를 크기로 제거하지 못한다는 사실이 드러났습니다.</p>
-        </div>
-        <div class="eq">
-          <div class="eq-h"><span class="eq-no">수식 D / Eq. D</span><span class="eq-nm">효소 분해 · 전단응력 / Enzymatic digestion · shear</span>
-            <span class="eq-mod">InputValidator · TFF1Separation</span></div>
-          <div class="eq-f">[hcDNA](t) = [hcDNA]₀·exp(−k·C·t) · τw = 8μv/dh</div>
-          <p class="eq-d" data-ko="숙주 DNA의 효소 분해량과, 막 유로에서 복합체를 깨뜨릴 수 있는 벽면 전단응력입니다." data-en="Enzymatic clearance of host-cell DNA, and the wall shear stress in the membrane channel that can break the complex apart.">숙주 DNA의 효소 분해량과, 막 유로에서 복합체를 깨뜨릴 수 있는 벽면 전단응력입니다.</p>
-        </div></div>
-    </div>
-    <div class="drawer" id="drw-var">
-      <div class="drawer-h"><h3 data-ko="독립변수 26개" data-en="26 independent variables">독립변수 26개</h3>
-        <span data-ko="config.py · 범위 검증 후 계산에 투입" data-en="config.py · range-checked before use">config.py · 범위 검증 후 계산에 투입</span></div>
-      <div class="drawer-b"><div class="vphase" data-ko="Phase 0 — 입고" data-en="Phase 0 — Intake">Phase 0 — 입고</div><div class="vtable"><div class="vrow"><span class="vn">01</span><code>full_empty_ratio_init</code><span class="vko" data-ko="투입 Full 비율" data-en="Input full fraction">투입 Full 비율</span><span class="vrg">0.05 – 0.40</span><span class="vu">–</span></div><div class="vrow"><span class="vn">02</span><code>total_AAV_titer_init</code><span class="vko" data-ko="총 AAV 역가" data-en="Total AAV titer">총 AAV 역가</span><span class="vrg">10⁹ – 10¹³</span><span class="vu">vg/mL</span></div><div class="vrow"><span class="vn">03</span><code>feed_volume_L</code><span class="vko" data-ko="배양액 부피" data-en="Feed volume">배양액 부피</span><span class="vrg">0.1 – 200</span><span class="vu">L</span></div></div><div class="vphase" data-ko="Phase 1 — Clarification" data-en="Phase 1 — Clarification">Phase 1 — Clarification</div><div class="vtable"><div class="vrow"><span class="vn">04</span><code>lysis_method</code><span class="vko" data-ko="세포 파쇄법" data-en="Lysis method">세포 파쇄법</span><span class="vrg">냉동-해동 / Tween-20</span><span class="vu">–</span></div><div class="vrow"><span class="vn">05</span><code>benzonase_conc</code><span class="vko" data-ko="Benzonase 농도" data-en="Benzonase conc.">Benzonase 농도</span><span class="vrg">25 – 250</span><span class="vu">U/mL</span></div><div class="vrow"><span class="vn">06</span><code>benzonase_time</code><span class="vko" data-ko="Benzonase 처리시간" data-en="Benzonase time">Benzonase 처리시간</span><span class="vrg">15 – 90</span><span class="vu">min</span></div><div class="vrow"><span class="vn">07</span><code>depth_filter_grade</code><span class="vko" data-ko="뎁스 필터 등급" data-en="Depth-filter grade">뎁스 필터 등급</span><span class="vrg">1.0+0.45 / 0.45</span><span class="vu">μm</span></div></div><div class="vphase" data-ko="Phase 2 — 표면 화학" data-en="Phase 2 — Surface chemistry">Phase 2 — 표면 화학</div><div class="vtable"><div class="vrow"><span class="vn">08</span><code>env_pH</code><span class="vko" data-ko="결합 환경 pH" data-en="Binding pH">결합 환경 pH</span><span class="vrg">6.0 – 8.5</span><span class="vu">–</span></div><div class="vrow"><span class="vn">09</span><code>salt_conc</code><span class="vko" data-ko="NaCl 농도" data-en="NaCl conc.">NaCl 농도</span><span class="vrg">10 – 500</span><span class="vu">mM</span></div><div class="vrow"><span class="vn">10</span><code>buffer_type</code><span class="vko" data-ko="완충액 종류" data-en="Buffer type">완충액 종류</span><span class="vrg">PBS / Tris / HEPES</span><span class="vu">–</span></div></div><div class="vphase" data-ko="Phase 3 — 고분자 결합" data-en="Phase 3 — Polymer binding">Phase 3 — 고분자 결합</div><div class="vtable"><div class="vrow"><span class="vn">11</span><code>polymer_type</code><span class="vko" data-ko="고분자 종류" data-en="Polymer type">고분자 종류</span><span class="vrg">PLL / Chitosan / DEAE</span><span class="vu">–</span></div><div class="vrow"><span class="vn">12</span><code>polymer_MW</code><span class="vko" data-ko="고분자 분자량" data-en="Polymer MW">고분자 분자량</span><span class="vrg">10,000 – 150,000</span><span class="vu">Da</span></div><div class="vrow"><span class="vn">13</span><code>polymer_ratio</code><span class="vko" data-ko="고분자 몰비" data-en="Polymer molar ratio">고분자 몰비</span><span class="vrg">0 – 5,000</span><span class="vu">×</span></div><div class="vrow"><span class="vn">14</span><code>residence_time</code><span class="vko" data-ko="결합 체류시간" data-en="Residence time">결합 체류시간</span><span class="vrg">0 – 30</span><span class="vu">min</span></div><div class="vrow"><span class="vn">15</span><code>mixing_speed</code><span class="vko" data-ko="교반 속도" data-en="Mixing speed">교반 속도</span><span class="vrg">50 – 500</span><span class="vu">rpm</span></div><div class="vrow"><span class="vn">16</span><code>nonspecific_frac</code><span class="vko" data-ko="비특이 손실률" data-en="Nonspecific loss">비특이 손실률</span><span class="vrg">0 – 0.20</span><span class="vu">–</span></div></div><div class="vphase" data-ko="Phase 4a — TFF1" data-en="Phase 4a — TFF1">Phase 4a — TFF1</div><div class="vtable"><div class="vrow"><span class="vn">17</span><code>TMP_TFF1</code><span class="vko" data-ko="막간 압력차" data-en="Transmembrane pressure">막간 압력차</span><span class="vrg">10 – 200</span><span class="vu">kPa</span></div><div class="vrow"><span class="vn">18</span><code>CFV_TFF1</code><span class="vko" data-ko="교차흐름 속도" data-en="Crossflow velocity">교차흐름 속도</span><span class="vrg">100 – 1,000</span><span class="vu">LMH</span></div><div class="vrow"><span class="vn">19</span><code>init_temperature</code><span class="vko" data-ko="공정 온도" data-en="Process temperature">공정 온도</span><span class="vrg">4 – 37</span><span class="vu">°C</span></div><div class="vrow"><span class="vn">20</span><code>pore_size_TFF1</code><span class="vko" data-ko="TFF1 포어 크기" data-en="TFF1 pore size">TFF1 포어 크기</span><span class="vrg">30 – 100</span><span class="vu">nm</span></div><div class="vrow"><span class="vn">21</span><code>membrane_use_count</code><span class="vko" data-ko="멤브레인 재사용" data-en="Membrane reuse count">멤브레인 재사용</span><span class="vrg">0 – 50</span><span class="vu">×</span></div></div><div class="vphase" data-ko="Phase 4b — TFF2" data-en="Phase 4b — TFF2">Phase 4b — TFF2</div><div class="vtable"><div class="vrow"><span class="vn">22</span><code>TMP_TFF2</code><span class="vko" data-ko="막간 압력차" data-en="Transmembrane pressure">막간 압력차</span><span class="vrg">10 – 200</span><span class="vu">kPa</span></div><div class="vrow"><span class="vn">23</span><code>CFV_TFF2</code><span class="vko" data-ko="교차흐름 속도" data-en="Crossflow velocity">교차흐름 속도</span><span class="vrg">100 – 1,000</span><span class="vu">LMH</span></div><div class="vrow"><span class="vn">24</span><code>pore_size_TFF2</code><span class="vko" data-ko="TFF2 포어 크기" data-en="TFF2 pore size">TFF2 포어 크기</span><span class="vrg">50 – 200</span><span class="vu">nm</span></div></div><div class="vphase" data-ko="Phase 5 — 탈착" data-en="Phase 5 — Release">Phase 5 — 탈착</div><div class="vtable"><div class="vrow"><span class="vn">25</span><code>release_NaCl_conc</code><span class="vko" data-ko="탈착 NaCl 농도" data-en="Release NaCl conc.">탈착 NaCl 농도</span><span class="vrg">0.3 – 2.0</span><span class="vu">M</span></div><div class="vrow"><span class="vn">26</span><code>release_pH</code><span class="vko" data-ko="탈착 pH" data-en="Release pH">탈착 pH</span><span class="vrg">4.5 – 6.0</span><span class="vu">–</span></div></div><div class="vnote" data-ko="위 26개가 사용자가 직접 조절하는 독립변수입니다. 이와 별도로 hcp_init, hcdna_init, aggregation_threshold, Rf_init, total_process_time 5종은 위 변수들로부터 자동 산출됩니다." data-en="These 26 are the user-adjustable independent variables. Five further quantities — hcp_init, hcdna_init, aggregation_threshold, Rf_init, total_process_time — are derived automatically from them.">위 26개가 사용자가 직접 조절하는 독립변수입니다. 이와 별도로 <code>hcp_init</code>, <code>hcdna_init</code>, <code>aggregation_threshold</code>, <code>Rf_init</code>, <code>total_process_time</code> 5종은 위 변수들로부터 자동 산출됩니다.</div></div>
-    </div>
-  </header>
-
-  <section>
-    <h2 data-ko="왜 제조원가인가" data-en="Why manufacturing cost">왜 제조원가인가</h2>
-    <div class="chain">
-      <div class="link"><div class="n">01</div>
-        <p><b data-ko="약값이 너무 높습니다" data-en="The prices are simply too high">약값이 너무 높습니다</b><span data-ko="유전자치료제는 한 번의 투여로 치료가 끝나는 경우도 있지만, 그 한 번의 비용이 용량당 최대 미화 350만 달러에 이릅니다." data-en="A gene therapy can sometimes cure with a single dose — yet that one dose can cost up to US$3.5 million.">유전자치료제는 한 번의 투여로 치료가 끝나는 경우도 있지만, 그 한 번의 비용이 용량당 최대 미화 350만 달러에 이릅니다.</span></p></div>
-      <div class="chev">›</div>
-      <div class="link"><div class="n">02</div>
-        <p><b data-ko="건강보험이 감당하기 어렵습니다" data-en="Insurance can't easily keep up">건강보험이 감당하기 어렵습니다</b><span data-ko="이런 고가 신약이 하나둘 늘어날수록, 한정된 건강보험 재정으로 모두를 지원하기가 점점 어려워집니다." data-en="As more of these costly therapies arrive, a limited insurance budget struggles to cover them all.">이런 고가 신약이 하나둘 늘어날수록, 한정된 건강보험 재정으로 모두를 지원하기가 점점 어려워집니다.</span></p></div>
-      <div class="chev">›</div>
-      <div class="link"><div class="n">03</div>
-        <p><b data-ko="그 부담이 환자에게 갑니다" data-en="And the burden reaches the patient">그 부담이 환자에게 갑니다</b><span data-ko="결국 누구에게 먼저 지원할지를 정하게 되고, 그 사이에서 치료법이 있는데도 받지 못하는 환자가 생깁니다." data-en="In the end someone must decide who gets support first — and some patients go without a therapy that already exists.">결국 누구에게 먼저 지원할지를 정하게 되고, 그 사이에서 치료법이 있는데도 받지 못하는 환자가 생깁니다.</span></p></div>
-    </div>
-    <div class="focus">
-      <b data-ko="이 사슬의 최상류를 다룹니다." data-en="We address the top of this chain.">이 사슬의 최상류를 다룹니다.</b>
-      <span data-ko=" 약가 협상이나 급여 정책이 아니라, 그보다 앞에 놓인 제조원가입니다. AAV 유전자치료제는 10¹⁴ vg 용량 기준 제조원가가 미화 2~3만 달러로 보고되며, 전체 정제 수율이 10~20 %에 머무는 것이 주요 원인입니다. 원가를 2~3배만 낮춰도 기존 항체의약품과 견줄 수 있는 수준이 된다는 분석이 있습니다."
-            data-en=" Not price negotiation or reimbursement policy, but the manufacturing cost upstream of them. For AAV gene therapies the cost of goods is reported at US$20–30k per 10¹⁴ vg dose, driven largely by overall purification yields of only 10–20 %. Analyses suggest that cutting cost by just 2–3× would bring it in line with conventional antibody drugs."> 약가 협상이나 급여 정책이 아니라, 그보다 앞에 놓인 제조원가입니다. AAV 유전자치료제는 10¹⁴ vg 용량 기준 제조원가가 미화 2~3만 달러로 보고되며, 전체 정제 수율이 10~20 %에 머무는 것이 주요 원인입니다. 원가를 2~3배만 낮춰도 기존 항체의약품과 견줄 수 있는 수준이 된다는 분석이 있습니다.</span>
-    </div>
-  </section>
-
-  <section>
-    <h2 data-ko="접근 방법" data-en="Approach">접근 방법</h2>
-    <p class="lead"
-       data-ko="공정 전 구간을 지배 방정식으로 기술하고, 그 위에서 조건을 바꿔가며 결과를 예측합니다. 실험을 대체하려는 것이 아니라, 한정된 실험 자원을 어디에 먼저 투입해야 하는지 정하기 위한 도구입니다."
-       data-en="We describe the whole process with governing equations and predict outcomes as conditions change. It is not a replacement for experiments, but a tool for deciding where to spend limited experimental resources first.">
+</header>
+<!-- ═══ 프로젝트 선택 (히어로 바로 뒤) ═══ -->
+<section class="projsel">
+<div class="projsel-h">
+<h2 data-en="Projects" data-ko="프로젝트">프로젝트</h2>
+<p data-en="Projects that lower manufacturing cost by rethinking process steps. Each targets a different therapy and process, but all share one principle — validate with physical models and publish the calculations and code. The tools for Project 01 are under the “Simulator” and “Comparison” tabs above." data-ko="공정 단계의 혁신으로 제조 원가를 낮추는 프로젝트들입니다. 프로젝트마다 대상 치료제와 공정은 다르지만, 물리 모델로 검증하고 계산과 코드를 공개한다는 원칙은 같습니다. 프로젝트 01의 도구는 상단의 ‘공정 시뮬레이터’·‘공정 비교’ 탭에서 볼 수 있습니다.">
+        공정 단계의 혁신으로 제조 원가를 낮추는 프로젝트들입니다. 프로젝트마다 대상 치료제와 공정은 다르지만, 물리 모델로 검증하고 계산과 코드를 공개한다는 원칙은 같습니다. 프로젝트 01의 도구는 상단의 '공정 시뮬레이터'·'공정 비교' 탭에서 볼 수 있습니다.
+      </p>
+</div>
+<div class="projgrid">
+<!-- 프로젝트 01 (활성) -->
+<div aria-disabled="true" class="projcard active">
+<div class="pc-top">
+<span class="pc-no">Project 01</span>
+<span class="pc-badge live" data-en="Active" data-ko="진행 중">진행 중</span>
+</div>
+<h3 data-en="AAV vector purification — Full / empty separation" data-ko="AAV 벡터 정제 — Full / Empty 분리">AAV 벡터 정제 — Full / Empty 분리</h3>
+<p data-en="Most of an AAV product is empty capsids with no gene. The step that separates them is a major cost driver. Polymer-assisted tangential-flow filtration (PA-TFF) is examined as an alternative to current chromatography." data-ko="AAV 유전자치료제 생산물의 대부분은 유전자가 없는 빈 캡시드입니다. 이를 걸러내는 정제 단계가 원가의 큰 부분을 차지합니다. 고분자 보조 접선흐름여과(PA-TFF)를 현행 크로마토그래피의 대안으로 검토합니다.">AAV 유전자치료제 생산물의 대부분은 유전자가 없는 빈 캡시드입니다. 이를 걸러내는 정제 단계가 원가의 큰 부분을 차지합니다. 고분자 보조 접선흐름여과(PA-TFF)를 현행 크로마토그래피의 대안으로 검토합니다.</p>
+<span class="pc-go" data-en="Open from the tabs above →" data-ko="위 탭에서 열람 →">위 탭에서 열람 →</span>
+</div>
+<!-- 프로젝트 02 (준비 중) — 이후 AAV처럼 내용을 채워 넣을 수 있는 구조 -->
+<div aria-disabled="true" class="projcard soon">
+<div class="pc-top">
+<span class="pc-no">Project 02</span>
+<span class="pc-badge prep" data-en="Coming soon" data-ko="준비 중">준비 중</span>
+</div>
+<h3 data-en="Next project" data-ko="다음 프로젝트">다음 프로젝트</h3>
+<p data-en="The next therapy and process are in preparation. Once ready, it will be published in the same format as Project 01 — physical model, simulator and process comparison." data-ko="다음 대상 치료제와 공정을 준비하고 있습니다. 준비가 되는 대로 프로젝트 01과 같은 형식으로 물리 모델·시뮬레이터·공정 비교를 공개할 예정입니다.">다음 대상 치료제와 공정을 준비하고 있습니다. 준비가 되는 대로 프로젝트 01과 같은 형식으로 물리 모델·시뮬레이터·공정 비교를 공개할 예정입니다.</p>
+<span class="pc-go" data-en="Coming soon" data-ko="준비 중">준비 중</span>
+</div>
+</div>
+</section>
+<!-- ═══ 시장 분석 (프로젝트 뒤) ═══ -->
+<section class="why-section">
+<div class="why-head">
+<span class="kicker" data-en="Market analysis" data-ko="시장 분석">시장 분석</span>
+<h2 data-en="Why this problem matters" data-ko="왜 이 문제가 중요한가">왜 이 문제가 중요한가</h2>
+</div>
+<div class="why">
+<div class="why-block">
+<h3 data-en="1. Extreme pricing is becoming the norm, not the exception" data-ko="1. 초고가는 예외가 아니라 이 분야의 기본값이 되고 있다">1. 초고가는 예외가 아니라 이 분야의 기본값이 되고 있다</h3>
+<p data-en="Most recently approved AAV gene therapies carry one-time list prices in the millions: Hemgenix (hemophilia B) ~US$3.5M, Zolgensma (spinal muscular atrophy) ~US$2.1M. This is less any single company's pricing than the band the whole modality now occupies." data-ko="최근 승인된 AAV 유전자치료제의 1회 투여 정가는 대부분 수백만 달러 수준입니다. 헴제닉스(혈우병 B) 약 350만 달러, 졸겐스마(척수성 근위축증) 약 210만 달러 등, 이는 개별 기업의 가격 정책이라기보다 이 치료 방식 전반이 도달해 있는 가격대입니다.">최근 승인된 AAV 유전자치료제의 1회 투여 정가는 대부분 수백만 달러 수준입니다. 헴제닉스(혈우병 B) 약 350만 달러, 졸겐스마(척수성 근위축증) 약 210만 달러 등, 이는 개별 기업의 가격 정책이라기보다 이 치료 방식 전반이 도달해 있는 가격대입니다.</p>
+<figure class="mkt-fig">
+<figcaption data-en="List price per single dose, approved AAV gene therapies (US$ millions)" data-ko="승인된 주요 AAV 유전자치료제의 1회 투여 정가 (백만 달러)">승인된 주요 AAV 유전자치료제의 1회 투여 정가 (백만 달러)</figcaption>
+<div class="barchart">
+<div class="bar-row"><span class="bar-lbl">Hemgenix<small data-en="Hemophilia B" data-ko="혈우병 B">혈우병 B</small></span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-val">$3.5M</span></div>
+<div class="bar-row"><span class="bar-lbl">Elevidys<small data-en="Duchenne MD" data-ko="뒤센근이영양증">뒤센근이영양증</small></span><span class="bar-track"><span class="bar-fill" style="width:91.4%"></span></span><span class="bar-val">$3.2M</span></div>
+<div class="bar-row"><span class="bar-lbl">Roctavian<small data-en="Hemophilia A" data-ko="혈우병 A">혈우병 A</small></span><span class="bar-track"><span class="bar-fill" style="width:82.9%"></span></span><span class="bar-val">$2.9M</span></div>
+<div class="bar-row"><span class="bar-lbl">Zolgensma<small data-en="Spinal muscular atrophy" data-ko="척수성 근위축증">척수성 근위축증</small></span><span class="bar-track"><span class="bar-fill" style="width:60%"></span></span><span class="bar-val">$2.1M</span></div>
+<div class="bar-row"><span class="bar-lbl">Luxturna<small data-en="Inherited retinal disease" data-ko="유전성 망막질환">유전성 망막질환</small></span><span class="bar-track"><span class="bar-fill" style="width:24.3%"></span></span><span class="bar-val">$0.85M</span></div>
+</div>
+<p class="mkt-src"><span data-en="Source: Charles River / GEN, “Platform Processes May Reduce AAV Gene Therapy Costs” (2024)." data-ko="출처: Charles River / GEN, “Platform Processes May Reduce AAV Gene Therapy Costs” (2024).">출처: Charles River / GEN, "Platform Processes May Reduce AAV Gene Therapy Costs" (2024).</span> <a href="https://www.genengnews.com/topics/translational-medicine/platform-processes-may-reduce-aav-gene-therapy-costs" rel="noopener" target="_blank">GEN</a></p>
+</figure>
+</div>
+<div class="why-block">
+<h3 data-en="2. A large share of that price traces to the difficulty of manufacturing" data-ko="2. 이 가격의 상당 부분은 “만들기 어렵다”는 제조 원가에서 온다">2. 이 가격의 상당 부분은 "만들기 어렵다"는 제조 원가에서 온다</h3>
+<p data-en="A peer-style industry analysis (Cell &amp; Gene Therapy Insights, 2024) attributes high AAV cost-of-goods (COGS) to low production yields, significant product loss during purification, limited scalability, and expensive raw materials. Overall downstream yield from cell lysate is only 33–38%, so over 60% is lost in-process. The same analysis notes that a mere 2–3× cost reduction would reach the economics of established antibody drugs (mAbs). The cost problem is not a physical wall but an area where process-step improvement remains possible." data-ko="동료 심사 형식의 산업 분석(Cell &amp; Gene Therapy Insights, 2024)은 AAV 치료제의 높은 제조원가(COGS) 요인을 낮은 생산 수율, 정제 과정의 상당한 제품 손실, 제한된 공정 확장성, 비싼 원자재로 정리합니다. 실제로 세포 용해물에서 시작한 전체 정제 수율은 33~38%에 그쳐 60% 이상이 공정 중 손실됩니다. 같은 분석은 제조원가를 2~3배만 낮춰도 이미 자리 잡은 항체의약품(mAb) 수준의 경제성에 도달할 수 있다고 지적합니다. 즉 원가 문제는 물리적으로 불가능한 벽이 아니라 공정 단계의 개선 여지가 남아 있는 영역입니다.">동료 심사 형식의 산업 분석(Cell &amp; Gene Therapy Insights, 2024)은 AAV 치료제의 높은 제조원가(COGS) 요인을 낮은 생산 수율, 정제 과정의 상당한 제품 손실, 제한된 공정 확장성, 비싼 원자재로 정리합니다. 실제로 세포 용해물에서 시작한 전체 정제 수율은 33~38%에 그쳐 60% 이상이 공정 중 손실됩니다. 같은 분석은 제조원가를 2~3배만 낮춰도 이미 자리 잡은 항체의약품(mAb) 수준의 경제성에 도달할 수 있다고 지적합니다. 즉 원가 문제는 물리적으로 불가능한 벽이 아니라 공정 단계의 개선 여지가 남아 있는 영역입니다.</p>
+<div class="mkt-callout">
+<div class="mc-item"><div class="mc-v">33–38%</div><div class="mc-k" data-en="Overall downstream yield from cell lysate — over 60% lost in-process." data-ko="세포 용해물에서 시작한 전체 정제 수율. 나머지 60% 이상은 공정 중 손실.">세포 용해물에서 시작한 전체 정제 수율. 나머지 60% 이상은 공정 중 손실.</div></div>
+<div class="mc-item"><div class="mc-v">2–3×</div><div class="mc-k" data-en="A cost cut of this size reaches antibody-drug economics." data-ko="이 정도의 원가 절감이면 항체의약품 수준의 경제성에 도달.">이 정도의 원가 절감이면 항체의약품 수준의 경제성에 도달.</div></div>
+<div class="mc-item"><div class="mc-v">~$3.5M</div><div class="mc-k" data-en="Up to this per-dose cost/price level." data-ko="1회 투여 최대 제조원가·치료가 수준.">1회 투여 최대 제조원가·치료가 수준.</div></div>
+</div>
+<p class="mkt-src"><span data-en="Sources: Thakur et al., Cell &amp; Gene Therapy Insights 2024; 10(3):479–499 (DOI 10.18609/cgti.2024.061)." data-ko="출처: Thakur 외, Cell &amp; Gene Therapy Insights 2024; 10(3):479–499 (DOI 10.18609/cgti.2024.061).">출처: Thakur 외, Cell &amp; Gene Therapy Insights 2024; 10(3):479–499 (DOI 10.18609/cgti.2024.061).</span> <a href="https://doi.org/10.18609/cgti.2024.061" rel="noopener" target="_blank">DOI</a> · <span data-en="Overall yield 33–38%: Lonza, ASGCT 2023 downstream case study." data-ko="전체 수율 33–38%: Lonza, ASGCT 2023 다운스트림 정제 사례.">전체 수율 33–38%: Lonza, ASGCT 2023 다운스트림 정제 사례.</span> <a href="https://www.lonza.com/knowledge-center/cellgene/post/downstream-purification-aav-asgct2023" rel="noopener" target="_blank">Lonza</a></p>
+</div>
+<div class="why-block">
+<h3 data-en="3. The market grows fast, and the burden concentrates on producers and CDMOs" data-ko="3. 시장은 빠르게 커지고, 생산 부담은 생산자·CDMO에 집중된다">3. 시장은 빠르게 커지고, 생산 부담은 생산자·CDMO에 집중된다</h3>
+<p data-en="The AAV gene therapy market grows from ~US$2.7–2.8B in 2024 to the mid-US$20B range (~26% CAGR) or ~US$78B (~40% CAGR) by 2034. The forecasts vary in magnitude but agree in direction: the volume that must be produced grows by tens of times. Low yield and limited scalability then become an industry-wide bottleneck, and analyses name CDMOs and vector-production facilities as the fastest-growing segment — structural, rising demand for cost-lowering process technology." data-ko="AAV 유전자치료제 시장은 2024년 약 27~28억 달러에서 2034년경 200억 달러 중반(연 26%)에서 780억 달러(연 40%)까지 성장할 것으로 전망됩니다. 전망치의 폭은 크지만 방향은 일치합니다 — 생산해야 할 총량이 수십 배로 늘어난다는 것입니다. 이때 낮은 수율과 제한된 확장성은 개별 배치가 아니라 산업 전체의 병목이 되고, 여러 분석은 CDMO·벡터 생산 시설을 가장 빠르게 성장하는 부문으로 지적합니다. 공정 원가를 낮추는 기술의 수요가 구조적으로 커진다는 뜻입니다.">AAV 유전자치료제 시장은 2024년 약 27~28억 달러에서 2034년경 200억 달러 중반(연 26%)에서 780억 달러(연 40%)까지 성장할 것으로 전망됩니다. 전망치의 폭은 크지만 방향은 일치합니다 — 생산해야 할 총량이 수십 배로 늘어난다는 것입니다. 이때 낮은 수율과 제한된 확장성은 개별 배치가 아니라 산업 전체의 병목이 되고, 여러 분석은 CDMO·벡터 생산 시설을 가장 빠르게 성장하는 부문으로 지적합니다. 공정 원가를 낮추는 기술의 수요가 구조적으로 커진다는 뜻입니다.</p>
+<figure class="mkt-fig">
+<figcaption data-en="AAV gene therapy market size forecast (US$ billions) — two research houses" data-ko="AAV 유전자치료제 시장 규모 전망 (십억 달러) — 두 조사기관 비교">AAV 유전자치료제 시장 규모 전망 (십억 달러) — 두 조사기관 비교</figcaption>
+<div class="barchart grouped">
+<div class="bar-row"><span class="bar-lbl">2024<small data-en="base year" data-ko="실측 기준연도">실측 기준연도</small></span><span class="bar-track"><span class="bar-fill lo" style="width:3.5%"></span></span><span class="bar-val">$2.75B</span></div>
+<div class="bar-row"><span class="bar-lbl">2034<small data-en="Precedence · 26.4% CAGR" data-ko="Precedence · 연 26.4%">Precedence · 연 26.4%</small></span><span class="bar-track"><span class="bar-fill mid" style="width:30%"></span></span><span class="bar-val">$23.5B</span></div>
+<div class="bar-row"><span class="bar-lbl">2034<small data-en="Towards Healthcare · 40.1% CAGR" data-ko="Towards Healthcare · 연 40.1%">Towards Healthcare · 연 40.1%</small></span><span class="bar-track"><span class="bar-fill hi" style="width:100%"></span></span><span class="bar-val">$78.6B</span></div>
+</div>
+<p class="mkt-src"><span data-en="Sources: Precedence Research (2025), US$23.5B by 2034, 26.4% CAGR." data-ko="출처: Precedence Research (2025), 2034년 235.5억 달러·연 26.4%.">출처: Precedence Research (2025), 2034년 235.5억 달러·연 26.4%.</span> <a href="https://www.biospace.com/press-releases/aav-gene-therapy-market-size-worth-usd-23-546-27-million-by-2034" rel="noopener" target="_blank">Precedence</a> · <span data-en="Towards Healthcare (2025), US$78.6B by 2034, 40.1% CAGR. Both from ~US$2.75B in 2024." data-ko="Towards Healthcare (2025), 2034년 785.6억 달러·연 40.1%. 두 기관 모두 2024년 기준 약 27.5억 달러.">Towards Healthcare (2025), 2034년 785.6억 달러·연 40.1%. 두 기관 모두 2024년 기준 약 27.5억 달러.</span> <a href="https://www.towardshealthcare.com/insights/aav-gene-therapy-market-sizing" rel="noopener" target="_blank">Towards Healthcare</a></p>
+</figure>
+</div>
+<div class="mkt-close">
+<p data-en="In short, market data bear out the chain of extreme price → manufacturing-cost burden → technical limits in the process steps, and the larger the market grows, the more that weight falls on producers. The projects here target the last link of that chain — the process steps — redesigning them with physical models to find where the cost burden can be reduced. Within each project, whether a number is theoretical or measured is marked explicitly by grade." data-ko="정리하면, 초고가 → 제조원가 부담 → 공정 단계의 기술적 한계라는 사슬이 시장 자료로 확인되고, 시장이 커질수록 그 무게는 생산자에게 더 집중됩니다. 여기서 다루는 프로젝트들은 이 사슬의 마지막 고리인 공정 단계를 물리 모델로 다시 설계해, 원가 부담을 줄일 수 있는 지점을 찾습니다. 각 수치가 이론 계산인지 실측인지는 프로젝트 안에서 등급으로 명확히 구분합니다.">정리하면, 초고가 → 제조원가 부담 → 공정 단계의 기술적 한계라는 사슬이 시장 자료로 확인되고, 시장이 커질수록 그 무게는 생산자에게 더 집중됩니다. 여기서 다루는 프로젝트들은 이 사슬의 마지막 고리인 공정 단계를 물리 모델로 다시 설계해, 원가 부담을 줄일 수 있는 지점을 찾습니다. 각 수치가 이론 계산인지 실측인지는 프로젝트 안에서 등급으로 명확히 구분합니다.</p>
+</div>
+</div>
+</section>
+<!-- ═══ 프로젝트 01 상세 ═══ -->
+<section>
+<h2 data-en="Approach" data-ko="접근 방법">접근 방법</h2>
+<p class="lead" data-en="We describe the whole process with governing equations and predict outcomes as conditions change. It is not a replacement for experiments, but a tool for deciding where to spend limited experimental resources first." data-ko="공정 전 구간을 지배 방정식으로 기술하고, 그 위에서 조건을 바꿔가며 결과를 예측합니다. 실험을 대체하려는 것이 아니라, 한정된 실험 자원을 어디에 먼저 투입해야 하는지 정하기 위한 도구입니다.">
       공정 전 구간을 지배 방정식으로 기술하고, 그 위에서 조건을 바꿔가며 결과를 예측합니다. 실험을 대체하려는 것이 아니라, 한정된 실험 자원을 어디에 먼저 투입해야 하는지 정하기 위한 도구입니다.
     </p>
-    <div class="method">
-      <div class="mcard"><div class="n">01 · <span data-ko="물리 모델링" data-en="Physical modeling">물리 모델링</span></div>
-        <h3 data-ko="공정 전 구간의 수식화" data-en="Whole-process formulation">공정 전 구간의 수식화</h3>
-        <p data-ko="표면 전하, 이온 차폐, 결합 에너지, 경쟁 흡착, 체거름, 막 저항, 열 변성까지 11개 방정식과 26개 독립변수로 기술했습니다." data-en="Surface charge, ionic screening, binding energy, competitive adsorption, sieving, membrane resistance and thermal denaturation — 11 equations and 26 variables.">표면 전하, 이온 차폐, 결합 에너지, 경쟁 흡착, 체거름, 막 저항, 열 변성까지 11개 방정식과 26개 독립변수로 기술했습니다.</p></div>
-      <div class="mcard"><div class="n">02 · <span data-ko="검증 가능한 구조" data-en="Verifiable structure">검증 가능한 구조</span></div>
-        <h3 data-ko="수식과 코드의 1:1 대응" data-en="One-to-one equation–code mapping">수식과 코드의 1:1 대응</h3>
-        <p data-ko="모든 수식은 상태 없는 순수 함수로 구현되어 개별 검증이 가능합니다. 회귀 시험 53건이 물리적 방향성과 문헌 대조값을 자동 확인합니다." data-en="Every equation is a stateless pure function that can be tested in isolation. 53 regression tests automatically check physical directionality and literature values.">모든 수식은 상태 없는 순수 함수로 구현되어 개별 검증이 가능합니다. 회귀 시험 53건이 물리적 방향성과 문헌 대조값을 자동 확인합니다.</p></div>
-      <div class="mcard"><div class="n">03 · <span data-ko="민감도 분석" data-en="Sensitivity analysis">민감도 분석</span></div>
-        <h3 data-ko="결론을 지배하는 변수의 식별" data-en="Identifying decisive variables">결론을 지배하는 변수의 식별</h3>
-        <p data-ko="미측정 보정상수 6종을 문헌 범위에서 흔들어 29개 시나리오를 계산하고, 어떤 상수가 결론을 좌우하고 어떤 상수가 무관한지 정량화했습니다." data-en="Six unmeasured constants were swept across literature ranges over 29 scenarios to quantify which ones drive the conclusion and which are irrelevant.">미측정 보정상수 6종을 문헌 범위에서 흔들어 29개 시나리오를 계산하고, 어떤 상수가 결론을 좌우하고 어떤 상수가 무관한지 정량화했습니다.</p></div>
-      <div class="mcard"><div class="n">04 · <span data-ko="데이터 등급제" data-en="Data grading">데이터 등급제</span></div>
-        <h3 data-ko="모든 수치에 신뢰 등급 부여" data-en="Confidence grade on every number">모든 수치에 신뢰 등급 부여</h3>
-        <p data-ko="실측 데이터, 문헌 범위, 이론 추정을 화면에서 구분해 표기합니다. 등급 표시가 없는 숫자는 이 사이트에 존재하지 않습니다." data-en="Measured data, literature ranges and theoretical estimates are visually distinguished. No number appears on this site without a grade.">실측 데이터, 문헌 범위, 이론 추정을 화면에서 구분해 표기합니다. 등급 표시가 없는 숫자는 이 사이트에 존재하지 않습니다.</p></div>
-    </div>
-    <div class="stack">
-      <b data-ko="구현" data-en="Implementation">구현</b>&nbsp;Python 3.12 · NumPy · SciPy · pandas · SQLite · Plotly &nbsp;|&nbsp;
-      <b data-ko="시각화" data-en="Visualization">시각화</b>&nbsp;HTML5 Canvas · Vanilla JS &nbsp;|&nbsp;
-      <b data-ko="구조" data-en="Architecture">구조</b>&nbsp;<span data-ko="모듈 6개 · 팩토리 패턴 · MVP/V2 상속 확장" data-en="6 modules · factory pattern · MVP/V2 inheritance">모듈 6개 · 팩토리 패턴 · MVP/V2 상속 확장</span>
-    </div>
-    <div class="grades">
-      <span class="badge g3"><i></i><span data-ko="등급 3 — 실측 데이터" data-en="Grade 3 — measured">등급 3 — 실측 데이터</span></span>
-      <span class="badge g2"><i></i><span data-ko="등급 2 — 문헌 범위" data-en="Grade 2 — literature range">등급 2 — 문헌 범위</span></span>
-      <span class="badge g1"><i></i><span data-ko="등급 1 — 이론·시뮬레이션" data-en="Grade 1 — theory/simulation">등급 1 — 이론·시뮬레이션</span></span>
-    </div>
-  </section>
-
-  <section>
-    <h2 data-ko="두 가지 원칙" data-en="Two principles">두 가지 원칙</h2>
-    <div class="principles">
-      <div class="pr"><div class="n">원칙 01 / Principle 01</div>
-        <h3 data-ko="안전성이 경제성보다 앞선다" data-en="Safety before economics">안전성이 경제성보다 앞선다</h3>
-        <p data-ko="싸게 만드는 것이 목적이 아니라 안전한 약을 싸게 만드는 것이 목적입니다. 공정 변경으로 새로 도입되는 물질은 잔류 한도와 정량법이 확정되기 전까지 원가 논의를 시작하지 않습니다. 접근성을 이유로 안전 기준을 완화하는 것은 이 연구의 목적에 정면으로 반합니다."
-              data-en="The goal is not a cheaper drug but a cheaper safe drug. Any substance newly introduced by a process change is not costed until its residual limit and assay are defined. Loosening a safety standard for the sake of access runs directly against the purpose of this work.">싸게 만드는 것이 목적이 아니라 안전한 약을 싸게 만드는 것이 목적입니다. 공정 변경으로 새로 도입되는 물질은 잔류 한도와 정량법이 확정되기 전까지 원가 논의를 시작하지 않습니다. 접근성을 이유로 안전 기준을 완화하는 것은 이 연구의 목적에 정면으로 반합니다.</p></div>
-      <div class="pr"><div class="n">원칙 02 / Principle 02</div>
-        <h3 data-ko="목적이 선하다고 분석이 물러지지 않는다" data-en="A good cause does not soften the analysis">목적이 선하다고 분석이 물러지지 않는다</h3>
-        <p data-ko="공익적 동기를 이유로 자기 기술에 유리하게 해석하지 않습니다. 작동하지 않는 공정을 공개하는 것은 접근성에 기여하지 않습니다. 따라서 이 사이트는 제안 공정이 열세인 지표를 먼저 제시합니다."
-              data-en="A public-interest motive is no license to read one's own technology charitably. Publishing a process that does not work contributes nothing to access. This site therefore presents the metrics on which the proposed process is behind, first.">공익적 동기를 이유로 자기 기술에 유리하게 해석하지 않습니다. 작동하지 않는 공정을 공개하는 것은 접근성에 기여하지 않습니다. 따라서 이 사이트는 제안 공정이 열세인 지표를 먼저 제시합니다.</p></div>
-    </div>
-  </section>
-
-  <section>
-    <h2 data-ko="프로젝트 01 — AAV 벡터 정제" data-en="Project 01 — AAV vector purification">프로젝트 01 — AAV 벡터 정제</h2>
-    <p class="lead"
-       data-ko="AAV 유전자치료제는 생산물의 상당수가 유전자를 담지 않은 빈 캡시드입니다. 이를 분리하는 단계가 제조 공정에서 가장 까다로운 구간이며 원가의 큰 부분을 차지합니다. 현행 표준은 음이온교환 크로마토그래피(AEX)이고, 본 연구는 고분자 보조 접선흐름여과(PA-TFF)를 대안으로 검토합니다."
-       data-en="Much of an AAV product is empty capsids carrying no gene. Separating them is the hardest step in the process and a major cost driver. The current standard is anion-exchange chromatography (AEX); this work examines polymer-assisted tangential-flow filtration (PA-TFF) as an alternative.">
-      AAV 유전자치료제는 생산물의 상당수가 유전자를 담지 않은 빈 캡시드입니다. 이를 분리하는 단계가 제조 공정에서 가장 까다로운 구간이며 원가의 큰 부분을 차지합니다. 현행 표준은 음이온교환 크로마토그래피(AEX)이고, 본 연구는 고분자 보조 접선흐름여과(PA-TFF)를 대안으로 검토합니다.
+<div class="method">
+<div class="mcard"><div class="n">01 · <span data-en="Physical modeling" data-ko="물리 모델링">물리 모델링</span></div>
+<h3 data-en="Whole-process formulation" data-ko="공정 전 구간의 수식화">공정 전 구간의 수식화</h3>
+<p data-en="Surface charge, ionic screening, binding energy, competitive adsorption, sieving, membrane resistance and thermal denaturation — 11 equations and 26 variables." data-ko="표면 전하, 이온 차폐, 결합 에너지, 경쟁 흡착, 체거름, 막 저항, 열 변성까지 11개 방정식과 26개 독립변수로 기술했습니다.">표면 전하, 이온 차폐, 결합 에너지, 경쟁 흡착, 체거름, 막 저항, 열 변성까지 11개 방정식과 26개 독립변수로 기술했습니다.</p></div>
+<div class="mcard"><div class="n">02 · <span data-en="Verifiable structure" data-ko="검증 가능한 구조">검증 가능한 구조</span></div>
+<h3 data-en="One-to-one equation–code mapping" data-ko="수식과 코드의 1:1 대응">수식과 코드의 1:1 대응</h3>
+<p data-en="Every equation is a stateless pure function that can be tested in isolation. 53 regression tests automatically check physical directionality and literature values." data-ko="모든 수식은 상태 없는 순수 함수로 구현되어 개별 검증이 가능합니다. 회귀 시험 53건이 물리적 방향성과 문헌 대조값을 자동 확인합니다.">모든 수식은 상태 없는 순수 함수로 구현되어 개별 검증이 가능합니다. 회귀 시험 53건이 물리적 방향성과 문헌 대조값을 자동 확인합니다.</p></div>
+<div class="mcard"><div class="n">03 · <span data-en="Sensitivity analysis" data-ko="민감도 분석">민감도 분석</span></div>
+<h3 data-en="Identifying decisive variables" data-ko="결론을 지배하는 변수의 식별">결론을 지배하는 변수의 식별</h3>
+<p data-en="Six unmeasured constants were swept across literature ranges over 29 scenarios to quantify which ones drive the conclusion and which are irrelevant." data-ko="미측정 보정상수 6종을 문헌 범위에서 흔들어 29개 시나리오를 계산하고, 어떤 상수가 결론을 좌우하고 어떤 상수가 무관한지 정량화했습니다.">미측정 보정상수 6종을 문헌 범위에서 흔들어 29개 시나리오를 계산하고, 어떤 상수가 결론을 좌우하고 어떤 상수가 무관한지 정량화했습니다.</p></div>
+<div class="mcard"><div class="n">04 · <span data-en="Data grading" data-ko="데이터 등급제">데이터 등급제</span></div>
+<h3 data-en="Confidence grade on every number" data-ko="모든 수치에 신뢰 등급 부여">모든 수치에 신뢰 등급 부여</h3>
+<p data-en="Measured data, literature ranges and theoretical estimates are visually distinguished. No number appears anywhere without a grade." data-ko="실측 데이터, 문헌 범위, 이론 추정을 화면에서 구분해 표기합니다. 등급 표시가 없는 숫자는 어디에도 두지 않습니다.">실측 데이터, 문헌 범위, 이론 추정을 화면에서 구분해 표기합니다. 등급 표시가 없는 숫자는 어디에도 두지 않습니다.</p></div>
+</div>
+<div class="stack">
+<b data-en="Implementation" data-ko="구현">구현</b> Python 3.12 · NumPy · SciPy · pandas · SQLite · Plotly  | 
+      <b data-en="Visualization" data-ko="시각화">시각화</b> HTML5 Canvas · Vanilla JS  | 
+      <b data-en="Architecture" data-ko="구조">구조</b> <span data-en="6 modules · factory pattern · MVP/V2 inheritance" data-ko="모듈 6개 · 팩토리 패턴 · MVP/V2 상속 확장">모듈 6개 · 팩토리 패턴 · MVP/V2 상속 확장</span>
+</div>
+<div class="grades">
+<span class="badge g3"><i></i><span data-en="Grade 3 — measured: values reported in papers or vendor app-notes" data-ko="등급 3 — 실측: 논문·제조사 응용노트에 보고된 값">등급 3 — 실측: 논문·제조사 응용노트에 보고된 값</span></span>
+<span class="badge g2"><i></i><span data-en="Grade 2 — literature range: the spread across several reports" data-ko="등급 2 — 문헌 범위: 여러 보고가 이루는 폭">등급 2 — 문헌 범위: 여러 보고가 이루는 폭</span></span>
+<span class="badge g1"><i></i><span data-en="Grade 1 — theory/simulation: not yet experimentally validated" data-ko="등급 1 — 이론·시뮬레이션: 실험 검증 전">등급 1 — 이론·시뮬레이션: 실험 검증 전</span></span>
+</div>
+<p class="grades-note" data-en="Every number on this site carries one of these grades. No ungraded number appears anywhere — including the yield–purity chart under the Comparison tab, where amber marks measured literature (Grade 3) and teal marks simulation (Grade 1)." data-ko="이 사이트의 모든 수치에는 이 등급 중 하나가 붙습니다. 등급 표시가 없는 숫자는 어디에도 두지 않으며, 공정 비교 탭의 수율–순도 그래프도 마찬가지로 주황은 문헌 실측(등급 3), 청록은 시뮬레이션(등급 1)으로 구분해 표시합니다.">이 사이트의 모든 수치에는 이 등급 중 하나가 붙습니다. 등급 표시가 없는 숫자는 어디에도 두지 않으며, 공정 비교 탭의 수율–순도 그래프도 마찬가지로 주황은 문헌 실측(등급 3), 청록은 시뮬레이션(등급 1)으로 구분해 표시합니다.</p>
+</section>
+<section>
+<h2 data-en="Two principles" data-ko="두 가지 원칙">두 가지 원칙</h2>
+<div class="principles">
+<div class="pr"><div class="n">원칙 01 / Principle 01</div>
+<h3 data-en="Safety before economics" data-ko="안전성이 경제성보다 앞선다">안전성이 경제성보다 앞선다</h3>
+<p data-en="The goal is not a cheaper drug but a cheaper safe drug. Any substance newly introduced by a process change is not costed until its residual limit and assay are defined. Loosening a safety standard for the sake of access runs directly against the purpose of this work." data-ko="싸게 만드는 것이 목적이 아니라 안전한 약을 싸게 만드는 것이 목적입니다. 공정 변경으로 새로 도입되는 물질은 잔류 한도와 정량법이 확정되기 전까지 원가 논의를 시작하지 않습니다. 접근성을 이유로 안전 기준을 완화하는 것은 이 연구의 목적에 정면으로 반합니다.">싸게 만드는 것이 목적이 아니라 안전한 약을 싸게 만드는 것이 목적입니다. 공정 변경으로 새로 도입되는 물질은 잔류 한도와 정량법이 확정되기 전까지 원가 논의를 시작하지 않습니다. 접근성을 이유로 안전 기준을 완화하는 것은 이 연구의 목적에 정면으로 반합니다.</p></div>
+<div class="pr"><div class="n">원칙 02 / Principle 02</div>
+<h3 data-en="A good cause does not soften the analysis" data-ko="목적이 선하다고 분석이 물러지지 않는다">목적이 선하다고 분석이 물러지지 않는다</h3>
+<p data-en="A public-interest motive is no license to read one's own technology charitably. Publishing a process that does not work contributes nothing to access. The metrics on which the proposed process is behind are therefore presented first." data-ko="공익적 동기를 이유로 자기 기술에 유리하게 해석하지 않습니다. 작동하지 않는 공정을 공개하는 것은 접근성에 기여하지 않습니다. 따라서 제안 공정이 열세인 지표를 먼저 제시합니다.">공익적 동기를 이유로 자기 기술에 유리하게 해석하지 않습니다. 작동하지 않는 공정을 공개하는 것은 접근성에 기여하지 않습니다. 따라서 제안 공정이 열세인 지표를 먼저 제시합니다.</p></div>
+</div>
+</section>
+<section>
+<h2 data-en="Tools — simulator and comparison" data-ko="도구 — 시뮬레이터와 공정 비교">도구 — 시뮬레이터와 공정 비교</h2>
+<p class="lead" data-en="Project 01 can be explored with two tools. The process-flow simulator shows how capsids separate at the particle level, and the comparison places the result side by side with measured AEX data to weigh it honestly." data-ko="프로젝트 01은 두 가지 도구로 살펴볼 수 있습니다. 공정 흐름 시뮬레이터는 캡시드가 실제로 어떻게 분리되는지 입자 단위로 보여주고, 공정 비교는 현행 AEX 실측값과 나란히 놓아 우열을 정직하게 따집니다.">
+      프로젝트 01은 두 가지 도구로 살펴볼 수 있습니다. 공정 흐름 시뮬레이터는 캡시드가 실제로 어떻게 분리되는지 입자 단위로 보여주고, 공정 비교는 현행 AEX 실측값과 나란히 놓아 우열을 정직하게 따집니다.
     </p>
-    <div class="proj">
-      <button class="card" data-go="sim">
-        <div class="head"><h3 data-ko="공정 흐름 시뮬레이터" data-en="Process-flow simulator">공정 흐름 시뮬레이터</h3><span class="id">SJL-2026-01-A</span></div>
-        <p data-ko="배관계장도 위에서 캡시드가 개별 입자로 흐릅니다. 유리처럼 투명한 껍데기 안에 붉은 유전자가 보이면 진짜 치료제, 비어 있으면 빈 캡시드입니다. 막을 만날 때마다 Ferry 식이 산출한 확률로 통과 여부가 결정되며, 화면의 수율은 계산값이 아니라 실제로 제품 용기에 도달한 입자를 센 값입니다."
-              data-en="Capsids flow as individual particles over a P&ID. A red gene inside a glass-clear shell marks a real therapeutic; an empty shell marks a decoy. At each membrane, passage is drawn from the Ferry-equation probability, and the on-screen yield is counted from particles that actually reach the product vessel — not a formula.">배관계장도 위에서 캡시드가 개별 입자로 흐릅니다. 유리처럼 투명한 껍데기 안에 붉은 유전자가 보이면 진짜 치료제, 비어 있으면 빈 캡시드입니다. 막을 만날 때마다 Ferry 식이 산출한 확률로 통과 여부가 결정되며, 화면의 수율은 계산값이 아니라 실제로 제품 용기에 도달한 입자를 센 값입니다.</p>
-        <div class="chips"><span class="chip sim" data-ko="등급 1 · 시뮬레이션" data-en="Grade 1 · simulation">등급 1 · 시뮬레이션</span><span class="chip" data-ko="실시간 입자 추적" data-en="Live particle tracking">실시간 입자 추적</span></div>
-        <span class="go" data-ko="열어보기 →" data-en="Open →">열어보기 →</span>
-      </button>
-      <button class="card" data-go="cmp">
-        <div class="head"><h3 data-ko="현행 공정과의 정량 비교" data-en="Quantitative comparison with the current process">현행 공정과의 정량 비교</h3><span class="id">SJL-2026-01-B</span></div>
-        <p data-ko="문헌에 보고된 AEX 실측값과 본 시뮬레이션을 수율–순도 평면 위에 함께 배치했습니다. 두 공정 모두 수율과 순도가 맞바꿈 관계에 있으므로 막대그래프 대신 트레이드오프 곡선으로 비교합니다. 현 시점의 결론은 제안 공정이 수율에서 우위에 있다는 근거가 없다는 것입니다."
-              data-en="Published AEX measurements and this simulation are placed together on a yield–purity plane. Because both processes trade yield against purity, they are compared as trade-off curves rather than bars. The present conclusion is that there is no evidence the proposed process is superior in yield.">문헌에 보고된 AEX 실측값과 본 시뮬레이션을 수율–순도 평면 위에 함께 배치했습니다. 두 공정 모두 수율과 순도가 맞바꿈 관계에 있으므로 막대그래프 대신 트레이드오프 곡선으로 비교합니다. 현 시점의 결론은 제안 공정이 수율에서 우위에 있다는 근거가 없다는 것입니다.</p>
-        <div class="chips"><span class="chip lit" data-ko="등급 3 · 문헌 실측 11건" data-en="Grade 3 · 11 measured refs">등급 3 · 문헌 실측 11건</span><span class="chip sim" data-ko="등급 1 · 시뮬레이션" data-en="Grade 1 · simulation">등급 1 · 시뮬레이션</span></div>
-        <span class="go" data-ko="열어보기 →" data-en="Open →">열어보기 →</span>
-      </button>
-    </div>
-  </section>
-
-  <section>
-    <h2 data-ko="검증 설계" data-en="Verification design">검증 설계</h2>
-    <div class="status">
-      <h3 data-ko="현 단계에서 확정된 것과 확정되지 않은 것" data-en="What is settled and what is not, at this stage">현 단계에서 확정된 것과 확정되지 않은 것</h3>
-      <ul>
-        <li data-ko="습식 실험 데이터는 아직 확보되지 않았습니다. 제안 공정 측 수치는 전부 이론 시뮬레이션 출력이며 등급 1로 표기됩니다." data-en="No wet-lab data yet. All proposed-process numbers are simulation output, marked Grade 1."><b>습식 실험 데이터는 아직 확보되지 않았습니다.</b> 제안 공정 측 수치는 전부 이론 시뮬레이션 출력이며 등급 1로 표기됩니다.</li>
-        <li data-ko="결론을 지배하는 미측정 상수를 3개로 좁혔습니다. 그중 고분자–캡시드 결합 세기를 문헌 범위 안에서 변화시키면 예측 수율이 0.3 %에서 84 %까지 이동합니다. 반면 브리징 응집수는 32배를 변화시켜도 수율이 움직이지 않습니다." data-en="The constants that drive the conclusion have been narrowed to three. Varying the polymer–capsid binding strength within its literature range moves predicted yield from 0.3 % to 84 %; by contrast, a 32× change in bridging number does not move yield at all."><b>결론을 지배하는 미측정 상수를 3개로 좁혔습니다.</b> 그중 고분자–캡시드 결합 세기를 문헌 범위 안에서 변화시키면 예측 수율이 0.3 %에서 84 %까지 이동합니다. 반면 브리징 응집수는 32배를 변화시켜도 수율이 움직이지 않습니다.</li>
-        <li data-ko="모델이 자체 설계의 오류 4건을 식별했습니다. 점도 상수 오기, 복합체 크기 가정의 순환논리, 고분자 투입량 최적값의 비확정성, 2차 여과의 고분자 분리 불가 문제입니다. 네 건 모두 공개해 두었습니다." data-en="The model identified four errors in its own design: a viscosity-constant typo, circular reasoning in the complex-size assumption, non-determinacy of the optimal polymer dose, and the inability of the second filtration to separate the polymer. All four are disclosed."><b>모델이 자체 설계의 오류 4건을 식별했습니다.</b> 점도 상수 오기, 복합체 크기 가정의 순환논리, 고분자 투입량 최적값의 비확정성, 2차 여과의 고분자 분리 불가 문제입니다. 네 건 모두 공개해 두었습니다.</li>
-        <li data-ko="다음 단계는 성능 향상이 아니라 불확실성 축소입니다. 폴리스티렌 비드를 이용한 검증 실험 1건(약 200만 원)이 공정 성립의 핵심 전제를 판별합니다." data-en="The next step is not raising performance but shrinking uncertainty. A single polystyrene-bead experiment (about ₩2M) tests the core premise of the process."><b>다음 단계는 성능 향상이 아니라 불확실성 축소입니다.</b> 폴리스티렌 비드를 이용한 검증 실험 1건(약 200만 원)이 공정 성립의 핵심 전제를 판별합니다.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section id="sec-terms">
-    <h2 data-ko="이용 조건" data-en="Terms of use">이용 조건</h2>
-    <div class="terms">
-      <div class="term"><h3 data-ko="연구·교육 목적 — 무료" data-en="Research & education — free">연구·교육 목적 — 무료</h3>
-        <p data-ko="시뮬레이터, 코드, 문서, 도표를 연구와 교육 목적으로 자유롭게 이용하실 수 있습니다. 출처 표기만 부탁드립니다." data-en="The simulator, code, documents and figures are free for research and educational use. Attribution is requested.">시뮬레이터, 코드, 문서, 도표를 연구와 교육 목적으로 자유롭게 이용하실 수 있습니다. 출처 표기만 부탁드립니다.</p>
-        <p data-ko="코드 " data-en="Code ">코드 <code>PolyForm Noncommercial 1.0.0</code><br><span data-ko="문서·도표 " data-en="Docs & figures ">문서·도표 </span><code>CC BY-NC-SA 4.0</code></p>
-        <a class="dlbtn" href="./download/sjlabs-aav-simulator.zip" download data-ko="시뮬레이터 전체 코드 내려받기" data-en="Download full simulator code">시뮬레이터 전체 코드 내려받기</a></div>
-      <div class="term"><h3 data-ko="상업적 이용 — 사전 협의" data-en="Commercial use — prior agreement">상업적 이용 — 사전 협의</h3>
-        <p data-ko="상업적 목적의 이용은 저작자와의 사전 협의가 필요합니다. 의약품 접근성 향상에 기여하는 용도라면 조건을 유연하게 검토합니다." data-en="Commercial use requires prior agreement with the author. Terms are considered flexibly for uses that improve medicine access.">상업적 목적의 이용은 저작자와의 사전 협의가 필요합니다. 의약품 접근성 향상에 기여하는 용도라면 조건을 유연하게 검토합니다.</p>
-        <p data-ko="문의는 " data-en="Contact: ">문의는 <a href="mailto:sjlee0235@gmail.com">sjlee0235@gmail.com</a><span data-ko="으로 연락 주십시오." data-en=".">으로 연락 주십시오.</span></p></div>
-      <div class="term"><h3 data-ko="인용" data-en="Citation">인용</h3>
-        <p class="ko-only">이성진, <i>SJ LABS — AAV 벡터 정제 공정 시뮬레이터 (MVP)</i>, 중앙대학교 약학대학 약학과, 2026.</p>
-        <p class="en-only">Sungjin Lee, <i>SJ LABS — AAV Vector Purification Process Simulator (MVP)</i>, College of Pharmacy, Chung-Ang University, 2026.</p>
-        <p data-ko="인용 시 해당 수치가 이론 시뮬레이션(등급 1)이며 실험 검증 전이라는 점을 함께 밝혀 주십시오." data-en="When citing, please note that the figures are theoretical simulation (Grade 1) and not experimentally validated.">인용 시 해당 수치가 이론 시뮬레이션(등급 1)이며 실험 검증 전이라는 점을 함께 밝혀 주십시오.</p></div>
-      <div class="term"><h3 data-ko="면책" data-en="Disclaimer">면책</h3>
-        <p data-ko="본 사이트의 분석은 공개 자료에 기반한 이론적 추정이며, 언급된 기업이나 제품의 실제 제조공정을 반영하지 않습니다." data-en="The analyses here are theoretical estimates based on public information and do not reflect the actual manufacturing processes of any company or product mentioned.">본 사이트의 분석은 공개 자료에 기반한 이론적 추정이며, 언급된 기업이나 제품의 실제 제조공정을 반영하지 않습니다.</p>
-        <p data-ko="특정 기업·제품을 평가하거나 비판할 의도가 없으며, 공정 기술의 이론적 개선 여지를 다룹니다. 의학적·투자적 판단의 근거로 사용될 수 없습니다." data-en="There is no intent to evaluate or criticize any company or product; the subject is the theoretical room for process improvement. It must not be used as a basis for medical or investment decisions.">특정 기업·제품을 평가하거나 비판할 의도가 없으며, 공정 기술의 이론적 개선 여지를 다룹니다. 의학적·투자적 판단의 근거로 사용될 수 없습니다.</p></div>
-    </div>
-  </section>
-
+<div class="proj">
+<button class="card" data-go="sim">
+<div class="head"><h3 data-en="Process-flow simulator" data-ko="공정 흐름 시뮬레이터">공정 흐름 시뮬레이터</h3><span class="id">SJL-2026-01-A</span></div>
+<p data-en="Capsids flow as individual particles over a P&amp;ID. A red gene inside a glass-clear shell marks a real therapeutic; an empty shell marks a decoy. At each membrane, passage is drawn from the Ferry-equation probability, and the on-screen yield is counted from particles that actually reach the product vessel — not a formula." data-ko="배관계장도 위에서 캡시드가 개별 입자로 흐릅니다. 유리처럼 투명한 껍데기 안에 붉은 유전자가 보이면 진짜 치료제, 비어 있으면 빈 캡시드입니다. 막을 만날 때마다 Ferry 식이 산출한 확률로 통과 여부가 결정되며, 화면의 수율은 계산값이 아니라 실제로 제품 용기에 도달한 입자를 센 값입니다.">배관계장도 위에서 캡시드가 개별 입자로 흐릅니다. 유리처럼 투명한 껍데기 안에 붉은 유전자가 보이면 진짜 치료제, 비어 있으면 빈 캡시드입니다. 막을 만날 때마다 Ferry 식이 산출한 확률로 통과 여부가 결정되며, 화면의 수율은 계산값이 아니라 실제로 제품 용기에 도달한 입자를 센 값입니다.</p>
+<div class="chips"><span class="chip sim" data-en="Grade 1 · simulation" data-ko="등급 1 · 시뮬레이션">등급 1 · 시뮬레이션</span><span class="chip" data-en="Live particle tracking" data-ko="실시간 입자 추적">실시간 입자 추적</span></div>
+<span class="go" data-en="Open →" data-ko="열어보기 →">열어보기 →</span>
+</button>
+<button class="card" data-go="cmp">
+<div class="head"><h3 data-en="Quantitative comparison with the current process" data-ko="현행 공정과의 정량 비교">현행 공정과의 정량 비교</h3><span class="id">SJL-2026-01-B</span></div>
+<p data-en="Published AEX measurements and this simulation are placed together on a yield–purity plane. Because both processes trade yield against purity, they are compared as trade-off curves rather than bars. The present conclusion is that there is no evidence the proposed process is superior in yield." data-ko="문헌에 보고된 AEX 실측값과 본 시뮬레이션을 수율–순도 평면 위에 함께 배치했습니다. 두 공정 모두 수율과 순도가 맞바꿈 관계에 있으므로 막대그래프 대신 트레이드오프 곡선으로 비교합니다. 현 시점의 결론은 제안 공정이 수율에서 우위에 있다는 근거가 없다는 것입니다.">문헌에 보고된 AEX 실측값과 본 시뮬레이션을 수율–순도 평면 위에 함께 배치했습니다. 두 공정 모두 수율과 순도가 맞바꿈 관계에 있으므로 막대그래프 대신 트레이드오프 곡선으로 비교합니다. 현 시점의 결론은 제안 공정이 수율에서 우위에 있다는 근거가 없다는 것입니다.</p>
+<div class="chips"><span class="chip lit" data-en="Grade 3 · 11 measured refs" data-ko="등급 3 · 문헌 실측 11건">등급 3 · 문헌 실측 11건</span><span class="chip sim" data-en="Grade 1 · simulation" data-ko="등급 1 · 시뮬레이션">등급 1 · 시뮬레이션</span></div>
+<span class="go" data-en="Open →" data-ko="열어보기 →">열어보기 →</span>
+</button>
+</div>
+</section>
+<section>
+<h2 data-en="Verification design" data-ko="검증 설계">검증 설계</h2>
+<div class="status">
+<h3 data-en="What is settled and what is not, at this stage" data-ko="현 단계에서 확정된 것과 확정되지 않은 것">현 단계에서 확정된 것과 확정되지 않은 것</h3>
+<ul>
+<li data-en="No wet-lab data yet. All proposed-process numbers are simulation output, marked Grade 1." data-ko="습식 실험 데이터는 아직 확보되지 않았습니다. 제안 공정 측 수치는 전부 이론 시뮬레이션 출력이며 등급 1로 표기됩니다."><b>습식 실험 데이터는 아직 확보되지 않았습니다.</b> 제안 공정 측 수치는 전부 이론 시뮬레이션 출력이며 등급 1로 표기됩니다.</li>
+<li data-en="The constants that drive the conclusion have been narrowed to three. Varying the polymer–capsid binding strength within its literature range moves predicted yield from 0.3 % to 84 %; by contrast, a 32× change in bridging number does not move yield at all." data-ko="결론을 지배하는 미측정 상수를 3개로 좁혔습니다. 그중 고분자–캡시드 결합 세기를 문헌 범위 안에서 변화시키면 예측 수율이 0.3 %에서 84 %까지 이동합니다. 반면 브리징 응집수는 32배를 변화시켜도 수율이 움직이지 않습니다."><b>결론을 지배하는 미측정 상수를 3개로 좁혔습니다.</b> 그중 고분자–캡시드 결합 세기를 문헌 범위 안에서 변화시키면 예측 수율이 0.3 %에서 84 %까지 이동합니다. 반면 브리징 응집수는 32배를 변화시켜도 수율이 움직이지 않습니다.</li>
+<li data-en="The model identified four errors in its own design: a viscosity-constant typo, circular reasoning in the complex-size assumption, non-determinacy of the optimal polymer dose, and the inability of the second filtration to separate the polymer. All four are disclosed." data-ko="모델이 자체 설계의 오류 4건을 식별했습니다. 점도 상수 오기, 복합체 크기 가정의 순환논리, 고분자 투입량 최적값의 비확정성, 2차 여과의 고분자 분리 불가 문제입니다. 네 건 모두 공개해 두었습니다."><b>모델이 자체 설계의 오류 4건을 식별했습니다.</b> 점도 상수 오기, 복합체 크기 가정의 순환논리, 고분자 투입량 최적값의 비확정성, 2차 여과의 고분자 분리 불가 문제입니다. 네 건 모두 공개해 두었습니다.</li>
+<li data-en="The next step is not raising performance but shrinking uncertainty. A single polystyrene-bead experiment (about ₩2M) tests the core premise of the process." data-ko="다음 단계는 성능 향상이 아니라 불확실성 축소입니다. 폴리스티렌 비드를 이용한 검증 실험 1건(약 200만 원)이 공정 성립의 핵심 전제를 판별합니다."><b>다음 단계는 성능 향상이 아니라 불확실성 축소입니다.</b> 폴리스티렌 비드를 이용한 검증 실험 1건(약 200만 원)이 공정 성립의 핵심 전제를 판별합니다.</li>
+</ul>
+</div>
+</section>
+<section id="sec-terms">
+<h2 data-en="Terms of use &amp; contact" data-ko="이용 안내 및 문의">이용 안내 및 문의</h2>
+<p class="terms-intro" data-en="This work is intended to be shared. The simulator, source code, figures, and documentation are openly available for others to read, run, and build upon. The sections below outline the conditions of use and how to make contact; collaboration and inquiries are warmly welcomed." data-ko="본 연구는 공유를 전제로 공개됩니다. 시뮬레이터와 소스 코드, 도표, 문서는 누구나 열람하고 실행하며 발전시킬 수 있도록 개방되어 있습니다. 아래에서 이용 조건과 연락 방법을 안내드리며, 협업과 문의를 언제든 환영합니다.">본 연구는 공유를 전제로 공개됩니다. 시뮬레이터와 소스 코드, 도표, 문서는 누구나 열람하고 실행하며 발전시킬 수 있도록 개방되어 있습니다. 아래에서 이용 조건과 연락 방법을 안내드리며, 협업과 문의를 언제든 환영합니다.</p>
+<div class="terms">
+<div class="term"><h3 data-en="Research &amp; education" data-ko="연구·교육 목적">연구·교육 목적</h3>
+<p data-en="For research and educational purposes, the simulator, source code, documents, and figures may be used freely — for reading, running, teaching, and adaptation. A brief attribution is the only request." data-ko="연구와 교육 목적이라면 시뮬레이터와 소스 코드, 문서, 도표를 자유롭게 이용하실 수 있습니다. 열람과 실행, 강의, 재구성 모두 가능하며, 짧은 출처 표기만 정중히 부탁드립니다.">연구와 교육 목적이라면 시뮬레이터와 소스 코드, 문서, 도표를 자유롭게 이용하실 수 있습니다. 열람과 실행, 강의, 재구성 모두 가능하며, 짧은 출처 표기만 정중히 부탁드립니다.</p>
+<p class="lic-line"><span data-en="Code " data-ko="코드 ">코드 </span><code>PolyForm Noncommercial 1.0.0</code><br/><span data-en="Docs &amp; figures " data-ko="문서·도표 ">문서·도표 </span><code>CC BY-NC-SA 4.0</code></p></div>
+<div class="term"><h3 data-en="Commercial use" data-ko="상업적 이용">상업적 이용</h3>
+<p data-en="Commercial use is welcome following a brief prior discussion. Where the intended use advances access to medicines, the terms are reviewed flexibly and in good faith. The aim is not to restrict use but to find a workable arrangement together." data-ko="상업적 이용은 사전에 간단한 협의를 거쳐 얼마든지 가능합니다. 의약품 접근성 향상에 기여하는 용도라면 조건을 유연하고 전향적으로 검토해 드립니다. 이용을 제한하기 위함이 아니라, 함께 적절한 방안을 찾기 위한 절차입니다.">상업적 이용은 사전에 간단한 협의를 거쳐 얼마든지 가능합니다. 의약품 접근성 향상에 기여하는 용도라면 조건을 유연하고 전향적으로 검토해 드립니다. 이용을 제한하기 위함이 아니라, 함께 적절한 방안을 찾기 위한 절차입니다.</p></div>
+<div class="term contact"><h3 data-en="Collaboration &amp; inquiries" data-ko="협업 및 문의">협업 및 문의</h3>
+<p data-en="Suggestions, corrections, joint research, and general questions are all genuinely welcome. Email is the most direct channel, and every message is read personally." data-ko="제언과 오류 제보, 공동 연구, 그리고 일반적인 문의까지 모두 진심으로 환영합니다. 이메일이 가장 빠른 연락 방법이며, 보내 주신 모든 메시지를 직접 확인하고 있습니다.">제언과 오류 제보, 공동 연구, 그리고 일반적인 문의까지 모두 진심으로 환영합니다. 이메일이 가장 빠른 연락 방법이며, 보내 주신 모든 메시지를 직접 확인하고 있습니다.</p>
+<a class="mailbtn" href="mailto:sjlee0235@gmail.com">sjlee0235@gmail.com</a></div>
+<div class="term"><h3 data-en="Citation" data-ko="인용">인용</h3>
+<p class="ko-only">이성진, <i>SJ LABS — AAV 벡터 정제 공정 시뮬레이터 (MVP)</i>, 중앙대학교 약학대학 약학과, 2026.</p>
+<p class="en-only">Sungjin Lee, <i>SJ LABS — AAV Vector Purification Process Simulator (MVP)</i>, College of Pharmacy, Chung-Ang University, 2026.</p>
+<p data-en="When citing, kindly note that the figures are theoretical simulation (Grade 1) and have not yet been experimentally validated. Doing so preserves an accurate record for subsequent readers." data-ko="인용하실 때에는 해당 수치가 이론 시뮬레이션(등급 1)이며 아직 실험으로 검증되지 않았음을 함께 밝혀 주시길 부탁드립니다. 이는 이후의 독자를 위한 정확한 기록이 됩니다.">인용하실 때에는 해당 수치가 이론 시뮬레이션(등급 1)이며 아직 실험으로 검증되지 않았음을 함께 밝혀 주시길 부탁드립니다. 이는 이후의 독자를 위한 정확한 기록이 됩니다.</p></div>
+<div class="term"><h3 data-en="Scope &amp; limitations" data-ko="범위와 한계">범위와 한계</h3>
+<p data-en="The analyses presented here are theoretical estimates derived from publicly available information and do not represent the actual manufacturing process of any company. They are not intended to evaluate or criticize any specific product — the subject is the scope for process improvement itself — and must not serve as a basis for medical or investment decisions." data-ko="본 사이트의 분석은 공개된 자료에 근거한 이론적 추정이며, 특정 기업의 실제 제조공정을 반영하지 않습니다. 특정 제품을 평가하거나 비판하려는 것이 아니라 공정 개선의 여지 자체를 다루는 것이며, 의학적·투자적 판단의 근거로 사용될 수 없습니다.">본 사이트의 분석은 공개된 자료에 근거한 이론적 추정이며, 특정 기업의 실제 제조공정을 반영하지 않습니다. 특정 제품을 평가하거나 비판하려는 것이 아니라 공정 개선의 여지 자체를 다루는 것이며, 의학적·투자적 판단의 근거로 사용될 수 없습니다.</p></div>
+</div>
+</section>
 </div></div>
-
 <!-- ══════════════════ 시뮬레이터 ══════════════════ -->
 <div class="view" id="view-sim">
-  <div class="viewhead">
-    <div class="crumb">SJ LABS / <span data-ko="프로젝트 01 · AAV 벡터 정제" data-en="Project 01 · AAV purification">프로젝트 01 · AAV 벡터 정제</span> / SJL-2026-01-A</div>
-    <div class="byline"><b><span class="ko-only">이성진</span><span class="en-only">Sungjin Lee</span></b><span data-ko=" · 중앙대학교 약학대학 약학과 6학년" data-en=" · Chung-Ang University, College of Pharmacy"> · 중앙대학교 약학대학 약학과 6학년</span><br><span data-ko="공정 흐름 시뮬레이터" data-en="Process-flow simulator">공정 흐름 시뮬레이터</span></div>
-  </div>
-  <div class="notice">
-    <b data-ko="등급 1 · 이론 시뮬레이션." data-en="Grade 1 · theoretical simulation.">등급 1 · 이론 시뮬레이션.</b>
-    <span data-ko=" 이 화면의 수치는 실험으로 검증되지 않은 계산 결과입니다. 결론을 지배하는 미측정 상수가 3개 있으며, 그중 하나를 문헌 범위에서 변화시키면 예측 수율이 0.3 %에서 84 %까지 이동합니다. 또한 이 페이지는 제안 공정만 단독으로 보여줍니다 — 현행 공정과의 나란한 비교는 공정 비교 탭에 있습니다."
-          data-en=" The numbers here are unvalidated calculations. Three unmeasured constants drive the conclusion; varying one across its literature range moves predicted yield from 0.3 % to 84 %. This page also shows the proposed process alone — the side-by-side comparison is under the Comparison tab."> 이 화면의 수치는 실험으로 검증되지 않은 계산 결과입니다. 결론을 지배하는 미측정 상수가 3개 있으며, 그중 하나를 문헌 범위에서 변화시키면 예측 수율이 0.3 %에서 84 %까지 이동합니다. 또한 이 페이지는 제안 공정만 단독으로 보여줍니다 — 현행 공정과의 나란한 비교는 공정 비교 탭에 있습니다.</span>
-  </div>
-  <div class="shell">
-
-  <div class="masthead">
-    <div>
-      <h1>Polymer-Assisted TFF · 공정 흐름 시뮬레이터</h1>
-      <div class="sub">유리 캡시드 안의 붉은 유전자가 보이면 진짜 치료제(Full), 비어 있으면 가짜(Empty)입니다.</div>
-    </div>
-    <div class="tagstrip">
-      <span>DWG <b>PID-001</b></span>
-      <span>REV <b>MVP</b></span>
-      <span>BASIS <b>ΔpI 0.4</b></span>
-      <span>SCALE <b>1 입자 = 캡시드 1개</b></span>
-    </div>
-  </div>
-
-  <div class="stage">
-    <canvas id="pid" width="1280" height="520" role="img"
-      aria-label="AAV 정제 공정 배관계장도. 수확 탱크에서 시작해 뎁스 필터, PLL 혼합조, TFF1, 탈착조, TFF2를 거쳐 제품 용기로 이어집니다."></canvas>
-    <div class="stage-bar">
-      <span class="dot" id="runDot"></span>
-      <span id="runLabel">RUNNING</span>
-      <span id="clock">T+00:00</span>
-      <span id="throughput">FEED 0</span>
-    </div>
-  </div>
-
-  <div class="deck">
-
-    <!-- 사이트글라스 -->
-    <section class="panel">
-      <h2>사이트글라스</h2>
-      <div class="glasswrap">
-        <canvas id="glass" width="444" height="444"
-          aria-label="선택한 지점의 확대 관찰창"></canvas>
-        <div class="glasstabs" id="glassTabs" role="group" aria-label="관찰 지점 선택">
-          <button data-focus="mix" aria-pressed="true">PLL 혼합조</button>
-          <button data-focus="tff1" aria-pressed="false">TFF1 막면</button>
-          <button data-focus="release" aria-pressed="false">탈착조</button>
-          <button data-focus="tff2" aria-pressed="false">TFF2 막면</button>
-          <button data-focus="vial" aria-pressed="false">제품 용기</button>
-        </div>
-        <div class="legend">
-          <div><i style="background:radial-gradient(circle at 32% 28%,#fff,rgba(150,200,215,.25));border:1px solid rgba(190,225,235,.6)"></i> Empty — 캡시드만</div>
-          <div><i style="background:radial-gradient(circle at 32% 28%,#fff,rgba(150,200,215,.25));border:1px solid rgba(190,225,235,.6);position:relative"><span style="display:block;width:5px;height:5px;border-radius:50%;background:var(--genome);margin:3px auto;box-shadow:0 0 5px var(--genome)"></span></i> Full — 붉은 유전자 있음</div>
-          <div><i style="background:var(--polymer);box-shadow:0 0 6px rgba(139,111,232,.6)"></i> PLL 고분자</div>
-          <div><i style="background:var(--product);box-shadow:0 0 6px rgba(224,163,74,.5)"></i> 회수된 제품</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 공정 조건 -->
-    <section class="panel">
-      <h2>공정 조건</h2>
-      <div class="ctrls" id="ctrls"></div>
-      <div class="presets" id="presets">
-        <button data-preset="opt">최적 조건</button>
-        <button data-preset="over">PLL 과다 투입</button>
-        <button data-preset="lowph">pH 6.5 (결합 실패)</button>
-        <button data-preset="salty">고염 (차폐 붕괴)</button>
-      </div>
-      <div class="runrow">
-        <button class="runbtn primary" id="btnRun">일시정지</button>
-        <button class="runbtn" id="btnReset">배치 초기화</button>
-        <button class="runbtn" id="btnSpeed">속도 ×2</button>
-      </div>
-      <div class="note">
+<div class="viewhead">
+<div class="crumb">SJ LABS / <span data-en="Project 01 · AAV purification" data-ko="프로젝트 01 · AAV 벡터 정제">프로젝트 01 · AAV 벡터 정제</span> / SJL-2026-01-A</div>
+<div class="byline"><b><span class="ko-only">이성진</span><span class="en-only">Sungjin Lee</span></b><span data-en=" · Chung-Ang University, College of Pharmacy" data-ko=" · 중앙대학교 약학대학 약학과 6학년"> · 중앙대학교 약학대학 약학과 6학년</span><br/><span data-en="Process-flow simulator" data-ko="공정 흐름 시뮬레이터">공정 흐름 시뮬레이터</span></div>
+</div>
+<div class="shell">
+<div class="masthead">
+<div>
+<h1>Polymer-Assisted TFF · 공정 흐름 시뮬레이터</h1>
+<div class="sub">유리 캡시드 안의 붉은 유전자가 보이면 진짜 치료제(Full), 비어 있으면 가짜(Empty)입니다.</div>
+</div>
+<div class="tagstrip">
+<span>DWG <b>PID-001</b></span>
+<span>REV <b>MVP</b></span>
+<span>BASIS <b>ΔpI 0.4</b></span>
+<span>SCALE <b>1 입자 = 캡시드 1개</b></span>
+</div>
+</div>
+<div class="stage">
+<canvas aria-label="AAV 정제 공정 배관계장도. 수확 탱크에서 시작해 뎁스 필터, PLL 혼합조, TFF1, 탈착조, TFF2를 거쳐 제품 용기로 이어집니다." height="520" id="pid" role="img" width="1280"></canvas>
+<div class="stage-bar">
+<span class="dot" id="runDot"></span>
+<span id="runLabel">RUNNING</span>
+<span id="clock">T+00:00</span>
+<span id="throughput">FEED 0</span>
+</div>
+</div>
+<div class="deck">
+<!-- 사이트글라스 -->
+<section class="panel">
+<h2>사이트글라스</h2>
+<div class="glasswrap">
+<canvas aria-label="선택한 지점의 확대 관찰창" height="444" id="glass" width="444"></canvas>
+<div aria-label="관찰 지점 선택" class="glasstabs" id="glassTabs" role="group">
+<button aria-pressed="true" data-focus="mix">PLL 혼합조</button>
+<button aria-pressed="false" data-focus="tff1">TFF1 막면</button>
+<button aria-pressed="false" data-focus="release">탈착조</button>
+<button aria-pressed="false" data-focus="tff2">TFF2 막면</button>
+<button aria-pressed="false" data-focus="vial">제품 용기</button>
+</div>
+<div class="legend">
+<div><i style="background:radial-gradient(circle at 32% 28%,#fff,rgba(150,200,215,.25));border:1px solid rgba(190,225,235,.6)"></i> Empty — 캡시드만</div>
+<div><i style="background:radial-gradient(circle at 32% 28%,#fff,rgba(150,200,215,.25));border:1px solid rgba(190,225,235,.6);position:relative"><span style="display:block;width:5px;height:5px;border-radius:50%;background:var(--genome);margin:3px auto;box-shadow:0 0 5px var(--genome)"></span></i> Full — 붉은 유전자 있음</div>
+<div><i style="background:var(--polymer);box-shadow:0 0 6px rgba(139,111,232,.6)"></i> PLL 고분자</div>
+<div><i style="background:var(--product);box-shadow:0 0 6px rgba(224,163,74,.5)"></i> 회수된 제품</div>
+</div>
+</div>
+</section>
+<!-- 공정 조건 -->
+<section class="panel">
+<h2>공정 조건</h2>
+<div class="ctrls" id="ctrls"></div>
+<div class="presets" id="presets">
+<button data-preset="opt">최적 조건</button>
+<button data-preset="over">PLL 과다 투입</button>
+<button data-preset="lowph">pH 6.5 (결합 실패)</button>
+<button data-preset="salty">고염 (차폐 붕괴)</button>
+</div>
+<div class="runrow">
+<button class="runbtn primary" id="btnRun">일시정지</button>
+<button class="runbtn" id="btnReset">배치 초기화</button>
+<button class="runbtn" id="btnSpeed">속도 ×2</button>
+</div>
+<div class="note">
         막을 만난 입자가 통과할지 막힐지는 매번 <b>Ferry 식 S = (1−λ²)²</b> 이 준 확률로 뽑습니다.
         화면의 수율은 계산된 값이 아니라 <b>실제로 제품 용기에 도착한 캡시드를 센 값</b>입니다.
       </div>
-    </section>
-
-    <!-- 계기 -->
-    <section class="panel">
-      <h2>배치 실적</h2>
-      <div class="bigs">
-        <div class="big" id="bigYield"><div class="k">Yield</div><div class="v" id="vYield">—<small>%</small></div></div>
-        <div class="big" id="bigPur"><div class="k">Purity</div><div class="v" id="vPur">—<small>%</small></div></div>
-      </div>
-      <div class="readout" id="counts"></div>
-      <h2 style="margin-top:16px">계산값</h2>
-      <div class="readout" id="phys"></div>
-      <div class="note">
+</section>
+<!-- 계기 -->
+<section class="panel">
+<h2>배치 실적</h2>
+<div class="bigs">
+<div class="big" id="bigYield"><div class="k">Yield</div><div class="v" id="vYield">—<small>%</small></div></div>
+<div class="big" id="bigPur"><div class="k">Purity</div><div class="v" id="vPur">—<small>%</small></div></div>
+</div>
+<div class="readout" id="counts"></div>
+<h2 style="margin-top:16px">계산값</h2>
+<div class="readout" id="phys"></div>
+<div class="note">
         애니메이션은 열 변성·비특이 손실(약 5 %)과 HCP·hcDNA 거동을 생략합니다.
         그 항목까지 포함한 값은 Python 쪽 <b>run_mvp.py</b> 가 계산합니다.
       </div>
-    </section>
-
-  </div>
+</section>
+<!-- 프로젝트 지표·수식·문헌 요약 (페이지 하단) -->
+</div><div class="sim-summary">
+<div class="metrics">
+<div class="metric"><div class="v">11</div><div class="k" data-en="Governing equations" data-ko="지배 방정식">지배 방정식</div></div>
+<div class="metric"><div class="v">26</div><div class="k" data-en="Independent variables" data-ko="독립변수">독립변수</div></div>
+<div class="metric"><div class="v">6</div><div class="k" data-en="Process modules" data-ko="공정 모듈">공정 모듈</div></div>
+<div class="metric"><div class="v">53</div><div class="k" data-en="Regression tests" data-ko="회귀 시험">회귀 시험</div></div>
+<div class="metric"><div class="v">29</div><div class="k" data-en="Sensitivity scenarios" data-ko="민감도 시나리오">민감도 시나리오</div></div>
+<div class="metric"><div class="v">11</div><div class="k" data-en="References" data-ko="참조 문헌">참조 문헌</div></div>
+</div>
+<div class="titleblock">
+<div class="tb"><div class="k">Project No.</div><div class="v">SJL-2026-01</div></div>
+<div class="tb"><div class="k">Title</div><div class="v"><span class="ko-only">AAV 벡터 정제 공정<small>Full / Empty 캡시드 분리</small></span><span class="en-only">AAV vector purification<small>Full / empty capsid separation</small></span></div></div>
+<div class="tb"><div class="k">Drawn by</div><div class="v"><span class="ko-only">이성진<small>중앙대학교 약학대학 약학과 6학년</small></span><span class="en-only">Sungjin Lee<small>Chung-Ang University, College of Pharmacy</small></span></div></div>
+<div class="tb"><div class="k">Date</div><div class="v">2026 – 07</div></div>
+<div class="tb"><div class="k">Revision</div><div class="v">MVP
+        <div class="revbtns">
+<button aria-controls="drw-eq" aria-expanded="false" class="revbtn" id="btn-eq"><span data-en="11 equations" data-ko="수식 11">수식 11</span><span class="caret">▾</span></button>
+<button aria-controls="drw-var" aria-expanded="false" class="revbtn" id="btn-var"><span data-en="26 variables" data-ko="독립변수 26">독립변수 26</span><span class="caret">▾</span></button>
+<button aria-controls="drw-ref" aria-expanded="false" class="revbtn" id="btn-ref"><span data-en="11 references" data-ko="참조문헌 11">참조문헌 11</span><span class="caret">▾</span></button>
+</div></div></div>
+<div class="tb hi"><div class="k">Status</div><div class="v"><span class="ko-only">이론 검증 단계<small>습식 실험 데이터 확보 전</small></span><span class="en-only">Theoretical stage<small>No wet-lab data yet</small></span></div></div>
+</div>
+<div class="drawer" id="drw-eq">
+<div class="drawer-h"><h3 data-en="11 governing equations" data-ko="지배 방정식 11개">지배 방정식 11개</h3>
+<span data-en="modules/common/equations.py · pure functions" data-ko="modules/common/equations.py · 순수 함수로 구현">modules/common/equations.py · 순수 함수로 구현</span></div>
+<div class="drawer-b">
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 1 / Eq. 1</span><span class="eq-nm">Multi-residue Charge</span>
+<span class="eq-mod">SurfaceChemistry</span></div>
+<div class="eq-f">Q = Σ zᵢnᵢ / (1 + 10^(zᵢ(pH − pKa,i)))</div>
+<p class="eq-d" data-en="Applies Henderson–Hasselbalch across thousands of residues to get the capsid's net charge and isoelectric point — the physical origin of the Full/Empty difference." data-ko="아미노산 잔기 수천 개에 Henderson–Hasselbalch를 동시에 적용해 캡시드 총 전하와 등전점을 구합니다. Full과 Empty를 가르는 물리적 출발점입니다.">아미노산 잔기 수천 개에 Henderson–Hasselbalch를 동시에 적용해 캡시드 총 전하와 등전점을 구합니다. Full과 Empty를 가르는 물리적 출발점입니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 2 / Eq. 2</span><span class="eq-nm">Davies 이온 강도 / Davies ionic strength</span>
+<span class="eq-mod">SurfaceChemistry · TFF2Polishing</span></div>
+<div class="eq-f">I = ½Σcᵢzᵢ² · log γ± = −Az²(√I/(1+√I) − 0.3I) · κ⁻¹ = 0.304/√I</div>
+<p class="eq-d" data-en="Computes how much charge is screened (Debye length) as salt rises — the same reasoning as tonicity calculations for injectables." data-ko="염 농도가 높을수록 전하가 가려지는 정도(Debye 길이)를 계산합니다. 주사제 삼투압 계산과 같은 발상입니다.">염 농도가 높을수록 전하가 가려지는 정도(Debye 길이)를 계산합니다. 주사제 삼투압 계산과 같은 발상입니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 3 / Eq. 3</span><span class="eq-nm">DLVO 결합 에너지 → Ka / DLVO binding energy → Ka</span>
+<span class="eq-mod">BindingKinetics · TFF2Polishing</span></div>
+<div class="eq-f">V = 2πε₀εr·R_eff·ψ₁ψ₂·ln(1+e^(−κd)) − A_H·R_eff/(6d) · Ka = exp(−ΔG/kT)</div>
+<p class="eq-d" data-en="Sums electrostatic and van der Waals attraction to get polymer–capsid binding strength. The original point-charge form diverged, so it was replaced with the sphere–sphere (HHF) form." data-ko="정전기 인력과 반데르발스 인력을 더해 고분자–캡시드 결합 세기를 구합니다. 원 계획서의 점전하식이 발산하여 구–구 표면전위형(HHF)으로 교체했습니다.">정전기 인력과 반데르발스 인력을 더해 고분자–캡시드 결합 세기를 구합니다. 원 계획서의 점전하식이 발산하여 구–구 표면전위형(HHF)으로 교체했습니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 4 / Eq. 4</span><span class="eq-nm">Langmuir 경쟁 흡착 + 속도론 / Competitive Langmuir + kinetics</span>
+<span class="eq-mod">BindingKinetics</span></div>
+<div class="eq-f">dθ/dt = ka·C_free(1−θ) − kd·θ,  C_free = C_pol − n_sites(C_f θ_f + C_e θ_e)</div>
+<p class="eq-d" data-en="Because polymer is finite, Full and Empty compete for it — the same structure as drug–plasma-protein competition. Selectivity emerges here." data-ko="고분자가 유한하므로 Full과 Empty가 서로 뺏는 경쟁 문제로 풉니다. 약물–혈장단백 결합 경쟁과 같은 구조이며, 선택성이 여기서 발생합니다.">고분자가 유한하므로 Full과 Empty가 서로 뺏는 경쟁 문제로 풉니다. 약물–혈장단백 결합 경쟁과 같은 구조이며, 선택성이 여기서 발생합니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 A / Eq. A</span><span class="eq-nm">복합체 크기 · 브리징 응집 / Complex size · bridging</span>
+<span class="eq-mod">BindingKinetics</span></div>
+<div class="eq-f">δ = l₀√(MW_p/MW_m) · r = r_AAV + δ√θ · r_floc = r·n^(1/df)</div>
+<p class="eq-d" data-en="Calculates coating thickness and the size of aggregates where one chain bridges several capsids. Coating and bridging are kept as separate terms to expose the assumption." data-ko="고분자 코팅 두께와, 한 사슬이 캡시드 여럿을 묶는 응집체 크기를 계산합니다. 코팅과 응집을 별개 항으로 분리해 가정을 노출시켰습니다.">고분자 코팅 두께와, 한 사슬이 캡시드 여럿을 묶는 응집체 크기를 계산합니다. 코팅과 응집을 별개 항으로 분리해 가정을 노출시켰습니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 B / Eq. B</span><span class="eq-nm">온도–점도 / Temperature–viscosity</span>
+<span class="eq-mod">TFF1Separation · TFF2Polishing</span></div>
+<div class="eq-f">μ(T) = 2.414×10⁻⁵ · 10^(247.8/(T − 140))</div>
+<p class="eq-d" data-en="Viscosity enters the flux equation directly. The original Arrhenius constant gave 1/18 of the measured value at 25 °C, so it was replaced with the Vogel equation." data-ko="점도는 Flux 식의 분모에 직접 들어갑니다. 원 계획서의 Arrhenius형 상수가 25 °C에서 실측의 1/18을 주어 Vogel 식으로 교체했습니다.">점도는 Flux 식의 분모에 직접 들어갑니다. 원 계획서의 Arrhenius형 상수가 25 °C에서 실측의 1/18을 주어 Vogel 식으로 교체했습니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 6 / Eq. 6</span><span class="eq-nm">Ferry 체거름 계수 / Ferry sieving coefficient</span>
+<span class="eq-mod">TFF1Separation · TFF2Polishing</span></div>
+<div class="eq-f">λ = d_particle / d_pore · S = (1 − λ²)²</div>
+<p class="eq-d" data-en="The probability a particle passes the membrane. S=1 passes, S=0 fully retained — the same idea as a dialysis MWCO. Each particle's fate is drawn from this probability." data-ko="입자가 막을 통과할 확률입니다. S=1이면 통과, S=0이면 완전 차단. 투석막 MWCO와 같은 개념이며, 시뮬레이션에서 입자마다 이 확률로 통과 여부를 뽑습니다.">입자가 막을 통과할 확률입니다. S=1이면 통과, S=0이면 완전 차단. 투석막 MWCO와 같은 개념이며, 시뮬레이션에서 입자마다 이 확률로 통과 여부를 뽑습니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 7 / Eq. 7</span><span class="eq-nm">저항–직렬 Flux · 파울링 / Resistance-in-series flux · fouling</span>
+<span class="eq-mod">TFF1Separation · TFF2Polishing</span></div>
+<div class="eq-f">J = TMP / (μ(Rm + Rcp + Rf)) · dRf/dt = kc·J·C_wall</div>
+<p class="eq-d" data-en="The same form as Ohm's law: TMP is voltage, J is current, resistance is membrane fouling. Fouling accumulation is integrated over time." data-ko="옴의 법칙과 같은 형태입니다. TMP가 전압, J가 전류, 저항이 막의 오염도입니다. 시간에 따라 누적되는 파울링을 수치적분합니다.">옴의 법칙과 같은 형태입니다. TMP가 전압, J가 전류, 저항이 막의 오염도입니다. 시간에 따라 누적되는 파울링을 수치적분합니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 9 / Eq. 9</span><span class="eq-nm">Arrhenius 열 변성 / Arrhenius thermal denaturation</span>
+<span class="eq-mod">TFF1Separation · TFF2Polishing</span></div>
+<div class="eq-f">k_den = A·exp(−Ea/RT) · [intact](t) = exp(−k_den·t)</div>
+<p class="eq-d" data-en="Capsid loss as a function of process temperature and residence time — the same equation as accelerated stability testing." data-ko="공정 온도와 체류시간에 따른 캡시드 손실입니다. 의약품 가속안정성 시험과 같은 식입니다.">공정 온도와 체류시간에 따른 캡시드 손실입니다. 의약품 가속안정성 시험과 같은 식입니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 C / Eq. C</span><span class="eq-nm">고분자 잔류율 / Residual polymer</span>
+<span class="eq-mod">TFF2Polishing</span></div>
+<div class="eq-f">Rs = 0.0145·MW^0.571 · [PLL] = [PLL]₀·exp(−S·N_DV)</div>
+<p class="eq-d" data-en="Residual polymer concentration after diafiltration. This calculation revealed that the second filtration cannot remove the polymer by size." data-ko="정용여과 후 남는 고분자 농도입니다. 이 계산으로 2차 여과가 고분자를 크기로 제거하지 못한다는 사실이 드러났습니다.">정용여과 후 남는 고분자 농도입니다. 이 계산으로 2차 여과가 고분자를 크기로 제거하지 못한다는 사실이 드러났습니다.</p>
+</div>
+<div class="eq">
+<div class="eq-h"><span class="eq-no">수식 D / Eq. D</span><span class="eq-nm">효소 분해 · 전단응력 / Enzymatic digestion · shear</span>
+<span class="eq-mod">InputValidator · TFF1Separation</span></div>
+<div class="eq-f">[hcDNA](t) = [hcDNA]₀·exp(−k·C·t) · τw = 8μv/dh</div>
+<p class="eq-d" data-en="Enzymatic clearance of host-cell DNA, and the wall shear stress in the membrane channel that can break the complex apart." data-ko="숙주 DNA의 효소 분해량과, 막 유로에서 복합체를 깨뜨릴 수 있는 벽면 전단응력입니다.">숙주 DNA의 효소 분해량과, 막 유로에서 복합체를 깨뜨릴 수 있는 벽면 전단응력입니다.</p>
+</div></div>
+</div>
+<div class="drawer" id="drw-var">
+<div class="drawer-h"><h3 data-en="26 independent variables" data-ko="독립변수 26개">독립변수 26개</h3>
+<span data-en="config.py · range-checked before use" data-ko="config.py · 범위 검증 후 계산에 투입">config.py · 범위 검증 후 계산에 투입</span></div>
+<div class="drawer-b"><div class="vphase" data-en="Phase 0 — Intake" data-ko="Phase 0 — 입고">Phase 0 — 입고</div><div class="vtable"><div class="vrow"><span class="vn">01</span><code>full_empty_ratio_init</code><span class="vko" data-en="Input full fraction" data-ko="투입 Full 비율">투입 Full 비율</span><span class="vrg">0.05 – 0.40</span><span class="vu">–</span></div><div class="vrow"><span class="vn">02</span><code>total_AAV_titer_init</code><span class="vko" data-en="Total AAV titer" data-ko="총 AAV 역가">총 AAV 역가</span><span class="vrg">10⁹ – 10¹³</span><span class="vu">vg/mL</span></div><div class="vrow"><span class="vn">03</span><code>feed_volume_L</code><span class="vko" data-en="Feed volume" data-ko="배양액 부피">배양액 부피</span><span class="vrg">0.1 – 200</span><span class="vu">L</span></div></div><div class="vphase" data-en="Phase 1 — Clarification" data-ko="Phase 1 — Clarification">Phase 1 — Clarification</div><div class="vtable"><div class="vrow"><span class="vn">04</span><code>lysis_method</code><span class="vko" data-en="Lysis method" data-ko="세포 파쇄법">세포 파쇄법</span><span class="vrg">냉동-해동 / Tween-20</span><span class="vu">–</span></div><div class="vrow"><span class="vn">05</span><code>benzonase_conc</code><span class="vko" data-en="Benzonase conc." data-ko="Benzonase 농도">Benzonase 농도</span><span class="vrg">25 – 250</span><span class="vu">U/mL</span></div><div class="vrow"><span class="vn">06</span><code>benzonase_time</code><span class="vko" data-en="Benzonase time" data-ko="Benzonase 처리시간">Benzonase 처리시간</span><span class="vrg">15 – 90</span><span class="vu">min</span></div><div class="vrow"><span class="vn">07</span><code>depth_filter_grade</code><span class="vko" data-en="Depth-filter grade" data-ko="뎁스 필터 등급">뎁스 필터 등급</span><span class="vrg">1.0+0.45 / 0.45</span><span class="vu">μm</span></div></div><div class="vphase" data-en="Phase 2 — Surface chemistry" data-ko="Phase 2 — 표면 화학">Phase 2 — 표면 화학</div><div class="vtable"><div class="vrow"><span class="vn">08</span><code>env_pH</code><span class="vko" data-en="Binding pH" data-ko="결합 환경 pH">결합 환경 pH</span><span class="vrg">6.0 – 8.5</span><span class="vu">–</span></div><div class="vrow"><span class="vn">09</span><code>salt_conc</code><span class="vko" data-en="NaCl conc." data-ko="NaCl 농도">NaCl 농도</span><span class="vrg">10 – 500</span><span class="vu">mM</span></div><div class="vrow"><span class="vn">10</span><code>buffer_type</code><span class="vko" data-en="Buffer type" data-ko="완충액 종류">완충액 종류</span><span class="vrg">PBS / Tris / HEPES</span><span class="vu">–</span></div></div><div class="vphase" data-en="Phase 3 — Polymer binding" data-ko="Phase 3 — 고분자 결합">Phase 3 — 고분자 결합</div><div class="vtable"><div class="vrow"><span class="vn">11</span><code>polymer_type</code><span class="vko" data-en="Polymer type" data-ko="고분자 종류">고분자 종류</span><span class="vrg">PLL / Chitosan / DEAE</span><span class="vu">–</span></div><div class="vrow"><span class="vn">12</span><code>polymer_MW</code><span class="vko" data-en="Polymer MW" data-ko="고분자 분자량">고분자 분자량</span><span class="vrg">10,000 – 150,000</span><span class="vu">Da</span></div><div class="vrow"><span class="vn">13</span><code>polymer_ratio</code><span class="vko" data-en="Polymer molar ratio" data-ko="고분자 몰비">고분자 몰비</span><span class="vrg">0 – 5,000</span><span class="vu">×</span></div><div class="vrow"><span class="vn">14</span><code>residence_time</code><span class="vko" data-en="Residence time" data-ko="결합 체류시간">결합 체류시간</span><span class="vrg">0 – 30</span><span class="vu">min</span></div><div class="vrow"><span class="vn">15</span><code>mixing_speed</code><span class="vko" data-en="Mixing speed" data-ko="교반 속도">교반 속도</span><span class="vrg">50 – 500</span><span class="vu">rpm</span></div><div class="vrow"><span class="vn">16</span><code>nonspecific_frac</code><span class="vko" data-en="Nonspecific loss" data-ko="비특이 손실률">비특이 손실률</span><span class="vrg">0 – 0.20</span><span class="vu">–</span></div></div><div class="vphase" data-en="Phase 4a — TFF1" data-ko="Phase 4a — TFF1">Phase 4a — TFF1</div><div class="vtable"><div class="vrow"><span class="vn">17</span><code>TMP_TFF1</code><span class="vko" data-en="Transmembrane pressure" data-ko="막간 압력차">막간 압력차</span><span class="vrg">10 – 200</span><span class="vu">kPa</span></div><div class="vrow"><span class="vn">18</span><code>CFV_TFF1</code><span class="vko" data-en="Crossflow velocity" data-ko="교차흐름 속도">교차흐름 속도</span><span class="vrg">100 – 1,000</span><span class="vu">LMH</span></div><div class="vrow"><span class="vn">19</span><code>init_temperature</code><span class="vko" data-en="Process temperature" data-ko="공정 온도">공정 온도</span><span class="vrg">4 – 37</span><span class="vu">°C</span></div><div class="vrow"><span class="vn">20</span><code>pore_size_TFF1</code><span class="vko" data-en="TFF1 pore size" data-ko="TFF1 포어 크기">TFF1 포어 크기</span><span class="vrg">30 – 100</span><span class="vu">nm</span></div><div class="vrow"><span class="vn">21</span><code>membrane_use_count</code><span class="vko" data-en="Membrane reuse count" data-ko="멤브레인 재사용">멤브레인 재사용</span><span class="vrg">0 – 50</span><span class="vu">×</span></div></div><div class="vphase" data-en="Phase 4b — TFF2" data-ko="Phase 4b — TFF2">Phase 4b — TFF2</div><div class="vtable"><div class="vrow"><span class="vn">22</span><code>TMP_TFF2</code><span class="vko" data-en="Transmembrane pressure" data-ko="막간 압력차">막간 압력차</span><span class="vrg">10 – 200</span><span class="vu">kPa</span></div><div class="vrow"><span class="vn">23</span><code>CFV_TFF2</code><span class="vko" data-en="Crossflow velocity" data-ko="교차흐름 속도">교차흐름 속도</span><span class="vrg">100 – 1,000</span><span class="vu">LMH</span></div><div class="vrow"><span class="vn">24</span><code>pore_size_TFF2</code><span class="vko" data-en="TFF2 pore size" data-ko="TFF2 포어 크기">TFF2 포어 크기</span><span class="vrg">50 – 200</span><span class="vu">nm</span></div></div><div class="vphase" data-en="Phase 5 — Release" data-ko="Phase 5 — 탈착">Phase 5 — 탈착</div><div class="vtable"><div class="vrow"><span class="vn">25</span><code>release_NaCl_conc</code><span class="vko" data-en="Release NaCl conc." data-ko="탈착 NaCl 농도">탈착 NaCl 농도</span><span class="vrg">0.3 – 2.0</span><span class="vu">M</span></div><div class="vrow"><span class="vn">26</span><code>release_pH</code><span class="vko" data-en="Release pH" data-ko="탈착 pH">탈착 pH</span><span class="vrg">4.5 – 6.0</span><span class="vu">–</span></div></div><div class="vnote" data-en="These 26 are the user-adjustable independent variables. Five further quantities — hcp_init, hcdna_init, aggregation_threshold, Rf_init, total_process_time — are derived automatically from them." data-ko="위 26개가 사용자가 직접 조절하는 독립변수입니다. 이와 별도로 hcp_init, hcdna_init, aggregation_threshold, Rf_init, total_process_time 5종은 위 변수들로부터 자동 산출됩니다.">위 26개가 사용자가 직접 조절하는 독립변수입니다. 이와 별도로 <code>hcp_init</code>, <code>hcdna_init</code>, <code>aggregation_threshold</code>, <code>Rf_init</code>, <code>total_process_time</code> 5종은 위 변수들로부터 자동 산출됩니다.</div></div>
+</div>
+<div class="drawer" id="drw-ref">
+<div class="drawer-h"><h3 data-en="11 references" data-ko="참조 문헌 11건">참조 문헌 11건</h3>
+<span data-en="Sources behind the comparison and market analysis" data-ko="공정 비교·시장 분석의 근거 문헌">공정 비교·시장 분석의 근거 문헌</span></div>
+<div class="drawer-b">
+<div class="src">
+<ol>
+<li>Cytiva, <em>Effective separation of full and empty rAAV capsids by anion exchange</em> — <span data-en="On Capto Q ImpRes, VG recovery ~60–70 %, full enrichment ~40–60 %; improved protocol reaches ~80 %+ yield/purity across all serotypes tested." data-ko="Capto Q ImpRes에서 VG 회수 약 60–70 %, Full 농축 약 40–60 %. 개선 프로토콜에서 시험한 모든 혈청형에 대해 수율·순도 약 80 % 이상.">Capto Q ImpRes에서 VG 회수 약 60–70 %, Full 농축 약 40–60 %. 개선 프로토콜에서 시험한 모든 혈청형에 대해 수율·순도 약 80 % 이상.</span> <a href="https://www.cytivalifesciences.com/en/us/solutions/cell-therapy/knowledge-center/resources/Effective-separation-of-full-and-empty-rAAV-capsids-by-anion-exchange" rel="noopener" target="_blank">Cytiva</a></li>
+<li>Mechanistic modeling of empty-full separation in rAAV production using anion-exchange membrane chromatography, <em>Biotechnol Bioeng</em> (PMID 37942560) — <span data-en="Purity 90 %, recovery 84 % under optimized, validated conditions." data-ko="최적화·검증 조건에서 순도 90 %, 회수율 84 %.">최적화·검증 조건에서 순도 90 %, 회수율 84 %.</span> <a href="https://pubmed.ncbi.nlm.nih.gov/37942560/" rel="noopener" target="_blank">PubMed</a></li>
+<li>Developing a scalable full/empty separation step by AEX in step gradient mode, <em>Cell &amp; Gene</em> — <span data-en="At 50 L scale: full ~75 %, VG recovery ~70 %, 3× enrichment." data-ko="50 L 규모에서 Full 약 75 %, VG 회수 약 70 %, 3배 농축.">50 L 규모에서 Full 약 75 %, VG 회수 약 70 %, 3배 농축.</span> <a href="https://www.cellandgene.com/doc/developing-a-scalable-full-empty-separation-step-for-an-aav-capsid-by-anion-exchange-chromatography-in-step-gradient-elution-mode-0001" rel="noopener" target="_blank">Cell &amp; Gene</a></li>
+<li>Hejmowski et al., <em>Biotechnology Journal</em> (2022) — <span data-en="AEX membrane step gradient: 4×+ enrichment, full ~50–60 %; best ddPCR yield 49 %." data-ko="AEX 멤브레인 단계구배로 4배 이상 농축, Full 약 50–60 %. 최고 ddPCR 수율 49 %.">AEX 멤브레인 단계구배로 4배 이상 농축, Full 약 50–60 %. 최고 ddPCR 수율 49 %.</span> <a href="https://analyticalsciencejournals.onlinelibrary.wiley.com/doi/full/10.1002/biot.202100219" rel="noopener" target="_blank">Wiley</a></li>
+<li>A two-pass anion-exchange chromatography strategy for enrichment of full capsids, <em>Mol Ther Methods Clin Dev</em> (2025) — <span data-en="At 5–20 % input full, AEX gradient rarely exceeds 70 % full; reaching 95 % costs a further 10–20 % yield." data-ko="투입 Full 5–20 %일 때 AEX 구배법으로 Full 70 % 초과는 어렵고, 95 %까지 농축하려면 수율 10–20 %를 추가로 잃음.">투입 Full 5–20 %일 때 AEX 구배법으로 Full 70 % 초과는 어렵고, 95 %까지 농축하려면 수율 10–20 %를 추가로 잃음.</span> <a href="https://www.sciencedirect.com/science/article/pii/S2329050125000361" rel="noopener" target="_blank">ScienceDirect</a></li>
+<li>Downstream processing of AAV based gene therapy vectors, <em>Curr Opin Biotechnol</em> (2025) — <span data-en="Affinity capture 45–70 %, overall yield often 10–20 %; COGS US$20–30k per 10¹⁴ vg dose; price up to US$3.5M." data-ko="친화 포집 수율 45–70 %, 전체 수율 10–20 % 빈번, 10¹⁴ vg 용량 COGS US$2–3만, 치료비 최대 US$350만.">친화 포집 수율 45–70 %, 전체 수율 10–20 % 빈번, 10¹⁴ vg 용량 COGS US$2–3만, 치료비 최대 US$350만.</span> <a href="https://www.sciencedirect.com/science/article/pii/S138358662501648X" rel="noopener" target="_blank">ScienceDirect</a></li>
+<li>A3P, <em>Overcoming obstacles in downstream bioprocessing of AAV</em> — <span data-en="Six steps at 70 % each → 17 % overall." data-ko="6단계 각 70 %면 전체 17 %.">6단계 각 70 %면 전체 17 %.</span> <a href="https://www.a3p.org/en/overcoming-obstacles-in-downstream-bioprocessing-of-aav-based-gene-therapy-products/" rel="noopener" target="_blank">A3P</a></li>
+<li>Downstream bioprocessing of AAV vectors, <em>Cell &amp; Gene Therapy Insights</em> — <span data-en="Five steps: 90 % → cap 60 %, 80 % → 32 %; own runs AAV8 40 %, AAV9 60 %." data-ko="5단계 90 %면 상한 60 %, 80 %면 32 %. 자체 실험 AAV8 40 %, AAV9 60 %.">5단계 90 %면 상한 60 %, 80 %면 32 %. 자체 실험 AAV8 40 %, AAV9 60 %.</span> <a href="https://www.insights.bio/cell-and-gene-therapy-insights/journal/article/352/Downstream-bioprocessing-of-AAV-vectors-industrial-challenges-regulatory-requirements" rel="noopener" target="_blank">CGTI</a></li>
+<li>Sartorius BIA Separations, AAV Process Development Services — <span data-en="Five-step DSP platform, overall recovery up to 50 %." data-ko="5단계 DSP 플랫폼 전체 회수 최대 50 %.">5단계 DSP 플랫폼 전체 회수 최대 50 %.</span> <a href="https://www.biaseparations.com/services/process-development-services-for-viruses-vlps-nanoparticles/aav-process-development-services/" rel="noopener" target="_blank">Sartorius</a></li>
+<li>Thakur et al., <em>Improving process efficiency to reduce cost-of-goods per dose in manufacturing of recombinant AAVs</em>, <em>Cell &amp; Gene Therapy Insights</em> 2024; 10(3):479–499 (DOI 10.18609/cgti.2024.061) — <span data-en="A 2–3× cost cut reaches antibody-drug economics; identifies the four COGS drivers." data-ko="원가를 2–3배만 낮춰도 기존 항체의약품 수준과 견줄 수 있음. COGS 4대 요인 제시.">원가를 2–3배만 낮춰도 기존 항체의약품 수준과 견줄 수 있음. COGS 4대 요인 제시.</span> <a href="https://doi.org/10.18609/cgti.2024.061" rel="noopener" target="_blank">DOI</a></li>
+<li>Lonza, <em>Downstream purification of AAV</em> (ASGCT 2023) — <span data-en="Overall downstream yield 33–38 % starting from cell lysate." data-ko="세포 용해물에서 시작한 전체 정제 수율 33–38 %.">세포 용해물에서 시작한 전체 정제 수율 33–38 %.</span> <a href="https://www.lonza.com/knowledge-center/cellgene/post/downstream-purification-aav-asgct2023" rel="noopener" target="_blank">Lonza</a></li>
+</ol>
+<p class="ref-note"><span data-en="Market-size forecast sources are listed separately beneath each chart in the market analysis at the top of the home page (Precedence Research, Towards Healthcare, Charles River / GEN)." data-ko="시장 규모 전망 출처는 홈 화면 상단 시장 분석의 각 그래프 아래에 별도로 표기되어 있습니다 (Precedence Research, Towards Healthcare, Charles River / GEN).">시장 규모 전망 출처는 홈 화면 상단 시장 분석의 각 그래프 아래에 별도로 표기되어 있습니다 (Precedence Research, Towards Healthcare, Charles River / GEN).</span></p>
 </div>
 </div>
-
+</div>
+</div><div class="notice grade-note" style="margin-top:16px">
+<span class="badge g1"><i></i><span data-en="Grade 1 — theory/simulation" data-ko="등급 1 — 이론·시뮬레이션">등급 1 — 이론·시뮬레이션</span></span>
+</div>
+</div>
+</div>
 <!-- ══════════════════ 비교 ══════════════════ -->
 <div class="view" id="view-cmp">
-  <div class="viewhead">
-    <div class="crumb">SJ LABS / <span data-ko="프로젝트 01 · AAV 벡터 정제" data-en="Project 01 · AAV purification">프로젝트 01 · AAV 벡터 정제</span> / SJL-2026-01-B</div>
-    <div class="byline"><b><span class="ko-only">이성진</span><span class="en-only">Sungjin Lee</span></b><span data-ko=" · 중앙대학교 약학대학 약학과 6학년" data-en=" · Chung-Ang University, College of Pharmacy"> · 중앙대학교 약학대학 약학과 6학년</span><br><span data-ko="현행 공정과의 정량 비교" data-en="Quantitative comparison">현행 공정과의 정량 비교</span></div>
-  </div>
-  <div class="notice">
-    <b data-ko="주황색은 문헌 실측(등급 3), 청록색은 시뮬레이션(등급 1)입니다." data-en="Amber is measured literature (Grade 3); teal is simulation (Grade 1).">주황색은 문헌 실측(등급 3), 청록색은 시뮬레이션(등급 1)입니다.</b>
-    <span data-ko=" 두 폭의 성격이 다릅니다. 주황 상자의 너비는 여러 연구팀이 실제로 측정한 범위이고, 청록 띠의 너비는 아직 측정되지 않은 상수 하나로 인한 불확실성입니다."
-          data-en=" The two widths mean different things: the amber box is the spread of values several teams actually measured; the teal band is uncertainty from one still-unmeasured constant."> 두 폭의 성격이 다릅니다. 주황 상자의 너비는 여러 연구팀이 실제로 측정한 범위이고, 청록 띠의 너비는 아직 측정되지 않은 상수 하나로 인한 불확실성입니다.</span>
-  </div>
-  <div class="wrap">
+<div class="viewhead">
+<div class="crumb">SJ LABS / <span data-en="Project 01 · AAV purification" data-ko="프로젝트 01 · AAV 벡터 정제">프로젝트 01 · AAV 벡터 정제</span> / SJL-2026-01-B</div>
+<div class="byline"><b><span class="ko-only">이성진</span><span class="en-only">Sungjin Lee</span></b><span data-en=" · Chung-Ang University, College of Pharmacy" data-ko=" · 중앙대학교 약학대학 약학과 6학년"> · 중앙대학교 약학대학 약학과 6학년</span><br/><span data-en="Quantitative comparison" data-ko="현행 공정과의 정량 비교">현행 공정과의 정량 비교</span></div>
+</div>
 
-  <h1>Full / Empty 캡시드 분리 — 현행 공정과 제안 공정</h1>
-  <p class="lede">
+<div class="wrap">
+<h1>Full / Empty 캡시드 분리 — 현행 공정과 제안 공정</h1>
+<p class="lede">
     AAV 생산물의 대부분은 유전자가 들어 있지 않은 빈 캡시드입니다. 이걸 걸러내는 단계가
     유전자치료제 제조에서 가장 까다로운 구간입니다. 현행 표준은 음이온교환 크로마토그래피(AEX)이고,
     아래는 그것과 고분자 보조 접선흐름여과(PA-TFF)를 같은 축 위에 놓은 것입니다.
   </p>
-
-  <div class="verdict">
-    <b>먼저 결론:</b> 현재 시뮬레이션 기준으로 <b>PA-TFF가 수율에서 AEX를 앞선다는 근거는 없습니다.</b>
+<div class="verdict">
+<b>먼저 결론:</b> 현재 시뮬레이션 기준으로 <b>PA-TFF가 수율에서 AEX를 앞선다는 근거는 없습니다.</b>
     두 공정의 수율·순도는 문헌 AEX 최적 조건과 겹칩니다. PA-TFF의 우위 주장은 성능이 아니라
     <b>소모품 구조와 확장 방식</b>에 한정되며, 그마저 아직 정량 검증되지 않았습니다.
     이 페이지의 목적은 우열을 주장하는 것이 아니라 <b>무엇을 측정해야 우열이 정해지는지</b>를 보이는 것입니다.
   </div>
-
-  <h2>데이터 등급</h2>
-  <div class="grades">
-    <span class="badge g3"><i></i>문헌 실측 — 논문·제조사 응용노트에 보고된 값</span>
-    <span class="badge g2"><i></i>문헌 범위 — 여러 보고가 이루는 폭</span>
-    <span class="badge g1"><i></i>이론 시뮬레이션 — 실험 검증 안 됨</span>
-  </div>
-  <p class="lede" style="margin-top:10px;font-size:12.5px;color:var(--ink-dim)">
-    아래 모든 수치에는 이 등급이 붙어 있습니다. 등급 표시가 없는 숫자는 이 페이지에 없습니다.
-  </p>
-
-  <h2>공정 흐름 비교</h2>
-  <div class="routes">
-
-    <section class="route cur">
-      <header><h3>현행 — 친화크로마토그래피 + AEX</h3><span class="tag">STANDARD</span></header>
-      <div class="step"><span class="n">01</span><span class="body"><span class="t">수확 · 세포 용해</span><span class="d">HEK293 배양액에서 캡시드를 꺼냅니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
-      <div class="arrow"></div>
-      <div class="step"><span class="n">02</span><span class="body"><span class="t">Clarification</span><span class="d">뎁스 필터로 세포 잔해 제거. 일부 HCP·DNA도 함께 빠집니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
-      <div class="arrow"></div>
-      <div class="step"><span class="n">03</span><span class="body"><span class="t">UF/DF 농축 · 완충액 교환</span><span class="d">컬럼에 올리기 좋은 농도와 조성으로 맞춥니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
-      <div class="arrow"></div>
-      <div class="step"><span class="n">04</span><span class="body"><span class="t">친화 포집 (Affinity capture)</span><span class="d">숙주단백(HCP)의 대부분을 여기서 제거합니다. Full/Empty는 구분하지 못합니다.</span></span><span class="y" style="color:var(--aex)">45–70 %<sup>[6]</sup></span></div>
-      <div class="arrow"></div>
-      <div class="step key"><span class="n">05</span><span class="body"><span class="t">AEX 폴리싱 — Full/Empty 분리</span><span class="d">Full이 게놈 때문에 더 음전하를 띠어 컬럼에 더 세게 붙습니다. 염 농도를 올려가며 Empty를 먼저 흘려보냅니다. <b style="color:var(--ink)">두 공정이 실제로 맞붙는 지점입니다.</b></span></span><span class="y" style="color:var(--aex)">49–84 %<sup>[1-5]</sup></span></div>
-      <div class="arrow"></div>
-      <div class="step"><span class="n">06</span><span class="body"><span class="t">UF/DF · 최종 여과</span><span class="d">제형 완충액으로 교환하고 0.2 μm로 멸균 여과합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
-    </section>
-
-    <section class="route ours">
-      <header><h3>제안 — Polymer-Assisted TFF</h3><span class="tag">PROPOSED</span></header>
-      <div class="step"><span class="n">01</span><span class="body"><span class="t">수확 · 세포 용해</span><span class="d">동일합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
-      <div class="arrow"></div>
-      <div class="step"><span class="n">02</span><span class="body"><span class="t">Clarification + Benzonase</span><span class="d">동일. 숙주 DNA를 효소로 분해합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
-      <div class="arrow"></div>
-      <div class="step"><span class="n">03</span><span class="body"><span class="t omit">친화 포집 — 없음</span><span class="d omit">이 설계는 친화 컬럼을 쓰지 않습니다. 소모품비가 가장 큰 단계를 뺀 것이지만, <b style="color:var(--genome)">HCP 제거 부담이 전부 TFF로 넘어갑니다. 아직 검증되지 않은 부분입니다.</b></span></span><span class="y" style="color:var(--genome)">생략</span></div>
-      <div class="arrow"></div>
-      <div class="step"><span class="n">04</span><span class="body"><span class="t">완충액 조정 + PLL 결합</span><span class="d">pH를 두 캡시드의 등전점 사이에 맞춰, 더 음전하인 Full에만 양전하 고분자(PLL)가 붙게 합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
-      <div class="arrow"></div>
-      <div class="step key"><span class="n">05</span><span class="body"><span class="t">TFF1 — Empty 제거 (50 nm)</span><span class="d">PLL이 Full 여럿을 묶어 덩어리로 키웁니다. 25 nm Empty는 막을 통과해 버려지고, 큰 덩어리만 남습니다. <b style="color:var(--ink)">전하 차이를 크기 차이로 바꾼 것이 핵심입니다.</b></span></span><span class="y" style="color:var(--fluid)">시뮬</span></div>
-      <div class="arrow"></div>
-      <div class="step key"><span class="n">06</span><span class="body"><span class="t">PLL 탈착 + TFF2 (100 nm)</span><span class="d">고염·저pH로 PLL을 떼어내고, 벌거벗은 Full만 막을 통과시켜 회수합니다.</span></span><span class="y" style="color:var(--fluid)">시뮬</span></div>
-      <div class="arrow"></div>
-      <div class="step"><span class="n">07</span><span class="body"><span class="t">UF/DF · 최종 여과</span><span class="d">동일합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
-    </section>
-  </div>
-
-  <h2>수율 · 순도 트레이드오프</h2>
-  <div class="chartbox">
-    <div class="controls">
-      <div class="ctrl">
-        <label for="frSlider"><span>투입 Full 비율 (분리 전 원액)</span><span class="val" id="frVal">15 %</span></label>
-        <input type="range" id="frSlider" min="0" max="6" step="1" value="4">
-      </div>
-      <label class="toggle"><input type="checkbox" id="bandChk" checked> 시뮬레이션 불확실성 띠 표시</label>
-    </div>
-    <canvas id="chart" width="1080" height="560"
-      aria-label="가로축은 Full 캡시드 순도, 세로축은 벡터 게놈 회수율. 현행 AEX 문헌 실측값과 제안 공정 시뮬레이션 곡선을 함께 표시합니다."></canvas>
-    <div class="readnote" id="chartNote"></div>
-  </div>
-
-  <h2>왜 전체 수율은 그보다 훨씬 낮은가</h2>
-  <div class="casc">
-    <div class="cascbars">
-      <div class="controls" style="margin-bottom:16px">
-        <div class="ctrl">
-          <label for="stepY"><span>정제 단계당 회수율</span><span class="val" id="stepYVal">80 %</span></label>
-          <input type="range" id="stepY" min="60" max="95" step="1" value="80">
-        </div>
-      </div>
-      <div id="cascade"></div>
-      <div class="readnote">
+<h2>공정 흐름 비교</h2>
+<div class="routes">
+<section class="route cur">
+<header><h3>현행 — 친화크로마토그래피 + AEX</h3><span class="tag">STANDARD</span></header>
+<div class="step"><span class="n">01</span><span class="body"><span class="t">수확 · 세포 용해</span><span class="d">HEK293 배양액에서 캡시드를 꺼냅니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
+<div class="arrow"></div>
+<div class="step"><span class="n">02</span><span class="body"><span class="t">Clarification</span><span class="d">뎁스 필터로 세포 잔해 제거. 일부 HCP·DNA도 함께 빠집니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
+<div class="arrow"></div>
+<div class="step"><span class="n">03</span><span class="body"><span class="t">UF/DF 농축 · 완충액 교환</span><span class="d">컬럼에 올리기 좋은 농도와 조성으로 맞춥니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
+<div class="arrow"></div>
+<div class="step"><span class="n">04</span><span class="body"><span class="t">친화 포집 (Affinity capture)</span><span class="d">숙주단백(HCP)의 대부분을 여기서 제거합니다. Full/Empty는 구분하지 못합니다.</span></span><span class="y" style="color:var(--aex)">45–70 %<sup>[6]</sup></span></div>
+<div class="arrow"></div>
+<div class="step key"><span class="n">05</span><span class="body"><span class="t">AEX 폴리싱 — Full/Empty 분리</span><span class="d">Full이 게놈 때문에 더 음전하를 띠어 컬럼에 더 세게 붙습니다. 염 농도를 올려가며 Empty를 먼저 흘려보냅니다. <b style="color:var(--ink)">두 공정이 실제로 맞붙는 지점입니다.</b></span></span><span class="y" style="color:var(--aex)">49–84 %<sup>[1-5]</sup></span></div>
+<div class="arrow"></div>
+<div class="step"><span class="n">06</span><span class="body"><span class="t">UF/DF · 최종 여과</span><span class="d">제형 완충액으로 교환하고 0.2 μm로 멸균 여과합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
+</section>
+<section class="route ours">
+<header><h3>제안 — Polymer-Assisted TFF</h3><span class="tag">PROPOSED</span></header>
+<div class="step"><span class="n">01</span><span class="body"><span class="t">수확 · 세포 용해</span><span class="d">동일합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
+<div class="arrow"></div>
+<div class="step"><span class="n">02</span><span class="body"><span class="t">Clarification + Benzonase</span><span class="d">동일. 숙주 DNA를 효소로 분해합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
+<div class="arrow"></div>
+<div class="step"><span class="n">03</span><span class="body"><span class="t omit">친화 포집 — 없음</span><span class="d omit">이 설계는 친화 컬럼을 쓰지 않습니다. 소모품비가 가장 큰 단계를 뺀 것이지만, <b style="color:var(--genome)">HCP 제거 부담이 전부 TFF로 넘어갑니다. 아직 검증되지 않은 부분입니다.</b></span></span><span class="y" style="color:var(--genome)">생략</span></div>
+<div class="arrow"></div>
+<div class="step"><span class="n">04</span><span class="body"><span class="t">완충액 조정 + PLL 결합</span><span class="d">pH를 두 캡시드의 등전점 사이에 맞춰, 더 음전하인 Full에만 양전하 고분자(PLL)가 붙게 합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
+<div class="arrow"></div>
+<div class="step key"><span class="n">05</span><span class="body"><span class="t">TFF1 — Empty 제거 (50 nm)</span><span class="d">PLL이 Full 여럿을 묶어 덩어리로 키웁니다. 25 nm Empty는 막을 통과해 버려지고, 큰 덩어리만 남습니다. <b style="color:var(--ink)">전하 차이를 크기 차이로 바꾼 것이 핵심입니다.</b></span></span><span class="y" style="color:var(--fluid)">시뮬</span></div>
+<div class="arrow"></div>
+<div class="step key"><span class="n">06</span><span class="body"><span class="t">PLL 탈착 + TFF2 (100 nm)</span><span class="d">고염·저pH로 PLL을 떼어내고, 벌거벗은 Full만 막을 통과시켜 회수합니다.</span></span><span class="y" style="color:var(--fluid)">시뮬</span></div>
+<div class="arrow"></div>
+<div class="step"><span class="n">07</span><span class="body"><span class="t">UF/DF · 최종 여과</span><span class="d">동일합니다.</span></span><span class="y" style="color:var(--ink-dim)">—</span></div>
+</section>
+</div>
+<h2>수율 · 순도 트레이드오프</h2>
+<div class="chartbox">
+<div class="controls">
+<div class="ctrl">
+<label for="frSlider"><span>투입 Full 비율 (분리 전 원액)</span><span class="val" id="frVal">15 %</span></label>
+<input id="frSlider" max="6" min="0" step="1" type="range" value="4"/>
+</div>
+<label class="toggle"><input checked="" id="bandChk" type="checkbox"/> 시뮬레이션 불확실성 띠 표시</label>
+</div>
+<canvas aria-label="가로축은 Full 캡시드 순도, 세로축은 벡터 게놈 회수율. 현행 AEX 문헌 실측값과 제안 공정 시뮬레이션 곡선을 함께 표시합니다." height="560" id="chart" width="1080"></canvas>
+<div class="readnote" id="chartNote"></div>
+</div>
+<h2>왜 전체 수율은 그보다 훨씬 낮은가</h2>
+<div class="casc">
+<div class="cascbars">
+<div class="controls" style="margin-bottom:16px">
+<div class="ctrl">
+<label for="stepY"><span>정제 단계당 회수율</span><span class="val" id="stepYVal">80 %</span></label>
+<input id="stepY" max="95" min="60" step="1" type="range" value="80"/>
+</div>
+</div>
+<div id="cascade"></div>
+<div class="readnote">
         정제는 단계마다 곱해집니다. 단계당 90 %라도 6단계면 53 %, 80 %면 26 %가 됩니다.
         <b>이것이 개별 단계 수율이 70~84 %인데 전체 수율은 10~20 %로 보고되는 이유입니다.</b>
         단계 수를 줄이는 것 자체가 수율 개선 수단이라는 뜻이기도 합니다.
       </div>
-    </div>
-    <div class="lit">
-      <h3 style="font-size:12.5px">문헌에 보고된 전체 수율</h3>
-      <ul>
-        <li>6단계 × 단계당 70 % → 전체 <b>17 %</b> <sup>[7]</sup></li>
-        <li>5단계 × 단계당 90 % → 상한 <b>60 %</b>, 80 %면 <b>32 %</b> <sup>[8]</sup></li>
-        <li>실험실 실측 AAV8 <b>40 %</b>, AAV9 <b>60 %</b> <sup>[8]</sup></li>
-        <li>리뷰: 전체 수율 <b>10–20 %</b>가 빈번히 보고됨 <sup>[6]</sup></li>
-        <li>상용 플랫폼(5단계): 전체 회수 <b>최대 50 %</b> <sup>[9]</sup></li>
-      </ul>
-      <h3 style="font-size:12.5px;margin-top:14px">원가</h3>
-      <ul>
-        <li>10<sup>14</sup> vg 용량 기준 COGS <b>US$2–3만</b>, 10<sup>15</sup> vg면 그 이상 <sup>[6]</sup></li>
-        <li>치료비는 용량당 최대 <b>US$350만</b> <sup>[6]</sup></li>
-        <li>원가를 <b>2–3배</b>만 낮춰도 기존 항체의약품과 견줄 수준이 됨 <sup>[10]</sup></li>
-      </ul>
-    </div>
-  </div>
-
-  <h2>정직한 평가</h2>
-  <div class="cards">
-    <div class="card">
-      <div class="k lose">① 수율 — 우위 없음</div>
-      <p>시뮬레이션 최적 조건에서 회수율 <b>73–86 %</b>입니다. 문헌 AEX 최적 조건은 <b>80–84 %</b>로,
+</div>
+<div class="lit">
+<h3 style="font-size:12.5px">문헌에 보고된 전체 수율</h3>
+<ul>
+<li>6단계 × 단계당 70 % → 전체 <b>17 %</b> <sup>[7]</sup></li>
+<li>5단계 × 단계당 90 % → 상한 <b>60 %</b>, 80 %면 <b>32 %</b> <sup>[8]</sup></li>
+<li>실험실 실측 AAV8 <b>40 %</b>, AAV9 <b>60 %</b> <sup>[8]</sup></li>
+<li>리뷰: 전체 수율 <b>10–20 %</b>가 빈번히 보고됨 <sup>[6]</sup></li>
+<li>상용 플랫폼(5단계): 전체 회수 <b>최대 50 %</b> <sup>[9]</sup></li>
+</ul>
+<h3 style="font-size:12.5px;margin-top:14px">원가</h3>
+<ul>
+<li>10<sup>14</sup> vg 용량 기준 COGS <b>US$2–3만</b>, 10<sup>15</sup> vg면 그 이상 <sup>[6]</sup></li>
+<li>치료비는 용량당 최대 <b>US$350만</b> <sup>[6]</sup></li>
+<li>원가를 <b>2–3배</b>만 낮춰도 기존 항체의약품과 견줄 수준이 됨 <sup>[10]</sup></li>
+</ul>
+</div>
+</div>
+<h2>정직한 평가</h2>
+<div class="cards">
+<div class="card">
+<div class="k lose">① 수율 — 우위 없음</div>
+<p>시뮬레이션 최적 조건에서 회수율 <b>73–86 %</b>입니다. 문헌 AEX 최적 조건은 <b>80–84 %</b>로,
       <b>겹칩니다.</b> 게다가 시뮬레이션은 미측정 보정상수에 크게 좌우되어, 상수를 문헌 범위 안에서만
       흔들어도 결과가 0 %에서 84 %까지 움직입니다. 지금은 우위를 주장할 수 없습니다.</p>
-    </div>
-    <div class="card">
-      <div class="k open">② 순도 — 조건부 우위</div>
-      <p>시뮬레이션은 순도 <b>95–98 %</b>를 냅니다. AEX는 최적 조건에서 <b>80–90 %</b>이고,
+</div>
+<div class="card">
+<div class="k open">② 순도 — 조건부 우위</div>
+<p>시뮬레이션은 순도 <b>95–98 %</b>를 냅니다. AEX는 최적 조건에서 <b>80–90 %</b>이고,
       투입 Full이 5–20 %로 낮으면 한 번의 통과로 70 % 이상을 얻기 어렵다고 보고됩니다<sup>[5]</sup>.
       다만 <b>PA-TFF도 투입 Full이 7.5 % 이하면 시뮬레이션상 95 % 순도에 도달하지 못합니다.</b>
       약점의 위치가 같습니다.</p>
-    </div>
-    <div class="card">
-      <div class="k win">③ 소모품 — 구조적 차이</div>
-      <p>AEX는 단회용 레진, TFF 카세트는 재사용이 가능합니다. 여기에 이 설계는 <b>친화 컬럼을 아예 쓰지 않습니다.</b>
+</div>
+<div class="card">
+<div class="k win">③ 소모품 — 구조적 차이</div>
+<p>AEX는 단회용 레진, TFF 카세트는 재사용이 가능합니다. 여기에 이 설계는 <b>친화 컬럼을 아예 쓰지 않습니다.</b>
       원가 우위가 있다면 AEX 대체가 아니라 여기서 나올 가능성이 큽니다.
       <b>단, 이 페이지는 그 차이를 정량화하지 않았습니다.</b> 레진 단가·수명·인건비 실측이 필요합니다.</p>
-    </div>
-    <div class="card">
-      <div class="k open">④ 확장성 — 구조적 차이</div>
-      <p>컬럼은 직경을 키우면 분해능이 떨어지지만, TFF는 막 면적을 더하는 방식이라 확장이 선형에 가깝습니다.
+</div>
+<div class="card">
+<div class="k open">④ 확장성 — 구조적 차이</div>
+<p>컬럼은 직경을 키우면 분해능이 떨어지지만, TFF는 막 면적을 더하는 방식이라 확장이 선형에 가깝습니다.
       다만 <b>PA-TFF는 단계를 늘립니다</b>(결합·TFF1·탈착·TFF2). 단계 수가 늘면 전체 수율은 곱셈으로 깎입니다.
       이 상충이 아직 정리되지 않았습니다.</p>
-    </div>
-    <div class="card" style="grid-column:1/-1;border-left:3px solid var(--genome)">
-      <div class="k lose">⑤ 이 그림을 확정하려면 — 측정 3개</div>
-      <p>
-      <b>1. PLL–캡시드 결합 세기</b> (ITC 또는 QCM-D) — 위 시뮬레이션 곡선의 위치를 통째로 정합니다.
-      <b>2. Full/Empty 실제 등전점을 ±0.1 정밀도로</b> (cIEF) — 0.2만 틀려도 수율 예측이 25 %와 84 % 사이를 오갑니다.
-      <b>3. 복합체가 50 nm 막을 실제로 막는지</b> (DLS + 폴리스티렌 비드 TFF, 약 200만 원) — 공정 성립의 전제입니다.
-      </p>
-    </div>
-  </div>
-
-  <h2>출처</h2>
-  <div class="src">
-    <ol>
-      <li>Cytiva, <em>Effective separation of full and empty rAAV capsids by anion exchange</em> — Capto Q ImpRes에서 VG 회수 약 60–70 %, Full 농축 약 40–60 %. 개선 프로토콜(덱스트란 extender + MgCl₂ + 아세트산나트륨 단계용출)에서 시험한 모든 혈청형에 대해 수율·순도 약 80 % 이상. <a href="https://www.cytivalifesciences.com/en/us/solutions/cell-therapy/knowledge-center/resources/Effective-separation-of-full-and-empty-rAAV-capsids-by-anion-exchange" target="_blank" rel="noopener">링크</a></li>
-      <li>Mechanistic modeling of empty-full separation in rAAV production using anion-exchange membrane chromatography, <em>Biotechnol Bioeng</em> (PMID 37942560) — 최적화·검증된 조건에서 순도 90 %, 회수율 84 %. <a href="https://pubmed.ncbi.nlm.nih.gov/37942560/" target="_blank" rel="noopener">링크</a></li>
-      <li>Developing a scalable full/empty separation step by AEX in step gradient mode, Cell &amp; Gene — 50 L 규모에서 Full 약 75 %, VG 회수 약 70 %, 3배 농축. <a href="https://www.cellandgene.com/doc/developing-a-scalable-full-empty-separation-step-for-an-aav-capsid-by-anion-exchange-chromatography-in-step-gradient-elution-mode-0001" target="_blank" rel="noopener">링크</a></li>
-      <li>Hejmowski et al., <em>Biotechnology Journal</em> (2022) — AEX 멤브레인 단계구배로 4배 이상 농축, Full 약 50–60 %. 보고된 분획 중 최고 ddPCR 수율 49 %. <a href="https://analyticalsciencejournals.onlinelibrary.wiley.com/doi/full/10.1002/biot.202100219" target="_blank" rel="noopener">링크</a></li>
-      <li>A two-pass anion-exchange chromatography strategy for enrichment of full capsids, <em>Mol Ther Methods Clin Dev</em> (2025) — 투입 Full이 5–20 %인 경우 AEX 구배법으로 Full 70 % 초과 달성은 어렵다고 보고. 95 % 이상까지 농축하려면 수율 10–20 %를 추가로 잃음. <a href="https://www.sciencedirect.com/science/article/pii/S2329050125000361" target="_blank" rel="noopener">링크</a></li>
-      <li>Downstream processing of AAV based gene therapy vectors, <em>Curr Opin Biotechnol</em> 계열 리뷰 (2025) — 친화 포집 수율 45–70 %, 전체 수율 10–20 % 빈번 보고, 10<sup>14</sup> vg 용량 COGS US$2–3만, 치료비 최대 US$350만. <a href="https://www.sciencedirect.com/science/article/pii/S138358662501648X" target="_blank" rel="noopener">링크</a></li>
-      <li>A3P, <em>Overcoming obstacles in downstream bioprocessing of AAV</em> — 6단계 각 70 %면 전체 17 %. <a href="https://www.a3p.org/en/overcoming-obstacles-in-downstream-bioprocessing-of-aav-based-gene-therapy-products/" target="_blank" rel="noopener">링크</a></li>
-      <li>Downstream bioprocessing of AAV vectors, <em>Cell &amp; Gene Therapy Insights</em> — 5단계 90 %면 상한 60 %, 80 %면 32 %. 자체 실험 AAV8 40 %, AAV9 60 %. <a href="https://www.insights.bio/cell-and-gene-therapy-insights/journal/article/352/Downstream-bioprocessing-of-AAV-vectors-industrial-challenges-regulatory-requirements" target="_blank" rel="noopener">링크</a></li>
-      <li>Sartorius BIA Separations, AAV Process Development Services — 5단계 DSP 플랫폼 전체 회수 최대 50 %. <a href="https://www.biaseparations.com/services/process-development-services-for-viruses-vlps-nanoparticles/aav-process-development-services/" target="_blank" rel="noopener">링크</a></li>
-      <li>Improving process efficiency to reduce cost-of-goods per dose in manufacturing of recombinant AAVs, <em>Cell &amp; Gene Therapy Insights</em> (2024) — 원가를 2–3배만 낮춰도 기존 항체의약품 수준과 견줄 수 있음. <a href="https://www.insights.bio/cell-and-gene-therapy-insights/journal/article/3192/Improving-process-efficiency-to-reduce-cost-of-goods-per-dose-in-manufacturing-of" target="_blank" rel="noopener">링크</a></li>
-      <li>PA-TFF 곡선: 본 프로젝트 시뮬레이터(MVP) 출력. 수식 11개·독립변수 26개 기반이며 <strong>실험 보정 전</strong>입니다. 불확실성 띠는 미측정 보정상수(다가결합 계수)를 6·8·10으로 둔 세 계산의 폭입니다.</li>
-    </ol>
-  </div>
-
+</div>
+<div class="card" style="grid-column:1/-1;border-left:3px solid var(--genome)">
+<div class="k lose">⑤ 이 그림을 확정하려면 — 측정 3개</div>
+<p class="measure-list">
+<span><b>1. PLL–캡시드 결합 세기</b> (ITC 또는 QCM-D) — 위 시뮬레이션 곡선의 위치를 통째로 정합니다.</span>
+<span><b>2. Full/Empty 실제 등전점을 ±0.1 정밀도로</b> (cIEF) — 0.2만 틀려도 수율 예측이 25 %와 84 % 사이를 오갑니다.</span>
+<span><b>3. 복합체가 50 nm 막을 실제로 막는지</b> (DLS + 폴리스티렌 비드 TFF, 약 200만 원) — 공정 성립의 전제입니다.</span>
+</p>
 </div>
 </div>
-
+<h2>출처</h2>
+<div class="src">
+<ol>
+<li>Cytiva, <em>Effective separation of full and empty rAAV capsids by anion exchange</em> — Capto Q ImpRes에서 VG 회수 약 60–70 %, Full 농축 약 40–60 %. 개선 프로토콜(덱스트란 extender + MgCl₂ + 아세트산나트륨 단계용출)에서 시험한 모든 혈청형에 대해 수율·순도 약 80 % 이상. <a href="https://www.cytivalifesciences.com/en/us/solutions/cell-therapy/knowledge-center/resources/Effective-separation-of-full-and-empty-rAAV-capsids-by-anion-exchange" rel="noopener" target="_blank">링크</a></li>
+<li>Mechanistic modeling of empty-full separation in rAAV production using anion-exchange membrane chromatography, <em>Biotechnol Bioeng</em> (PMID 37942560) — 최적화·검증된 조건에서 순도 90 %, 회수율 84 %. <a href="https://pubmed.ncbi.nlm.nih.gov/37942560/" rel="noopener" target="_blank">링크</a></li>
+<li>Developing a scalable full/empty separation step by AEX in step gradient mode, Cell &amp; Gene — 50 L 규모에서 Full 약 75 %, VG 회수 약 70 %, 3배 농축. <a href="https://www.cellandgene.com/doc/developing-a-scalable-full-empty-separation-step-for-an-aav-capsid-by-anion-exchange-chromatography-in-step-gradient-elution-mode-0001" rel="noopener" target="_blank">링크</a></li>
+<li>Hejmowski et al., <em>Biotechnology Journal</em> (2022) — AEX 멤브레인 단계구배로 4배 이상 농축, Full 약 50–60 %. 보고된 분획 중 최고 ddPCR 수율 49 %. <a href="https://analyticalsciencejournals.onlinelibrary.wiley.com/doi/full/10.1002/biot.202100219" rel="noopener" target="_blank">링크</a></li>
+<li>A two-pass anion-exchange chromatography strategy for enrichment of full capsids, <em>Mol Ther Methods Clin Dev</em> (2025) — 투입 Full이 5–20 %인 경우 AEX 구배법으로 Full 70 % 초과 달성은 어렵다고 보고. 95 % 이상까지 농축하려면 수율 10–20 %를 추가로 잃음. <a href="https://www.sciencedirect.com/science/article/pii/S2329050125000361" rel="noopener" target="_blank">링크</a></li>
+<li>Downstream processing of AAV based gene therapy vectors, <em>Curr Opin Biotechnol</em> 계열 리뷰 (2025) — 친화 포집 수율 45–70 %, 전체 수율 10–20 % 빈번 보고, 10<sup>14</sup> vg 용량 COGS US$2–3만, 치료비 최대 US$350만. <a href="https://www.sciencedirect.com/science/article/pii/S138358662501648X" rel="noopener" target="_blank">링크</a></li>
+<li>A3P, <em>Overcoming obstacles in downstream bioprocessing of AAV</em> — 6단계 각 70 %면 전체 17 %. <a href="https://www.a3p.org/en/overcoming-obstacles-in-downstream-bioprocessing-of-aav-based-gene-therapy-products/" rel="noopener" target="_blank">링크</a></li>
+<li>Downstream bioprocessing of AAV vectors, <em>Cell &amp; Gene Therapy Insights</em> — 5단계 90 %면 상한 60 %, 80 %면 32 %. 자체 실험 AAV8 40 %, AAV9 60 %. <a href="https://www.insights.bio/cell-and-gene-therapy-insights/journal/article/352/Downstream-bioprocessing-of-AAV-vectors-industrial-challenges-regulatory-requirements" rel="noopener" target="_blank">링크</a></li>
+<li>Sartorius BIA Separations, AAV Process Development Services — 5단계 DSP 플랫폼 전체 회수 최대 50 %. <a href="https://www.biaseparations.com/services/process-development-services-for-viruses-vlps-nanoparticles/aav-process-development-services/" rel="noopener" target="_blank">링크</a></li>
+<li>Improving process efficiency to reduce cost-of-goods per dose in manufacturing of recombinant AAVs, <em>Cell &amp; Gene Therapy Insights</em> (2024) — 원가를 2–3배만 낮춰도 기존 항체의약품 수준과 견줄 수 있음. <a href="https://www.insights.bio/cell-and-gene-therapy-insights/journal/article/3192/Improving-process-efficiency-to-reduce-cost-of-goods-per-dose-in-manufacturing-of" rel="noopener" target="_blank">링크</a></li>
+<li>PA-TFF 곡선: 본 프로젝트 시뮬레이터(MVP) 출력. 수식 11개·독립변수 26개 기반이며 <strong>실험 보정 전</strong>입니다. 불확실성 띠는 미측정 보정상수(다가결합 계수)를 6·8·10으로 둔 세 계산의 폭입니다.</li>
+</ol>
+</div><div class="notice grade-note" style="margin-top:24px">
+<span class="badge g3"><i></i>등급 3 — 문헌 실측</span>
+<span class="badge g1"><i></i>등급 1 — 이론·시뮬레이션</span>
+</div>
+</div>
+</div>
 <div class="sitefoot"><div class="in">
-  <div>
-    <p><b><span class="ko-only">이성진</span><span class="en-only">Sungjin Lee</span></b><span data-ko=" · 중앙대학교 약학대학 약학과 6학년" data-en=" · Chung-Ang University, College of Pharmacy"> · 중앙대학교 약학대학 약학과 6학년</span></p>
-    <p data-ko="SJ LABS — 고가 의약품 제조공정 원가 저감 연구" data-en="SJ LABS — manufacturing-cost reduction for expensive medicines">SJ LABS — 고가 의약품 제조공정 원가 저감 연구</p>
-    <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;margin-top:12px">SJL-2026-01 · REV. MVP · 2026-07</p>
-  </div>
-  <div class="disc">
-    <b data-ko="고지" data-en="Notice">고지</b><span data-ko=" — 개인 연구자가 수행하는 이론 연구이며 소속 기관의 공식 입장이 아닙니다. 등급 1로 표기된 값은 실험 검증 전이므로 실제 공정 설계나 의사결정의 근거로 사용될 수 없습니다. 연구·교육 목적 이용은 무료이며(PolyForm NC 1.0.0 / CC BY-NC-SA 4.0), 상업적 이용은 사전 협의가 필요합니다."
-                data-en=" — Independent theoretical research; not an official position of any affiliated institution. Grade 1 values are unvalidated and must not ground real process design or decisions. Free for research/education (PolyForm NC 1.0.0 / CC BY-NC-SA 4.0); commercial use requires prior agreement."> — 개인 연구자가 수행하는 이론 연구이며 소속 기관의 공식 입장이 아닙니다. 등급 1로 표기된 값은 실험 검증 전이므로 실제 공정 설계나 의사결정의 근거로 사용될 수 없습니다. 연구·교육 목적 이용은 무료이며(PolyForm NC 1.0.0 / CC BY-NC-SA 4.0), 상업적 이용은 사전 협의가 필요합니다.</span>
-  </div>
+<div>
+<p><b><span class="ko-only">이성진</span><span class="en-only">Sungjin Lee</span></b><span data-en=" · Chung-Ang University, College of Pharmacy" data-ko=" · 중앙대학교 약학대학 약학과 6학년"> · 중앙대학교 약학대학 약학과 6학년</span></p>
+<p data-en="SJ LABS — manufacturing-cost reduction for expensive medicines" data-ko="SJ LABS — 고가 의약품 제조공정 원가 저감 연구">SJ LABS — 고가 의약품 제조공정 원가 저감 연구</p>
+<p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;margin-top:12px">SJL-2026-01 · REV. MVP · 2026-07</p>
+</div>
+<div class="disc">
+<b data-en="Notice" data-ko="고지">고지</b><span data-en=" — Independent theoretical research; not an official position of any affiliated institution. Grade 1 values are unvalidated and must not ground real process design or decisions. Free for research/education (PolyForm NC 1.0.0 / CC BY-NC-SA 4.0); commercial use requires prior agreement." data-ko=" — 개인 연구자가 수행하는 이론 연구이며 소속 기관의 공식 입장이 아닙니다. 등급 1로 표기된 값은 실험 검증 전이므로 실제 공정 설계나 의사결정의 근거로 사용될 수 없습니다. 연구·교육 목적 이용은 무료이며(PolyForm NC 1.0.0 / CC BY-NC-SA 4.0), 상업적 이용은 사전 협의가 필요합니다."> — 개인 연구자가 수행하는 이론 연구이며 소속 기관의 공식 입장이 아닙니다. 등급 1로 표기된 값은 실험 검증 전이므로 실제 공정 설계나 의사결정의 근거로 사용될 수 없습니다. 연구·교육 목적 이용은 무료이며(PolyForm NC 1.0.0 / CC BY-NC-SA 4.0), 상업적 이용은 사전 협의가 필요합니다.</span>
+</div>
 </div></div>
-
 <script>
 /* ═══ 탭·언어·테마 제어 ═══════════════════════════════════ */
 (function(){
@@ -1072,7 +1313,7 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
   });
 
   /* --- 펼침 패널 --- */
-  [["btn-eq","drw-eq"],["btn-var","drw-var"]].forEach(function(p){
+  [["btn-eq","drw-eq"],["btn-var","drw-var"],["btn-ref","drw-ref"]].forEach(function(p){
     var btn = document.getElementById(p[0]), drw = document.getElementById(p[1]);
     btn.addEventListener("click", function(e){
       e.stopPropagation();
@@ -1182,10 +1423,9 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
   });
 
   applyLang("ko");
-  applyTheme("dark");
+  applyTheme("light");
 })();
 </script>
-
 <script>
 /* 런타임 번역 사전 (프로젝트 뷰 DOM·캔버스 공용) */
 window.__SJT = {
@@ -5295,6 +5535,5 @@ document.addEventListener('sjrelayout', function(){ try{ if(typeof render==='fun
 
 };
 </script>
-
 </body>
 </html>
