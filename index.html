@@ -91,6 +91,16 @@ body{
 .themebtn:hover{border-color:var(--fluid);color:var(--fluid)}
 .themebtn:focus-visible{outline:2px solid var(--fluid);outline-offset:1px}
 .themebtn .ic{width:12px;height:12px;display:inline-block}
+.viewcount{display:inline-flex;align-items:center;gap:6px;
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.04em;
+  color:var(--ink-dim);border:1px solid var(--rule);border-radius:3px;
+  padding:6px 10px;white-space:nowrap;user-select:none}
+.viewcount .vc-dot{width:6px;height:6px;border-radius:50%;background:var(--fluid);
+  flex:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--fluid) 20%,transparent);
+  animation:vcPulse 2.4s ease-in-out infinite}
+.viewcount .vc-num{font-weight:600;color:var(--ink)}
+@keyframes vcPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.viewcount .vc-dot{animation:none}}
 
 /* ═══ 홈 ═════════════════════════════════════════════════ */
 #view-home{padding-bottom:20px}
@@ -403,7 +413,21 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
   .principles,.terms,.sitefoot .in{grid-template-columns:1fr}
   .vrow{grid-template-columns:22px 1fr;row-gap:2px}
   .vrg,.vu{text-align:left}
-  .topbar .in{height:auto;padding:8px 20px;flex-wrap:wrap}
+  .topbar .in{height:auto;min-height:54px;padding:8px 16px;flex-wrap:wrap;row-gap:6px}
+  .navwrap{width:100%;gap:8px;justify-content:space-between}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;flex:1 1 auto;min-width:0}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:none;padding:6px 9px;font-size:12px}
+  .switches{flex:none;gap:6px}
+}
+@media (max-width:520px){
+  .topbar .in{padding:8px 14px}
+  .mark b{font-size:12px;letter-spacing:.12em}
+  .switch button{padding:5px 7px;font-size:10px}
+  .themebtn{padding:5px 8px;font-size:10px}
+  .themebtn #themeTxt{display:none}          /* 아이콘만 남겨 공간 확보 */
+  .viewcount{padding:5px 8px;font-size:10px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
@@ -634,6 +658,7 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
 <button aria-label="테마 전환" class="themebtn" id="themeBtn">
 <span class="ic" id="themeIc"></span><span id="themeTxt">LIGHT</span>
 </button>
+<span class="viewcount" id="viewCount" title="누적 조회수" hidden><span class="vc-dot"></span><span class="vc-num" id="vcNum">—</span></span>
 </div>
 </div>
 </div></div>
@@ -1424,6 +1449,33 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
 
   applyLang("ko");
   applyTheme("light");
+
+  /* ── 누적 조회수 카운터 (외부 무료 카운터, 서버 없이 공유 집계) ── */
+  (function(){
+    var el = document.getElementById("viewCount");
+    var numEl = document.getElementById("vcNum");
+    if(!el || !numEl) return;
+    var NS = "sjlabs-aav", KEY = "home-visits";        // 이 사이트 고유 키 (고정)
+    function fmt(n){ return (parseInt(n,10)||0).toLocaleString("en-US"); }
+    // 세션당 1회만 +1 (새로고침 연타로 부풀지 않도록)
+    var counted = false;
+    try { counted = sessionStorage.getItem("sjlabs_counted")==="1"; } catch(e){}
+    var op = counted ? "" : "/up";                     // 이미 셌으면 조회만
+    var url = "https://api.counterapi.dev/v1/" + NS + "/" + KEY + op;
+    fetch(url, {cache:"no-store", mode:"cors"})
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+      .then(function(d){
+        // V1은 count 또는 value 로 반환 — 둘 다 대응
+        var v = d && (d.count != null ? d.count
+                   : d.value != null ? d.value
+                   : (d.data && (d.data.count != null ? d.data.count : d.data.value)));
+        if(v == null) return Promise.reject();
+        try { sessionStorage.setItem("sjlabs_counted","1"); } catch(e){}
+        numEl.textContent = fmt(v);
+        el.hidden = false;                             // 성공했을 때만 노출
+      })
+      .catch(function(){ el.hidden = true; });         // 실패 시 조용히 숨김
+  })();
 })();
 </script>
 <script>
