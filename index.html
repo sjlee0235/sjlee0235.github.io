@@ -61,7 +61,8 @@ body{
 .mark .glyph{width:19px;height:19px;border:1.5px solid var(--fluid);border-radius:2px;position:relative;flex:none}
 .mark .glyph::after{content:"";position:absolute;inset:4px;background:var(--fluid);border-radius:1px;opacity:.55}
 .mark b{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;letter-spacing:.16em;color:var(--ink-hi)}
-.navwrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+.navwrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;
+  flex:1 1 auto;margin-right:14px}
 .tabs{display:flex;gap:2px;flex-wrap:wrap}
 .tabs button{
   font-family:"IBM Plex Sans KR",sans-serif;font-size:12.5px;font-weight:300;
@@ -146,8 +147,14 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
   50%{opacity:1}
 }
 @media (max-width:560px){
-  .cover-top{grid-template-columns:1fr;gap:8px}
-  .cover-viz{max-width:240px;margin-top:4px;order:-1;justify-self:start}
+  .cover-top{grid-template-columns:minmax(0,1fr) 38vw;gap:12px;margin-bottom:20px}
+  .cover-viz{max-width:180px;margin-right:0;justify-self:end}
+  .cover-lead h1{font-size:clamp(24px,7.2vw,32px);line-height:1.15}
+  .cover-lead .kicker{font-size:9.5px;letter-spacing:.16em;margin-bottom:12px}
+}
+@media (max-width:380px){
+  .cover-top{gap:8px}
+  .cover-lead h1{font-size:23px}
 }
 @media (prefers-reduced-motion:reduce){
   .cap-float,.cap-orbit,.cap-genome,.cap-tags{animation:none}
@@ -413,13 +420,15 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
   .principles,.terms,.sitefoot .in{grid-template-columns:1fr}
   .vrow{grid-template-columns:22px 1fr;row-gap:2px}
   .vrg,.vu{text-align:left}
-  .topbar .in{height:auto;min-height:54px;padding:8px 16px;flex-wrap:wrap;row-gap:6px}
-  .navwrap{width:100%;gap:8px;justify-content:space-between}
+  .topbar .in{height:auto;min-height:54px;padding:8px 16px;flex-wrap:wrap;row-gap:8px;
+    align-items:center}
+  .mark{order:1}
+  .switches{order:2;margin-left:auto;flex:none;gap:6px}
+  .navwrap{order:3;width:100%;margin-right:0;flex:1 1 100%;justify-content:flex-start}
   .tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
-    scrollbar-width:none;flex:1 1 auto;min-width:0}
+    scrollbar-width:none;width:100%;min-width:0}
   .tabs::-webkit-scrollbar{display:none}
-  .tabs button{flex:none;padding:6px 9px;font-size:12px}
-  .switches{flex:none;gap:6px}
+  .tabs button{flex:none;padding:6px 10px;font-size:12.5px}
 }
 @media (max-width:520px){
   .topbar .in{padding:8px 14px}
@@ -649,6 +658,7 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
 <button aria-selected="false" data-en="Simulator" data-go="sim" data-ko="공정 시뮬레이터" role="tab">공정 시뮬레이터</button>
 <button aria-selected="false" data-en="Comparison" data-go="cmp" data-ko="공정 비교" role="tab">공정 비교</button>
 <button aria-selected="false" data-en="Terms" data-go="terms" data-ko="이용 조건" role="tab">이용 조건</button>
+</div>
 </div>
 <div class="switches">
 <div aria-label="Language" class="switch" role="group">
@@ -1450,29 +1460,27 @@ h1 em{font-style:normal;font-weight:500;color:var(--fluid)}
   applyLang("ko");
   applyTheme("light");
 
-  /* ── 누적 조회수 카운터 (외부 무료 카운터, 서버 없이 공유 집계) ── */
+  /* ── 누적 조회수 카운터 (키 불필요·CORS 지원 무료 카운터, 서버 없이 공유 집계) ── */
   (function(){
     var el = document.getElementById("viewCount");
     var numEl = document.getElementById("vcNum");
     if(!el || !numEl) return;
-    var NS = "sjlabs-aav", KEY = "home-visits";        // 이 사이트 고유 키 (고정)
+    var BASE = "https://countapi.mileshilliard.com/api/v1";
+    var KEY  = "sjlabs-aav-home-visits";               // 충분히 고유한 단일 키
     function fmt(n){ return (parseInt(n,10)||0).toLocaleString("en-US"); }
-    // 세션당 1회만 +1 (새로고침 연타로 부풀지 않도록)
+    // 세션당 1회만 +1 (새로고침 연타 방지), 이후엔 get 으로 값만 조회
     var counted = false;
     try { counted = sessionStorage.getItem("sjlabs_counted")==="1"; } catch(e){}
-    var op = counted ? "" : "/up";                     // 이미 셌으면 조회만
-    var url = "https://api.counterapi.dev/v1/" + NS + "/" + KEY + op;
-    fetch(url, {cache:"no-store", mode:"cors"})
+    var url = BASE + "/" + (counted ? "get" : "hit") + "/" + KEY;
+    fetch(url, {cache:"no-store"})
       .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
       .then(function(d){
-        // V1은 count 또는 value 로 반환 — 둘 다 대응
-        var v = d && (d.count != null ? d.count
-                   : d.value != null ? d.value
-                   : (d.data && (d.data.count != null ? d.data.count : d.data.value)));
+        // value 는 문자열("3")로 오므로 parseInt 로 처리
+        var v = d && (d.value != null ? d.value : d.count);
         if(v == null) return Promise.reject();
         try { sessionStorage.setItem("sjlabs_counted","1"); } catch(e){}
         numEl.textContent = fmt(v);
-        el.hidden = false;                             // 성공했을 때만 노출
+        el.hidden = false;                             // 성공 시에만 노출
       })
       .catch(function(){ el.hidden = true; });         // 실패 시 조용히 숨김
   })();
