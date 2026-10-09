@@ -159,8 +159,8 @@
     "pending": "Work income to be paid",
     "payoutNote": "Work income is paid all at once when the era ends.",
     "plus": "+{coins}",
-    "eyes": "{count} eyes",
-    "done": "{count} done",
+    "eyes": "Eyes: {count}",
+    "done": "Done: {count}",
     "pendingShort": "Pending"
   },
   "music": {
