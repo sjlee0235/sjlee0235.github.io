@@ -47,8 +47,8 @@ export interface AppOptions {
   clock: Clock;
   now: () => number;
   assetBase: string;
-  /** 가상 데이터로 실행 중이면 표시 */
-  virtualData: boolean;
+  /** 이 시대가 가상 데이터(아직 콘텐츠 없음)면 true → 화면에 표시 */
+  isVirtual: (eraId: string) => boolean;
   /** (디버그) 이 시대부터 새로 시작 */
   startEraIndex?: number;
   /** (디버그) 저장된 게임을 무시하고 새로 */
@@ -192,7 +192,7 @@ export class App {
     const c = this.theme.htsSkin.colors as Record<string, string>;
     for (const [k, v] of Object.entries(c)) this.root.style.setProperty(`--hts-${k}`, v);
     this.root.dataset.skin = this.theme.htsSkin.id;
-    this.root.dataset.virtual = this.opts.virtualData ? '1' : '0';
+    this.root.dataset.virtual = this.opts.isVirtual(this.game.eraId) ? '1' : '0';
   }
 
   private applyScale(): void {

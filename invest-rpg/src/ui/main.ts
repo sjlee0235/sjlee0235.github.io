@@ -1,6 +1,7 @@
 // 화면 시작점 (npm run dev → http://localhost:5173/)
 //
-// 시대 데이터: 등록된 시대(ALL_ERAS)가 있으면 그것, 없으면 개발용 가상 시대 3개 (화면에 "가상 데이터" 표시).
+// 시대 데이터: 진행 순서(eraSequence.json)의 시대마다 등록된 데이터(ALL_ERAS)를 쓰고,
+// 아직 없는 시대(지금은 2010s·2020s)는 개발용 가상 시대로 채운다 (화면에 "VIRTUAL DATA" 표시).
 // 주소 옵션 (개발 서버에서만): ?debug=1 디버그 패널, &seed=7 시드 고정, &era=1 시대 선택, &fresh=1 저장 무시
 
 import { ALL_ERAS, ERA_SEQUENCE, orderBySequence } from '../data/eras/index.ts';
@@ -12,12 +13,12 @@ import { browserClock } from './loop.ts';
 import { BrowserStorage } from './storage.ts';
 import './style.css';
 
-function virtualEras(): Era[] {
-  return ERA_SEQUENCE.map((id, i) => {
-    const era = makeSpecEra({ id, order: i + 1, seed: 11 + i });
-    const year = id.replace('s', '');
-    return { ...era, displayName: { ko: `${year}년대 (가상 데이터)`, en: `${id} (virtual data)` } };
-  });
+function virtualEra(id: string, i: number): Era {
+  // 진행 순서는 엔진이 order 값으로 정렬한다 → 실제 시대(2000s = 2000)와 같은 규칙으로 연도를 쓴다
+  const order = Number.parseInt(id, 10) || 9000 + i;
+  const era = makeSpecEra({ id, order, seed: 11 + i });
+  const year = id.replace('s', '');
+  return { ...era, displayName: { ko: `${year}년대 (가상 데이터)`, en: `${id} (virtual data)` } };
 }
 
 function randomSeed(): number {
@@ -29,7 +30,8 @@ function randomSeed(): number {
 const params = new URLSearchParams(window.location.search);
 const debug = import.meta.env.DEV && params.has('debug');
 const real = orderBySequence(ALL_ERAS);
-const eras = real.length > 0 ? real : virtualEras();
+const eras = ERA_SEQUENCE.map((id, i) => real.find((e) => e.id === id) ?? virtualEra(id, i));
+const virtualIds = new Set(eras.filter((e) => !real.includes(e)).map((e) => e.id));
 const seedParam = debug ? Number(params.get('seed')) : NaN;
 const eraParam = debug ? Number(params.get('era')) : NaN;
 
@@ -41,7 +43,7 @@ const app = new App({
   clock: browserClock,
   now: () => Date.now(),
   assetBase: import.meta.env.BASE_URL,
-  virtualData: real.length === 0,
+  isVirtual: (eraId: string) => virtualIds.has(eraId),
   ...(Number.isFinite(eraParam) && eraParam > 0 ? { startEraIndex: eraParam } : {}),
   fresh: debug && params.has('fresh'),
 });

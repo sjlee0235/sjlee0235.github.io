@@ -1,0 +1,7588 @@
+{
+ "id": "2000s",
+ "order": 2000,
+ "displayName": {
+  "ko": "2000년대",
+  "en": "The 2000s"
+ },
+ "period": {
+  "startYear": 2000,
+  "endYear": 2009
+ },
+ "themes": [
+  {
+   "id": "semiconductor",
+   "name": {
+    "ko": "반도체(메모리)",
+    "en": "Memory Chips"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "반도체",
+     "D램",
+     "메모리",
+     "칩",
+     "웨이퍼",
+     "반도체 가격"
+    ],
+    "en": [
+     "semiconductor",
+     "DRAM",
+     "memory",
+     "chip",
+     "wafer",
+     "chip prices"
+    ]
+   },
+   "existsEvidence": "2000년대 한국 메모리 반도체가 D램 세계 점유율 1위권, 최대 수출 품목"
+  },
+  {
+   "id": "shipbuilding",
+   "name": {
+    "ko": "조선",
+    "en": "Shipbuilding"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "조선",
+     "선박",
+     "조선소",
+     "유조선",
+     "컨테이너선",
+     "선박 수주"
+    ],
+    "en": [
+     "shipbuilding",
+     "ship",
+     "shipyard",
+     "tanker",
+     "container ship",
+     "ship orders"
+    ]
+   },
+   "existsEvidence": "2000년대 초 이후 한국이 세계 선박 수주량 1위, 2003~2008년 수주 호황"
+  },
+  {
+   "id": "steel",
+   "name": {
+    "ko": "철강",
+    "en": "Steel"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "철강",
+     "철광석",
+     "강판",
+     "제철",
+     "철근",
+     "철강재"
+    ],
+    "en": [
+     "steel",
+     "iron ore",
+     "steel plate",
+     "steelmaking",
+     "rebar",
+     "steel products"
+    ]
+   },
+   "existsEvidence": "중국 인프라 수요로 2004~2008년 철강 가격·실적 호황"
+  },
+  {
+   "id": "handset",
+   "name": {
+    "ko": "휴대폰",
+    "en": "Handsets"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "휴대폰",
+     "단말기",
+     "휴대전화",
+     "카메라폰",
+     "휴대폰 수출"
+    ],
+    "en": [
+     "handset",
+     "mobile device",
+     "mobile phone",
+     "camera phone",
+     "handset exports"
+    ]
+   },
+   "existsEvidence": "2000년대 한국 휴대폰이 세계 점유율 2~3위권 주력 수출품으로 성장"
+  },
+  {
+   "id": "display",
+   "name": {
+    "ko": "디스플레이(LCD)",
+    "en": "LCD Displays"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "디스플레이",
+     "LCD",
+     "패널",
+     "액정",
+     "평판 TV"
+    ],
+    "en": [
+     "display",
+     "LCD",
+     "panel",
+     "liquid crystal",
+     "flat TV"
+    ]
+   },
+   "existsEvidence": "2000년대 대형 LCD 패널 투자 경쟁, 중반 이후 한국이 세계 1위권"
+  },
+  {
+   "id": "online_game",
+   "name": {
+    "ko": "온라인 게임",
+    "en": "Online Games"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "온라인 게임",
+     "게임",
+     "게이머",
+     "PC방",
+     "동시 접속자"
+    ],
+    "en": [
+     "online game",
+     "game",
+     "gamer",
+     "PC room",
+     "concurrent users"
+    ]
+   },
+   "existsEvidence": "1990년대 말 온라인 RPG 흥행 이후 2000년대 수출 산업으로 성장"
+  },
+  {
+   "id": "portal",
+   "name": {
+    "ko": "인터넷 포털",
+    "en": "Internet Portals"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "포털",
+     "검색",
+     "인터넷",
+     "초고속 인터넷",
+     "온라인 광고"
+    ],
+    "en": [
+     "portal",
+     "search",
+     "internet",
+     "broadband",
+     "online ads"
+    ]
+   },
+   "existsEvidence": "2000년대 초 초고속 인터넷 보급(세계 최고 수준)과 함께 검색·포털 성장"
+  },
+  {
+   "id": "shipping",
+   "name": {
+    "ko": "해운",
+    "en": "Shipping"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "해운",
+     "운임",
+     "물동량",
+     "화물선",
+     "벌크선",
+     "항만"
+    ],
+    "en": [
+     "shipping",
+     "freight rates",
+     "cargo volume",
+     "cargo ship",
+     "bulk carrier",
+     "port"
+    ]
+   },
+   "existsEvidence": "중국발 물동량 증가로 벌크선 운임지수가 2008년 5월 사상 최고 (이후 급락)"
+  },
+  {
+   "id": "overseas_plant",
+   "name": {
+    "ko": "해외 플랜트 건설",
+    "en": "Overseas Plants"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "플랜트",
+     "해외 건설",
+     "중동",
+     "해외 수주",
+     "정유 공장"
+    ],
+    "en": [
+     "plant",
+     "overseas construction",
+     "Middle East",
+     "overseas orders",
+     "refinery plant"
+    ]
+   },
+   "existsEvidence": "고유가로 중동 발주 증가, 2008년 해외건설 수주 사상 최대(약 476억 달러)"
+  },
+  {
+   "id": "machinery",
+   "name": {
+    "ko": "건설기계",
+    "en": "Construction Machinery"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "건설기계",
+     "굴착기",
+     "중장비",
+     "인프라",
+     "공사 현장"
+    ],
+    "en": [
+     "construction machinery",
+     "excavator",
+     "heavy equipment",
+     "infrastructure",
+     "construction site"
+    ]
+   },
+   "existsEvidence": "중국 건설 붐으로 2000년대 중반 굴착기 등 수출 증가"
+  },
+  {
+   "id": "hallyu",
+   "name": {
+    "ko": "한류 엔터테인먼트",
+    "en": "Korean Wave Entertainment"
+   },
+   "sentiment": "positive",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "한류",
+     "드라마",
+     "연예",
+     "공연",
+     "엔터테인먼트"
+    ],
+    "en": [
+     "Korean Wave",
+     "drama",
+     "celebrity",
+     "concert",
+     "entertainment"
+    ]
+   },
+   "existsEvidence": "2003~2004년 드라마 한류(일본 방영), 2000년대 연예기획사 상장"
+  },
+  {
+   "id": "battery",
+   "name": {
+    "ko": "2차전지",
+    "en": "Rechargeable Batteries"
+   },
+   "sentiment": "positive",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "2차전지",
+     "배터리",
+     "리튬이온",
+     "충전",
+     "전지"
+    ],
+    "en": [
+     "rechargeable battery",
+     "battery",
+     "lithium-ion",
+     "charging",
+     "cell"
+    ]
+   },
+   "existsEvidence": "휴대폰·노트북용 리튬이온 전지 국내 양산(2000년 전후), 후반 세계 점유율 상승"
+  },
+  {
+   "id": "renewable",
+   "name": {
+    "ko": "신재생에너지(태양광·풍력)",
+    "en": "Renewables"
+   },
+   "sentiment": "positive",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "태양광",
+     "풍력",
+     "신재생",
+     "녹색",
+     "친환경 에너지"
+    ],
+    "en": [
+     "solar",
+     "wind power",
+     "renewable",
+     "green",
+     "clean energy"
+    ]
+   },
+   "existsEvidence": "2008년 '저탄소 녹색성장' 국가 비전 발표, 태양광 소재 투자 확대"
+  },
+  {
+   "id": "card",
+   "name": {
+    "ko": "신용카드",
+    "en": "Credit Cards"
+   },
+   "sentiment": "negative",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "신용카드",
+     "카드",
+     "연체",
+     "현금서비스",
+     "카드사"
+    ],
+    "en": [
+     "credit card",
+     "card",
+     "delinquency",
+     "cash advance",
+     "card issuer"
+    ]
+   },
+   "existsEvidence": "2003년 카드 대란 (연체율 급등, 대규모 신용불량자, 대형 카드사 유동성 위기)"
+  },
+  {
+   "id": "airline",
+   "name": {
+    "ko": "항공",
+    "en": "Airlines"
+   },
+   "sentiment": "negative",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "항공",
+     "항공사",
+     "여객",
+     "항공유",
+     "항공편"
+    ],
+    "en": [
+     "airline",
+     "air carrier",
+     "passengers",
+     "jet fuel",
+     "flights"
+    ]
+   },
+   "existsEvidence": "2001년 9·11 테러, 2003년 사스, 2008년 고유가·환율 급등으로 연속 타격"
+  },
+  {
+   "id": "dotcom",
+   "name": {
+    "ko": "닷컴·벤처",
+    "en": "Dot-com Ventures"
+   },
+   "sentiment": "negative",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "벤처",
+     "닷컴",
+     "기술주",
+     "신생 기업",
+     "인터넷 기업"
+    ],
+    "en": [
+     "venture",
+     "dot-com",
+     "tech stocks",
+     "startup",
+     "internet company"
+    ]
+   },
+   "existsEvidence": "2000년 IT 버블 붕괴로 벤처 기업 주가 폭락, 기술주 시장 급락"
+  },
+  {
+   "id": "textile",
+   "name": {
+    "ko": "섬유·의류 제조",
+    "en": "Textiles"
+   },
+   "sentiment": "negative",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "섬유",
+     "의류",
+     "원단",
+     "봉제",
+     "수입 쿼터"
+    ],
+    "en": [
+     "textile",
+     "apparel",
+     "fabric",
+     "sewing",
+     "import quota"
+    ]
+   },
+   "existsEvidence": "중국 저가 공세와 2005년 섬유 수입 쿼터 폐지로 국내 생산 축소"
+  },
+  {
+   "id": "travel",
+   "name": {
+    "ko": "여행",
+    "en": "Travel"
+   },
+   "sentiment": "negative",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "여행",
+     "관광",
+     "해외여행",
+     "여행사",
+     "관광객"
+    ],
+    "en": [
+     "travel",
+     "tourism",
+     "overseas trips",
+     "travel agency",
+     "tourists"
+    ]
+   },
+   "existsEvidence": "사스(2003)·신종플루(2009)·2008년 환율 급등으로 해외여행 수요 급감 반복"
+  },
+  {
+   "id": "poultry",
+   "name": {
+    "ko": "양계(가금)",
+    "en": "Poultry"
+   },
+   "sentiment": "negative",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "양계",
+     "닭",
+     "가금류",
+     "닭고기",
+     "조류인플루엔자",
+     "살처분"
+    ],
+    "en": [
+     "poultry",
+     "chicken",
+     "fowl",
+     "chicken meat",
+     "bird flu",
+     "culling"
+    ]
+   },
+   "existsEvidence": "2003·2006·2008년 고병원성 조류인플루엔자 발생과 살처분"
+  },
+  {
+   "id": "landline",
+   "name": {
+    "ko": "유선전화",
+    "en": "Landlines"
+   },
+   "sentiment": "negative",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "유선전화",
+     "집 전화",
+     "유선",
+     "전화 가입자",
+     "인터넷 전화"
+    ],
+    "en": [
+     "landline",
+     "home phone",
+     "wired line",
+     "phone subscribers",
+     "internet phone"
+    ]
+   },
+   "existsEvidence": "이동전화 가입자가 유선을 넘어선(1999년 무렵) 뒤 2000년대 유선 가입자 감소"
+  },
+  {
+   "id": "records",
+   "name": {
+    "ko": "음반",
+    "en": "Records"
+   },
+   "sentiment": "negative",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "음반",
+     "앨범",
+     "CD",
+     "음원",
+     "가요"
+    ],
+    "en": [
+     "record",
+     "album",
+     "CD",
+     "digital music",
+     "pop songs"
+    ]
+   },
+   "existsEvidence": "MP3·온라인 음원 확산으로 2000년대 음반 시장 규모 급감"
+  },
+  {
+   "id": "pc",
+   "name": {
+    "ko": "PC 제조",
+    "en": "PC Makers"
+   },
+   "sentiment": "negative",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "PC",
+     "컴퓨터",
+     "데스크톱",
+     "PC 제조",
+     "모니터"
+    ],
+    "en": [
+     "PC",
+     "computer",
+     "desktop",
+     "PC manufacturing",
+     "monitor"
+    ]
+   },
+   "existsEvidence": "2000년대 국내 PC 제조사 경영난 (한 중견 업체 2005년 법정관리)"
+  },
+  {
+   "id": "film",
+   "name": {
+    "ko": "필름·사진 인화",
+    "en": "Film & Photo"
+   },
+   "sentiment": "negative",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "필름",
+     "사진",
+     "인화",
+     "현상",
+     "필름 카메라"
+    ],
+    "en": [
+     "film",
+     "photo",
+     "printing",
+     "developing",
+     "film camera"
+    ]
+   },
+   "existsEvidence": "디지털카메라 보급으로 2000년대 중반 필름 수요 급감"
+  },
+  {
+   "id": "print",
+   "name": {
+    "ko": "인쇄 매체(신문·잡지)",
+    "en": "Print Media"
+   },
+   "sentiment": "negative",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "신문",
+     "잡지",
+     "구독",
+     "인쇄",
+     "지면 광고"
+    ],
+    "en": [
+     "newspaper",
+     "magazine",
+     "subscription",
+     "printing",
+     "print ads"
+    ]
+   },
+   "existsEvidence": "인터넷 뉴스 확산으로 2000년대 신문 구독률·광고 감소"
+  },
+  {
+   "id": "savings_bank",
+   "name": {
+    "ko": "저축은행",
+    "en": "Savings Banks"
+   },
+   "sentiment": "negative",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "저축은행",
+     "서민 금융",
+     "PF 대출",
+     "부동산 대출",
+     "고금리 예금"
+    ],
+    "en": [
+     "savings bank",
+     "consumer finance",
+     "project finance loans",
+     "property loans",
+     "high-rate deposits"
+    ]
+   },
+   "existsEvidence": "2000년대 후반 부동산 PF 대출 부실 누적 (2008년 이후 문제화)"
+  },
+  {
+   "id": "flour",
+   "name": {
+    "ko": "제분·제당",
+    "en": "Flour & Sugar"
+   },
+   "sentiment": "negative",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "밀가루",
+     "설탕",
+     "제분",
+     "곡물",
+     "원당"
+    ],
+    "en": [
+     "flour",
+     "sugar",
+     "milling",
+     "grain",
+     "raw sugar"
+    ]
+   },
+   "existsEvidence": "2007~2008년 국제 곡물가 급등으로 원가 부담"
+  },
+  {
+   "id": "auto",
+   "name": {
+    "ko": "자동차",
+    "en": "Automobiles"
+   },
+   "sentiment": "neutral",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "자동차",
+     "완성차",
+     "승용차",
+     "자동차 수출",
+     "차량"
+    ],
+    "en": [
+     "automobile",
+     "automaker",
+     "passenger car",
+     "car exports",
+     "vehicle"
+    ]
+   },
+   "existsEvidence": "2000년대 해외 공장 확대와 수출 증가, 동시에 파업·환율 변동"
+  },
+  {
+   "id": "bank",
+   "name": {
+    "ko": "은행",
+    "en": "Banks"
+   },
+   "sentiment": "neutral",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "은행",
+     "대출",
+     "금리",
+     "예금",
+     "외화"
+    ],
+    "en": [
+     "bank",
+     "loans",
+     "interest rate",
+     "deposits",
+     "foreign currency"
+    ]
+   },
+   "existsEvidence": "2000년대 초 구조조정 뒤 성장, 2008년 금융위기 외화 유동성 위기"
+  },
+  {
+   "id": "securities",
+   "name": {
+    "ko": "증권",
+    "en": "Securities"
+   },
+   "sentiment": "neutral",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "증권",
+     "증시",
+     "주식",
+     "펀드",
+     "거래대금"
+    ],
+    "en": [
+     "brokerage",
+     "stock market",
+     "shares",
+     "funds",
+     "trading volume"
+    ]
+   },
+   "existsEvidence": "2005~2007년 펀드 열풍과 지수 2,000 돌파(2007년 7월), 2008년 급락"
+  },
+  {
+   "id": "housing",
+   "name": {
+    "ko": "주택 건설",
+    "en": "Housing Construction"
+   },
+   "sentiment": "neutral",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "아파트",
+     "주택",
+     "분양",
+     "집값",
+     "부동산"
+    ],
+    "en": [
+     "apartment",
+     "housing",
+     "presales",
+     "home prices",
+     "real estate"
+    ]
+   },
+   "existsEvidence": "2000년대 중반 집값 급등, 2008년 이후 미분양 증가"
+  },
+  {
+   "id": "refining",
+   "name": {
+    "ko": "정유",
+    "en": "Oil Refining"
+   },
+   "sentiment": "neutral",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "정유",
+     "유가",
+     "석유",
+     "원유",
+     "휘발유"
+    ],
+    "en": [
+     "refining",
+     "oil price",
+     "petroleum",
+     "crude oil",
+     "gasoline"
+    ]
+   },
+   "existsEvidence": "2008년 유가 급등(7월 배럴당 147달러)과 정제 마진 변동"
+  },
+  {
+   "id": "mobile",
+   "name": {
+    "ko": "이동통신 서비스",
+    "en": "Mobile Carriers"
+   },
+   "sentiment": "neutral",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "이동통신",
+     "통신사",
+     "가입자",
+     "통신 요금",
+     "영상통화"
+    ],
+    "en": [
+     "mobile carrier",
+     "telecom operator",
+     "subscribers",
+     "phone bills",
+     "video calls"
+    ]
+   },
+   "existsEvidence": "2000년대 가입자 포화, 2007년 3세대(영상통화) 경쟁"
+  },
+  {
+   "id": "mart",
+   "name": {
+    "ko": "대형마트",
+    "en": "Big-box Retail"
+   },
+   "sentiment": "neutral",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "대형마트",
+     "유통",
+     "할인점",
+     "매장",
+     "소비"
+    ],
+    "en": [
+     "big-box store",
+     "retail",
+     "discount store",
+     "stores",
+     "consumer spending"
+    ]
+   },
+   "existsEvidence": "2000년대 대형마트 점포 급증, 유통 구조 재편"
+  },
+  {
+   "id": "pharma",
+   "name": {
+    "ko": "제약",
+    "en": "Pharmaceuticals"
+   },
+   "sentiment": "neutral",
+   "relevance": "core",
+   "keywords": {
+    "ko": [
+     "제약",
+     "의약품",
+     "백신",
+     "치료제",
+     "약값"
+    ],
+    "en": [
+     "pharmaceutical",
+     "medicine",
+     "vaccine",
+     "treatment",
+     "drug prices"
+    ]
+   },
+   "existsEvidence": "2000년 의약분업 시행, 2006년 이후 약가 정책 변화"
+  },
+  {
+   "id": "food",
+   "name": {
+    "ko": "식품",
+    "en": "Foods"
+   },
+   "sentiment": "neutral",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "식품",
+     "가공식품",
+     "분유",
+     "라면",
+     "먹거리"
+    ],
+    "en": [
+     "food",
+     "processed food",
+     "infant formula",
+     "instant noodles",
+     "groceries"
+    ]
+   },
+   "existsEvidence": "2000년대 식품 안전 사고(2008년 멜라민)와 원재료 가격 변동"
+  },
+  {
+   "id": "defense",
+   "name": {
+    "ko": "방산",
+    "en": "Defense"
+   },
+   "sentiment": "neutral",
+   "relevance": "peripheral",
+   "keywords": {
+    "ko": [
+     "방산",
+     "국방",
+     "무기",
+     "자주포",
+     "군사"
+    ],
+    "en": [
+     "defense",
+     "national defense",
+     "weapons",
+     "self-propelled howitzer",
+     "military"
+    ]
+   },
+   "existsEvidence": "2001년 자주포 첫 수출 계약 등 2000년대 무기 국산화·수출 시작"
+  }
+ ],
+ "stocks": [
+  {
+   "id": "2000s-semiconductor",
+   "themeId": "semiconductor",
+   "name": {
+    "ko": "은빛 반도체주",
+    "en": "Silver Chip Stock"
+   },
+   "description": {
+    "ko": "PC와 휴대폰에 들어가는 메모리 반도체를 만든다.",
+    "en": "Makes memory chips for PCs and phones."
+   }
+  },
+  {
+   "id": "2000s-shipbuilding",
+   "themeId": "shipbuilding",
+   "name": {
+    "ko": "물결 조선주",
+    "en": "Wave Shipbuilding Stock"
+   },
+   "description": {
+    "ko": "유조선과 컨테이너선을 만드는 조선소를 운영한다.",
+    "en": "Runs a shipyard building tankers and container ships."
+   }
+  },
+  {
+   "id": "2000s-steel",
+   "themeId": "steel",
+   "name": {
+    "ko": "자갈 철강주",
+    "en": "Pebble Steel Stock"
+   },
+   "description": {
+    "ko": "철광석을 녹여 강판과 철근을 만든다.",
+    "en": "Melts iron ore into steel plate and rebar."
+   }
+  },
+  {
+   "id": "2000s-handset",
+   "themeId": "handset",
+   "name": {
+    "ko": "구름 휴대폰주",
+    "en": "Cloud Handset Stock"
+   },
+   "description": {
+    "ko": "휴대폰을 설계해 국내외 통신사에 공급한다.",
+    "en": "Designs handsets and supplies carriers at home and abroad."
+   }
+  },
+  {
+   "id": "2000s-display",
+   "themeId": "display",
+   "name": {
+    "ko": "유리 패널주",
+    "en": "Glass Panel Stock"
+   },
+   "description": {
+    "ko": "TV와 모니터에 들어가는 액정 패널을 만든다.",
+    "en": "Makes LCD panels for TVs and monitors."
+   }
+  },
+  {
+   "id": "2000s-online_game",
+   "themeId": "online_game",
+   "name": {
+    "ko": "별빛 게임주",
+    "en": "Starlight Games Stock"
+   },
+   "description": {
+    "ko": "PC로 즐기는 온라인 롤플레잉 게임을 서비스한다.",
+    "en": "Runs online role-playing games for PC."
+   }
+  },
+  {
+   "id": "2000s-portal",
+   "themeId": "portal",
+   "name": {
+    "ko": "등대 포털주",
+    "en": "Lighthouse Portal Stock"
+   },
+   "description": {
+    "ko": "검색과 이메일, 카페 서비스를 운영하는 인터넷 회사다.",
+    "en": "An internet company running search, email and communities."
+   }
+  },
+  {
+   "id": "2000s-shipping",
+   "themeId": "shipping",
+   "name": {
+    "ko": "돛배 해운주",
+    "en": "Sailboat Shipping Stock"
+   },
+   "description": {
+    "ko": "화물선으로 철광석과 곡물, 컨테이너를 실어 나른다.",
+    "en": "Carries iron ore, grain and containers by sea."
+   }
+  },
+  {
+   "id": "2000s-overseas_plant",
+   "themeId": "overseas_plant",
+   "name": {
+    "ko": "모래 플랜트주",
+    "en": "Sand Plant Stock"
+   },
+   "description": {
+    "ko": "해외에 정유 공장과 발전소를 지어 주는 건설사다.",
+    "en": "Builds refineries and power plants overseas."
+   }
+  },
+  {
+   "id": "2000s-machinery",
+   "themeId": "machinery",
+   "name": {
+    "ko": "단풍 중장비주",
+    "en": "Maple Machinery Stock"
+   },
+   "description": {
+    "ko": "굴착기와 지게차를 만들어 공사 현장에 판다.",
+    "en": "Makes excavators and forklifts for construction sites."
+   }
+  },
+  {
+   "id": "2000s-hallyu",
+   "themeId": "hallyu",
+   "name": {
+    "ko": "노을 엔터주",
+    "en": "Dusk Entertainment Stock"
+   },
+   "description": {
+    "ko": "가수와 배우를 관리하고 드라마와 공연을 만든다.",
+    "en": "Manages singers and actors and produces dramas and shows."
+   }
+  },
+  {
+   "id": "2000s-battery",
+   "themeId": "battery",
+   "name": {
+    "ko": "이슬 전지주",
+    "en": "Dew Battery Stock"
+   },
+   "description": {
+    "ko": "휴대폰과 노트북에 들어가는 충전용 전지를 만든다.",
+    "en": "Makes rechargeable cells for phones and laptops."
+   }
+  },
+  {
+   "id": "2000s-renewable",
+   "themeId": "renewable",
+   "name": {
+    "ko": "바람 신재생주",
+    "en": "Wind Renewables Stock"
+   },
+   "description": {
+    "ko": "태양광 모듈과 풍력 발전기 부품을 만든다.",
+    "en": "Makes solar modules and wind turbine parts."
+   }
+  },
+  {
+   "id": "2000s-card",
+   "themeId": "card",
+   "name": {
+    "ko": "종이 카드주",
+    "en": "Paper Card Stock"
+   },
+   "description": {
+    "ko": "신용카드를 발급하고 할부와 현금서비스를 제공한다.",
+    "en": "Issues credit cards and offers installments and cash advances."
+   }
+  },
+  {
+   "id": "2000s-airline",
+   "themeId": "airline",
+   "name": {
+    "ko": "새벽 항공주",
+    "en": "Dawn Airlines Stock"
+   },
+   "description": {
+    "ko": "국내선과 국제선 여객기를 운항한다.",
+    "en": "Flies domestic and international passenger routes."
+   }
+  },
+  {
+   "id": "2000s-dotcom",
+   "themeId": "dotcom",
+   "name": {
+    "ko": "파랑 벤처주",
+    "en": "Blue Venture Stock"
+   },
+   "description": {
+    "ko": "인터넷 쇼핑몰과 커뮤니티 사이트를 만드는 작은 회사다.",
+    "en": "A small firm building online malls and community sites."
+   }
+  },
+  {
+   "id": "2000s-textile",
+   "themeId": "textile",
+   "name": {
+    "ko": "솔잎 섬유주",
+    "en": "Pine Textile Stock"
+   },
+   "description": {
+    "ko": "원단을 짜고 의류를 봉제해 수출한다.",
+    "en": "Weaves fabric and sews apparel for export."
+   }
+  },
+  {
+   "id": "2000s-travel",
+   "themeId": "travel",
+   "name": {
+    "ko": "갈대 여행주",
+    "en": "Reed Travel Stock"
+   },
+   "description": {
+    "ko": "해외 패키지 여행 상품을 만들어 판다.",
+    "en": "Sells overseas package tours."
+   }
+  },
+  {
+   "id": "2000s-poultry",
+   "themeId": "poultry",
+   "name": {
+    "ko": "들꽃 양계주",
+    "en": "Wildflower Poultry Stock"
+   },
+   "description": {
+    "ko": "닭을 길러 닭고기와 달걀을 판다.",
+    "en": "Raises chickens and sells meat and eggs."
+   }
+  },
+  {
+   "id": "2000s-landline",
+   "themeId": "landline",
+   "name": {
+    "ko": "연필 전화주",
+    "en": "Pencil Telephone Stock"
+   },
+   "description": {
+    "ko": "집과 사무실에 유선전화 서비스를 제공한다.",
+    "en": "Provides landline phone service to homes and offices."
+   }
+  },
+  {
+   "id": "2000s-records",
+   "themeId": "records",
+   "name": {
+    "ko": "보라 음반주",
+    "en": "Violet Records Stock"
+   },
+   "description": {
+    "ko": "가요 음반을 만들어 CD와 테이프로 판다.",
+    "en": "Produces pop albums and sells CDs and tapes."
+   }
+  },
+  {
+   "id": "2000s-pc",
+   "themeId": "pc",
+   "name": {
+    "ko": "하양 컴퓨터주",
+    "en": "White Computer Stock"
+   },
+   "description": {
+    "ko": "가정과 학교에 쓰는 데스크톱 PC를 조립해 판다.",
+    "en": "Assembles desktop PCs for homes and schools."
+   }
+  },
+  {
+   "id": "2000s-film",
+   "themeId": "film",
+   "name": {
+    "ko": "호수 필름주",
+    "en": "Lake Film Stock"
+   },
+   "description": {
+    "ko": "사진 필름을 만들고 동네 사진관에 인화 장비를 공급한다.",
+    "en": "Makes photo film and supplies printing gear to photo shops."
+   }
+  },
+  {
+   "id": "2000s-print",
+   "themeId": "print",
+   "name": {
+    "ko": "강물 신문주",
+    "en": "River Newspaper Stock"
+   },
+   "description": {
+    "ko": "일간 신문과 주간 잡지를 펴낸다.",
+    "en": "Publishes a daily newspaper and weekly magazines."
+   }
+  },
+  {
+   "id": "2000s-savings_bank",
+   "themeId": "savings_bank",
+   "name": {
+    "ko": "저녁 저축은행주",
+    "en": "Evening Savings Bank Stock"
+   },
+   "description": {
+    "ko": "높은 금리의 예금을 받아 개인과 건설사에 돈을 빌려준다.",
+    "en": "Takes high-rate deposits and lends to individuals and builders."
+   }
+  },
+  {
+   "id": "2000s-flour",
+   "themeId": "flour",
+   "name": {
+    "ko": "노랑 제분주",
+    "en": "Yellow Flour Stock"
+   },
+   "description": {
+    "ko": "수입한 밀과 원당으로 밀가루와 설탕을 만든다.",
+    "en": "Turns imported wheat and raw sugar into flour and sugar."
+   }
+  },
+  {
+   "id": "2000s-auto",
+   "themeId": "auto",
+   "name": {
+    "ko": "검정 자동차주",
+    "en": "Black Motors Stock"
+   },
+   "description": {
+    "ko": "승용차와 소형 트럭을 만들어 국내외에 판다.",
+    "en": "Builds cars and small trucks for home and abroad."
+   }
+  },
+  {
+   "id": "2000s-bank",
+   "themeId": "bank",
+   "name": {
+    "ko": "초록 은행주",
+    "en": "Green Bank Stock"
+   },
+   "description": {
+    "ko": "예금을 받아 가계와 기업에 대출해 주는 시중 은행이다.",
+    "en": "A commercial bank taking deposits and lending to homes and firms."
+   }
+  },
+  {
+   "id": "2000s-securities",
+   "themeId": "securities",
+   "name": {
+    "ko": "주황 증권주",
+    "en": "Orange Securities Stock"
+   },
+   "description": {
+    "ko": "주식 매매를 중개하고 펀드를 판매한다.",
+    "en": "Brokers share trades and sells funds."
+   }
+  },
+  {
+   "id": "2000s-housing",
+   "themeId": "housing",
+   "name": {
+    "ko": "우산 건설주",
+    "en": "Umbrella Builders Stock"
+   },
+   "description": {
+    "ko": "아파트를 지어 분양하는 주택 건설사다.",
+    "en": "A homebuilder that builds and sells apartments."
+   }
+  },
+  {
+   "id": "2000s-refining",
+   "themeId": "refining",
+   "name": {
+    "ko": "안개 정유주",
+    "en": "Mist Refining Stock"
+   },
+   "description": {
+    "ko": "수입한 원유로 휘발유와 경유를 만든다.",
+    "en": "Refines imported crude into gasoline and diesel."
+   }
+  },
+  {
+   "id": "2000s-mobile",
+   "themeId": "mobile",
+   "name": {
+    "ko": "고요 통신주",
+    "en": "Calm Telecom Stock"
+   },
+   "description": {
+    "ko": "휴대폰 통화와 데이터 서비스를 제공하는 통신사다.",
+    "en": "A carrier offering mobile calls and data."
+   }
+  },
+  {
+   "id": "2000s-mart",
+   "themeId": "mart",
+   "name": {
+    "ko": "하늘 유통주",
+    "en": "Sky Retail Stock"
+   },
+   "description": {
+    "ko": "생활용품과 식료품을 파는 대형 할인점을 운영한다.",
+    "en": "Runs big discount stores selling groceries and household goods."
+   }
+  },
+  {
+   "id": "2000s-pharma",
+   "themeId": "pharma",
+   "name": {
+    "ko": "구슬 제약주",
+    "en": "Marble Pharma Stock"
+   },
+   "description": {
+    "ko": "감기약과 백신, 병원용 치료제를 만든다.",
+    "en": "Makes cold medicine, vaccines and hospital drugs."
+   }
+  },
+  {
+   "id": "2000s-food",
+   "themeId": "food",
+   "name": {
+    "ko": "참새 식품주",
+    "en": "Sparrow Foods Stock"
+   },
+   "description": {
+    "ko": "라면과 과자, 분유 같은 가공식품을 만든다.",
+    "en": "Makes instant noodles, snacks and infant formula."
+   }
+  },
+  {
+   "id": "2000s-defense",
+   "themeId": "defense",
+   "name": {
+    "ko": "돌담 방산주",
+    "en": "Stonewall Defense Stock"
+   },
+   "description": {
+    "ko": "군용 장갑차와 포를 만들어 군에 납품한다.",
+    "en": "Builds armored vehicles and artillery for the military."
+   }
+  }
+ ],
+ "breaking": [
+  {
+   "id": "b01-tech-bubble",
+   "type": "breaking",
+   "magnitude": 8,
+   "title": {
+    "ko": "미국 기술주 폭락, 인터넷 벤처 거품 꺼져",
+    "en": "US Tech Stocks Crash as the Internet Venture Bubble Bursts"
+   },
+   "body": {
+    "ko": "미국 기술주 지수가 고점에서 연일 급락하며 인터넷 벤처 기업의 거품이 꺼지고 있다. 국내 기술주 시장도 함께 떨어졌고, 투자금이 끊긴 닷컴 기업들이 줄줄이 구조조정에 들어갔다.",
+    "en": "US tech stocks keep plunging from their peak as the internet venture bubble bursts. Korea's tech market fell with them, and dot-com firms cut off from funding are restructuring one after another."
+   },
+   "effects": [
+    {
+     "themeId": "dotcom",
+     "impact": -8,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "벤처",
+        "themeTerm": "벤처"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "투자금이 끊겨 벤처 기업 주가가 크게 떨어짐",
+      "en": "Funding dried up and venture stocks tumbled"
+     }
+    },
+    {
+     "themeId": "portal",
+     "impact": -5,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "광고주였던 닷컴 기업이 무너지면 온라인 광고 매출이 준다"
+     },
+     "reason": {
+      "ko": "광고주였던 닷컴 기업이 무너져 온라인 광고가 줄어듦",
+      "en": "Failing dot-coms were big ad buyers, so online ads shrank"
+     }
+    },
+    {
+     "themeId": "securities",
+     "impact": -5,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "주가 급락에 거래가 줄면 증권사 수수료가 준다"
+     },
+     "reason": {
+      "ko": "주가 급락으로 거래가 줄어 수수료 수입 감소",
+      "en": "Falling prices cut trading and brokerage fees"
+     }
+    },
+    {
+     "themeId": "semiconductor",
+     "impact": -5,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "기술 기업 투자가 줄면 서버·PC용 메모리 주문이 준다"
+     },
+     "reason": {
+      "ko": "기술 기업 투자 축소로 메모리 주문 감소",
+      "en": "Tech firms cut spending, so memory orders fell"
+     }
+    },
+    {
+     "themeId": "pc",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "IT 투자 위축 → 기업용 PC 교체 지연"
+     },
+     "reason": {
+      "ko": "기업들이 PC 교체를 미룸",
+      "en": "Companies delayed PC upgrades"
+     }
+    },
+    {
+     "themeId": "online_game",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "인터넷 기업 전반 투자 심리 위축"
+     },
+     "reason": {
+      "ko": "인터넷 기업 전반에 대한 투자 심리가 얼어붙음",
+      "en": "Investor appetite for all internet firms froze"
+     }
+    },
+    {
+     "themeId": "handset",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "기술주 전반 투자 심리 위축"
+     },
+     "reason": {
+      "ko": "기술주 전반이 함께 약세",
+      "en": "Tech stocks weakened across the board"
+     }
+    }
+   ],
+   "realDate": "2000-03 ~ 2002",
+   "source": {
+    "event": "미국 기술주 지수 고점 이후 폭락, 닷컴 버블 붕괴",
+    "impactRationale": "직접 1개(±8), 밀접 3개(±5), 간접 3개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b02-us-terror",
+   "type": "breaking",
+   "magnitude": 9,
+   "title": {
+    "ko": "미국 동시다발 테러, 세계 증시 급락",
+    "en": "Coordinated Terror Attacks Hit the US, Global Markets Plunge"
+   },
+   "body": {
+    "ko": "여객기를 이용한 동시다발 테러로 미국 대도시가 큰 피해를 입었다. 미국 증시가 며칠간 문을 닫았고, 각국 항공사는 운항을 줄였다. 해외여행 취소가 잇따르고 국제 유가는 출렁였다.",
+    "en": "Coordinated attacks using hijacked airliners caused heavy damage in major US cities. US markets closed for days and airlines cut flights worldwide. Overseas trips were canceled and oil prices swung."
+   },
+   "effects": [
+    {
+     "themeId": "airline",
+     "impact": -9,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "항공사",
+        "themeTerm": "항공사"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "테러 공포와 운항 축소로 승객이 급감",
+      "en": "Fear and flight cuts emptied planes"
+     }
+    },
+    {
+     "themeId": "travel",
+     "impact": -9,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "해외여행",
+        "themeTerm": "해외여행"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "해외여행 취소가 잇따름",
+      "en": "Overseas trips were canceled en masse"
+     }
+    },
+    {
+     "themeId": "securities",
+     "impact": -5,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "세계 증시 급락 → 투자 심리 위축"
+     },
+     "reason": {
+      "ko": "세계 증시 급락으로 거래와 투자 심리 위축",
+      "en": "Global sell-off chilled trading"
+     }
+    },
+    {
+     "themeId": "defense",
+     "impact": 5,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "안보 불안 → 국방 예산 증가 기대"
+     },
+     "reason": {
+      "ko": "안보 불안으로 국방 예산이 늘 것이라는 관측",
+      "en": "Security fears pointed to bigger defense budgets"
+     }
+    },
+    {
+     "themeId": "refining",
+     "impact": 3,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "중동 긴장 → 원유 공급 불안 → 유가 출렁임"
+     },
+     "reason": {
+      "ko": "중동 긴장으로 유가가 출렁임",
+      "en": "Middle East tension rattled oil prices"
+     }
+    },
+    {
+     "themeId": "shipping",
+     "impact": -3,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "세계 교역 위축 우려 → 물동량 감소"
+     },
+     "reason": {
+      "ko": "세계 교역이 줄 것이라는 걱정",
+      "en": "Worries about shrinking world trade"
+     }
+    },
+    {
+     "themeId": "mart",
+     "impact": -3,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "소비 심리 위축 → 매장 매출 감소"
+     },
+     "reason": {
+      "ko": "불안한 분위기에 소비가 움츠러듦",
+      "en": "Anxious shoppers spent less"
+     }
+    }
+   ],
+   "realDate": "2001-09-11",
+   "source": {
+    "event": "미국 동시다발 테러 (재개장 후 미국 증시 급락, 국내 증시 하루 두 자릿수 하락)",
+    "impactRationale": "직접 2개(±9), 밀접 2개(±5), 간접 3개(±3) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b03-dram-crash",
+   "type": "breaking",
+   "magnitude": 7,
+   "title": {
+    "ko": "메모리 반도체 가격 1년 새 80% 폭락",
+    "en": "Memory Chip Prices Plunge 80% in a Year"
+   },
+   "body": {
+    "ko": "PC 수요가 줄면서 D램 현물 가격이 1년 만에 5분의 1 수준으로 떨어졌다. 반도체 회사들은 감산을 검토하고 있다. 반면 PC를 조립하는 회사들은 부품값 부담을 덜게 됐다.",
+    "en": "With PC demand slumping, spot DRAM prices fell to a fifth of their level a year ago. Chipmakers are weighing output cuts, while PC assemblers enjoy cheaper parts."
+   },
+   "effects": [
+    {
+     "themeId": "semiconductor",
+     "impact": -7,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "D램",
+        "themeTerm": "D램"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "D램 값이 폭락해 반도체 회사 이익이 급감",
+      "en": "DRAM prices collapsed, crushing chipmaker profits"
+     }
+    },
+    {
+     "themeId": "pc",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "메모리 값이 싸지면 PC 원가가 줄어든다"
+     },
+     "reason": {
+      "ko": "메모리 값 하락으로 PC 원가 부담이 줄어듦",
+      "en": "Cheaper memory lowered PC costs"
+     }
+    },
+    {
+     "themeId": "handset",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "부품값 하락 → 단말기 원가 부담 감소"
+     },
+     "reason": {
+      "ko": "부품값이 내려 단말기 원가가 줄어듦",
+      "en": "Cheaper parts trimmed handset costs"
+     }
+    },
+    {
+     "themeId": "display",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "전자 부품 업황 전반 위축"
+     },
+     "reason": {
+      "ko": "전자 부품 업황 전반이 가라앉음",
+      "en": "The whole electronics parts cycle weakened"
+     }
+    },
+    {
+     "themeId": "securities",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "대형 수출주 부진 → 지수 하락"
+     },
+     "reason": {
+      "ko": "대형 수출주가 부진해 지수가 약세",
+      "en": "Big exporters dragged the index down"
+     }
+    },
+    {
+     "themeId": "dotcom",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "기술주 투자 심리 위축"
+     },
+     "reason": {
+      "ko": "기술주 투자 심리가 함께 위축",
+      "en": "Tech sentiment soured"
+     }
+    }
+   ],
+   "realDate": "2001",
+   "source": {
+    "event": "D램 가격 폭락 (12개월간 약 -80%)",
+    "impactRationale": "직접 1개(±7), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b04-game-china",
+   "type": "breaking",
+   "magnitude": 6,
+   "title": {
+    "ko": "국산 온라인 게임, 중국 동시 접속자 수십만 명",
+    "en": "Korean Online Game Draws Hundreds of Thousands of Players in China"
+   },
+   "body": {
+    "ko": "국내 회사가 만든 온라인 게임이 중국에서 동시 접속자 수십만 명을 기록했다. 현지 PC방마다 이 게임을 하는 게이머로 붐빈다는 소식에 다른 게임 회사들도 해외 진출을 서두르고 있다.",
+    "en": "An online game made by a Korean studio hit hundreds of thousands of concurrent players in China. PC rooms there are packed with its gamers, and other studios are rushing abroad."
+   },
+   "effects": [
+    {
+     "themeId": "online_game",
+     "impact": 6,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "온라인 게임",
+        "themeTerm": "온라인 게임"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "해외에서 흥행해 게임 매출이 크게 늘 것으로 보임",
+      "en": "A hit abroad promised big game revenue"
+     }
+    },
+    {
+     "themeId": "portal",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "게임 포털을 함께 운영하는 인터넷 회사도 해외 매출 기대"
+     },
+     "reason": {
+      "ko": "게임 서비스를 함께 하는 인터넷 회사도 해외 매출 기대",
+      "en": "Internet firms with game portals eyed overseas sales"
+     }
+    },
+    {
+     "themeId": "hallyu",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "한국 콘텐츠에 대한 관심 확대"
+     },
+     "reason": {
+      "ko": "한국 콘텐츠 전반에 관심이 커짐",
+      "en": "Interest in Korean content grew"
+     }
+    },
+    {
+     "themeId": "pc",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "PC방 증설 → PC 수요 증가"
+     },
+     "reason": {
+      "ko": "PC방이 늘어 PC 주문이 늘어남",
+      "en": "More PC rooms meant more PC orders"
+     }
+    },
+    {
+     "themeId": "securities",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "게임 관련주 관심 → 거래 증가"
+     },
+     "reason": {
+      "ko": "게임 관련주에 관심이 몰려 거래 증가",
+      "en": "Game stocks drew trading"
+     }
+    },
+    {
+     "themeId": "landline",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "PC방 초고속 회선 수요 증가"
+     },
+     "reason": {
+      "ko": "PC방용 초고속 인터넷 회선 수요 증가",
+      "en": "PC rooms needed more broadband lines"
+     }
+    }
+   ],
+   "realDate": "2001-11 ~ 2002",
+   "source": {
+    "event": "국산 온라인 RPG 중국 흥행 (동시접속 수십만 명)",
+    "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b05-drama-japan",
+   "type": "breaking",
+   "magnitude": 6,
+   "title": {
+    "ko": "한국 드라마 일본서 인기, 촬영지 관광 몰려",
+    "en": "Korean Drama Becomes a Hit in Japan, Fans Flock to Filming Sites"
+   },
+   "body": {
+    "ko": "한국 드라마가 일본 공영 방송에서 높은 시청률을 기록하며 한류 열풍이 불고 있다. 드라마 촬영지를 찾는 일본 관광객이 늘었고, 주인공이 부른 주제곡 음반도 많이 팔렸다.",
+    "en": "A Korean drama drew high ratings on Japanese public TV, sparking a Korean Wave craze. More Japanese tourists are visiting the filming sites, and the theme song album sold well."
+   },
+   "effects": [
+    {
+     "themeId": "hallyu",
+     "impact": 6,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "한류",
+        "themeTerm": "한류"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "한류 열풍으로 드라마·공연 매출 증가",
+      "en": "The Korean Wave lifted drama and concert sales"
+     }
+    },
+    {
+     "themeId": "travel",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "일본 관광객 증가 → 여행업 매출 증가"
+     },
+     "reason": {
+      "ko": "촬영지 관광객이 늘어 여행 상품 판매 증가",
+      "en": "Fan tours boosted travel sales"
+     }
+    },
+    {
+     "themeId": "airline",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "한일 노선 승객 증가"
+     },
+     "reason": {
+      "ko": "한일 노선 승객이 늘어남",
+      "en": "More passengers on Korea-Japan routes"
+     }
+    },
+    {
+     "themeId": "records",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "드라마 주제곡 음반 판매 증가"
+     },
+     "reason": {
+      "ko": "드라마 주제곡 음반이 많이 팔림",
+      "en": "The drama soundtrack sold well"
+     }
+    },
+    {
+     "themeId": "mart",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "관광객 쇼핑 증가"
+     },
+     "reason": {
+      "ko": "관광객 쇼핑이 늘어남",
+      "en": "Tourists shopped more"
+     }
+    },
+    {
+     "themeId": "food",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "한국 먹거리 관심 → 수출 증가"
+     },
+     "reason": {
+      "ko": "한국 먹거리에 대한 관심이 커짐",
+      "en": "Interest in Korean food grew"
+     }
+    }
+   ],
+   "realDate": "2003-04 ~ 2004",
+   "source": {
+    "event": "드라마 한류 일본 방영 붐",
+    "impactRationale": "직접 1개(±6), 밀접 3개(±4), 간접 2개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b06-high-speed-rail",
+   "type": "breaking",
+   "magnitude": 5,
+   "title": {
+    "ko": "고속철도 개통, 서울~부산 2시간대",
+    "en": "High-Speed Rail Opens, Seoul to Busan in Under Three Hours"
+   },
+   "body": {
+    "ko": "고속철도가 개통해 서울에서 부산까지 2시간 40분이면 닿게 됐다. 짧은 국내선 항공편 승객은 크게 줄 것으로 보이고, 역 주변 개발과 지역 관광에 대한 관심이 커졌다.",
+    "en": "High-speed rail opened, cutting Seoul to Busan to 2 hours 40 minutes. Short domestic flights are likely to lose many passengers, while station-area development and local tourism draw interest."
+   },
+   "effects": [
+    {
+     "themeId": "airline",
+     "impact": -5,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "항공편",
+        "themeTerm": "항공편"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "짧은 국내선 승객이 고속철도로 옮겨 감",
+      "en": "Short-haul flyers switched to rail"
+     }
+    },
+    {
+     "themeId": "travel",
+     "impact": 3,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "지역 관광 이동이 쉬워짐"
+     },
+     "reason": {
+      "ko": "지방 여행이 쉬워져 국내 여행 수요 증가",
+      "en": "Easier trips lifted domestic travel"
+     }
+    },
+    {
+     "themeId": "housing",
+     "impact": 3,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "역 주변 개발 기대"
+     },
+     "reason": {
+      "ko": "역 주변 개발로 주택 분양 기대",
+      "en": "Station-area development lifted housing hopes"
+     }
+    },
+    {
+     "themeId": "steel",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "철로·역사 공사에 철강재 사용"
+     },
+     "reason": {
+      "ko": "철로와 역 공사에 철강재가 쓰임",
+      "en": "Rails and stations use steel"
+     }
+    },
+    {
+     "themeId": "machinery",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "역 주변 공사 → 장비 수요"
+     },
+     "reason": {
+      "ko": "역 주변 공사로 장비 수요 증가",
+      "en": "Station projects needed equipment"
+     }
+    },
+    {
+     "themeId": "auto",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "장거리 자가용 이동 일부가 철도로"
+     },
+     "reason": {
+      "ko": "장거리 자동차 이동 일부가 철도로 옮겨 감",
+      "en": "Some long car trips moved to rail"
+     }
+    },
+    {
+     "themeId": "refining",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "항공유·휘발유 수요 일부 감소"
+     },
+     "reason": {
+      "ko": "항공유와 휘발유 수요가 조금 줄어듦",
+      "en": "Slightly less jet fuel and gasoline demand"
+     }
+    }
+   ],
+   "realDate": "2004-04-01",
+   "source": {
+    "event": "고속철도 개통 (김포~대구 항공 승객 약 80% 감소)",
+    "impactRationale": "직접 1개(±5), 밀접 2개(±3), 간접 4개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b07-textile-quota",
+   "type": "breaking",
+   "magnitude": 6,
+   "title": {
+    "ko": "섬유 수입 쿼터 전면 폐지, 값싼 의류 몰려온다",
+    "en": "Textile Import Quotas Scrapped, Cheap Apparel Floods In"
+   },
+   "body": {
+    "ko": "선진국들이 수십 년간 유지해 온 섬유 수입 쿼터가 전면 폐지됐다. 값싼 중국산 원단과 의류가 세계 시장에 쏟아지면서 국내 봉제 공장들은 일감이 줄고 있다.",
+    "en": "Textile import quotas kept by rich countries for decades were scrapped. Cheap Chinese fabric and apparel are pouring into world markets, and Korean sewing factories are losing work."
+   },
+   "effects": [
+    {
+     "themeId": "textile",
+     "impact": -6,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "수입 쿼터",
+        "themeTerm": "수입 쿼터"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "값싼 수입 의류와 경쟁해야 해 주문이 줄어듦",
+      "en": "Cheap imports took orders away"
+     }
+    },
+    {
+     "themeId": "mart",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "값싼 수입 의류 → 할인점 의류 마진 개선"
+     },
+     "reason": {
+      "ko": "싼 수입 의류로 할인점 의류 판매 이익 증가",
+      "en": "Cheap imports lifted store apparel margins"
+     }
+    },
+    {
+     "themeId": "shipping",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "수입 물동량 증가"
+     },
+     "reason": {
+      "ko": "의류 수입 물동량이 늘어남",
+      "en": "More apparel cargo to carry"
+     }
+    },
+    {
+     "themeId": "bank",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "섬유 업체 대출 부실 우려"
+     },
+     "reason": {
+      "ko": "섬유 업체 대출을 떼일까 걱정",
+      "en": "Loans to textile firms looked shakier"
+     }
+    },
+    {
+     "themeId": "savings_bank",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "지방 중소 봉제 업체 대출 부실 우려"
+     },
+     "reason": {
+      "ko": "지방 봉제 업체 대출 부실 우려",
+      "en": "Loans to small sewing shops looked shakier"
+     }
+    },
+    {
+     "themeId": "refining",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "합성섬유 원료 수요 증가"
+     },
+     "reason": {
+      "ko": "중국 합성섬유 생산이 늘어 석유화학 원료 수요 증가",
+      "en": "More synthetic fiber meant more petrochemical demand"
+     }
+    }
+   ],
+   "realDate": "2005-01-01",
+   "source": {
+    "event": "세계 섬유 수입 쿼터 폐지",
+    "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b08-hurricane-oil",
+   "type": "breaking",
+   "magnitude": 6,
+   "title": {
+    "ko": "초대형 허리케인, 미국 정유 시설 멈춰 유가 사상 최고",
+    "en": "Massive Hurricane Shuts US Refineries, Oil Hits a Record"
+   },
+   "body": {
+    "ko": "초대형 허리케인이 미국 남부 해안을 덮쳐 정유 공장 여러 곳이 가동을 멈췄다. 국제 유가가 사상 최고치로 뛰었고, 휘발유 값도 크게 올랐다.",
+    "en": "A massive hurricane struck the US Gulf Coast and shut several refineries. Oil prices jumped to a record and gasoline prices surged."
+   },
+   "effects": [
+    {
+     "themeId": "refining",
+     "impact": 6,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "유가",
+        "themeTerm": "유가"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "정유 시설이 멈춰 정제 마진과 유가가 함께 오름",
+      "en": "Refinery outages lifted margins and prices"
+     }
+    },
+    {
+     "themeId": "airline",
+     "impact": -4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "항공유 값 상승 → 연료비 부담"
+     },
+     "reason": {
+      "ko": "항공유 값이 올라 연료비 부담 증가",
+      "en": "Jet fuel costs jumped"
+     }
+    },
+    {
+     "themeId": "shipping",
+     "impact": -4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "선박 연료비 상승"
+     },
+     "reason": {
+      "ko": "배 연료비가 올라 이익 감소",
+      "en": "Ship fuel costs rose"
+     }
+    },
+    {
+     "themeId": "renewable",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "유가 급등 → 대체 에너지 관심"
+     },
+     "reason": {
+      "ko": "기름값이 올라 대체 에너지에 관심",
+      "en": "High oil spurred interest in alternatives"
+     }
+    },
+    {
+     "themeId": "auto",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "휘발유 값 부담 → 차 구매 위축"
+     },
+     "reason": {
+      "ko": "휘발유 값 부담에 차 구매를 미룸",
+      "en": "Pricey gasoline delayed car purchases"
+     }
+    },
+    {
+     "themeId": "overseas_plant",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "정유 시설 복구·증설 발주 기대"
+     },
+     "reason": {
+      "ko": "정유 시설을 새로 짓는 발주가 늘 것으로 봄",
+      "en": "Refinery rebuilding meant new plant orders"
+     }
+    },
+    {
+     "themeId": "travel",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "유류할증료로 여행비 상승"
+     },
+     "reason": {
+      "ko": "유류할증료가 올라 여행비 부담 증가",
+      "en": "Fuel surcharges raised trip costs"
+     }
+    }
+   ],
+   "realDate": "2005-08-29",
+   "source": {
+    "event": "허리케인으로 미국 정유시설 중단, 유가 당시 최고",
+    "impactRationale": "직접 1개(±6), 밀접 2개(±4), 간접 4개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b09-mp3",
+   "type": "breaking",
+   "magnitude": 5,
+   "title": {
+    "ko": "MP3 플레이어 판매 급증, 음반 판매는 반 토막",
+    "en": "MP3 Player Sales Soar as Album Sales Halve"
+   },
+   "body": {
+    "ko": "작은 MP3 플레이어가 학생들 사이에서 필수품이 되면서 인터넷으로 음원을 내려받는 사람이 크게 늘었다. 반면 CD 앨범 판매량은 몇 년 사이 절반 아래로 떨어졌다.",
+    "en": "Small MP3 players became a must-have for students, and far more people download music online. Meanwhile CD album sales fell below half in just a few years."
+   },
+   "effects": [
+    {
+     "themeId": "records",
+     "impact": -5,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "앨범",
+        "themeTerm": "앨범"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "음원 내려받기가 늘어 앨범 판매 급감",
+      "en": "Downloads replaced album sales"
+     }
+    },
+    {
+     "themeId": "semiconductor",
+     "impact": 3,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "MP3 플레이어에 들어가는 플래시 메모리 수요"
+     },
+     "reason": {
+      "ko": "MP3 플레이어용 플래시 메모리 수요 증가",
+      "en": "MP3 players need flash memory"
+     }
+    },
+    {
+     "themeId": "portal",
+     "impact": 3,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "음원 서비스 매출"
+     },
+     "reason": {
+      "ko": "음원 서비스 매출이 늘어남",
+      "en": "Music download services grew"
+     }
+    },
+    {
+     "themeId": "battery",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "휴대 기기용 소형 충전지 수요"
+     },
+     "reason": {
+      "ko": "휴대용 기기 충전지 수요 증가",
+      "en": "Portable devices need small batteries"
+     }
+    },
+    {
+     "themeId": "mobile",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "휴대폰 음악 서비스 이용 증가"
+     },
+     "reason": {
+      "ko": "휴대폰으로 음악을 듣는 데이터 이용 증가",
+      "en": "More music listening on phones"
+     }
+    },
+    {
+     "themeId": "hallyu",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "음원으로 가요가 해외에 쉽게 퍼짐"
+     },
+     "reason": {
+      "ko": "가요가 음원으로 해외에 쉽게 퍼짐",
+      "en": "Songs spread abroad more easily as downloads"
+     }
+    }
+   ],
+   "realDate": "2000년대 중반",
+   "source": {
+    "event": "MP3·온라인 음원 확산, 음반 시장 급감",
+    "impactRationale": "직접 1개(±5), 밀접 2개(±3), 간접 3개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b10-digital-camera",
+   "type": "breaking",
+   "magnitude": 5,
+   "title": {
+    "ko": "디지털카메라 보급 확산, 필름 수요 급감",
+    "en": "Digital Cameras Spread as Film Demand Collapses"
+   },
+   "body": {
+    "ko": "디지털카메라 값이 내려가면서 필름 카메라 대신 디지털카메라를 사는 사람이 크게 늘었다. 동네 사진관의 필름 현상과 인화 주문은 크게 줄었고, 메모리 카드와 고화질 화면을 쓰는 기기는 늘고 있다.",
+    "en": "As digital cameras got cheaper, far more people bought them instead of film cameras. Photo shops see far fewer film developing orders, while devices with memory cards and sharp screens multiply."
+   },
+   "effects": [
+    {
+     "themeId": "film",
+     "impact": -5,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "필름",
+        "themeTerm": "필름"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "필름 현상·인화 주문이 크게 줄어듦",
+      "en": "Film developing orders collapsed"
+     }
+    },
+    {
+     "themeId": "semiconductor",
+     "impact": 3,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "메모리 카드 수요"
+     },
+     "reason": {
+      "ko": "카메라용 메모리 카드 수요 증가",
+      "en": "Cameras need memory cards"
+     }
+    },
+    {
+     "themeId": "display",
+     "impact": 3,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "카메라 화면용 패널"
+     },
+     "reason": {
+      "ko": "카메라 화면용 패널 주문 증가",
+      "en": "Camera screens need panels"
+     }
+    },
+    {
+     "themeId": "battery",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "카메라용 충전 배터리"
+     },
+     "reason": {
+      "ko": "카메라용 충전지 수요 증가",
+      "en": "Cameras need rechargeable batteries"
+     }
+    },
+    {
+     "themeId": "mart",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "가전 매장 디지털카메라 판매"
+     },
+     "reason": {
+      "ko": "대형마트 가전 매장에서 카메라가 잘 팔림",
+      "en": "Big-box stores sold many cameras"
+     }
+    },
+    {
+     "themeId": "handset",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "카메라 기능 경쟁 → 카메라폰 수요 자극"
+     },
+     "reason": {
+      "ko": "카메라 기능 경쟁이 휴대폰으로 번짐",
+      "en": "Camera features spread to phones"
+     }
+    }
+   ],
+   "realDate": "2000년대 중반",
+   "source": {
+    "event": "디지털카메라 보급, 필름 수요 급감",
+    "impactRationale": "직접 1개(±5), 밀접 2개(±3), 간접 3개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b11-free-papers",
+   "type": "breaking",
+   "magnitude": 4,
+   "title": {
+    "ko": "무료 신문·인터넷 뉴스 확산, 신문 구독 감소",
+    "en": "Free Papers and Online News Spread, Newspaper Subscriptions Fall"
+   },
+   "body": {
+    "ko": "출근길 지하철에서 무료 신문을 보는 사람이 늘고, 젊은 층은 포털에서 뉴스를 읽는다. 유료 신문 구독자와 지면 광고가 함께 줄고 있다.",
+    "en": "More commuters read free papers on the subway, and young people read news on portals. Paid subscriptions and print ads are both shrinking."
+   },
+   "effects": [
+    {
+     "themeId": "print",
+     "impact": -4,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "신문",
+        "themeTerm": "신문"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "구독자와 지면 광고가 함께 줄어듦",
+      "en": "Subscribers and print ads both fell"
+     }
+    },
+    {
+     "themeId": "portal",
+     "impact": 2,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "포털 뉴스 이용 증가"
+     },
+     "reason": {
+      "ko": "포털에서 뉴스를 읽는 사람이 늘어남",
+      "en": "More people read news on portals"
+     }
+    },
+    {
+     "themeId": "dotcom",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "인터넷 뉴스 서비스 벤처"
+     },
+     "reason": {
+      "ko": "인터넷 뉴스 벤처에 관심",
+      "en": "Online news ventures drew interest"
+     }
+    },
+    {
+     "themeId": "mobile",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "휴대폰 인터넷으로 뉴스 이용"
+     },
+     "reason": {
+      "ko": "휴대폰으로 뉴스를 보는 사람이 조금 늘어남",
+      "en": "Some read news on phones"
+     }
+    },
+    {
+     "themeId": "records",
+     "impact": -1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "무료 콘텐츠 확산 → 유료 콘텐츠 구매 감소"
+     },
+     "reason": {
+      "ko": "공짜 콘텐츠가 늘어 음반 같은 유료 콘텐츠 구매 감소",
+      "en": "Free content cut paid purchases"
+     }
+    },
+    {
+     "themeId": "landline",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "초고속 인터넷 회선 이용 증가"
+     },
+     "reason": {
+      "ko": "초고속 인터넷 회선 이용이 늘어남",
+      "en": "More broadband use"
+     }
+    }
+   ],
+   "realDate": "2002 ~ 2000년대 중반",
+   "source": {
+    "event": "무료 신문 등장과 인터넷 뉴스 확산",
+    "impactRationale": "직접 1개(±4), 밀접 1개(±2), 간접 4개(±1) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b12-index-2000",
+   "type": "breaking",
+   "magnitude": 7,
+   "title": {
+    "ko": "주가지수 사상 첫 2,000 돌파, 펀드에 돈 몰려",
+    "en": "Stock Index Tops 2,000 for the First Time as Money Pours into Funds"
+   },
+   "body": {
+    "ko": "종합주가지수가 사상 처음 2,000을 넘었다. 은행 예금 대신 주식형 펀드에 가입하는 사람이 크게 늘었고, 증권사 객장은 다시 붐빈다.",
+    "en": "The composite index topped 2,000 for the first time. Many people chose equity funds over bank deposits, and brokerage floors are crowded again."
+   },
+   "effects": [
+    {
+     "themeId": "securities",
+     "impact": 7,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "펀드",
+        "themeTerm": "펀드"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "펀드 가입과 거래가 늘어 증권사 수수료 증가",
+      "en": "Fund sales and trading lifted brokerage fees"
+     }
+    },
+    {
+     "themeId": "bank",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "은행 창구 펀드 판매 수수료"
+     },
+     "reason": {
+      "ko": "은행 창구의 펀드 판매 수수료 증가",
+      "en": "Banks earned fees selling funds"
+     }
+    },
+    {
+     "themeId": "savings_bank",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "예금이 펀드로 빠져나감"
+     },
+     "reason": {
+      "ko": "예금이 펀드로 빠져나감",
+      "en": "Deposits flowed out to funds"
+     }
+    },
+    {
+     "themeId": "housing",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "자산 가격 상승 분위기"
+     },
+     "reason": {
+      "ko": "자산 가격이 오르는 분위기",
+      "en": "Asset prices rose broadly"
+     }
+    },
+    {
+     "themeId": "auto",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "자산 효과 → 차 구매 증가"
+     },
+     "reason": {
+      "ko": "주가가 올라 차를 바꾸는 사람이 늘어남",
+      "en": "Wealthier households bought cars"
+     }
+    },
+    {
+     "themeId": "mart",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "자산 효과 → 소비 증가"
+     },
+     "reason": {
+      "ko": "주가가 올라 씀씀이가 늘어남",
+      "en": "Feeling richer, people spent more"
+     }
+    },
+    {
+     "themeId": "card",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "소비 증가 → 카드 사용 증가"
+     },
+     "reason": {
+      "ko": "소비가 늘어 카드 사용액 증가",
+      "en": "More spending meant more card use"
+     }
+    }
+   ],
+   "realDate": "2007-07-25",
+   "source": {
+    "event": "종합주가지수 첫 2,000 돌파, 펀드 열풍",
+    "impactRationale": "직접 1개(±7), 간접 6개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b13-china-growth",
+   "type": "breaking",
+   "magnitude": 7,
+   "title": {
+    "ko": "중국 경제 두 자릿수 성장, 철광석·선박 주문 폭주",
+    "en": "China Grows at Double Digits, Iron Ore and Ship Orders Soar"
+   },
+   "body": {
+    "ko": "중국이 해마다 두 자릿수 성장을 이어 가며 도로와 공장을 짓느라 철강재와 철광석을 빨아들이고 있다. 원자재를 실어 나를 배가 모자라 선박 주문도 밀려든다.",
+    "en": "China keeps growing at double digits, soaking up steel products and iron ore for roads and factories. Ships to carry raw materials are scarce, so ship orders are piling up."
+   },
+   "effects": [
+    {
+     "themeId": "steel",
+     "impact": 7,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "철강재",
+        "themeTerm": "철강재"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "중국 수요로 철강재 값과 판매가 함께 늘어남",
+      "en": "Chinese demand lifted steel prices and volumes"
+     }
+    },
+    {
+     "themeId": "shipbuilding",
+     "impact": 7,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "선박",
+        "themeTerm": "선박"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "원자재 운반선 주문이 밀려듦",
+      "en": "Orders for bulk carriers piled up"
+     }
+    },
+    {
+     "themeId": "shipping",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "원자재 물동량 증가 → 운임 상승"
+     },
+     "reason": {
+      "ko": "원자재 물동량이 늘어 운임 상승",
+      "en": "More raw material cargo lifted freight rates"
+     }
+    },
+    {
+     "themeId": "machinery",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "중국 공사 현장 굴착기 수요"
+     },
+     "reason": {
+      "ko": "중국 공사 현장의 굴착기 수요 증가",
+      "en": "Chinese sites needed excavators"
+     }
+    },
+    {
+     "themeId": "refining",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "원유 수요 증가 → 유가 상승"
+     },
+     "reason": {
+      "ko": "원유 수요가 늘어 유가 상승",
+      "en": "More oil demand lifted prices"
+     }
+    },
+    {
+     "themeId": "flour",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "중국 곡물 수입 증가 → 곡물값 부담"
+     },
+     "reason": {
+      "ko": "중국의 곡물 수입이 늘어 원료값 부담",
+      "en": "Chinese grain imports raised input costs"
+     }
+    }
+   ],
+   "realDate": "2003 ~ 2007",
+   "source": {
+    "event": "중국 고성장 (2007년 성장률 공식 13.0%)",
+    "impactRationale": "직접 2개(±7), 밀접 2개(±4), 간접 2개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b14-plant-orders",
+   "type": "breaking",
+   "magnitude": 6,
+   "title": {
+    "ko": "중동 플랜트 수주 사상 최대",
+    "en": "Record Middle East Plant Orders for Korean Builders"
+   },
+   "body": {
+    "ko": "높은 유가로 돈을 번 중동 산유국들이 정유 공장과 발전소를 잇달아 발주하면서, 국내 건설사의 해외 수주가 사상 최대를 기록했다.",
+    "en": "Flush with oil money, Middle East producers ordered refineries and power plants one after another, and Korean builders posted record overseas orders."
+   },
+   "effects": [
+    {
+     "themeId": "overseas_plant",
+     "impact": 6,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "해외 수주",
+        "themeTerm": "해외 수주"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "해외 수주가 사상 최대를 기록",
+      "en": "Overseas orders hit a record"
+     }
+    },
+    {
+     "themeId": "steel",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "플랜트 자재로 철강재 수요"
+     },
+     "reason": {
+      "ko": "플랜트 자재로 철강재 수요 증가",
+      "en": "Plants need steel"
+     }
+    },
+    {
+     "themeId": "machinery",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "건설 장비 수요"
+     },
+     "reason": {
+      "ko": "현장에 들어갈 건설 장비 수요 증가",
+      "en": "Sites need heavy equipment"
+     }
+    },
+    {
+     "themeId": "shipbuilding",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "해양 설비 발주 동반"
+     },
+     "reason": {
+      "ko": "해양 설비 발주도 함께 늘어남",
+      "en": "Offshore facility orders rose too"
+     }
+    },
+    {
+     "themeId": "bank",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "해외 공사 보증·대출 수수료"
+     },
+     "reason": {
+      "ko": "해외 공사 보증과 대출 수수료 증가",
+      "en": "Banks earned fees on project guarantees"
+     }
+    },
+    {
+     "themeId": "shipping",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "자재 운송 물동량"
+     },
+     "reason": {
+      "ko": "공사 자재를 실어 나를 물량 증가",
+      "en": "More project cargo to ship"
+     }
+    }
+   ],
+   "realDate": "2008",
+   "source": {
+    "event": "해외건설 수주 사상 최대 (약 476억 달러)",
+    "impactRationale": "직접 1개(±6), 밀접 2개(±4), 간접 3개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b15-green-growth",
+   "type": "breaking",
+   "magnitude": 6,
+   "title": {
+    "ko": "정부, 저탄소 녹색성장 국가 비전 발표",
+    "en": "Government Unveils a Low-Carbon Green Growth Vision"
+   },
+   "body": {
+    "ko": "정부가 온실가스를 줄이고 태양광과 풍력 같은 신재생 에너지를 키우겠다는 국가 비전을 내놨다. 친환경 자동차와 차세대 전지 개발도 지원하기로 했다.",
+    "en": "The government announced a national vision to cut emissions and grow renewables such as solar and wind. It will also back eco-friendly cars and next-generation batteries."
+   },
+   "effects": [
+    {
+     "themeId": "renewable",
+     "impact": 6,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "태양광",
+        "themeTerm": "태양광"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "정부 지원으로 태양광·풍력 투자가 늘어날 것으로 보임",
+      "en": "State support promised more solar and wind investment"
+     }
+    },
+    {
+     "themeId": "battery",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "차세대 전지 개발 지원"
+     },
+     "reason": {
+      "ko": "차세대 전지 개발 지원",
+      "en": "Support for next-generation batteries"
+     }
+    },
+    {
+     "themeId": "auto",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "친환경 자동차 개발 지원"
+     },
+     "reason": {
+      "ko": "친환경 차 개발 지원",
+      "en": "Support for eco-friendly cars"
+     }
+    },
+    {
+     "themeId": "refining",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "장기적으로 석유 사용 감소"
+     },
+     "reason": {
+      "ko": "길게 보면 석유 사용이 줄어듦",
+      "en": "Less oil use in the long run"
+     }
+    },
+    {
+     "themeId": "overseas_plant",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "발전소 건설 수요"
+     },
+     "reason": {
+      "ko": "신재생 발전소 건설 수요",
+      "en": "Renewable power plants need builders"
+     }
+    },
+    {
+     "themeId": "securities",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "녹색 테마 투자 열기"
+     },
+     "reason": {
+      "ko": "녹색 관련 주식에 투자가 몰림",
+      "en": "Investors chased green stocks"
+     }
+    }
+   ],
+   "realDate": "2008-08-15",
+   "source": {
+    "event": "저탄소 녹색성장 국가 비전",
+    "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b16-grain-prices",
+   "type": "breaking",
+   "magnitude": 6,
+   "title": {
+    "ko": "국제 곡물값 급등, 밀가루·라면값 인상 잇따라",
+    "en": "Global Grain Prices Surge, Flour and Noodle Prices Rise"
+   },
+   "body": {
+    "ko": "가뭄과 바이오 연료 수요로 국제 밀과 옥수수 값이 크게 올랐다. 제분 회사들이 밀가루 값을 올리자 라면과 과자 값도 줄줄이 오르고, 사료값 부담에 양계 농가도 시름이 깊다.",
+    "en": "Drought and biofuel demand sent wheat and corn prices soaring. Millers raised flour prices, noodles and snacks followed, and poultry farms struggle with feed costs."
+   },
+   "effects": [
+    {
+     "themeId": "flour",
+     "impact": -6,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "밀가루",
+        "themeTerm": "밀가루"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "원료 곡물값이 올라 제분 원가 급등",
+      "en": "Grain costs jumped for millers"
+     }
+    },
+    {
+     "themeId": "food",
+     "impact": -4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "원재료값 상승 → 가공식품 원가 부담"
+     },
+     "reason": {
+      "ko": "원재료값이 올라 가공식품 원가 부담",
+      "en": "Food makers faced higher input costs"
+     }
+    },
+    {
+     "themeId": "poultry",
+     "impact": -4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "사료값 상승"
+     },
+     "reason": {
+      "ko": "사료값이 올라 양계 농가 부담",
+      "en": "Feed costs squeezed poultry farms"
+     }
+    },
+    {
+     "themeId": "mart",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "물가 상승 → 소비 위축"
+     },
+     "reason": {
+      "ko": "물가가 올라 장바구니가 가벼워짐",
+      "en": "Inflation squeezed shoppers"
+     }
+    },
+    {
+     "themeId": "shipping",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "곡물 운송 운임 상승"
+     },
+     "reason": {
+      "ko": "곡물 운송 운임이 오름",
+      "en": "Grain freight rates rose"
+     }
+    },
+    {
+     "themeId": "renewable",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "바이오 연료 관심"
+     },
+     "reason": {
+      "ko": "바이오 연료에 대한 관심이 커짐",
+      "en": "Biofuels drew attention"
+     }
+    }
+   ],
+   "realDate": "2007 ~ 2008 봄",
+   "source": {
+    "event": "국제 곡물가 급등(애그플레이션)",
+    "impactRationale": "직접 1개(±6), 밀접 2개(±4), 간접 3개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b17-won-1500",
+   "type": "breaking",
+   "magnitude": 7,
+   "title": {
+    "ko": "원·달러 환율 1,500원 돌파, 외화 확보 비상",
+    "en": "Won Breaks 1,500 per Dollar, Scramble for Foreign Currency"
+   },
+   "body": {
+    "ko": "외국인 투자금이 빠져나가면서 원·달러 환율이 1,500원을 넘었다. 해외여행 경비와 항공유 값 부담이 커진 반면, 달러로 돈을 버는 수출 기업은 환율 덕을 본다는 분석이다.",
+    "en": "As foreign money fled, the won weakened past 1,500 per dollar. Overseas travel and jet fuel got pricier, while exporters earning dollars gain from the exchange rate."
+   },
+   "effects": [
+    {
+     "themeId": "travel",
+     "impact": -7,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "해외여행",
+        "themeTerm": "해외여행"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "환율이 올라 해외여행 경비가 크게 늘어남",
+      "en": "A weak won made trips abroad expensive"
+     }
+    },
+    {
+     "themeId": "airline",
+     "impact": -4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "달러로 내는 항공유·리스 비용 증가"
+     },
+     "reason": {
+      "ko": "달러로 내는 연료비와 비행기 임차료 증가",
+      "en": "Dollar-priced fuel and leases cost more"
+     }
+    },
+    {
+     "themeId": "auto",
+     "impact": 4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "수출 가격 경쟁력"
+     },
+     "reason": {
+      "ko": "수출 가격 경쟁력이 높아짐",
+      "en": "Exports became more competitive"
+     }
+    },
+    {
+     "themeId": "bank",
+     "impact": -4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "외화 차입 상환 부담"
+     },
+     "reason": {
+      "ko": "외화 빚을 갚을 부담이 커짐",
+      "en": "Repaying foreign borrowing got harder"
+     }
+    },
+    {
+     "themeId": "shipbuilding",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "달러 수주 대금 환산 이익"
+     },
+     "reason": {
+      "ko": "달러로 받는 배 값이 원화로 늘어남",
+      "en": "Dollar ship payments are worth more in won"
+     }
+    },
+    {
+     "themeId": "semiconductor",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "수출 대금 환산 이익"
+     },
+     "reason": {
+      "ko": "수출 대금의 원화 가치 증가",
+      "en": "Export earnings rose in won"
+     }
+    },
+    {
+     "themeId": "savings_bank",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "금융 시장 불안"
+     },
+     "reason": {
+      "ko": "금융 시장 불안이 번짐",
+      "en": "Financial jitters spread"
+     }
+    },
+    {
+     "themeId": "print",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "수입 신문 용지 값 상승"
+     },
+     "reason": {
+      "ko": "수입 종이 값이 올라 인쇄 원가 증가",
+      "en": "Imported newsprint cost more"
+     }
+    },
+    {
+     "themeId": "pc",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "수입 부품값 상승 → PC 원가 부담"
+     },
+     "reason": {
+      "ko": "수입 부품값이 올라 PC 원가 부담",
+      "en": "Imported parts made PCs costlier"
+     }
+    }
+   ],
+   "realDate": "2008-11",
+   "source": {
+    "event": "원·달러 환율 1,500원 안팎 (11-24 1,515원 보도)",
+    "impactRationale": "직접 1개(±7), 밀접 3개(±4), 간접 5개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b18-savings-pf",
+   "type": "breaking",
+   "magnitude": 6,
+   "title": {
+    "ko": "저축은행 부동산 PF 대출 부실 우려 커져",
+    "en": "Savings Banks Face Mounting Property Loan Losses"
+   },
+   "body": {
+    "ko": "미분양 아파트가 늘면서 건설 현장에 돈을 빌려준 저축은행의 PF 대출이 제때 회수되지 않고 있다. 금융 당국은 일부 저축은행의 건전성을 점검하기로 했다.",
+    "en": "As unsold apartments pile up, savings banks that lent to construction projects are struggling to collect. Regulators will review the soundness of some savings banks."
+   },
+   "effects": [
+    {
+     "themeId": "savings_bank",
+     "impact": -6,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "저축은행",
+        "themeTerm": "저축은행"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "빌려준 돈을 제때 돌려받지 못할 위험",
+      "en": "Loans may not be repaid"
+     }
+    },
+    {
+     "themeId": "housing",
+     "impact": -4,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "자금줄 막힘 → 분양·공사 지연"
+     },
+     "reason": {
+      "ko": "자금이 막혀 아파트 공사와 분양이 늦어짐",
+      "en": "Tight funding delayed projects"
+     }
+    },
+    {
+     "themeId": "bank",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "금융권 전반 신용 불안"
+     },
+     "reason": {
+      "ko": "금융권 전반에 불안이 번짐",
+      "en": "Credit worries spread across finance"
+     }
+    },
+    {
+     "themeId": "securities",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "금융주 투자 심리 위축"
+     },
+     "reason": {
+      "ko": "금융주 투자 심리가 위축됨",
+      "en": "Financial stocks lost favor"
+     }
+    },
+    {
+     "themeId": "machinery",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "공사 지연 → 장비 수요 감소"
+     },
+     "reason": {
+      "ko": "공사가 늦어져 장비 수요 감소",
+      "en": "Delayed projects needed less equipment"
+     }
+    },
+    {
+     "themeId": "steel",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "건설용 철근 수요 감소"
+     },
+     "reason": {
+      "ko": "건설용 철근 수요 감소",
+      "en": "Less rebar for construction"
+     }
+    }
+   ],
+   "realDate": "2008 ~",
+   "source": {
+    "event": "저축은행 부동산 PF 대출 부실",
+    "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b19-video-call",
+   "type": "breaking",
+   "magnitude": 5,
+   "title": {
+    "ko": "통신사 영상통화 경쟁, 휴대폰 교체 붐",
+    "en": "Carriers Battle Over Video Calls, Spurring a Handset Upgrade Boom"
+   },
+   "body": {
+    "ko": "이동통신 회사들이 얼굴을 보며 통화하는 새 서비스 가입자를 늘리려고 단말기 보조금을 쏟아붓고 있다. 휴대폰 교체 수요가 늘어난 반면 통신사의 마케팅 비용 부담은 커졌다.",
+    "en": "Mobile carriers are pouring subsidies into handsets to sign up users for new video-call service. Handset upgrades surged while carriers' marketing costs ballooned."
+   },
+   "effects": [
+    {
+     "themeId": "handset",
+     "impact": 5,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "휴대폰",
+        "themeTerm": "휴대폰"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "휴대폰을 바꾸는 사람이 늘어 판매 증가",
+      "en": "Upgrades lifted handset sales"
+     }
+    },
+    {
+     "themeId": "mobile",
+     "impact": -3,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "보조금 지출 → 이익 감소"
+     },
+     "reason": {
+      "ko": "보조금 지출이 늘어 통신사 이익 감소",
+      "en": "Subsidies ate into carrier profits"
+     }
+    },
+    {
+     "themeId": "semiconductor",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "단말기용 메모리 수요"
+     },
+     "reason": {
+      "ko": "단말기용 메모리 수요 증가",
+      "en": "New phones need memory"
+     }
+    },
+    {
+     "themeId": "display",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "휴대폰 화면 패널 수요"
+     },
+     "reason": {
+      "ko": "휴대폰 화면 패널 수요 증가",
+      "en": "New phones need screens"
+     }
+    },
+    {
+     "themeId": "landline",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "유선 통화 감소"
+     },
+     "reason": {
+      "ko": "유선 통화가 더 줄어듦",
+      "en": "Even fewer landline calls"
+     }
+    },
+    {
+     "themeId": "battery",
+     "impact": 2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "단말기 전지 수요"
+     },
+     "reason": {
+      "ko": "새 단말기용 전지 수요 증가",
+      "en": "New phones need batteries"
+     }
+    }
+   ],
+   "realDate": "2007",
+   "source": {
+    "event": "3세대 영상통화 경쟁",
+    "impactRationale": "직접 1개(±5), 밀접 1개(±3), 간접 4개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b20-battery-recall",
+   "type": "breaking",
+   "magnitude": 5,
+   "title": {
+    "ko": "노트북 배터리 발화 사고, 수백만 개 리콜",
+    "en": "Laptop Battery Fires Trigger Recall of Millions"
+   },
+   "body": {
+    "ko": "해외에서 노트북 배터리가 과열돼 불이 나는 사고가 잇따르자 제조사들이 배터리 수백만 개를 리콜하기로 했다. 리튬이온 전지의 안전성 논란이 커졌다.",
+    "en": "After laptop batteries overheated and caught fire abroad, makers recalled millions of them. Safety concerns over lithium-ion cells grew."
+   },
+   "effects": [
+    {
+     "themeId": "battery",
+     "impact": -5,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "리튬이온",
+        "themeTerm": "리튬이온"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "안전성 논란과 리콜 비용 부담",
+      "en": "Safety worries and recall costs"
+     }
+    },
+    {
+     "themeId": "pc",
+     "impact": -3,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "노트북 판매 위축"
+     },
+     "reason": {
+      "ko": "노트북 판매가 주춤함",
+      "en": "Laptop sales stalled"
+     }
+    },
+    {
+     "themeId": "handset",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "휴대폰 배터리 안전성 우려"
+     },
+     "reason": {
+      "ko": "휴대폰 배터리도 괜찮을지 걱정",
+      "en": "Phone battery safety questioned"
+     }
+    },
+    {
+     "themeId": "semiconductor",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "노트북 생산 차질 → 부품 주문 감소"
+     },
+     "reason": {
+      "ko": "노트북 생산이 줄어 부품 주문 감소",
+      "en": "Fewer laptops, fewer chip orders"
+     }
+    },
+    {
+     "themeId": "display",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "노트북 패널 주문 감소"
+     },
+     "reason": {
+      "ko": "노트북 화면 주문 감소",
+      "en": "Fewer laptop screens ordered"
+     }
+    },
+    {
+     "themeId": "airline",
+     "impact": -2,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "기내 배터리 반입 규제 강화"
+     },
+     "reason": {
+      "ko": "기내 배터리 규제가 까다로워짐",
+      "en": "Stricter in-flight battery rules"
+     }
+    }
+   ],
+   "realDate": "2006-08",
+   "source": {
+    "event": "노트북 배터리 대량 리콜",
+    "impactRationale": "직접 1개(±5), 밀접 1개(±3), 간접 4개(±2) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b21-howitzer-export",
+   "type": "breaking",
+   "magnitude": 4,
+   "title": {
+    "ko": "국산 자주포 첫 해외 수출 계약",
+    "en": "Korean Self-Propelled Howitzer Wins First Export Deal"
+   },
+   "body": {
+    "ko": "국내 기술로 만든 자주포가 처음으로 해외 군에 수출된다. 국방 기술 수출의 길이 열렸다는 평가 속에 부품을 만드는 협력 업체들도 바빠졌다.",
+    "en": "A howitzer built with Korean technology will be exported to a foreign military for the first time. Parts suppliers are busy as the door opens to defense exports."
+   },
+   "effects": [
+    {
+     "themeId": "defense",
+     "impact": 4,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "자주포",
+        "themeTerm": "자주포"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "첫 수출 계약으로 해외 판로가 열림",
+      "en": "A first export deal opened foreign markets"
+     }
+    },
+    {
+     "themeId": "steel",
+     "impact": 2,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "장갑용 특수강 수요"
+     },
+     "reason": {
+      "ko": "장갑용 특수강 수요",
+      "en": "Armor needs special steel"
+     }
+    },
+    {
+     "themeId": "machinery",
+     "impact": 2,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "엔진·변속기 협력 업체 일감"
+     },
+     "reason": {
+      "ko": "엔진·변속기 협력 업체 일감 증가",
+      "en": "Engine and gearbox suppliers got work"
+     }
+    },
+    {
+     "themeId": "auto",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "엔진 부품 협력사 겹침"
+     },
+     "reason": {
+      "ko": "자동차 부품 협력사에도 일감",
+      "en": "Auto parts suppliers shared the work"
+     }
+    },
+    {
+     "themeId": "shipbuilding",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "방산 수출 확대 기대 → 함정 수출"
+     },
+     "reason": {
+      "ko": "함정 수출에도 관심",
+      "en": "Interest spread to naval ship exports"
+     }
+    },
+    {
+     "themeId": "securities",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "방산 관련주 관심"
+     },
+     "reason": {
+      "ko": "방산 관련주에 관심",
+      "en": "Defense stocks drew interest"
+     }
+    }
+   ],
+   "realDate": "2001",
+   "source": {
+    "event": "국산 자주포 첫 수출 계약",
+    "impactRationale": "직접 1개(±4), 밀접 2개(±2), 간접 3개(±1) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b22-internet-phone",
+   "type": "breaking",
+   "magnitude": 4,
+   "title": {
+    "ko": "인터넷 전화 등장, 집 전화 해지 늘어",
+    "en": "Internet Phones Arrive as Households Drop Landlines"
+   },
+   "body": {
+    "ko": "초고속 인터넷망으로 거는 값싼 인터넷 전화가 등장하고 휴대폰이 집집마다 보급되면서 집 전화를 해지하는 가구가 늘고 있다.",
+    "en": "Cheap internet phones over broadband have arrived, and with a mobile phone in every home, more households are canceling their home phones."
+   },
+   "effects": [
+    {
+     "themeId": "landline",
+     "impact": -4,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "집 전화",
+        "themeTerm": "집 전화"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "집 전화를 해지하는 가구가 늘어남",
+      "en": "Households canceled home phones"
+     }
+    },
+    {
+     "themeId": "mobile",
+     "impact": 2,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "휴대폰 통화량 증가"
+     },
+     "reason": {
+      "ko": "휴대폰 통화가 집 전화를 대신함",
+      "en": "Mobile calls replaced home calls"
+     }
+    },
+    {
+     "themeId": "portal",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "인터넷 이용 증가"
+     },
+     "reason": {
+      "ko": "인터넷 서비스 이용이 늘어남",
+      "en": "More internet use"
+     }
+    },
+    {
+     "themeId": "handset",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "집집마다 휴대폰 보급"
+     },
+     "reason": {
+      "ko": "휴대폰 보급이 늘어남",
+      "en": "More phones in every home"
+     }
+    },
+    {
+     "themeId": "print",
+     "impact": -1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "생활 정보가 인터넷으로 옮겨 감 → 전화번호부·광고지 인쇄 감소"
+     },
+     "reason": {
+      "ko": "전화번호부와 광고지 인쇄가 줄어듦",
+      "en": "Fewer phone books and flyers printed"
+     }
+    },
+    {
+     "themeId": "semiconductor",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "통신 장비용 칩 수요"
+     },
+     "reason": {
+      "ko": "통신 장비용 칩 수요",
+      "en": "Network gear needs chips"
+     }
+    }
+   ],
+   "realDate": "2000년대 중후반",
+   "source": {
+    "event": "인터넷 전화 등장, 유선 가입자 감소",
+    "impactRationale": "직접 1개(±4), 밀접 1개(±2), 간접 4개(±1) — 공식 그대로",
+    "needsVerification": true
+   }
+  },
+  {
+   "id": "b23-camera-phone",
+   "type": "breaking",
+   "magnitude": 4,
+   "title": {
+    "ko": "카메라폰이 휴대폰 판매의 절반 넘어, 사진 문화가 바뀐다",
+    "en": "Camera Phones Pass Half of Handset Sales, Changing How People Take Photos"
+   },
+   "body": {
+    "ko": "새로 팔리는 휴대폰의 절반 이상이 카메라폰이 될 만큼 빠르게 보급되면서 언제든 사진을 찍고 바로 보내는 문화가 자리 잡았다. 필름을 사서 사진관에 맡기는 사람은 눈에 띄게 줄었다.",
+    "en": "Camera phones now make up more than half of new handset sales, and snapping and sending photos anytime became normal. Far fewer people buy film and take it to a photo shop."
+   },
+   "effects": [
+    {
+     "themeId": "handset",
+     "impact": 4,
+     "link": {
+      "strength": 3,
+      "keywords": [
+       {
+        "newsTerm": "카메라폰",
+        "themeTerm": "카메라폰"
+       }
+      ]
+     },
+     "reason": {
+      "ko": "카메라폰으로 바꾸는 사람이 늘어남",
+      "en": "People switched to camera phones"
+     }
+    },
+    {
+     "themeId": "film",
+     "impact": -2,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "필름 인화 감소"
+     },
+     "reason": {
+      "ko": "필름을 맡기는 사람이 줄어듦",
+      "en": "Fewer rolls of film to develop"
+     }
+    },
+    {
+     "themeId": "mobile",
+     "impact": 2,
+     "link": {
+      "strength": 2,
+      "keywords": [],
+      "chain": "사진 전송 데이터 이용"
+     },
+     "reason": {
+      "ko": "사진을 보내는 데이터 이용 증가",
+      "en": "Photo messaging raised data use"
+     }
+    },
+    {
+     "themeId": "semiconductor",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "이미지 센서·메모리 수요"
+     },
+     "reason": {
+      "ko": "카메라용 칩 수요 증가",
+      "en": "Camera chips in demand"
+     }
+    },
+    {
+     "themeId": "display",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "휴대폰 화면 고급화"
+     },
+     "reason": {
+      "ko": "더 좋은 휴대폰 화면 수요",
+      "en": "Better phone screens needed"
+     }
+    },
+    {
+     "themeId": "battery",
+     "impact": 1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "휴대폰 전지 용량 증가"
+     },
+     "reason": {
+      "ko": "더 큰 휴대폰 전지 수요",
+      "en": "Bigger phone batteries needed"
+     }
+    },
+    {
+     "themeId": "pc",
+     "impact": -1,
+     "link": {
+      "strength": 1,
+      "keywords": [],
+      "chain": "사진을 PC로 옮기지 않고 휴대폰으로 바로 보냄"
+     },
+     "reason": {
+      "ko": "사진 정리용 PC 수요가 줄어듦",
+      "en": "Photos skip the PC"
+     }
+    }
+   ],
+   "realDate": "2000년대 중반",
+   "source": {
+    "event": "카메라폰 보급 확산",
+    "impactRationale": "직접 1개(±4), 밀접 2개(±2), 간접 4개(±1) — 공식 그대로",
+    "needsVerification": true
+   }
+  }
+ ],
+ "stories": [
+  {
+   "id": "s01-iraq-war",
+   "tentative": {
+    "id": "s01-iraq-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "걸프 지역 긴장 고조… 전문가들 '전쟁 나도 단기전'",
+     "en": "Gulf Tension Rises… Experts Say Any War Would Be Short"
+    },
+    "body": {
+     "ko": "걸프 지역에 대규모 병력이 모이며 전쟁 가능성이 커지고 있다. 군사 전문가 다수는 실제 충돌이 일어나도 단기간에 끝날 것이라는 데 무게를 둔다. 국제 유가는 불안한 흐름이다.",
+     "en": "Large forces are massing in the Gulf and the chance of war is rising. Most military experts think any conflict would end quickly. Oil prices remain jittery."
+    },
+    "effects": [
+     {
+      "themeId": "refining",
+      "impact": -2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "유가",
+         "themeTerm": "유가"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "단기전이면 유가 불안이 곧 풀릴 수 있음",
+       "en": "A short war could ease oil fears soon"
+      }
+     },
+     {
+      "themeId": "airline",
+      "impact": 1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "유가 불안 해소 시 항공유 부담 감소"
+      },
+      "reason": {
+       "ko": "단기전이면 항공유 부담이 줄 수 있음",
+       "en": "A short war could ease jet fuel costs"
+      }
+     },
+     {
+      "themeId": "travel",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "불확실성 해소 → 여행 수요 회복"
+      },
+      "reason": {
+       "ko": "불확실성이 걷히면 여행 수요 회복",
+       "en": "Travel could recover once uncertainty clears"
+      }
+     },
+     {
+      "themeId": "shipping",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "해상 운송 위험 감소"
+      },
+      "reason": {
+       "ko": "중동 항로 위험이 줄 수 있음",
+       "en": "Gulf shipping risk could fall"
+      }
+     },
+     {
+      "themeId": "securities",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "불확실성 해소 → 증시 반등"
+      },
+      "reason": {
+       "ko": "불확실성이 걷히면 증시가 반등할 수 있음",
+       "en": "Markets could rebound once uncertainty clears"
+      }
+     },
+     {
+      "themeId": "overseas_plant",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "전후 재건 발주"
+      },
+      "reason": {
+       "ko": "전후 재건 공사 발주 가능성",
+       "en": "Postwar rebuilding could bring orders"
+      }
+     },
+     {
+      "themeId": "auto",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "유가 안정 → 차량 유지비 부담 감소"
+      },
+      "reason": {
+       "ko": "기름값이 안정되면 차 수요 회복",
+       "en": "Stable fuel prices help car demand"
+      }
+     }
+    ],
+    "realDate": "2002-09 ~ 2003-03",
+    "source": {
+     "event": "이라크전 직전 병력 증강, 단기전 관측",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 5개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s01-iraq-short-war",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "개전 3주 만에 수도 함락… 유가 급락, 증시 반등",
+      "en": "Capital Falls Three Weeks into the War… Oil Plunges, Stocks Rebound"
+     },
+     "body": {
+      "ko": "전쟁이 시작된 지 3주 만에 수도가 함락되며 전쟁이 사실상 끝났다. 공급 차질 걱정이 사라지자 국제 유가가 급락했고, 불확실성이 걷히며 증시는 오히려 반등했다. 전후 재건 사업 발주 기대도 나온다.",
+      "en": "Three weeks after the war began, the capital fell and the fighting effectively ended. With supply fears gone, oil prices plunged, and stocks actually rebounded as uncertainty lifted. Hopes for rebuilding contracts are emerging."
+     },
+     "effects": [
+      {
+       "themeId": "refining",
+       "impact": -8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "유가",
+          "themeTerm": "유가"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "공급 차질 걱정이 사라져 유가가 급락",
+        "en": "Supply fears vanished and oil plunged"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "불확실성 해소 → 증시 반등"
+       },
+       "reason": {
+        "ko": "불확실성이 걷혀 증시가 반등",
+        "en": "Uncertainty lifted and stocks rebounded"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "항공유 값 하락"
+       },
+       "reason": {
+        "ko": "항공유 값이 내려 연료비 부담 감소",
+        "en": "Cheaper jet fuel"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "여행 수요 회복"
+       },
+       "reason": {
+        "ko": "미뤘던 여행 수요가 돌아옴",
+        "en": "Delayed trips came back"
+       }
+      },
+      {
+       "themeId": "overseas_plant",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "전후 재건 공사 발주"
+       },
+       "reason": {
+        "ko": "전후 재건 공사 발주 기대",
+        "en": "Postwar rebuilding contracts expected"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "해상 운송 위험 감소"
+       },
+       "reason": {
+        "ko": "중동 항로 위험이 줄어듦",
+        "en": "Gulf shipping risk fell"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "유가 하락 → 차량 유지비 부담 감소"
+       },
+       "reason": {
+        "ko": "기름값이 내려 차 수요 회복",
+        "en": "Cheaper fuel helped car demand"
+       }
+      }
+     ],
+     "realDate": "2003-03-20 ~ 04-09",
+     "reactionNote": {
+      "ko": "전쟁이 시작됐는데도 불확실성이 걷히면서 오히려 증시가 반등했어요.",
+      "en": "Even though war broke out, stocks rebounded as uncertainty lifted."
+     },
+     "source": {
+      "event": "이라크전 개전 후 단기간에 수도 함락, 유가 급락·증시 반등",
+      "impactRationale": "직접 1개(±8), 밀접 4개(±5), 간접 2개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s01-iraq-long-war",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "전쟁 장기화… 유가 치솟고 세계 증시 흔들",
+      "en": "War Drags On… Oil Soars and Global Markets Shake"
+     },
+     "body": {
+      "ko": "전쟁이 예상과 달리 몇 달째 이어지면서 중동 원유 수송이 차질을 빚고 있다. 국제 유가가 연일 치솟고 항공사와 여행사는 예약 취소에 시달린다. 세계 증시도 흔들리고 있다.",
+      "en": "Against expectations the war has dragged on for months, disrupting Middle East oil shipments. Oil prices keep climbing, airlines and travel agencies face cancellations, and global markets are shaky."
+     },
+     "effects": [
+      {
+       "themeId": "refining",
+       "impact": 8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "유가",
+          "themeTerm": "유가"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "원유 수송 차질로 유가가 치솟음",
+        "en": "Disrupted supply sent oil soaring"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "세계 증시 불안"
+       },
+       "reason": {
+        "ko": "세계 증시가 흔들려 거래 위축",
+        "en": "Shaky markets chilled trading"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "항공유 값 급등과 예약 취소"
+       },
+       "reason": {
+        "ko": "항공유 값이 오르고 예약이 취소됨",
+        "en": "Jet fuel soared and bookings fell"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "예약 취소"
+       },
+       "reason": {
+        "ko": "여행 예약 취소가 잇따름",
+        "en": "Trips were canceled"
+       }
+      },
+      {
+       "themeId": "overseas_plant",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "중동 공사 중단"
+       },
+       "reason": {
+        "ko": "중동 공사 현장이 멈춤",
+        "en": "Middle East projects halted"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "중동 항로 위험 증가"
+       },
+       "reason": {
+        "ko": "중동 항로 위험이 커짐",
+        "en": "Gulf shipping risk rose"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "기름값 부담 → 차 구매 위축"
+       },
+       "reason": {
+        "ko": "기름값 부담에 차 구매를 미룸",
+        "en": "Fuel costs delayed car purchases"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 이라크전 장기화",
+      "impactRationale": "직접 1개(±8), 밀접 4개(±5), 간접 2개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s01-iraq-short-war",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s01-iraq-long-war",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s01-iraq-short-war",
+   "opener": true,
+   "memo": "이라크 전쟁. 단서(단기전 관측) → 실제: 단기 종전, 유가 급락·증시 반등"
+  },
+  {
+   "id": "s02-nk-test",
+   "tentative": {
+    "id": "s02-nk-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "북한 '핵실험 하겠다' 성명… 실험장 주변 움직임 포착",
+     "en": "North Korea Vows a Nuclear Test… Activity Spotted Near Test Site"
+    },
+    "body": {
+     "ko": "북한이 핵실험을 하겠다는 성명을 낸 데 이어, 실험장 주변에서 차량과 인력이 오가는 모습이 위성에 잡혔다. 국방 당국은 상황을 주시하고 있다.",
+     "en": "After North Korea announced it would conduct a nuclear test, satellites caught vehicles and personnel moving around the test site. Defense officials are watching closely."
+    },
+    "effects": [
+     {
+      "themeId": "defense",
+      "impact": 2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "국방",
+         "themeTerm": "국방"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "안보 긴장으로 국방 관련 수요 관심",
+       "en": "Security tension drew interest to defense"
+      }
+     },
+     {
+      "themeId": "securities",
+      "impact": -1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "안보 불안 → 투자 심리 위축"
+      },
+      "reason": {
+       "ko": "안보 불안에 투자 심리가 움츠러듦",
+       "en": "Security fears chilled investors"
+      }
+     },
+     {
+      "themeId": "bank",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "외국인 자금 이탈 우려"
+      },
+      "reason": {
+       "ko": "외국인 자금이 빠질까 걱정",
+       "en": "Fear of foreign capital outflows"
+      }
+     },
+     {
+      "themeId": "travel",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "관광 수요 위축"
+      },
+      "reason": {
+       "ko": "외국인 관광객이 줄 수 있음",
+       "en": "Tourists may stay away"
+      }
+     },
+     {
+      "themeId": "airline",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "외국인 입국 감소 우려"
+      },
+      "reason": {
+       "ko": "외국인 승객이 줄 수 있음",
+       "en": "Fewer foreign visitors"
+      }
+     },
+     {
+      "themeId": "shipping",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "지정학 위험 → 보험료 부담"
+      },
+      "reason": {
+       "ko": "선박 보험료 부담이 커질 수 있음",
+       "en": "Higher insurance for ships"
+      }
+     },
+     {
+      "themeId": "mart",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "소비 심리 위축"
+      },
+      "reason": {
+       "ko": "불안한 분위기에 소비가 움츠러듦",
+       "en": "Anxious consumers spent less"
+      }
+     }
+    ],
+    "realDate": "2006-10-03",
+    "source": {
+     "event": "북한 외무성 핵실험 예고 성명",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 5개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s02-nk-test-done",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "북한 핵실험 강행… 증시 하루 급락",
+      "en": "North Korea Conducts Nuclear Test… Stocks Plunge for a Day"
+     },
+     "body": {
+      "ko": "북한이 결국 핵실험을 강행했다. 발표 직후 증시가 급락하고 원·달러 환율이 뛰었지만, 전문가들은 과거 사례처럼 충격이 오래가지 않을 수 있다고 본다. 국방 경계 태세는 한층 높아졌다.",
+      "en": "North Korea went ahead with a nuclear test. Stocks plunged and the won weakened right after, though experts say the shock may not last, as in past cases. Defense alert levels were raised."
+     },
+     "effects": [
+      {
+       "themeId": "securities",
+       "impact": -7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "증시",
+          "themeTerm": "증시"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "핵실험 소식에 증시가 급락",
+        "en": "Stocks plunged on the test"
+       }
+      },
+      {
+       "themeId": "defense",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "국방",
+          "themeTerm": "국방"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "경계 태세 강화로 국방 수요 관심",
+        "en": "Higher alert drew interest to defense"
+       }
+      },
+      {
+       "themeId": "bank",
+       "impact": -4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "환율 급등과 외국인 자금 이탈 우려"
+       },
+       "reason": {
+        "ko": "외국인 자금 이탈 걱정에 은행주 약세",
+        "en": "Outflow fears weighed on banks"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "관광 수요 위축"
+       },
+       "reason": {
+        "ko": "외국인 관광 수요가 줄어듦",
+        "en": "Foreign tourism dipped"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "외국인 입국 감소"
+       },
+       "reason": {
+        "ko": "외국인 승객이 줄어듦",
+        "en": "Fewer foreign passengers"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "선박 보험료 부담"
+       },
+       "reason": {
+        "ko": "선박 보험료 부담이 커짐",
+        "en": "Ship insurance costs rose"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "소비 심리 위축"
+       },
+       "reason": {
+        "ko": "소비가 잠시 움츠러듦",
+        "en": "Consumers held back"
+       }
+      }
+     ],
+     "realDate": "2006-10-09",
+     "source": {
+      "event": "북한 1차 핵실험 (국내 증시 하루 급락, 5거래일 만에 회복)",
+      "impactRationale": "직접 2개(±7), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s02-nk-talks",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "북한, 핵실험 보류하고 다자회담 복귀",
+      "en": "North Korea Shelves Nuclear Test and Returns to Talks"
+     },
+     "body": {
+      "ko": "북한이 핵실험 계획을 보류하고 다자회담에 복귀하겠다고 밝혔다. 한반도 긴장이 누그러지면서 증시가 반등했고, 원·달러 환율도 안정을 찾았다.",
+      "en": "North Korea said it would shelve its test plan and return to multilateral talks. As tension on the peninsula eased, stocks rebounded and the won stabilized."
+     },
+     "effects": [
+      {
+       "themeId": "securities",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "증시",
+          "themeTerm": "증시"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "긴장 완화로 증시가 반등",
+        "en": "Easing tension lifted stocks"
+       }
+      },
+      {
+       "themeId": "defense",
+       "impact": -4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "긴장 완화 → 국방 관련 관심 감소"
+       },
+       "reason": {
+        "ko": "긴장이 풀려 국방 관련 관심이 줄어듦",
+        "en": "Less focus on defense"
+       }
+      },
+      {
+       "themeId": "bank",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "환율 안정 → 외국인 자금 복귀"
+       },
+       "reason": {
+        "ko": "외국인 자금이 돌아옴",
+        "en": "Foreign money returned"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "관광 수요 회복"
+       },
+       "reason": {
+        "ko": "관광 수요가 회복됨",
+        "en": "Tourism recovered"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "외국인 입국 회복"
+       },
+       "reason": {
+        "ko": "외국인 승객이 돌아옴",
+        "en": "Foreign passengers returned"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "선박 보험료 부담 완화"
+       },
+       "reason": {
+        "ko": "선박 보험료 부담이 줄어듦",
+        "en": "Ship insurance eased"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "소비 심리 회복"
+       },
+       "reason": {
+        "ko": "소비 심리가 회복됨",
+        "en": "Consumers relaxed"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 핵실험 보류, 회담 복귀",
+      "impactRationale": "직접 1개(±7), 밀접 2개(±4), 간접 4개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s02-nk-test-done",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s02-nk-talks",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s02-nk-test-done",
+   "memo": "북한 1차 핵실험. 실제: 강행, 증시 하루 급락 뒤 빠르게 회복"
+  },
+  {
+   "id": "s03-financial-crisis",
+   "tentative": {
+    "id": "s03-fc-tent",
+    "type": "tentative",
+    "magnitude": 3,
+    "title": {
+     "ko": "미국 대형 투자은행 위기설… 인수 협상 잇따라 결렬",
+     "en": "Crisis Rumors Hit a Big US Investment Bank… Takeover Talks Collapse"
+    },
+    "body": {
+     "ko": "부실 주택 대출을 떠안은 미국 대형 투자은행이 자금난에 빠졌다. 인수 후보로 거론되던 금융회사들이 잇따라 협상에서 발을 뺐다는 보도가 나온다. 국내 증시와 은행주도 불안하다.",
+     "en": "A big US investment bank saddled with bad mortgage loans is short of funds. Reports say would-be buyers have pulled out of talks one after another. Korean stocks and bank shares are uneasy."
+    },
+    "effects": [
+     {
+      "themeId": "bank",
+      "impact": -3,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "은행",
+         "themeTerm": "은행"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "금융 불안이 번질 수 있음",
+       "en": "Financial stress could spread"
+      }
+     },
+     {
+      "themeId": "securities",
+      "impact": -3,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "증시",
+         "themeTerm": "증시"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "증시 불안이 커짐",
+       "en": "Market jitters grew"
+      }
+     },
+     {
+      "themeId": "savings_bank",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "금융권 신용 불안"
+      },
+      "reason": {
+       "ko": "금융권 전반의 불안",
+       "en": "Finance-wide nerves"
+      }
+     },
+     {
+      "themeId": "shipbuilding",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "선박 금융 경색 우려"
+      },
+      "reason": {
+       "ko": "배를 사는 데 필요한 대출이 막힐 수 있음",
+       "en": "Ship financing could dry up"
+      }
+     },
+     {
+      "themeId": "shipping",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "세계 교역 위축 우려"
+      },
+      "reason": {
+       "ko": "세계 교역이 줄 수 있음",
+       "en": "Trade could shrink"
+      }
+     },
+     {
+      "themeId": "auto",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "해외 소비 위축 우려"
+      },
+      "reason": {
+       "ko": "해외 차 판매가 줄 수 있음",
+       "en": "Car sales abroad could fall"
+      }
+     },
+     {
+      "themeId": "semiconductor",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "전자제품 수요 위축 우려"
+      },
+      "reason": {
+       "ko": "전자제품 수요가 줄 수 있음",
+       "en": "Electronics demand could fall"
+      }
+     },
+     {
+      "themeId": "card",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "가계 소비 위축 우려"
+      },
+      "reason": {
+       "ko": "카드 사용이 줄 수 있음",
+       "en": "Card spending could fall"
+      }
+     }
+    ],
+    "realDate": "2008-09",
+    "source": {
+     "event": "미국 대형 투자은행 인수 협상 결렬 보도",
+     "impactRationale": "직접 2개(±3), 간접 6개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s03-fc-bankruptcy",
+     "type": "outcome",
+     "magnitude": 9,
+     "title": {
+      "ko": "미국 대형 투자은행 파산… 세계 금융위기로 번져",
+      "en": "Big US Investment Bank Collapses… A Global Financial Crisis Spreads"
+     },
+     "body": {
+      "ko": "미국의 대형 투자은행이 결국 파산을 신청했다. 세계 증시가 폭락하고 금융회사끼리 돈을 빌려주지 않는 신용 경색이 번졌다. 국내에서도 은행의 외화 조달이 막히고 수출 주문이 끊길 것이라는 걱정이 커졌다.",
+      "en": "The big US investment bank finally filed for bankruptcy. Global stocks crashed and a credit freeze spread as lenders stopped lending to each other. In Korea, banks struggled to raise dollars and exporters feared vanishing orders."
+     },
+     "effects": [
+      {
+       "themeId": "bank",
+       "impact": -9,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "은행",
+          "themeTerm": "은행"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "외화 조달이 막히고 대출 부실 우려",
+        "en": "Dollar funding froze and loan losses loomed"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": -9,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "증시",
+          "themeTerm": "증시"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "세계 증시 폭락",
+        "en": "Global stocks crashed"
+       }
+      },
+      {
+       "themeId": "savings_bank",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "신용 경색 → 자금 조달 어려움"
+       },
+       "reason": {
+        "ko": "돈줄이 막혀 부실이 커질 수 있음",
+        "en": "The credit freeze hit funding"
+       }
+      },
+      {
+       "themeId": "shipbuilding",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "선박 금융 경색 → 발주 취소"
+       },
+       "reason": {
+        "ko": "배 주문이 취소되거나 미뤄짐",
+        "en": "Ship orders were canceled or delayed"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "세계 교역 급감"
+       },
+       "reason": {
+        "ko": "세계 교역이 급감해 운임 폭락",
+        "en": "World trade and freight rates collapsed"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": -3,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "소비 위축 → 해외 판매 감소"
+       },
+       "reason": {
+        "ko": "해외 차 판매가 줄어듦",
+        "en": "Car sales abroad fell"
+       }
+      },
+      {
+       "themeId": "semiconductor",
+       "impact": -3,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "전자제품 수요 감소"
+       },
+       "reason": {
+        "ko": "전자제품 수요가 줄어 반도체 주문 감소",
+        "en": "Less electronics demand cut chip orders"
+       }
+      },
+      {
+       "themeId": "card",
+       "impact": -3,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "가계 소비 위축·연체 증가"
+       },
+       "reason": {
+        "ko": "소비가 줄고 연체가 늘어남",
+        "en": "Spending fell and delinquencies rose"
+       }
+      }
+     ],
+     "realDate": "2008-09-15",
+     "source": {
+      "event": "미국 대형 투자은행 파산 (미국·국내 증시 급락)",
+      "impactRationale": "직접 2개(±9), 밀접 3개(±5), 간접 3개(±3) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s03-fc-rescue",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "막판 인수 합의… 투자은행 파산 피해",
+      "en": "Last-Minute Takeover Deal… Investment Bank Avoids Collapse"
+     },
+     "body": {
+      "ko": "미국의 대형 투자은행이 파산 직전 다른 금융회사에 인수되기로 합의했다. 금융 시장의 연쇄 부실 걱정이 줄면서 세계 증시가 반등하고 은행 간 자금 거래도 다시 풀리고 있다.",
+      "en": "On the brink of bankruptcy, the big US investment bank agreed to be bought by another firm. Fears of a chain of failures eased, global stocks rebounded and interbank lending is thawing."
+     },
+     "effects": [
+      {
+       "themeId": "bank",
+       "impact": 8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "은행",
+          "themeTerm": "은행"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "은행 간 자금 거래가 풀림",
+        "en": "Interbank lending thawed"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": 8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "증시",
+          "themeTerm": "증시"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "세계 증시가 반등",
+        "en": "Global stocks rebounded"
+       }
+      },
+      {
+       "themeId": "savings_bank",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "신용 불안 완화"
+       },
+       "reason": {
+        "ko": "금융권 불안이 줄어듦",
+        "en": "Credit fears eased"
+       }
+      },
+      {
+       "themeId": "shipbuilding",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "선박 금융 정상화"
+       },
+       "reason": {
+        "ko": "선박 대출이 다시 풀림",
+        "en": "Ship financing resumed"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "교역 위축 우려 완화"
+       },
+       "reason": {
+        "ko": "교역 걱정이 줄어듦",
+        "en": "Trade worries eased"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "소비 심리 회복"
+       },
+       "reason": {
+        "ko": "해외 소비 심리가 회복됨",
+        "en": "Consumers abroad relaxed"
+       }
+      },
+      {
+       "themeId": "semiconductor",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "전자제품 수요 회복 기대"
+       },
+       "reason": {
+        "ko": "전자제품 수요 회복",
+        "en": "Electronics demand steadied"
+       }
+      },
+      {
+       "themeId": "card",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "가계 소비 회복"
+       },
+       "reason": {
+        "ko": "카드 사용이 회복됨",
+        "en": "Card spending recovered"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 막판 인수로 파산 회피",
+      "impactRationale": "직접 2개(±8), 밀접 3개(±5), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s03-fc-bankruptcy",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s03-fc-rescue",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s03-fc-bankruptcy",
+   "memo": "서브프라임 → 세계 금융위기. 실제: 대형 투자은행 파산"
+  },
+  {
+   "id": "s04-rate-hike",
+   "tentative": {
+    "id": "s04-rate-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "소비자물가 5% 넘어… 중앙은행 총재 '물가 안정이 우선'",
+     "en": "Consumer Inflation Tops 5%… Central Bank Chief Says Price Stability Comes First"
+    },
+    "body": {
+     "ko": "소비자물가 상승률이 5%를 넘어섰다. 중앙은행 총재는 '경기보다 물가 안정이 우선'이라고 말해, 다음 회의에서 기준금리를 올릴 수 있다는 관측이 나온다.",
+     "en": "Consumer inflation has topped 5%. The central bank governor said price stability comes before growth, fueling talk of a rate hike at the next meeting."
+    },
+    "effects": [
+     {
+      "themeId": "bank",
+      "impact": 2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "금리",
+         "themeTerm": "금리"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "금리가 오르면 예대마진이 커질 수 있음",
+       "en": "Higher rates could widen lending margins"
+      }
+     },
+     {
+      "themeId": "housing",
+      "impact": -1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "대출 금리 상승 → 주택 구매 부담"
+      },
+      "reason": {
+       "ko": "대출 이자가 오르면 집 사기 부담",
+       "en": "Higher mortgage costs could cool buying"
+      }
+     },
+     {
+      "themeId": "savings_bank",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "부동산 대출 부실 우려"
+      },
+      "reason": {
+       "ko": "부동산 대출이 부실해질 수 있음",
+       "en": "Property loans could sour"
+      }
+     },
+     {
+      "themeId": "securities",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "유동성 축소"
+      },
+      "reason": {
+       "ko": "시중 자금이 줄 수 있음",
+       "en": "Less liquidity for stocks"
+      }
+     },
+     {
+      "themeId": "card",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "조달 금리 상승"
+      },
+      "reason": {
+       "ko": "카드사 자금 조달 비용 증가",
+       "en": "Higher funding costs for card issuers"
+      }
+     },
+     {
+      "themeId": "auto",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "할부 금리 상승"
+      },
+      "reason": {
+       "ko": "자동차 할부 이자 부담",
+       "en": "Pricier car loans"
+      }
+     },
+     {
+      "themeId": "mart",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "가계 이자 부담 → 소비 위축"
+      },
+      "reason": {
+       "ko": "이자 부담에 소비가 줄 수 있음",
+       "en": "Interest costs could curb spending"
+      }
+     }
+    ],
+    "realDate": "2008-07 ~ 08",
+    "source": {
+     "event": "소비자물가 5%대, 중앙은행 총재 물가 우선 발언",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 5개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s04-rate-up",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "기준금리 0.25%p 인상… 대출 이자 부담 커진다",
+      "en": "Policy Rate Raised by 0.25 Points… Loan Costs Rise"
+     },
+     "body": {
+      "ko": "중앙은행이 물가를 잡기 위해 기준금리를 0.25%p 올렸다. 은행 예금과 대출 금리가 함께 오르면서 집을 사려던 사람들과 대출이 많은 가계의 이자 부담이 커지게 됐다.",
+      "en": "The central bank raised its policy rate by 0.25 points to fight inflation. Deposit and loan rates rose together, raising interest costs for would-be homebuyers and indebted households."
+     },
+     "effects": [
+      {
+       "themeId": "bank",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "금리",
+          "themeTerm": "금리"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "대출 금리가 올라 은행 이자 이익 증가",
+        "en": "Higher loan rates lifted bank margins"
+       }
+      },
+      {
+       "themeId": "housing",
+       "impact": -4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "주택 담보 대출 부담"
+       },
+       "reason": {
+        "ko": "대출 이자가 올라 집 사기 부담",
+        "en": "Mortgage costs rose"
+       }
+      },
+      {
+       "themeId": "savings_bank",
+       "impact": -4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "부동산 대출 부실 우려"
+       },
+       "reason": {
+        "ko": "부동산 대출이 부실해질 걱정",
+        "en": "Property loans looked riskier"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "유동성 축소"
+       },
+       "reason": {
+        "ko": "시중 자금이 줄어듦",
+        "en": "Liquidity tightened"
+       }
+      },
+      {
+       "themeId": "card",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "조달 금리 상승"
+       },
+       "reason": {
+        "ko": "카드사 자금 조달 비용 증가",
+        "en": "Card issuers' funding costs rose"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "할부 금리 상승"
+       },
+       "reason": {
+        "ko": "자동차 할부 이자 부담",
+        "en": "Car loans got pricier"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "가계 이자 부담 → 소비 위축"
+       },
+       "reason": {
+        "ko": "이자 부담에 소비가 줄어듦",
+        "en": "Interest costs curbed spending"
+       }
+      }
+     ],
+     "realDate": "2008-08",
+     "source": {
+      "event": "기준금리 5.00% → 5.25% (25bp 인상)",
+      "impactRationale": "직접 1개(±7), 밀접 2개(±4), 간접 4개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s04-rate-hold",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "중앙은행, 경기 둔화 걱정에 기준금리 동결",
+      "en": "Central Bank Holds Rates on Growth Worries"
+     },
+     "body": {
+      "ko": "물가가 높지만 경기가 빠르게 식고 있다는 판단에 중앙은행이 기준금리를 동결했다. 대출 금리 상승세가 멈추면서 부동산과 소비 시장은 한숨 돌리게 됐다.",
+      "en": "Despite high inflation, the central bank held rates, judging the economy to be cooling fast. With loan rates no longer rising, property and consumer markets got some relief."
+     },
+     "effects": [
+      {
+       "themeId": "bank",
+       "impact": -4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "예대마진 확대 기대 무산"
+       },
+       "reason": {
+        "ko": "이자 이익이 늘 것이라는 기대가 꺾임",
+        "en": "Hopes for wider margins faded"
+       }
+      },
+      {
+       "themeId": "housing",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "대출 부담 완화"
+       },
+       "reason": {
+        "ko": "대출 이자 걱정이 줄어 집 사기 부담 감소",
+        "en": "Mortgage worries eased"
+       }
+      },
+      {
+       "themeId": "savings_bank",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "부동산 대출 부실 우려 완화"
+       },
+       "reason": {
+        "ko": "부동산 대출 걱정이 줄어듦",
+        "en": "Property loan fears eased"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "유동성 유지"
+       },
+       "reason": {
+        "ko": "시중 자금이 유지됨",
+        "en": "Liquidity stayed ample"
+       }
+      },
+      {
+       "themeId": "card",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "조달 금리 안정"
+       },
+       "reason": {
+        "ko": "카드사 자금 조달 비용 안정",
+        "en": "Card funding costs steadied"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "할부 금리 안정"
+       },
+       "reason": {
+        "ko": "자동차 할부 부담 완화",
+        "en": "Car loans steadied"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "소비 심리 회복"
+       },
+       "reason": {
+        "ko": "소비가 숨을 돌림",
+        "en": "Spending got relief"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 기준금리 동결",
+      "impactRationale": "밀접 3개(±4), 간접 4개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s04-rate-up",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s04-rate-hold",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s04-rate-up",
+   "opener": true,
+   "memo": "한국은행 기준금리 인상 (물가 5%대). 실제: 0.25%p 인상"
+  },
+  {
+   "id": "s05-card-crisis",
+   "tentative": {
+    "id": "s05-card-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "카드 연체율 10% 넘어… 현금서비스 한도 줄줄이 축소",
+     "en": "Card Delinquencies Top 10%… Cash Advance Limits Slashed"
+    },
+    "body": {
+     "ko": "신용카드 연체율이 10%를 넘어서자 카드사들이 현금서비스 한도를 앞다퉈 줄이고 있다. 돌려막기로 버티던 사람들이 한꺼번에 연체에 빠질 수 있다는 경고가 나온다.",
+     "en": "As credit card delinquencies topped 10%, issuers are rushing to cut cash advance limits. Experts warn that people juggling cards could all default at once."
+    },
+    "effects": [
+     {
+      "themeId": "card",
+      "impact": -2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "연체",
+         "themeTerm": "연체"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "연체가 늘어 카드사 손실 위험",
+       "en": "Rising delinquencies threatened issuers"
+      }
+     },
+     {
+      "themeId": "bank",
+      "impact": -1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "카드사에 돈을 빌려준 금융권 부담"
+      },
+      "reason": {
+       "ko": "카드사에 빌려준 돈이 걱정",
+       "en": "Lenders to card firms got nervous"
+      }
+     },
+     {
+      "themeId": "securities",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "금융 불안 → 투자 심리 위축"
+      },
+      "reason": {
+       "ko": "금융 불안에 투자 심리 위축",
+       "en": "Financial jitters"
+      }
+     },
+     {
+      "themeId": "savings_bank",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "서민 대출 부실 우려"
+      },
+      "reason": {
+       "ko": "서민 대출 부실 걱정",
+       "en": "Consumer loans looked riskier"
+      }
+     },
+     {
+      "themeId": "mart",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "소비 위축"
+      },
+      "reason": {
+       "ko": "카드 한도가 줄어 소비 감소",
+       "en": "Lower limits cut spending"
+      }
+     },
+     {
+      "themeId": "auto",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "할부 구매 감소"
+      },
+      "reason": {
+       "ko": "할부로 차를 사는 사람이 줄 수 있음",
+       "en": "Fewer car installment buys"
+      }
+     },
+     {
+      "themeId": "travel",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "여가 소비 위축"
+      },
+      "reason": {
+       "ko": "여행 같은 여가 소비가 줄 수 있음",
+       "en": "Leisure spending could fall"
+      }
+     }
+    ],
+    "realDate": "2003",
+    "source": {
+     "event": "카드 연체율 급등, 현금서비스 한도 축소",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 5개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s05-card-liquidity",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "대형 카드사 유동성 위기… 채권단 긴급 자금 지원",
+      "en": "Major Card Issuer Hits a Cash Crunch… Creditors Step In"
+     },
+     "body": {
+      "ko": "연체가 쌓인 대형 카드사가 만기가 돌아온 빚을 갚지 못할 처지에 놓이자 채권단이 긴급 자금을 넣기로 했다. 신용불량자가 수백만 명으로 늘면서 소비가 크게 위축됐다.",
+      "en": "A major card issuer buried in delinquencies could not repay maturing debt, so creditors agreed to inject emergency funds. With millions now blacklisted for bad credit, consumer spending slumped."
+     },
+     "effects": [
+      {
+       "themeId": "card",
+       "impact": -8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "카드사",
+          "themeTerm": "카드사"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "빚을 갚지 못할 처지에 놓여 긴급 지원",
+        "en": "The issuer needed an emergency rescue"
+       }
+      },
+      {
+       "themeId": "bank",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "채권단 지원 부담"
+       },
+       "reason": {
+        "ko": "채권단이 돈을 넣어야 해 부담",
+        "en": "Creditor banks shouldered the rescue"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "소비 위축"
+       },
+       "reason": {
+        "ko": "신용불량자가 늘어 소비가 크게 줄어듦",
+        "en": "Spending slumped"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "금융 불안"
+       },
+       "reason": {
+        "ko": "금융주 투자 심리 위축",
+        "en": "Financial stocks slid"
+       }
+      },
+      {
+       "themeId": "savings_bank",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "서민 대출 부실"
+       },
+       "reason": {
+        "ko": "서민 대출 부실이 늘어남",
+        "en": "Consumer loans soured"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "할부 구매 감소"
+       },
+       "reason": {
+        "ko": "할부로 차를 사는 사람이 줄어듦",
+        "en": "Fewer car installment buys"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "여가 소비 위축"
+       },
+       "reason": {
+        "ko": "여행 같은 여가 소비가 줄어듦",
+        "en": "Leisure spending fell"
+       }
+      }
+     ],
+     "realDate": "2003-11",
+     "source": {
+      "event": "대형 카드사 유동성 위기, 채권단 지원 (신용불량자 수백만 명)",
+      "impactRationale": "직접 1개(±8), 밀접 2개(±5), 간접 4개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s05-card-recap",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "카드사 대규모 증자 성공… 연체 사태 조기 수습",
+      "en": "Card Issuers Raise Capital… Delinquency Crisis Contained Early"
+     },
+     "body": {
+      "ko": "카드사들이 대규모 증자로 자본을 늘리고 연체 채권을 털어 내면서 위기가 빠르게 수습되고 있다. 신용 시장이 안정을 찾자 소비 심리도 회복 조짐을 보인다.",
+      "en": "Card issuers raised fresh capital and cleared bad debts, quickly containing the crisis. As credit markets calmed, consumer sentiment showed signs of recovery."
+     },
+     "effects": [
+      {
+       "themeId": "card",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "카드사",
+          "themeTerm": "카드사"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "자본을 늘려 위기를 넘김",
+        "en": "Fresh capital stabilized issuers"
+       }
+      },
+      {
+       "themeId": "bank",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "금융권 부담 완화"
+       },
+       "reason": {
+        "ko": "금융권 부담이 줄어듦",
+        "en": "Banks' burden eased"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "소비 심리 회복"
+       },
+       "reason": {
+        "ko": "소비 심리가 회복됨",
+        "en": "Spending recovered"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "금융 불안 완화"
+       },
+       "reason": {
+        "ko": "금융주 투자 심리 회복",
+        "en": "Financial stocks steadied"
+       }
+      },
+      {
+       "themeId": "savings_bank",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "서민 대출 안정"
+       },
+       "reason": {
+        "ko": "서민 대출 부실 걱정이 줄어듦",
+        "en": "Consumer loan fears eased"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "할부 구매 회복"
+       },
+       "reason": {
+        "ko": "할부 구매가 회복됨",
+        "en": "Installment buying recovered"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "여가 소비 회복"
+       },
+       "reason": {
+        "ko": "여가 소비가 회복됨",
+        "en": "Leisure spending recovered"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 증자로 조기 수습",
+      "impactRationale": "직접 1개(±7), 밀접 2개(±4), 간접 4개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s05-card-liquidity",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s05-card-recap",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s05-card-liquidity",
+   "memo": "카드 대란. 실제: 대형 카드사 유동성 위기, 채권단 지원"
+  },
+  {
+   "id": "s06-sars",
+   "tentative": {
+    "id": "s06-sars-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "아시아 괴질 확산… 국내 의심 환자는 잇따라 '음성'",
+     "en": "Mystery Illness Spreads in Asia… Suspected Korean Cases Test Negative"
+    },
+    "body": {
+     "ko": "아시아 여러 나라에서 원인 모를 호흡기 질환이 퍼지며 여행 자제 권고가 나왔다. 다만 국내 의심 환자들은 정밀 검사에서 잇따라 음성 판정을 받았다.",
+     "en": "A mysterious respiratory illness is spreading across Asia, prompting travel advisories. But suspected cases in Korea keep testing negative."
+    },
+    "effects": [
+     {
+      "themeId": "travel",
+      "impact": 2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "여행",
+         "themeTerm": "여행"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "국내 확산이 없으면 여행 수요가 금방 돌아올 수 있음",
+       "en": "Travel could rebound if Korea stays clear"
+      }
+     },
+     {
+      "themeId": "airline",
+      "impact": 1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "여행 수요 회복 시 승객 증가"
+      },
+      "reason": {
+       "ko": "승객이 돌아올 수 있음",
+       "en": "Passengers could return"
+      }
+     },
+     {
+      "themeId": "pharma",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "치료제·방역 수요 기대 감소"
+      },
+      "reason": {
+       "ko": "치료제 수요 기대가 줄어듦",
+       "en": "Less demand for treatments"
+      }
+     },
+     {
+      "themeId": "mart",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "외출·소비 정상화"
+      },
+      "reason": {
+       "ko": "소비가 평소대로 돌아올 수 있음",
+       "en": "Shopping could normalize"
+      }
+     },
+     {
+      "themeId": "hallyu",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "공연·행사 정상 진행"
+      },
+      "reason": {
+       "ko": "공연이 예정대로 열릴 수 있음",
+       "en": "Shows could go ahead"
+      }
+     },
+     {
+      "themeId": "online_game",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "집에 머무는 시간 감소"
+      },
+      "reason": {
+       "ko": "집에서 게임하는 시간이 줄 수 있음",
+       "en": "Less time gaming at home"
+      }
+     },
+     {
+      "themeId": "shipping",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "아시아 교역 정상화"
+      },
+      "reason": {
+       "ko": "아시아 교역이 정상화될 수 있음",
+       "en": "Asian trade could normalize"
+      }
+     }
+    ],
+    "realDate": "2003-03 ~ 04",
+    "source": {
+     "event": "사스 확산, 국내 의심 환자 음성 판정",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 5개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s06-sars-contained",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "국내 확산 없이 괴질 진정… 여행·항공 예약 회복",
+      "en": "Illness Contained Without Spreading in Korea… Travel and Flight Bookings Recover"
+     },
+     "body": {
+      "ko": "아시아를 휩쓴 호흡기 질환이 국내에서는 확산 없이 진정됐다. 국제 보건 기구가 여행 자제 권고를 풀자 미뤘던 해외여행과 항공 예약이 빠르게 돌아오고 있다.",
+      "en": "The respiratory illness that swept Asia died down without spreading in Korea. As the global health body lifted its travel advisory, postponed trips and flight bookings are coming back fast."
+     },
+     "effects": [
+      {
+       "themeId": "travel",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "해외여행",
+          "themeTerm": "해외여행"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "미뤘던 해외여행이 돌아옴",
+        "en": "Postponed trips came back"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "항공",
+          "themeTerm": "항공"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "항공 예약이 빠르게 회복",
+        "en": "Flight bookings rebounded"
+       }
+      },
+      {
+       "themeId": "pharma",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "방역 용품·치료제 수요 감소"
+       },
+       "reason": {
+        "ko": "방역 용품 수요가 줄어듦",
+        "en": "Less demand for protective supplies"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "소비 정상화"
+       },
+       "reason": {
+        "ko": "외출과 소비가 늘어남",
+        "en": "Shoppers returned"
+       }
+      },
+      {
+       "themeId": "hallyu",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "공연·행사 재개"
+       },
+       "reason": {
+        "ko": "미뤘던 공연이 다시 열림",
+        "en": "Postponed shows resumed"
+       }
+      },
+      {
+       "themeId": "online_game",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "외출 증가 → 게임 시간 감소"
+       },
+       "reason": {
+        "ko": "밖에 나가는 시간이 늘어 게임 시간 감소",
+        "en": "People went out instead of gaming"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "아시아 교역 정상화"
+       },
+       "reason": {
+        "ko": "아시아 교역이 정상화됨",
+        "en": "Asian trade normalized"
+       }
+      }
+     ],
+     "realDate": "2003-07",
+     "source": {
+      "event": "사스 종식 (국내 추정 환자 소수, 사망자 없음)",
+      "impactRationale": "직접 2개(±7), 간접 5개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s06-sars-outbreak",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "괴질 국내 확산… 외출 자제에 거리 한산",
+      "en": "Illness Spreads in Korea… Streets Empty as People Stay Home"
+     },
+     "body": {
+      "ko": "호흡기 질환 환자가 국내에서도 잇따라 나오면서 보건 당국이 외출 자제를 권고했다. 학교와 공연장이 문을 닫고 해외여행 예약은 대부분 취소됐다. 마스크와 치료제를 찾는 사람이 몰린다.",
+      "en": "Cases of the respiratory illness appeared in Korea, and health authorities urged people to stay home. Schools and concert halls closed, most overseas trips were canceled, and people are rushing for masks and treatments."
+     },
+     "effects": [
+      {
+       "themeId": "travel",
+       "impact": -8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "해외여행",
+          "themeTerm": "해외여행"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "해외여행 예약이 대부분 취소됨",
+        "en": "Most trips were canceled"
+       }
+      },
+      {
+       "themeId": "pharma",
+       "impact": 8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "치료제",
+          "themeTerm": "치료제"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "치료제와 방역 용품 수요 급증",
+        "en": "Treatments and supplies in demand"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "승객 급감"
+       },
+       "reason": {
+        "ko": "비행기 승객이 급감",
+        "en": "Passengers vanished"
+       }
+      },
+      {
+       "themeId": "hallyu",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "공연장 폐쇄"
+       },
+       "reason": {
+        "ko": "공연과 행사가 취소됨",
+        "en": "Shows were canceled"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "외출 자제 → 매장 방문 감소"
+       },
+       "reason": {
+        "ko": "매장을 찾는 사람이 줄어듦",
+        "en": "Fewer store visits"
+       }
+      },
+      {
+       "themeId": "online_game",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "집에 머무는 시간 증가"
+       },
+       "reason": {
+        "ko": "집에서 게임하는 시간이 늘어남",
+        "en": "More time gaming at home"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "아시아 교역 위축"
+       },
+       "reason": {
+        "ko": "아시아 교역이 위축됨",
+        "en": "Asian trade slowed"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 사스 국내 확산",
+      "impactRationale": "직접 2개(±8), 밀접 2개(±5), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s06-sars-contained",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s06-sars-outbreak",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s06-sars-contained",
+   "opener": true,
+   "memo": "사스. 실제: 국내 확산 없이 진정 → 여행·항공 회복"
+  },
+  {
+   "id": "s07-kor-us-fta",
+   "tentative": {
+    "id": "s07-fta-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "통상 협상 막판 시한 연장… 양측 '큰 틀 의견 접근'",
+     "en": "Trade Talks Extended at the Deadline… Both Sides Say They Are Close"
+    },
+    "body": {
+     "ko": "미국과의 자유무역협정 협상이 마감 시한을 넘겨 연장됐다. 양측 대표단은 '큰 틀에서 의견이 가까워졌다'며 자동차와 농업 분야 마지막 쟁점을 조율하고 있다.",
+     "en": "Free trade talks with the US were extended past the deadline. Both delegations say they are close on the big picture and are working through final issues on cars and farming."
+    },
+    "effects": [
+     {
+      "themeId": "auto",
+      "impact": 2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "자동차",
+         "themeTerm": "자동차"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "타결되면 자동차 수출에 숨통",
+       "en": "A deal would help car exports"
+      }
+     },
+     {
+      "themeId": "textile",
+      "impact": 1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "의류 관세 철폐 가능성"
+      },
+      "reason": {
+       "ko": "의류 관세가 없어질 수 있음",
+       "en": "Apparel tariffs could go"
+      }
+     },
+     {
+      "themeId": "pharma",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "미국산 약과의 경쟁 우려"
+      },
+      "reason": {
+       "ko": "미국산 약과 경쟁할 수 있음",
+       "en": "US drug competition looms"
+      }
+     },
+     {
+      "themeId": "poultry",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "미국산 축산물 수입 우려"
+      },
+      "reason": {
+       "ko": "값싼 미국산 닭고기가 들어올 수 있음",
+       "en": "Cheap US poultry could arrive"
+      }
+     },
+     {
+      "themeId": "flour",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "원료 수입 관세 인하 가능성"
+      },
+      "reason": {
+       "ko": "원료 관세가 내려갈 수 있음",
+       "en": "Input tariffs could fall"
+      }
+     },
+     {
+      "themeId": "mart",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "수입품 가격 인하"
+      },
+      "reason": {
+       "ko": "수입품 값이 내려갈 수 있음",
+       "en": "Imports could get cheaper"
+      }
+     },
+     {
+      "themeId": "handset",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "전자제품 수출 확대"
+      },
+      "reason": {
+       "ko": "전자제품 수출이 늘 수 있음",
+       "en": "Electronics exports could grow"
+      }
+     },
+     {
+      "themeId": "securities",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "수출주 투자 심리"
+      },
+      "reason": {
+       "ko": "수출주에 관심",
+       "en": "Exporters drew interest"
+      }
+     }
+    ],
+    "realDate": "2007-03-31 ~ 04-02",
+    "source": {
+     "event": "한미 FTA 협상 시한 연장",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 6개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s07-fta-signed",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "한미 자유무역협정 타결… 승용차 관세 철폐",
+      "en": "Korea-US Free Trade Deal Reached… Car Tariffs Scrapped"
+     },
+     "body": {
+      "ko": "미국과의 자유무역협정이 마감 직전 타결됐다. 미국이 승용차 관세를 없애기로 해 자동차와 섬유 수출에 숨통이 트였지만, 축산과 제약 업계는 값싼 미국산 제품과의 경쟁을 걱정한다.",
+      "en": "The free trade deal with the US was reached just before the deadline. The US will scrap tariffs on passenger cars, helping car and textile exports, while livestock and drug industries worry about cheap US products."
+     },
+     "effects": [
+      {
+       "themeId": "auto",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "승용차",
+          "themeTerm": "승용차"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "미국 관세가 없어져 수출 가격 경쟁력 상승",
+        "en": "No US tariff made cars more competitive"
+       }
+      },
+      {
+       "themeId": "textile",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "의류 관세 철폐"
+       },
+       "reason": {
+        "ko": "의류 관세가 없어져 미국 수출에 숨통",
+        "en": "Apparel tariffs were scrapped"
+       }
+      },
+      {
+       "themeId": "pharma",
+       "impact": -4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "특허 보호 강화와 미국산 약 경쟁"
+       },
+       "reason": {
+        "ko": "미국산 약과 경쟁해야 함",
+        "en": "US drugs will compete"
+       }
+      },
+      {
+       "themeId": "poultry",
+       "impact": -4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "값싼 미국산 닭고기 수입"
+       },
+       "reason": {
+        "ko": "값싼 미국산 닭고기가 들어옴",
+        "en": "Cheap US poultry is coming"
+       }
+      },
+      {
+       "themeId": "flour",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "원료 수입 관세 인하"
+       },
+       "reason": {
+        "ko": "원료 관세가 내려감",
+        "en": "Input tariffs fell"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "수입품 가격 인하"
+       },
+       "reason": {
+        "ko": "수입품 값이 내려감",
+        "en": "Imports got cheaper"
+       }
+      },
+      {
+       "themeId": "handset",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "전자제품 수출 확대"
+       },
+       "reason": {
+        "ko": "전자제품 수출에 도움",
+        "en": "Electronics exports helped"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "수출주 투자 심리"
+       },
+       "reason": {
+        "ko": "수출주에 돈이 몰림",
+        "en": "Exporters drew money"
+       }
+      }
+     ],
+     "realDate": "2007-04-02",
+     "source": {
+      "event": "한미 FTA 타결 (미국 승용차 관세 2.5% 철폐)",
+      "impactRationale": "직접 1개(±7), 밀접 3개(±4), 간접 4개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s07-fta-failed",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "한미 자유무역협정 협상 결렬",
+      "en": "Korea-US Free Trade Talks Collapse"
+     },
+     "body": {
+      "ko": "미국과의 자유무역협정 협상이 자동차와 농업 쟁점에서 끝내 합의하지 못하고 결렬됐다. 수출 업계는 실망했고, 축산 농가와 제약 업계는 일단 안도했다.",
+      "en": "Free trade talks with the US collapsed over cars and farming. Exporters were disappointed, while livestock farmers and drugmakers breathed a sigh of relief."
+     },
+     "effects": [
+      {
+       "themeId": "auto",
+       "impact": -7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "자동차",
+          "themeTerm": "자동차"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "관세 철폐가 무산돼 수출 기대가 꺾임",
+        "en": "No tariff cut for car exports"
+       }
+      },
+      {
+       "themeId": "textile",
+       "impact": -4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "의류 관세 유지"
+       },
+       "reason": {
+        "ko": "의류 관세가 그대로",
+        "en": "Apparel tariffs remain"
+       }
+      },
+      {
+       "themeId": "pharma",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "미국산 약 경쟁 회피"
+       },
+       "reason": {
+        "ko": "미국산 약과 경쟁하지 않아도 됨",
+        "en": "No new US drug competition"
+       }
+      },
+      {
+       "themeId": "poultry",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "미국산 닭고기 수입 회피"
+       },
+       "reason": {
+        "ko": "값싼 수입 닭고기 걱정이 사라짐",
+        "en": "No cheap US poultry"
+       }
+      },
+      {
+       "themeId": "flour",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "원료 관세 유지"
+       },
+       "reason": {
+        "ko": "원료 관세가 그대로",
+        "en": "Input tariffs remain"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "수입품 가격 유지"
+       },
+       "reason": {
+        "ko": "수입품 값이 그대로",
+        "en": "Import prices stay"
+       }
+      },
+      {
+       "themeId": "handset",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "전자제품 수출 기대 감소"
+       },
+       "reason": {
+        "ko": "수출 기대가 줄어듦",
+        "en": "Export hopes faded"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "수출주 실망"
+       },
+       "reason": {
+        "ko": "수출주가 실망 매물에 밀림",
+        "en": "Exporters sold off"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 한미 FTA 결렬",
+      "impactRationale": "직접 1개(±7), 밀접 3개(±4), 간접 4개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s07-fta-signed",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s07-fta-failed",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s07-fta-signed",
+   "memo": "한미 FTA. 실제: 협상 시한 직전 타결"
+  },
+  {
+   "id": "s08-bird-flu",
+   "tentative": {
+    "id": "s08-flu-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "닭 집단 폐사 신고… 주변 농가에서도 폐사 늘어",
+     "en": "Mass Chicken Deaths Reported… More Farms Nearby Losing Birds"
+    },
+    "body": {
+     "ko": "한 양계 농장에서 닭이 집단으로 죽었다는 신고가 들어왔다. 정밀 검사 결과는 아직이지만, 주변 농가에서도 폐사하는 닭이 계속 늘고 있다.",
+     "en": "A poultry farm reported a mass die-off of chickens. Test results are not in yet, but nearby farms are losing more and more birds."
+    },
+    "effects": [
+     {
+      "themeId": "poultry",
+      "impact": -2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "닭",
+         "themeTerm": "닭"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "폐사가 번지면 닭고기 출하에 차질",
+       "en": "Spreading deaths could halt shipments"
+      }
+     },
+     {
+      "themeId": "food",
+      "impact": -1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "닭 가공식품 판매 우려"
+      },
+      "reason": {
+       "ko": "닭으로 만든 식품 판매가 줄 수 있음",
+       "en": "Chicken products could suffer"
+      }
+     },
+     {
+      "themeId": "mart",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "닭고기 매출 감소 우려"
+      },
+      "reason": {
+       "ko": "매장의 닭고기 판매가 줄 수 있음",
+       "en": "Store chicken sales could drop"
+      }
+     },
+     {
+      "themeId": "pharma",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "방역 약품 수요"
+      },
+      "reason": {
+       "ko": "방역 약품 수요가 생길 수 있음",
+       "en": "Disinfectant demand could rise"
+      }
+     },
+     {
+      "themeId": "flour",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "사료용 곡물 수요 감소"
+      },
+      "reason": {
+       "ko": "사료용 곡물이 덜 팔릴 수 있음",
+       "en": "Less feed grain needed"
+      }
+     },
+     {
+      "themeId": "travel",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "지역 축제 취소 우려"
+      },
+      "reason": {
+       "ko": "지역 행사가 취소될 수 있음",
+       "en": "Local festivals could be canceled"
+      }
+     }
+    ],
+    "realDate": "2008-04",
+    "source": {
+     "event": "조류인플루엔자 의심 신고, 인근 농가 폐사 증가",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 4개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s08-flu-confirmed",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "고병원성 조류인플루엔자 확진… 대규모 살처분",
+      "en": "Highly Pathogenic Bird Flu Confirmed… Mass Culling Ordered"
+     },
+     "body": {
+      "ko": "닭 집단 폐사의 원인이 고병원성 조류인플루엔자로 확진됐다. 방역 당국은 발생 농장과 주변 농장의 닭을 모두 살처분하기로 했다. 치킨집과 닭고기 매장에는 손님이 뚝 끊겼다.",
+      "en": "The die-off was confirmed as highly pathogenic bird flu. Authorities ordered all chickens on the farm and nearby farms culled. Chicken restaurants and poultry counters lost their customers."
+     },
+     "effects": [
+      {
+       "themeId": "poultry",
+       "impact": -8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "살처분",
+          "themeTerm": "살처분"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "대규모 살처분과 소비 급감",
+        "en": "Mass culling and collapsing demand"
+       }
+      },
+      {
+       "themeId": "food",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "닭 가공식품 판매 감소"
+       },
+       "reason": {
+        "ko": "닭으로 만든 식품 판매가 줄어듦",
+        "en": "Chicken products sold less"
+       }
+      },
+      {
+       "themeId": "pharma",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "방역 약품·소독제 수요"
+       },
+       "reason": {
+        "ko": "방역 약품과 소독제 수요 증가",
+        "en": "Disinfectants in demand"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "닭고기 매출 감소"
+       },
+       "reason": {
+        "ko": "매장의 닭고기 판매가 줄어듦",
+        "en": "Store chicken sales fell"
+       }
+      },
+      {
+       "themeId": "flour",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "사료용 곡물 수요 감소"
+       },
+       "reason": {
+        "ko": "사료용 곡물이 덜 팔림",
+        "en": "Less feed grain needed"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "지역 축제 취소"
+       },
+       "reason": {
+        "ko": "지역 축제가 취소됨",
+        "en": "Local festivals were canceled"
+       }
+      }
+     ],
+     "realDate": "2008-04",
+     "source": {
+      "event": "고병원성 조류인플루엔자 확진, 대규모 살처분",
+      "impactRationale": "직접 1개(±8), 밀접 2개(±5), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s08-flu-mild",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "닭 폐사 원인은 저병원성… 이동 제한 풀려",
+      "en": "Chicken Deaths Ruled Low-Pathogenic… Movement Limits Lifted"
+     },
+     "body": {
+      "ko": "집단 폐사한 닭을 검사한 결과 저병원성으로 판정돼 방역 당국이 이동 제한을 풀었다. 양계 농가는 출하를 다시 시작했고, 닭고기 소비도 평소 수준을 되찾고 있다.",
+      "en": "Tests ruled the die-off low-pathogenic, and authorities lifted movement limits. Poultry farms resumed shipments and chicken consumption is returning to normal."
+     },
+     "effects": [
+      {
+       "themeId": "poultry",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "양계",
+          "themeTerm": "양계"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "출하가 다시 시작됨",
+        "en": "Shipments resumed"
+       }
+      },
+      {
+       "themeId": "food",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "닭 가공식품 판매 정상화"
+       },
+       "reason": {
+        "ko": "닭으로 만든 식품 판매가 정상화",
+        "en": "Chicken products recovered"
+       }
+      },
+      {
+       "themeId": "pharma",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "방역 수요 감소"
+       },
+       "reason": {
+        "ko": "방역 약품 수요가 줄어듦",
+        "en": "Less disinfectant demand"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "닭고기 매출 회복"
+       },
+       "reason": {
+        "ko": "매장의 닭고기 판매 회복",
+        "en": "Store chicken sales recovered"
+       }
+      },
+      {
+       "themeId": "flour",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "사료용 곡물 수요 회복"
+       },
+       "reason": {
+        "ko": "사료용 곡물 판매 회복",
+        "en": "Feed grain demand recovered"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "지역 축제 정상 개최"
+       },
+       "reason": {
+        "ko": "지역 축제가 예정대로 열림",
+        "en": "Local festivals went ahead"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 저병원성 판정",
+      "impactRationale": "직접 1개(±7), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s08-flu-confirmed",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s08-flu-mild",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s08-flu-confirmed",
+   "opener": true,
+   "memo": "조류인플루엔자. 실제: 고병원성 확진, 대규모 살처분"
+  },
+  {
+   "id": "s09-oil-record",
+   "tentative": {
+    "id": "s09-oil-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "산유국 회의 앞두고 '공급은 충분하다' 입장 고수",
+     "en": "Ahead of Producer Meeting, Oil Exporters Insist Supply Is Ample"
+    },
+    "body": {
+     "ko": "주요 산유국들이 회의를 앞두고 '시장에 원유 공급은 충분하다'며 증산에 소극적인 입장을 고수했다. 국제 유가는 사상 최고 수준에서 좀처럼 내려오지 않고 있다.",
+     "en": "Ahead of their meeting, major oil producers insisted crude supply is ample and showed little appetite for raising output. Oil prices are stuck near record highs."
+    },
+    "effects": [
+     {
+      "themeId": "refining",
+      "impact": 2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "유가",
+         "themeTerm": "유가"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "증산이 없으면 유가가 높게 유지될 수 있음",
+       "en": "Without more output, oil could stay high"
+      }
+     },
+     {
+      "themeId": "airline",
+      "impact": -1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "항공유 부담 지속"
+      },
+      "reason": {
+       "ko": "항공유 부담이 계속될 수 있음",
+       "en": "Jet fuel costs could stay high"
+      }
+     },
+     {
+      "themeId": "shipping",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "선박 연료비 부담"
+      },
+      "reason": {
+       "ko": "배 연료비 부담이 계속될 수 있음",
+       "en": "Ship fuel costs could stay high"
+      }
+     },
+     {
+      "themeId": "renewable",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "대체 에너지 관심"
+      },
+      "reason": {
+       "ko": "대체 에너지에 관심",
+       "en": "Interest in alternatives"
+      }
+     },
+     {
+      "themeId": "auto",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "기름값 부담 → 차 구매 위축"
+      },
+      "reason": {
+       "ko": "기름값 부담에 차 구매를 미룰 수 있음",
+       "en": "Fuel costs could delay car purchases"
+      }
+     },
+     {
+      "themeId": "travel",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "유류할증료 부담"
+      },
+      "reason": {
+       "ko": "여행비가 오를 수 있음",
+       "en": "Trips could cost more"
+      }
+     },
+     {
+      "themeId": "overseas_plant",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "산유국 발주 여력"
+      },
+      "reason": {
+       "ko": "산유국이 공사를 더 발주할 수 있음",
+       "en": "Oil-rich clients could order more"
+      }
+     }
+    ],
+    "realDate": "2008-06",
+    "source": {
+     "event": "주요 산유국 증산에 소극적",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 5개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s09-oil-record-high",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "증산 약속에도 국제 유가 사상 최고 행진",
+      "en": "Oil Hits Record Highs Despite Output Pledge"
+     },
+     "body": {
+      "ko": "산유국들이 소폭 증산을 약속했지만 국제 유가는 오히려 사상 최고치를 다시 썼다. 항공사들은 유류할증료를 올리고 노선을 줄였으며, 대체 에너지에 대한 관심이 커지고 있다.",
+      "en": "Producers pledged a small output increase, yet oil set another record. Airlines raised fuel surcharges and cut routes, and interest in alternative energy is growing."
+     },
+     "effects": [
+      {
+       "themeId": "refining",
+       "impact": 8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "유가",
+          "themeTerm": "유가"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "유가가 사상 최고를 다시 씀",
+        "en": "Oil hit a fresh record"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": -8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "항공사",
+          "themeTerm": "항공사"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "연료비 부담에 노선을 줄임",
+        "en": "Fuel costs forced route cuts"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "선박 연료비 급등"
+       },
+       "reason": {
+        "ko": "배 연료비가 크게 오름",
+        "en": "Ship fuel soared"
+       }
+      },
+      {
+       "themeId": "renewable",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "대체 에너지 관심"
+       },
+       "reason": {
+        "ko": "대체 에너지에 투자가 몰림",
+        "en": "Alternatives drew investment"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "기름값 부담 → 차 구매 위축"
+       },
+       "reason": {
+        "ko": "기름값 부담에 큰 차 판매가 줄어듦",
+        "en": "Fuel costs hurt car sales"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "유류할증료 인상"
+       },
+       "reason": {
+        "ko": "유류할증료가 올라 여행비 부담",
+        "en": "Surcharges raised trip costs"
+       }
+      },
+      {
+       "themeId": "overseas_plant",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "산유국 발주 확대"
+       },
+       "reason": {
+        "ko": "산유국 공사 발주가 늘어남",
+        "en": "Oil-rich clients ordered more"
+       }
+      }
+     ],
+     "realDate": "2008-07-11",
+     "source": {
+      "event": "국제유가 사상 최고 147.27달러",
+      "impactRationale": "직접 2개(±8), 밀접 2개(±5), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s09-oil-glut",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "산유국 대규모 증산 합의… 국제 유가 급락",
+      "en": "Producers Agree to Big Output Boost… Oil Plunges"
+     },
+     "body": {
+      "ko": "주요 산유국들이 하루 수백만 배럴의 대규모 증산에 합의했다. 공급 부족 걱정이 사라지며 국제 유가가 급락했고, 항공사와 해운사의 연료비 부담이 크게 줄었다.",
+      "en": "Major producers agreed to add millions of barrels a day. With shortage fears gone, oil prices plunged and fuel costs for airlines and shippers fell sharply."
+     },
+     "effects": [
+      {
+       "themeId": "refining",
+       "impact": -8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "유가",
+          "themeTerm": "유가"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "공급 걱정이 사라져 유가 급락",
+        "en": "Oil plunged as supply fears faded"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": 8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "항공사",
+          "themeTerm": "항공사"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "연료비 부담이 크게 줄어듦",
+        "en": "Fuel costs fell sharply"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "선박 연료비 하락"
+       },
+       "reason": {
+        "ko": "배 연료비가 줄어듦",
+        "en": "Ship fuel got cheaper"
+       }
+      },
+      {
+       "themeId": "renewable",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "대체 에너지 관심 감소"
+       },
+       "reason": {
+        "ko": "대체 에너지 관심이 식음",
+        "en": "Alternatives lost appeal"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "기름값 하락 → 차 수요 회복"
+       },
+       "reason": {
+        "ko": "기름값이 내려 차 수요 회복",
+        "en": "Cheaper fuel helped car demand"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "유류할증료 인하"
+       },
+       "reason": {
+        "ko": "여행비 부담이 줄어듦",
+        "en": "Trips got cheaper"
+       }
+      },
+      {
+       "themeId": "overseas_plant",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "산유국 발주 축소"
+       },
+       "reason": {
+        "ko": "산유국 공사 발주가 줄 수 있음",
+        "en": "Oil-rich clients may order less"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 대규모 증산으로 유가 급락",
+      "impactRationale": "직접 2개(±8), 밀접 2개(±5), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s09-oil-record-high",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s09-oil-glut",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s09-oil-record-high",
+   "opener": true,
+   "memo": "산유국 증산 논의와 고유가. 실제: 소폭 증산에도 유가 사상 최고 행진"
+  },
+  {
+   "id": "s10-beijing-olympics",
+   "tentative": {
+    "id": "s10-bj-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "올림픽 개최지 투표 임박… 베이징 지지 선언 잇따라",
+     "en": "Olympic Host Vote Nears… Support for Beijing Grows"
+    },
+    "body": {
+     "ko": "올림픽 개최지 투표를 앞두고 여러 나라 위원들이 베이징 지지 의사를 밝히고 있다. 중국은 개최가 확정되면 경기장과 고속도로, 지하철 같은 인프라를 대거 짓겠다고 약속했다.",
+     "en": "Ahead of the Olympic host vote, members from many countries are backing Beijing. China pledged to build stadiums, highways, subways and other infrastructure on a large scale if it wins."
+    },
+    "effects": [
+     {
+      "themeId": "machinery",
+      "impact": 2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "인프라",
+         "themeTerm": "인프라"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "개최가 확정되면 공사 장비 수요 증가",
+       "en": "A win would mean more construction equipment"
+      }
+     },
+     {
+      "themeId": "steel",
+      "impact": 1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "경기장·도로 공사 철강 수요"
+      },
+      "reason": {
+       "ko": "경기장과 도로에 철강재가 쓰일 수 있음",
+       "en": "Stadiums and roads need steel"
+      }
+     },
+     {
+      "themeId": "shipping",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "원자재 물동량 증가 기대"
+      },
+      "reason": {
+       "ko": "원자재 운송이 늘 수 있음",
+       "en": "More raw materials to ship"
+      }
+     },
+     {
+      "themeId": "travel",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "올림픽 관광 수요"
+      },
+      "reason": {
+       "ko": "올림픽 관광 수요가 생길 수 있음",
+       "en": "Olympic tourism ahead"
+      }
+     },
+     {
+      "themeId": "hallyu",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "중국 내 한국 문화 관심"
+      },
+      "reason": {
+       "ko": "중국에서 한국 문화 관심이 커질 수 있음",
+       "en": "Korean culture could gain in China"
+      }
+     },
+     {
+      "themeId": "display",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "중계용 평판 TV 수요"
+      },
+      "reason": {
+       "ko": "경기 중계용 TV 수요가 늘 수 있음",
+       "en": "More TVs for broadcasts"
+      }
+     }
+    ],
+    "realDate": "2001-07",
+    "source": {
+     "event": "베이징 올림픽 유치 표결 앞두고 지지 표명",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 4개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s10-bj-won",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "베이징 올림픽 개최 확정… 중국 인프라 투자 기대",
+      "en": "Beijing Wins the Olympics… China Infrastructure Spending Expected"
+     },
+     "body": {
+      "ko": "베이징이 올림픽 개최지로 확정됐다. 중국은 경기장과 고속도로, 지하철 같은 인프라 건설에 막대한 돈을 쏟아붓겠다고 밝혔다. 철강재와 건설 장비 주문이 늘어날 것이라는 분석이 나온다.",
+      "en": "Beijing was chosen to host the Olympics. China said it will pour huge sums into stadiums, highways, subways and other infrastructure. Analysts expect more orders for steel and construction equipment."
+     },
+     "effects": [
+      {
+       "themeId": "steel",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "철강재",
+          "themeTerm": "철강재"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "중국 공사에 철강재 주문이 늘어날 것",
+        "en": "Chinese projects will need steel"
+       }
+      },
+      {
+       "themeId": "machinery",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "인프라",
+          "themeTerm": "인프라"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "인프라 공사에 건설 장비 수요 증가",
+        "en": "Infrastructure projects need equipment"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "원자재 물동량 증가"
+       },
+       "reason": {
+        "ko": "원자재 운송이 늘어남",
+        "en": "More raw materials to ship"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "올림픽 관광 수요"
+       },
+       "reason": {
+        "ko": "올림픽 관광 수요 기대",
+        "en": "Olympic tourism ahead"
+       }
+      },
+      {
+       "themeId": "hallyu",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "중국 내 한국 문화 관심"
+       },
+       "reason": {
+        "ko": "중국에서 한국 문화 관심이 커짐",
+        "en": "Korean culture gained in China"
+       }
+      },
+      {
+       "themeId": "display",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "중계용 평판 TV 수요"
+       },
+       "reason": {
+        "ko": "경기 중계용 TV 수요 증가",
+        "en": "More TVs for broadcasts"
+       }
+      }
+     ],
+     "realDate": "2001-07-13",
+     "source": {
+      "event": "2008 올림픽 개최지 베이징 확정",
+      "impactRationale": "직접 2개(±7), 밀접 1개(±4), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s10-bj-lost",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "올림픽 개최지 다른 도시로… 중국 건설 붐 기대 꺾여",
+      "en": "Olympics Go to Another City… Hopes for a China Building Boom Fade"
+     },
+     "body": {
+      "ko": "올림픽 개최지 투표에서 베이징이 떨어지고 다른 도시가 뽑혔다. 중국의 대규모 인프라 투자 계획이 늦춰질 수 있다는 관측이 나오면서 철강과 건설 장비 업계의 기대가 꺾였다.",
+      "en": "Beijing lost the Olympic host vote to another city. With China's big infrastructure plans possibly delayed, steel and equipment makers saw their hopes fade."
+     },
+     "effects": [
+      {
+       "themeId": "steel",
+       "impact": -7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "철강",
+          "themeTerm": "철강"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "중국 공사 기대가 꺾여 철강 수요 감소",
+        "en": "Less Chinese steel demand expected"
+       }
+      },
+      {
+       "themeId": "machinery",
+       "impact": -7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "인프라",
+          "themeTerm": "인프라"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "인프라 투자가 늦춰질 수 있음",
+        "en": "Infrastructure spending may slip"
+       }
+      },
+      {
+       "themeId": "shipping",
+       "impact": -4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "원자재 물동량 감소"
+       },
+       "reason": {
+        "ko": "원자재 운송 기대가 줄어듦",
+        "en": "Less raw material shipping"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "관광 수요 기대 감소"
+       },
+       "reason": {
+        "ko": "올림픽 관광 기대가 사라짐",
+        "en": "No Olympic tourism"
+       }
+      },
+      {
+       "themeId": "hallyu",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "중국 내 관심 감소"
+       },
+       "reason": {
+        "ko": "중국 행사 기대가 줄어듦",
+        "en": "Fewer Chinese event hopes"
+       }
+      },
+      {
+       "themeId": "display",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "중계용 TV 수요 기대 감소"
+       },
+       "reason": {
+        "ko": "TV 수요 기대가 줄어듦",
+        "en": "Less TV demand expected"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 베이징 탈락",
+      "impactRationale": "직접 2개(±7), 밀접 1개(±4), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s10-bj-won",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s10-bj-lost",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s10-bj-won",
+   "opener": true,
+   "memo": "베이징 올림픽 유치. 실제: 베이징 개최 확정"
+  }
+ ]
+}

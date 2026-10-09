@@ -1,85 +1,89 @@
-# 2000년대 뉴스 팩트체크 표
+# 2000년대 뉴스 팩트체크 표 (단계 B 초안)
 
-- 대상: `src/data/eras/2000s.json`의 뉴스 46개 (단독 30, 스토리 낌새 4, 스토리 단서·결과 12)
-- 이 문서는 **앱에 포함되지 않는다**. 그래서 검증 편의를 위해 실명(기업·인물·작품)을 그대로 적었다. 게임 데이터(JSON)에는 실명이 없다.
+- 대상: `src/data/eras/2000s.json` — 속보 23개, 스토리 10개(잠정 1 + 결과 2씩 = 30개), 모두 53개
+- 이 문서는 **앱에 포함되지 않는다**. 검증 편의를 위해 실명(기업·인물·지수)을 그대로 적었다. 게임 데이터(JSON)에는 실명이 없다.
 - 확신도
   - **높음**: 날짜와 핵심 수치를 웹 출처로 확인함
-  - **중간**: 사건과 날짜는 확인했지만 영향도 근거 수치(주가 등락 등) 일부를 확인하지 못함
+  - **중간**: 사건과 시기는 확인했지만 세부 수치(국내 주가 등락 폭 등) 일부를 확인하지 못함
   - **확인 필요**: 출처를 찾지 못했거나 출처끼리 수치가 다름
-- **"영향도 근거"는 게임 밸런스를 위해 실제 등락을 압축한 판단**이다. 실제 등락률을 그대로 옮긴 값이 아니다. 영향도 1 = 3%, 실제 반영은 배율(실전 0.6~1.4 / 간접 0.4~1.6) 때문에 매번 조금씩 다르다.
-- 가상 시나리오(실제와 다른 결과)는 **사실이 아님**을 표시했다. 게임 화면에서는 "가상 시나리오" 태그가 붙는다.
-- 검색일: 2026-10-09. 출처는 당시 보도·기관 자료이며, 같은 사건이라도 출처마다 수치가 조금씩 다를 수 있다.
+- 영향도는 **사건 규모에 따른 판단값**이다 (공식: 직접 = 규모, 밀접 = 규모×0.6, 간접 = 규모×0.3 반올림). 실제 등락률을 옮긴 값이 아니다.
+- 가상 결과(실제와 다른 결과)는 **사실이 아님**을 표시했다. 게임 화면에서는 "가상 시나리오" 태그가 붙는다.
+- 본문에는 연도·월을 쓰지 않았다 (뉴스는 시대 안에서 무작위 순서로 나온다). 실제 날짜는 데이터의 `realDate`에만 있다.
+- 검색일: 2026-10-09.
 
-## 단독 뉴스 — 연습·실전 공통 (직접 영향만)
+## 1. 속보 23개
 
-| 뉴스 ID | 사실 주장(사건) | 실제 날짜 | 영향도 근거 (당시 지수·가격 등락) | 출처 URL | 확신도 |
+| 뉴스 ID | 사실 주장(사건) | 실제 날짜 | 근거 수치 | 출처 | 확신도 |
 |---|---|---|---|---|---|
-| n01-dotcom-crash | 나스닥 고점 후 폭락, 닷컴 버블 붕괴 | 2000-03-10 고점 / 2002-10-09 저점 | 나스닥 종가 5,048.62 → 1,114.11 (약 -78%). 닷컴 -8, 반도체 -3, 휴대폰 -2. 국내 코스닥 하락률은 미확인 | [Wikipedia: Stock market downturn of 2002](https://en.wikipedia.org/wiki/Stock_market_downturn_of_2002), [NY Sun](https://www.nysun.com/article/business-five-years-after-peak-nasdaq-is-not-even-close) | 중간 |
-| n03-us-rate-cut | 미 연준 정례회의 전 0.5%p 긴급 인하 (6.5% → 6.0%) | 2001-01-03 | 당일 나스닥 +14.17% (사상 최대), 다우 +2.8%. 증권·건설 +4, 인터넷·카드 +2 | [CNN Money](https://money.cnn.com/2001/01/03/markets/markets_newyork/), [CNN Money 속보](https://money.cnn.com/2001/01/03/markets/stock_breaker/) | 높음 |
-| n06-sept-11 | 9·11 테러 | 2001-09-11 (재개장 09-17) | 재개장일 다우 -684.81p (-7.13%). AMR -39%, UAL -42~43%. 코스피 2001-09-12 -12.02%. 항공 -9(-27%)는 실제보다 작게 잡음 | [CNN Money](https://money.cnn.com/2001/09/17/markets/markets_newyork/), [Plansponsor](https://www.plansponsor.com/dow-closes-down-684-points/), [Motley Fool](https://www.fool.com/investing/general/2012/09/17/the-agony-of-the-airlines.aspx), [한국경제](https://www.hankyung.com/article/2026030492541) | 높음 |
-| n08-sars | 사스 확산, WHO 여행 자제 권고 | 경보 2003-03-12 / 여행 연기 권고 2003-04-02 | 홍콩·광둥 비필수 여행 연기 권고. 누적 8,096명·774명은 7월 무렵 최종 집계로 알려짐(미확인). 백신 +4는 기대감 (실제 백신 상용화 안 됨) | [WHO DON 2003-04-02](https://www.who.int/emergencies/disease-outbreak-news/item/2003_04_02b-en), [UN News](https://news.un.org/en/story/2003/04/63672-sars-spurs-who-advisory-avoid-travel-hong-kong-and-guangdong), [WHO 타임라인](https://www.who.int/emergencies/disease-outbreak-news/item/2003_07_01-en) | 중간 |
-| n10-bird-flu | 국내 첫 고병원성 조류독감 (충북 음성) | 2003-12 (의심 보고 12-12 전후) | 농장 닭 24,000마리 중 19,000마리 폐사, 나머지 살처분. 2003/04 시즌 총 19건. 축산 관련주 하락 폭은 미확인 | [PoultryMed](https://www.poultrymed.com/news_37255), [KoreaScience 논문](https://koreascience.kr/article/JAKO200772065754698.pdf) | 확인 필요 |
-| n12-hallyu-japan | 겨울연가 일본 NHK 방영, 한류 붐 | NHK BS2 2003-04 / 지상파 2004-04 무렵 | 지상파 마지막 회 도쿄 20.6% 등. 남이섬 등 촬영지 관광. 관광객 증가 수치·엔터주 상승 폭은 미확인 | [한국민족문화대백과](https://encykorea.aks.ac.kr/Article/E0073572), [매일신문](https://www.imaeil.com/page/view/2004100817542725446) | 중간 |
-| n13-online-game-china | 국산 온라인게임(미르의 전설2) 중국 흥행 | 2001-11 상용화 / 2002 | 2002년 중국 동시접속 약 35만 명, 이후 60~70만 명 보도. 수출액은 미확인 | [게임메카](https://www.gamemeca.com/view.php?gid=1283), [전자신문](https://m.etnews.com/200508200047) | 중간 |
-| n15-china-boom | 중국 두 자릿수 성장, 조선·철강 호황 | 2007 | 중국 2007년 성장률 공식 수정치 **13.0%** (처음 11.4% → 11.9% → 13.0%). 데이터의 기존 "약 14%"는 확인되지 않아 수정함. 조선·철강주 상승 폭은 미확인 | [China Daily 2009-01-14](https://covid-19.chinadaily.com.cn/china/2009-01/14/content_7396604.htm), [중국 국가통계국](https://www.stats.gov.cn/english/NewsEvents/200804/t20080410_26010.html) | 중간 |
-| n17-korea-us-fta | 한미 FTA 타결 | 2007-04-02 | 미국 승용차 관세 2.5% 철폐(1,500~3,000cc 즉시). 축산 피해 우려. 당일 주가 반응은 미확인 | [서울신문](https://m.seoul.co.kr/news/2010/12/05/20101205800042), [한국농촌경제연구원 보고서](https://repository.krei.re.kr/bitstream/2018.oak/19754/1/%ed%95%9c%c2%b7%eb%af%b8%20FTA%2c%20%eb%86%8d%ec%97%85%eb%b6%84%ec%95%bc%ec%9d%98%20%ec%98%81%ed%96%a5%ea%b3%bc%20%ea%b3%bc%ec%a0%9c.pdf) | 중간 |
-| n18-kospi-2000 | 코스피 첫 2,000 돌파, 펀드 열풍 | 2007-07-25 | 2,004.2 (시총 996조 원). 펀드 열풍의 정점은 2007-10~11. 증권 +7 | [아주경제](https://www.ajunews.com/view/20101214000105), [전자신문 2007 결산](https://www.etnews.com/200712240055) | 높음 |
-| n20-green-growth | 광복절 경축사 '저탄소 녹색성장' 비전 | 2008-08-15 | 신재생 비율 2% → 2030년 11% 목표. 태양광 테마주 상승 폭은 미확인 | [아이뉴스24](https://www.inews24.com/view/350989), [경향신문](https://www.khan.co.kr/article/200808182309455) | 중간 |
-| n23-bok-rate-low | 한은 기준금리 2.0% (당시 사상 최저) | 2009-02-12 | 2.5% → 2.0% (0.5%p 인하), 17개월 유지 | [메트로서울](https://www.metroseoul.co.kr/article/2015021700053), [뉴스토마토](https://newstomato.com/ReadNews.aspx?no=42109) | 높음 |
-| n25-stem-cell-scandal | 황우석 줄기세포 논문 조작 | 중간발표 2005-12-23 / 최종발표 2006-01-10 | 2005년 논문: 11개 세포주 데이터를 2개로 조작. 2004년 논문도 조작 판정. 테마주 하락 폭은 미확인 | [프레시안](https://pressian.com/pages/articles/31877), [메디컬타임즈](https://www.medicaltimes.com/Main/view.html?ID=23781), [데일리팜](https://dailypharm.com/user/news/255640) | 중간 |
-| n26-stem-cell-paper | 줄기세포 논문 사이언스 게재 (이후 조작 판명) | 2004-02 (정확한 일자 미확인) | 테마주 상승 폭은 미확인. 줄기세포 +7, 백신 +1 | [주간경향](https://weekly.khan.co.kr/article/11225) | 확인 필요 |
-| n28-nk-missile | 북한 대포동2호 등 미사일 연속 발사 | 2006-07-05 | 6~7발 발사, 장거리 1발은 약 40초 만에 실패. 국내 증시 반응은 미확인 | [Wikipedia](https://en.wikipedia.org/wiki/2006_North_Korean_missile_test), [Japan Times](https://info.japantimes.co.jp/weekly/news/nn2006/nn20060708a1.htm) | 중간 |
+| b01-tech-bubble | 미국 기술주 폭락, 닷컴 버블 붕괴 | 2000-03-10 고점 ~ 2002-10 저점 | 나스닥 5,048.62 → 1,114.11 (약 -78%). 코스닥 하락률은 미확인 | [Wikipedia](https://en.wikipedia.org/wiki/Stock_market_downturn_of_2002), [NY Sun](https://www.nysun.com/article/business-five-years-after-peak-nasdaq-is-not-even-close) | 중간 |
+| b02-us-terror | 9·11 테러, 미국 증시 휴장 후 급락 | 2001-09-11 (재개장 09-17) | 재개장일 다우 -7.13%, 항공주 -40% 안팎, 코스피 09-12 -12.02% | [CNN Money](https://money.cnn.com/2001/09/17/markets/markets_newyork/), [Motley Fool](https://www.fool.com/investing/general/2012/09/17/the-agony-of-the-airlines.aspx) | 높음 |
+| b03-dram-crash | D램 가격 폭락 | 2001 | 12개월간 약 -80%. 128Mb 현물 2월 약 4.5달러 → 6월 2달러 미만 | [ITWorld Canada](https://itworldcanada.com/?p=30495), [The Register](https://www.theregister.co.uk/2001/06/21/2001_worst_dram_year/) | 높음 |
+| b04-game-china | 국산 온라인 RPG(미르의 전설2) 중국 흥행 | 2001-11 ~ 2002 | 중국 동시접속 약 35만 명, 이후 60~70만 명 보도 | [게임메카](https://www.gamemeca.com/view.php?gid=1283), [전자신문](https://m.etnews.com/200508200047) | 중간 |
+| b05-drama-japan | 겨울연가 일본 NHK 방영, 한류 붐 | NHK BS2 2003-04 / 지상파 2004-04 | 지상파 마지막 회 도쿄 20.6%. OST 판매량·관광객 수는 미확인 | [한국민족문화대백과](https://encykorea.aks.ac.kr/Article/E0073572), [매일신문](https://www.imaeil.com/page/view/2004100817542725446) | 중간 |
+| b06-high-speed-rail | KTX 개통, 서울~부산 2시간 40분 | 2004-04-01 | 김포~대구 항공 승객 약 80% 감소 | [매일신문](https://www.imaeil.com/page/view/2007103010415089872), [한국경제](https://www.hankyung.com/amp/2010102869091) | 높음 (2시간 40분은 개통 당시 최단 기준, 확인 권장) |
+| b07-textile-quota | 섬유 수입 쿼터(다자간섬유협정 후속) 전면 폐지 | 2005-01-01 | WTO 섬유·의류 협정 종료로 쿼터 폐지, 중국산 수출 급증 | 널리 알려진 사실 (출처 추가 필요) | 중간 |
+| b08-hurricane-oil | 허리케인 카트리나, 미국 정유시설 중단 | 2005-08-29 (유가 최고 08-30) | WTI 장중 70.85달러(당시 최고), 정유시설 8~9곳 중단 | [EIA](https://www.eia.gov/oog/info/twip/twiparch/050831/twipprint.html) | 높음 |
+| b09-mp3 | MP3·온라인 음원 확산, 음반 시장 급감 | 2000 ~ 2006 | 음반 매출 2000년 4,104억 원 → 2006년 848억 원. 2005년 온라인 2,621억 원이 오프라인 1,087억 원 추월. "반 토막"은 몇 년 사이 절반 아래로 줄었다는 뜻이라 사실과 맞음 | [전자신문](https://m.etnews.com/200401200010), [한국콘텐츠진흥원 자료](https://www.kocca.kr/knowledge/publication/indu/__icsFiles/afieldfile/2012/06/14/XxQdX2e3cJq4.pdf) | 높음 |
+| b10-digital-camera | 디지털카메라 보급, 필름 수요 급감 | 2000년대 초중반 | 세계 디지털카메라 출하 2003년 4,793만 대 → 2004년 7,150만 대. 일본 필름카메라 출하 2005년 -46.5%. **국내 판매 역전 시점은 미확인**이라 제목을 "판매 추월"에서 "보급 확산"으로 고침 | [KoreaScience](https://koreascience.kr/article/JAKO200640960894988.pdf), [KoreaScience](https://koreascience.or.kr/article/JAKO200558448968886.pdf) | 중간 |
+| b11-free-papers | 지하철 무료 신문 등장, 인터넷 뉴스 확산 | 2002 ~ 2000년대 중반 | 국내 첫 무료 일간지 2002년 창간, 가판 신문 판매 2004년경부터 10~20% 감소. 유료 신문 구독률 수치는 미확인 | [기자협회보](https://www.journalist.or.kr/m/m_article.html?no=37512), [메트로](https://www.metroseoul.co.kr/article/2016010300095) | 중간 |
+| b12-index-2000 | 코스피 첫 2,000 돌파, 펀드 열풍 | 2007-07-25 | 2,004.2 (시총 996조 원) | [아주경제](https://www.ajunews.com/view/20101214000105), [전자신문 2007 결산](https://www.etnews.com/200712240055) | 높음 |
+| b13-china-growth | 중국 두 자릿수 성장, 철강·선박 수요 | 2003 ~ 2007 | 2007년 성장률 공식 수정치 13.0% | [China Daily](https://covid-19.chinadaily.com.cn/china/2009-01/14/content_7396604.htm), [중국 국가통계국](https://www.stats.gov.cn/english/NewsEvents/200804/t20080410_26010.html) | 중간 |
+| b14-plant-orders | 해외건설 수주 사상 최대 | 2008 | 476억 달러 (전년 398억 달러 대비 +19.7%), 중동 272억 달러(57%), 플랜트 286억 달러(70%) | [건설동향브리핑 188호](https://www.cerik.re.kr/report/briefing/1019), [머니투데이](https://www.mt.co.kr/estate/2009/03/19/2009031811244240616) | 높음 |
+| b15-green-growth | 광복절 경축사 '저탄소 녹색성장' 비전 | 2008-08-15 | 신재생 비율 2% → 2030년 11% 목표 | [아이뉴스24](https://www.inews24.com/view/350989), [경향신문](https://www.khan.co.kr/article/200808182309455) | 중간 |
+| b16-grain-prices | 국제 곡물가 급등(애그플레이션) | 2007 ~ 2008 봄 | 쌀 수출가 약 3배, 밀·옥수수 급등. 국내 밀가루·라면값 인상 | [CRS 보고서](https://www.everycrsreport.com/files/20080529_RL34474_7a0c5386086702043d0248ffd4e831012af32e63.html) | 중간 |
+| b17-won-1500 | 원·달러 환율 1,500원대 | 2008-11 | 11-20 종가 1,497원(장중 1,500원), 11-24 1,515원 보도 | [전북일보](https://www.jjan.kr/articleAmp/20081120289937), [매일신문](https://www.imaeil.com/page/view/2020032022025247391) | 중간 |
+| b18-savings-pf | 저축은행 부동산 PF 대출 부실, 금감원 실태조사 | 2008 | 89개 저축은행 899개 사업장 점검: 정상 55%, 주의 33%, 악화 우려 12%. 2011년 저축은행 연쇄 영업정지로 이어짐 | [새전북신문(경제)](https://sateconomy.co.kr/news/view/179587723950390), [주간경향](https://weekly.khan.co.kr/article/201105111553161) | 높음 |
+| b19-video-call | 3세대(HSDPA) 영상통화 전국 서비스 경쟁 | 2007-03 | KTF 03-01 전국 서비스, SKT 03-29. 보조금 8~30만 원, 영상통화 요금 10초 120원 → 30원 | [이투데이](https://www.etoday.co.kr/news/view/121593), [주간경향](https://weekly.khan.co.kr/article/15438) | 높음 |
+| b20-battery-recall | 노트북 배터리(소니 셀) 대량 리콜 | 2006-08-14 | 델 410만 개 리콜 (당시 미국 소비자제품안전위원회 최대 전자제품 리콜). 이후 다른 제조사도 리콜 | [Redmond](https://redmondmag.com/articles/2006/08/15/dell-recalls-firerisk-laptop-batteries.aspx), [eWeek](https://www.eweek.com/de/pc-hardware/dell-to-recall-millions-of-laptop-batteries/) | 높음 |
+| b21-howitzer-export | K9 자주포 터키 첫 수출 계약 (기술이전·현지 생산) | 2001 | 이후 여러 나라로 수출 확대. 수량(280문 등)은 기사마다 다름 | [디지털타임스](https://www.dt.co.kr/article/12062579), [뉴시스](https://mobile.newsis.com/view/NISX20200903_0001153759) | 중간 |
+| b22-internet-phone | 인터넷 전화(070) 등장, 집 전화 정체 | 2004-10 역무 고시 ~ 2007 상용화 확대 | 집 전화는 1997년 2천만 가입 뒤 정체. 연도별 가입자 감소 통계는 미확인 | [ETRI](https://ksp.etri.re.kr/ksp/article/file/37232.pdf), [머니투데이](https://www.mt.co.kr/stock/2008/10/03/2008100214535621296) | 확인 필요 |
+| b23-camera-phone | 카메라폰이 휴대폰 판매의 절반 넘음 | 2003 | 2003년 국내 단말기 1,400만 대 중 절반이 카메라폰, 7월 월간 판매 비중 50% 돌파. **"1천만 대 돌파"는 출처가 없어 제목을 고침** | [서울신문 2004-01-01](https://www.seoul.co.kr/news/2004/01/01/20040101052001), [서울신문 2003-08-18](https://www.seoul.co.kr/news/2003/08/18/20030818020003) | 높음 |
 
-## 단독 뉴스 — 실전 전용 (간접 영향 포함)
+## 2. 스토리 10개
 
-| 뉴스 ID | 사실 주장(사건) | 실제 날짜 | 영향도 근거 (당시 지수·가격 등락) | 출처 URL | 확신도 |
-|---|---|---|---|---|---|
-| n02-inter-korean-summit | 첫 남북정상회담, 6·15 공동선언 | 2000-06-13 ~ 06-15 | 증시·방산·건설 반응은 미확인. 모두 2차 해석(방산 -4, 건설 +4) | [Wikipedia](https://en.wikipedia.org/wiki/2000_inter-Korean_summit) | 중간 |
-| n04-dram-crash | D램 가격 폭락 | 2001 | 12개월간 약 -80%(Gartner Dataquest). 128Mb 현물 2월 약 4.5달러 → 6월 2달러 미만 | [ITWorld Canada](https://itworldcanada.com/?p=30495), [The Register](https://www.theregister.co.uk/2001/06/21/2001_worst_dram_year/) | 높음 |
-| n05-imf-repaid | IMF 차입금 195억 달러 조기 상환 | 2001-08-23 | 원래 만기 2004-05. 당일 지수 반응은 미확인 | [서울신문](https://www.seoul.co.kr/news/2001/08/23/20010823005005), [국가기록원](https://theme.archives.go.kr/next/koreaOfRecord/imf.do) | 높음 |
-| n07-world-cup | 2002 월드컵 한국 4강 진출 | 2002-06-22 (8강 스페인전 승리) | **"치킨 주문 폭주"는 출처를 찾지 못함.** 증시 영향은 미미했다는 평가가 많음 | [경향신문](https://www.khan.co.kr/article/200206221912161), [서울신문](https://www.seoul.co.kr/news/2002/06/23/20020623001001) | 확인 필요 |
-| n09-card-crisis | 카드대란 (LG카드 유동성 위기) | 2003 (LG카드 위기 2003-11) | 2003년 말 신용불량자 372만 명(카드 관련 240만 명). 카드사 주가 하락 폭은 미확인 | [주간경향](https://weekly.khan.co.kr/article/201012301018501), [참여연대](https://peoplepower21.org/?p=627355) | 중간 |
-| n11-high-speed-rail | KTX 개통 | 2004-04-01 | 김포~대구 항공 승객 약 80% 감소, 대구공항 국내선 2003년 210만 → 2004년 134만 명 | [매일신문](https://www.imaeil.com/page/view/2007103010415089872), [한국경제](https://www.hankyung.com/amp/2010102869091) | 높음 |
-| n14-hurricane | 허리케인 카트리나 | 2005-08-29 (유가 최고 08-30) | WTI 장중 70.85달러(당시 최고), 정유시설 8~9곳 중단 | [EIA](https://www.eia.gov/oog/info/twip/twiparch/050831/twipprint.html), [Arab News](https://www.arabnews.com/node/272250) | 높음 |
-| n16-smartphone-unveiled | 애플 아이폰 공개 | 2007-01-09 (판매 06-29) | 국내 휴대폰·반도체 반응은 미확인. 2차 해석용 | [Engadget](https://www.engadget.com/2012-01-09-january-9-2007-iphone-announced-at-macworld-expo.html), [History.com](https://history.com/this-day-in-history/january-9/steve-jobs-debuts-the-iphone) | 중간 |
-| n19-oil-147 | 국제유가 사상 최고 147.27달러 | 2008-07-11 | WTI 장중 147.27달러. 10월 초까지 약 -40%. 업종별 등락 폭은 미확인 | [AAPG](https://www.aapg.org/publications/news/correlator/details/articleid/32462), [Telemetro(AFP)](https://www.telemetro.com/economia/2008/07/11/barril-crudo-supera-primera-dolares/2112756.html/amp) | 중간 |
-| n21-won-plunge | 원·달러 1,500원대 | 2008-11 | 11-20 종가 1,497원(장중 1,500원), 11-24 1,515원 보도. 기존 메모의 1,513원은 확인되지 않음 | [전북일보](https://www.jjan.kr/articleAmp/20081120289937), [매일신문](https://www.imaeil.com/page/view/2020032022025247391) | 확인 필요 |
-| n22-china-stimulus | 중국 4조 위안 경기부양책 | 2008-11-09 | 약 5,860억 달러, 인프라 비중이 가장 큼(호주 재무부 추정 72%) | [Australian Treasury](https://treasury.gov.au/publication/chinese-macroeconomic-management-through-the-crisis-and-beyond/2011-01-chinese-macroeconomic-management-through-the-crisis-and-beyond/4-chinas-stimulus-package), [RIETI](https://www.rieti.go.jp/en/china/09040602.html) | 중간 |
-| n24-h1n1-pandemic | WHO 신종플루 대유행 6단계 | 2009-06-11 | 1968년 이후 첫 독감 대유행, 당일 74개국 28,774명. 국내 백신주 상승 폭은 미확인 | [CIDRAP](https://www.cidrap.umn.edu/h1n1-2009-pandemic-influenza/who-declares-pandemic-novel-h1n1-virus), [CDC](https://www.cdc.gov/h1n1flu/who/) | 중간 |
-| n27-us-automaker-bankrupt | GM 파산보호 신청 | 2009-06-01 | 부채 1,728억 달러, 미국 산업기업 최대 파산. 국내 완성차 반사이익은 미확인 | [Wikipedia](https://en.wikipedia.org/wiki/General_Motors_Chapter_11_reorganization) | 중간 |
-| n29-grain-prices | 세계 곡물가 급등(애그플레이션) | 2008 봄 (쌀·옥수수 최고 04-16 보도) | 쌀 수출가 약 3배, 대두는 연초 고점. 축산 -5는 사료값 경로의 2차 해석 | [CRS 보고서](https://www.everycrsreport.com/files/20080529_RL34474_7a0c5386086702043d0248ffd4e831012af32e63.html), [Hürriyet](https://www.hurriyet.com.tr/avrupa/us-rice-and-corn-prices-hit-record-on-supply-worries-1199026) | 중간 |
-| n30-china-wto | 중국 WTO 가입 (143번째 회원국) | 2001-12-11 | 장기 효과를 2차 해석으로 압축. 당일 반응은 작았을 수 있음 | [USTR](https://www.ustr.gov/archive/Document_Library/Fact_Sheets/2001/Background_Information_on_China's_Accession_to_the_World_Trade_Organization.html), [Bloomberg](https://www.bloomberg.com/news/articles/2011-12-11/china-marks-10-years-as-wto-member-amid-eu-and-u-s-criticism) | 높음 |
+| 스토리 | 뉴스 | 사실 주장 | 실제 날짜 | 근거 | 출처 | 확신도 |
+|---|---|---|---|---|---|---|
+| s01 이라크 전쟁 (opener) | 잠정 | 걸프 지역 병력 증강, 단기전 관측 | 2002-09 ~ 2003-03 | 병력 규모는 미확인. "전문가 다수 단기전 관측"은 당시 분위기 요약 | 출처 추가 필요 | 확인 필요 |
+| | 결과(실제) | 개전 3주 만에 바그다드 함락, 유가 급락·증시 반등 | 개전 2003-03-20, 함락 04-09 | 개전 주간 브렌트 30.13 → 24.80달러(약 -18%), 03-21 미국 증시 반등 | [Dawn](https://www.dawn.com/news/88337), [Business Times](https://eresources.nlb.gov.sg/newspapers/digitised/issue/biztimes20030321-1) | 높음 |
+| | 결과(**가상**) | 전쟁 장기화, 유가 급등 | — | **사실 아님** | — | 가상 |
+| s02 북한 1차 핵실험 | 잠정 | 핵실험 예고 성명 | 2006-10-03 | 시기는 밝히지 않음. "실험장 주변 움직임 위성 포착" 보도는 출처 추가 필요 | [뉴데일리](https://www.newdaily.co.kr/site/data/html/2006/10/04/2006100400002.amp.html) | 중간 |
+| | 결과(실제) | 핵실험 강행, 증시 하루 급락 뒤 회복 | 2006-10-09 | 코스피 -2.41%, 코스닥 -8.21%, 5거래일 만에 회복 | [노컷뉴스](https://nocutnews.co.kr/news/4528557), [뉴스토마토](https://www.newstomato.com/ReadNews.aspx?no=1127999) | 높음 |
+| | 결과(**가상**) | 실험 보류, 회담 복귀 | — | **사실 아님** (실제로는 실험 뒤 10-31 복귀 합의) | — | 가상 |
+| s03 세계 금융위기 | 잠정 | 리먼 브라더스 인수 협상 결렬 보도 | 2008-09-12 ~ 14 | 인수 후보(BoA·바클레이스) 협상 중단 | [CNN Money](https://money.cnn.com/2018/09/14/investing/lehman-brothers-2008-crisis/) | 높음 |
+| | 결과(실제) | 리먼 브라더스 파산 | 2008-09-15 | 다우 -4.42%, 코스피 09-16 -6.10%, 자산 약 6,900억 달러 | [MPR News](https://www.mprnews.org/story/2008/09/15/wallstreet), [이투데이](https://www.etoday.co.kr/news/view/184331) | 높음 |
+| | 결과(**가상**) | 막판 인수로 파산 회피 | — | **사실 아님** | — | 가상 |
+| s04 기준금리 인상 (opener) | 잠정 | 소비자물가 5%대, 총재 물가 우선 발언 | 2008-07 ~ 08 | 2008년 7월 물가 5.9% (확인 권장) | 출처 추가 필요 | 중간 |
+| | 결과(실제) | 기준금리 0.25%p 인상 (5.00% → 5.25%) | 2008-08 (8월 7일로 알려짐, 일자 확인 필요) | 리먼 사태 전 최고 5.25%, 이후 2009-02까지 2.0%로 인하 | [JoongAng Daily](https://www.koreajoongangdaily.com/business/money-tighter-as-bok-fights-prices/11071190), [Currency Thoughts](https://currencythoughts.com/2010/02/11/korean-base-rate-stays-at-2-0-as-expected/) | 중간 |
+| | 결과(**가상**) | 기준금리 동결 | — | **사실 아님** | — | 가상 |
+| s05 카드 대란 | 잠정 | 카드 연체율 10% 돌파, 현금서비스 한도 축소 | 2003 | 연체율 수치(10%)는 업계 평균 기준, 확인 권장 | 출처 추가 필요 | 확인 필요 |
+| | 결과(실제) | LG카드 유동성 위기, 채권단 긴급 지원 | 2003-11 | 2003년 말 신용불량자 372만 명(카드 관련 240만 명) | [주간경향](https://weekly.khan.co.kr/article/201012301018501), [참여연대](https://peoplepower21.org/?p=627355) | 중간 |
+| | 결과(**가상**) | 증자로 조기 수습 | — | **사실 아님** | — | 가상 |
+| s06 사스 (opener) | 잠정 | 아시아 확산·여행 자제 권고, 국내 의심 환자 음성 | 2003-03 ~ 04 | WHO 홍콩·광둥 여행 연기 권고 04-02 | [WHO](https://www.who.int/emergencies/disease-outbreak-news/item/2003_04_02b-en) | 높음 |
+| | 결과(실제) | 국내 확산 없이 진정, 여행 회복 | 2003-07 종식 선언 | 국내 추정 환자 소수, 사망자 없음 | [WHO 타임라인](https://www.who.int/emergencies/disease-outbreak-news/item/2003_07_01-en) | 중간 |
+| | 결과(**가상**) | 국내 확산, 외출 자제 | — | **사실 아님** | — | 가상 |
+| s07 한미 FTA | 잠정 | 협상 시한 연장, '큰 틀 접근' | 2007-03-31 ~ 04-02 | 시한 48시간 연장 | [서울신문](https://m.seoul.co.kr/news/2010/12/05/20101205800042) | 중간 |
+| | 결과(실제) | 타결, 미국 승용차 관세 2.5% 철폐 | 2007-04-02 | 1,500~3,000cc 즉시 철폐, 축산 피해 우려 | [서울신문](https://m.seoul.co.kr/news/2010/12/05/20101205800042), [KREI 보고서](https://repository.krei.re.kr/bitstream/2018.oak/19754/1/%ed%95%9c%c2%b7%eb%af%b8%20FTA%2c%20%eb%86%8d%ec%97%85%eb%b6%84%ec%95%bc%ec%9d%98%20%ec%98%81%ed%96%a5%ea%b3%bc%20%ea%b3%bc%ec%a0%9c.pdf) | 중간 |
+| | 결과(**가상**) | 결렬 | — | **사실 아님** | — | 가상 |
+| s08 조류인플루엔자 (opener) | 잠정 | 닭 집단 폐사 신고, 인근 폐사 증가 | 2008-04-01 | 전북 산란계 농장 의심 신고 (김제/정읍 기록이 엇갈림) | [KoreaScience](https://koreascience.or.kr/article/JAKO200851062620235.pdf) | 중간 |
+| | 결과(실제) | 고병원성 확진, 대규모 살처분 | 2008-04-03 판정 | 발생 농장과 반경 500m 내 닭 30만 8천 마리 폐기 (본문은 "발생 농장과 주변 농장"으로 씀) | [산업일보](https://kidd.co.kr/news/113083), [경향신문](https://www.khan.co.kr/article/200805181623311) | 중간 |
+| | 결과(**가상**) | 저병원성 판정, 이동 제한 해제 | — | **사실 아님** | — | 가상 |
+| s09 고유가 (opener) | 잠정 | 산유국 '공급 충분' 입장 | 2008-06 | 사우디 등 증산 소극적 (제다 회의 06-22) | 출처 추가 필요 | 중간 |
+| | 결과(실제) | 소폭 증산에도 유가 사상 최고 | 2008-07-11 | WTI 장중 147.27달러, 이후 10월 초까지 약 -40% | [AAPG](https://www.aapg.org/publications/news/correlator/details/articleid/32462) | 높음 |
+| | 결과(**가상**) | 대규모 증산 합의로 유가 급락 | — | **사실 아님** | — | 가상 |
+| s10 베이징 올림픽 유치 (opener) | 잠정 | 표결 앞두고 베이징 지지 | 2001-07 | 모스크바 IOC 총회 | 출처 추가 필요 | 중간 |
+| | 결과(실제) | 베이징 2008 올림픽 개최 확정 | 2001-07-13 | 2차 투표 과반 획득 | 널리 알려진 사실 (출처 추가 필요) | 높음 |
+| | 결과(**가상**) | 다른 도시 선정 | — | **사실 아님** | — | 가상 |
 
-## 스토리 (실전 전용)
+## 3. 검증하면서 바꾼 점 (데이터에 반영함)
 
-| 뉴스 ID | 사실 주장(사건) | 실제 날짜 | 영향도 근거 | 출처 URL | 확신도 |
-|---|---|---|---|---|---|
-| s1-iraq-signal (낌새) | 부시 대통령 유엔 연설, 이라크 대량살상무기 비난 | 2002-09-12 | 사찰단은 1998년 이후 이라크에 못 들어감(본문 근거). 낌새라 ±2 이내 | [CNN](https://edition.cnn.com/2002/US/09/12/bush.speech.un/index.html), [PBS](https://www.pbs.org/newshour/world/international-july-dec02-bush-speech_09-12) | 높음 |
-| s1-iraq-clue-buildup (단서→개전) | 걸프 지역 미군 증강 | 2003-01 ~ 02 | 병력 규모(수십만)는 미확인 | 출처 미확보 | 확인 필요 |
-| s1-iraq-clue-inspection (단서→가상) | 이라크, 사찰단 수용 검토 | 2002-09-16 (사찰단 초청) | **발언 자체는 사실**이지만, 게임에서는 가상 결과(전쟁 회피)를 가리키는 단서로 쓰임 | [MERIP](https://www.merip.org/2002/12/using-and-abusing-the-un-redux/) | 중간 |
-| s1-iraq-war-begins (결과, 실제) | 이라크전 개전, 유가 급락·증시 반등 | 2003-03-20 | 개전 주간 브렌트 30.13 → 24.80달러(약 -18%), 03-21 미국 증시 반등, 03-24 다시 하락. reactionNote 근거 | [Dawn](https://www.dawn.com/news/88337), [Business Times 2003-03-21](https://eresources.nlb.gov.sg/newspapers/digitised/issue/biztimes20030321-1) | 높음 |
-| s1-iraq-crisis-averted (결과, **가상**) | 이라크 무기사찰 전면 수용으로 전쟁 회피 | — | **사실 아님 (가상 시나리오)** | — | 가상 |
-| s2-nk-signal (낌새) | 북한 외무성 핵실험 예고 성명 | 2006-10-03 | 시기는 밝히지 않음, 6일 뒤 실행. 본문의 '7월 미사일 강행'은 n28로 사실 확인 | [뉴데일리](https://www.newdaily.co.kr/site/data/html/2006/10/04/2006100400002.amp.html), [통일연구원](https://repo.kinu.or.kr/bitstream/2015.oak/942/1/0000751463.pdf) | 높음 |
-| s2-nk-test (결과, 실제) | 북한 1차 핵실험 | 2006-10-09 | 코스피 -2.41%(-32.60p), 코스닥 -8.21%, 5거래일 만에 회복 | [노컷뉴스](https://nocutnews.co.kr/news/4528557), [뉴스토마토](https://www.newstomato.com/ReadNews.aspx?no=1127999) | 높음 |
-| s2-nk-talks (결과, **가상**) | 핵실험 대신 6자회담 복귀 | — | **사실 아님 (가상 시나리오).** 실제로는 핵실험 뒤 10-31에 복귀 합의 | — | 가상 |
-| s3-subprime-signal (낌새) | 서브프라임 대출업체 연쇄 파산 | 2007-04 ~ 2007-08 | 낌새라 ±3 이내. 구체 업체명·일자는 미확인 | 출처 미확보 | 확인 필요 |
-| s3-clue-fire-sale (단서→파산) | 베어스턴스, JP모건에 헐값 매각 | 2008-03-16 | 주당 약 2달러(이후 10달러로 상향), 연준 300억 달러 지원 | [SEC 공시](https://www.sec.gov/Archives/edgar/data/0000777001/000089882208000286/pressrelease.htm), [CNN Money](https://money.cnn.com/2008/03/16/news/companies/jpmorgan_bear_stearns/) | 높음 |
-| s3-clue-treasury (단서→가상) | 미 재무부 "대형 금융회사 부실 막겠다" | 2008 (구체 일자 미확인) | 가상 결과를 가리키는 단서. 실제 발언 시점 미확인 | 출처 미확보 | 확인 필요 |
-| s3-ib-bankruptcy (결과, 실제) | 리먼 브라더스 파산 | 2008-09-15 | 다우 -504.48p(-4.42%), 코스피 2008-09-16 -90.17p(-6.10%). 자산 약 6,900억 달러 | [MPR News](https://www.mprnews.org/story/2008/09/15/wallstreet), [CNN Money](https://money.cnn.com/2018/09/14/investing/lehman-brothers-2008-crisis/), [이투데이](https://www.etoday.co.kr/news/view/184331) | 높음 |
-| s3-ib-rescue (결과, **가상**) | 미 정부가 대형 투자은행 긴급 구제 | — | **사실 아님 (가상 시나리오).** 실제로는 리먼은 구제 거부, 다음 날 AIG는 구제 | — | 가상 |
-| s4-rate-signal (낌새) | 한은 총재 금리 인상 시사 | 2005-09 ~ 10 (구체 발언일 미확인) | 낌새라 ±2 이내 | 출처 미확보 | 확인 필요 |
-| s4-rate-hike (결과, 실제) | 한은 콜금리 3.25% → 3.50% 인상 | 2005-10-11 | 2002-05 이후 3년 5개월 만, 12월 추가 인상 | [한경 생글생글](https://sgsg.hankyung.com/article/2005101304601), [경향신문](https://www.khan.co.kr/article/200512081751111/amp) | 높음 |
-| s4-rate-hold (결과, **가상**) | 한은 금리 동결 | — | **사실 아님 (가상 시나리오)** | — | 가상 |
+1. **b23 카메라폰**: "1천만 대 돌파"는 출처를 찾지 못해 "휴대폰 판매의 절반 넘어"(2003년, 서울신문)로 고쳤다.
+2. **b10 디지털카메라**: 국내 "판매 추월" 시점을 확인하지 못해 "보급 확산, 필름 수요 급감"으로 고쳤다.
+3. **s04 금리 인상**: 정확한 일자(8월 7일)는 확인하지 못해 `realDate`를 "2008-08"로 두었다.
+4. **s08 살처분 범위**: "반경 3km"는 최초 조치(반경 500m)와 달라 "발생 농장과 주변 농장"으로 고쳤다.
+5. 게임 데이터의 근거 메모(`source.event`)에서 실명(카드사·투자은행·지수 이름)을 모두 뺐다. 실명은 이 문서에만 있다.
 
-## 검증하면서 바뀐 점 (데이터에도 반영함)
+## 4. 직접 확인 권장
 
-1. **n15 중국 성장률**: "약 14%" → 공식 수정치 **13.0%**로 메모를 고쳤다.
-2. **n21 환율**: "1,513원"은 확인되지 않았다. 11-20 종가 1,497원, 11-24 1,515원 보도로 고쳤다.
-3. **n08 사스**: 홍콩·광둥 여행 연기 권고일 2003-04-02를 확인했다. 8,096명·774명은 4월이 아니라 7월 무렵 최종 집계로 보인다.
-4. **s1 사찰 수용 단서**: 이라크가 2002-09-16에 사찰단을 초청한 것은 **사실**이다. 가상 결과로 이어지는 단서로만 쓰인다.
-5. **n07 월드컵 "치킨 주문 폭주"**: 출처를 찾지 못했다. 문구를 유지할지, 바꿀지 결정이 필요하다.
-
-## 미확인 항목 (직접 확인 권장)
-
+- s01·s05·s09·s10 잠정 뉴스의 세부 정황(병력 규모, 연체율 10%, 산유국 회의, 지지 표명)은 출처 미확보
+- b22 인터넷 전화의 집 전화 가입자 감소 통계
 - 대부분 뉴스의 "국내 관련 업종 주가 등락 폭"은 찾지 못했다. 현재 영향도는 사건 규모에 따른 판단값이다.
-- 낌새·단서 일부(s1-clue-buildup, s3-subprime-signal, s3-clue-treasury, s4-rate-signal)의 구체 일자·수치는 미확인이다.
