@@ -1,0 +1,56 @@
+{
+  "common": {
+    "confirm": "확인",
+    "cancel": "취소",
+    "bit": "{amount} 비트"
+  },
+  "phase": {
+    "running": "장 운영 중",
+    "news": "속보",
+    "era-ended": "시대 마감",
+    "finished": "모든 시대 종료"
+  },
+  "sentiment": {
+    "positive": "긍정",
+    "negative": "부정",
+    "neutral": "중립"
+  },
+  "trade": {
+    "buy": "매수",
+    "sell": "매도",
+    "quantity": "수량",
+    "maxQuantity": "최대 {count}주",
+    "bought": "{name} {count}주를 {price} 비트에 샀습니다.",
+    "sold": "{name} {count}주를 {price} 비트에 팔았습니다."
+  },
+  "error": {
+    "invalid-quantity": "수량은 1 이상의 정수여야 합니다.",
+    "invalid-price": "가격이 올바르지 않습니다.",
+    "insufficient-cash": "현금이 부족합니다.",
+    "insufficient-shares": "보유 수량이 부족합니다.",
+    "unknown-stock": "없는 종목입니다.",
+    "not-tradable": "지금은 거래할 수 없습니다."
+  },
+  "portfolio": {
+    "cash": "현금",
+    "totalAssets": "총 자산",
+    "avgPrice": "평균 매수가",
+    "currentPrice": "현재가",
+    "unrealizedPnl": "평가 손익",
+    "returnRate": "수익률",
+    "favorites": "관심 종목"
+  },
+  "settlement": {
+    "title": "{era} 정산",
+    "startAssets": "시작 자산",
+    "endAssets": "종료 자산",
+    "returnPct": "수익률",
+    "byStock": "종목별 손익",
+    "liquidated": "보유 종목은 모두 현재가로 자동 매도되었습니다.",
+    "nextEra": "다음 시대로"
+  },
+  "news": {
+    "breaking": "속보",
+    "pausedHint": "확인을 누르면 시간이 다시 흐릅니다."
+  }
+}

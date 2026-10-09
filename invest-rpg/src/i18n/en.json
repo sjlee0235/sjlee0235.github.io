@@ -1,0 +1,56 @@
+{
+  "common": {
+    "confirm": "OK",
+    "cancel": "Cancel",
+    "bit": "{amount} bits"
+  },
+  "phase": {
+    "running": "Market open",
+    "news": "Breaking news",
+    "era-ended": "Era closed",
+    "finished": "All eras complete"
+  },
+  "sentiment": {
+    "positive": "Positive",
+    "negative": "Negative",
+    "neutral": "Neutral"
+  },
+  "trade": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "quantity": "Quantity",
+    "maxQuantity": "Max {count} shares",
+    "bought": "Bought {count} shares of {name} at {price} bits.",
+    "sold": "Sold {count} shares of {name} at {price} bits."
+  },
+  "error": {
+    "invalid-quantity": "Quantity must be a whole number of 1 or more.",
+    "invalid-price": "Invalid price.",
+    "insufficient-cash": "Not enough cash.",
+    "insufficient-shares": "Not enough shares.",
+    "unknown-stock": "Unknown stock.",
+    "not-tradable": "Trading is not available right now."
+  },
+  "portfolio": {
+    "cash": "Cash",
+    "totalAssets": "Total assets",
+    "avgPrice": "Avg. price",
+    "currentPrice": "Price",
+    "unrealizedPnl": "Unrealized P/L",
+    "returnRate": "Return",
+    "favorites": "Watchlist"
+  },
+  "settlement": {
+    "title": "{era} Results",
+    "startAssets": "Starting assets",
+    "endAssets": "Ending assets",
+    "returnPct": "Return",
+    "byStock": "P/L by stock",
+    "liquidated": "All holdings were automatically sold at the current price.",
+    "nextEra": "Next era"
+  },
+  "news": {
+    "breaking": "Breaking",
+    "pausedHint": "Time resumes when you press OK."
+  }
+}
