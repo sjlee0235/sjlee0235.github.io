@@ -1,91 +1,97 @@
 # 화면 단계(W2) 인계 문서
 
-> 화면(UI)을 만들 때 반드시 지켜야 할 것. 엔진은 이미 이 규칙에 맞춰 데이터를 내보내므로,
+> 화면(UI)을 만들 때 반드시 지켜야 할 것. 엔진은 이미 이 규칙대로 데이터를 내보내므로,
 > 화면은 **받은 것만 그대로 보여주고, 숨긴 것을 다시 계산하거나 추측해서 보여주지 않으면** 된다.
+> 화면 구성 전체는 `docs/screens.md`, 그림 사양은 단계 U에서 `docs/art_spec.md`.
 
 ---
 
 ## 1. 공개용 뷰만 쓴다 ★
 
 - 화면 코드는 `src/engine/publicView.ts`의 **`PublicGame`만** 쓴다.
-  - 새 게임: `PublicGame.create({ eras: ALL_ERAS, seed, locale: 'ko' })`
-  - 튜토리얼: `new TutorialSession().view` (역시 `PublicGame`)
-  - 세이브: `savePublicGame(save, game)` / `restorePublicGame(save, ALL_ERAS)`
-- **엔진 본체 `Game`, `ScheduledNews`, 시대 데이터(`Era`, `News`, `Theme`)를 화면에서 직접 import하지 않는다.**
-  이것들에는 뉴스의 영향 테마·방향·규모, 테마 분위기·비중, 스토리 결과 확률이 들어 있다.
-- 플레이 기록(텔레메트리) 이벤트에는 분석용으로 내부 정보가 들어 있다. **기록 내용을 화면에 표시하지 않는다.**
-- 코드 리뷰 체크: 화면 폴더에서 `from '../engine/game'`, `data/eras`, `newsEngine` import가 있으면 안 된다.
+  - 새 게임: `PublicGame.create({ eras, seed, locale })` / 튜토리얼: `new TutorialSession().view`
+  - 세이브: `savePublicGame(save, game)` / `restorePublicGame(save, eras)`
+  - 탭 규칙: `src/engine/homeActivities.ts`(`TabController`, `topBarFor`) — `PublicGame`을 그대로 넘긴다
+- **엔진 본체 `Game`, `ScheduledNews`, 시대 데이터(`Era`, `News`, `Theme`)를 화면에서 직접 import하지 않는다.** 뉴스의 영향 테마·방향·규모, 테마 분위기·비중, 스토리 결과 확률이 들어 있다.
+- 플레이 기록(텔레메트리) 이벤트에는 분석용 내부 정보가 들어 있다. **기록 내용을 화면에 표시하지 않는다.**
 
-### 공개용 뷰가 주는 것
+## 2. 4탭 구조와 상단 요소
 
-| 데이터 | 담긴 것 | 담기지 않는 것 |
-|---|---|---|
-| 뉴스 `PublicNewsView` | id(무작위 문자열), 종류(속보/잠정/결과), 제목, 본문, 발표 시각. 결과 뉴스만 `fictional`(가상 시나리오 태그) | 영향 테마, 호재/악재 방향, 규모, 연결 강도, 단서 방향, 결과 확률, 실제 역사 여부(결과 뉴스 태그 제외) |
-| 종목 `PublicStockView` | id(판마다 바뀌는 무작위 문자열), 이름, 설명, 가격, 시작가, 등락률, 색, 즐겨찾기, 보유 수량 | 테마 id, 분위기, 비중(core/peripheral) |
-| 해설 `PublicRecap` | 종목별 발표 즉시 %, 5초 뒤 %, 합계 %, 이유 | — (반영이 끝난 사실이라 공개) |
-| 정산 `PublicSettlement` | 시간가중수익률, 순손익(입금 제외), 출처별 입금, 누적 수익률, 종목별 손익 | — |
-| 시대 종료 후 `getEraDebrief()` | 분위기·비중, 스토리 단서 방향과 실제 결과, 실제 역사 여부, 뉴스별 영향 종목과 해설 전체 | (시대가 끝나기 전에는 오류) |
+| 탭 | 상단 왼쪽 | 상단 오른쪽 | 비고 |
+|---|---|---|---|
+| 거실 | `NEWS!` (안 읽은 뉴스가 있을 때만 깜빡임) | 보유 현금 코인 (주황 코인 아이콘), 2배속이면 "x2" | |
+| 주식창 | — | — | 상단은 계좌 바(총 자산·손익률·남은 시간·1배/2배 버튼) |
+| 작업실 | `NEWS!` | 보유 현금 코인 + **정산 예정 작업 수입**, "x2" | |
+| TV홈쇼핑 | `NEWS!` | 보유 현금 코인, "x2" | **1차 비활성**: "방송 준비 중"(`tabs.comingSoon`) |
 
----
+- 값은 `TabController.topBar()`가 준다 (`cash`, `newsBadge`, `workPending`, `speedBadge`, `accountBar`). 화면이 직접 판단하지 않는다.
+- 보유 현금은 **작업 중에 늘지 않는다** (작업 수입은 시대 종료 때 합산). 작업실만 정산 예정 수입을 따로 보여준다.
+- `NEWS!`는 **뉴스에만**. 주가 리포트는 피드 안의 강조 표시만 쓴다.
+- 주식창에 들어가면 `markAllRead()` → `NEWS!` 사라짐. 주식창에 있는 동안 화면 틱마다 `TabController.onTick()`.
+- `NEWS!`를 누르면 주식창으로 이동 (`news_badge_click` 기록).
+- 시대 시작 때 기본 탭은 주식창 (`onEraStart()`), 그 외에는 마지막으로 보던 탭.
+- 화폐 이름은 **코인**. 아이콘은 주황색 코인 (비트코인 ₿ 기호·로고를 쓰지 않는다).
 
-## 2. 플레이 중 숨김
+## 3. 뉴스 피드와 주가 리포트 행 (팝업 없음)
 
-- **호재/악재 방향을 표시하지 않는다.** 모든 뉴스(속보·잠정·결과)에 적용. 뉴스 팝업에 "관련 테마", 화살표, 초록/빨강 표시, "수혜" 같은 말을 붙이지 않는다.
-- **테마 분위기(긍정/부정/중립)와 비중(주요/배경)을 표시하지 않는다.** 종목 목록·상세·차트 어디에도.
-- 뉴스 팝업에는 제목·본문·종류·발표 시각만. 결과 뉴스만 "가상 시나리오" 태그.
-- 결과 뉴스가 반대로 반응한 이유(`reactionNote`)는 팝업이 아니라 **해설 알림**에서만 보인다.
-- 시대가 끝나면 "돌아보기" 화면에서 `getEraDebrief()` 내용을 보여준다 (사후 학습).
-  - 활성 테마의 분위기·비중
-  - 스토리별: 잠정 뉴스 → 단서가 가리킨 쪽 → 실제 결과, 단서대로였는지, 실제 역사인지
-  - 뉴스별: 영향받은 종목(방향·강도)과 해설 전체 (상위 3개 제한 없음)
-- i18n: 방향·강도 문구는 `debrief.*`에만 있다 (`news.*`에는 없음). 플레이 중 화면에서 `debrief.*`를 쓰지 않는다.
+- 뉴스는 **팝업이 아니다.** 주식창의 뉴스 영역(피드)에 쌓인다: `getFeed()` = 최신순 `[{ news, report?, unread, reportUnread }]`.
+- 최신 뉴스는 제목+본문을 펼쳐 보여주고, 이전 뉴스는 제목 한 줄로 접는다(누르면 리포트까지 펼침, `feed_expand` 기록).
+- 발표 120초(게임 시간) 뒤 **그 뉴스 바로 아래에 '주가 리포트' 행**이 붙는다 (`report`). **시간을 멈추지 않는다.**
+  - 종목당 1~2줄: `{종목} {합계 %} — {이유}` (`report.line`). 세부로 **발표 즉시 {instantPct} · 5초 뒤 {delayedPct} · 합계 {appliedPct}** (`report.split`)
+  - 최대 3종목 + "외 N종목" (`report.more`). 잠정 뉴스는 `report.tentativeNote` 문구 (결과 방향을 암시하는 말 금지)
+  - 결과 뉴스와 그 리포트는 `relatedTentativeId`(이어진 잠정 뉴스)를 담는다 → "관련 잠정 뉴스" 링크로 보여줘도 된다
+  - 처음 한 번 `report.firstNotice`(게임 안 가상 수치, 투자 권유 아님)
+- 새 뉴스와 새 리포트는 잠깐 강조 표시. **호재/악재 방향 표시는 하지 않는다.**
+- 결과 뉴스만 "가상 시나리오" 태그(`news.fictional`).
 
-## 3. 종목 정렬
+## 4. 플레이 중 숨김
 
-- 기본 정렬: **즐겨찾기 먼저, 그 안팎은 이름 가나다순**. `getStockList()`가 이미 이 순서로 준다.
-- 데이터에 저장된 순서(분위기별로 묶여 있을 수 있음)를 화면에 드러내지 않는다. 다른 정렬(가격순·등락률순)은 추가해도 되지만, **id순·추가 순서 정렬은 만들지 않는다.**
-- 종목 id는 판마다 바뀐다. 화면에서 id를 저장해 두고 다음 판에 쓰지 않는다.
+- **호재/악재 방향 표시 금지** (모든 뉴스). "관련 테마", 화살표, 초록/빨강, "수혜" 같은 말을 뉴스에 붙이지 않는다.
+- **테마 분위기(긍정/부정/중립)와 비중(주요/배경) 표시 금지.**
+- 시대가 끝나면 정산 창의 접힌 "돌아보기"에서 `getEraDebrief()`를 보여준다 (분위기·비중, 스토리 단서 방향과 실제 결과, 역사 여부, 뉴스별 영향 종목과 리포트 전체). i18n `debrief.*`는 이때만 쓴다.
 
-## 4. 시간·저장
+## 5. 종목 목록·주문
 
-- 화면 타이머가 5초마다 `advanceTick()`을 부른다. 뉴스가 떠도 시간은 멈추지 않는다 (튜토리얼만 예외).
-- **입력이 없을 때 자동 일시정지**: 일정 시간(예: 3~5분, 테스트로 정함) 터치가 없으면 `suspend()`, 화면을 다시 만지면 확인 후 `resume()`. 앱이 백그라운드로 가면 무조건 `suspend()`.
-- **저장 빈도**: `advanceTick()` 결과의 `saveNeeded`가 true이거나 `pendingSaveReasons`가 비어 있지 않으면 바로 `savePublicGame()`.
-  엔진이 알리는 때: 매매, 입금, 뉴스 발표, 백그라운드 전환(`suspend`), 30초 경과, 시대 종료.
-  → 강제 종료 후 불러와서 "방금 본 뉴스"를 되돌리는 구멍이 30초 이내로 줄어든다.
-- 불러오기 결과 `status`
-  - `resumed`: 그대로 이어 하기
-  - `settled_on_version_change`: 앱 업데이트로 규칙·콘텐츠·밸런스가 바뀌어, 저장 시점 가격으로 그 시대를 정산했다. 안내 문구 `settlement.versionChange`를 보여주고 정산 화면 → 다음 시대 (마지막 시대였으면 `game`이 null)
-  - `restarted_legacy`: 아주 옛 형식 세이브. 그 시대를 처음부터
+- 기본 정렬: **즐겨찾기 먼저, 그 안팎은 이름 가나다순** (`getStockList()`가 이미 이 순서). id순·추가 순서 정렬은 만들지 않는다. 종목 id는 판마다 바뀌므로 저장해 두지 않는다.
+- 등락률은 시대 시작가 대비 누적(`changePct`), 색은 `color`(설정의 상승 색상 모드 반영). 구입한 종목은 자동 즐겨찾기.
+- 종목명은 "수식어 업종주"(예: 평화 방산주), 기업 설명은 1~2줄.
+- 주문은 현재가로만, 확인 창 없이 한 번에 체결하고 짧은 안내(`order.filled`). '최대'는 매수일 때 수수료 포함 최대 수량(`maxBuyQuantity`), 매도일 때 보유 수량 전부 (`max_button` 기록). 단계 U에서 `previewOrder`, `maxQty`를 엔진에 추가한다.
 
-## 5. 입금 (외부 유입)
+## 6. 시간·배속·저장
 
-- 인형 눈 붙이기·결제·광고 보상으로 생긴 돈은 `game.deposit(금액, 'work' | 'purchase' | 'ad' | 'other')`로 넣는다.
-- 결제·광고 SDK는 앱 쪽에서 붙이고, **성공이 확인된 금액만** 엔진에 넣는다. 엔진은 결제 검증을 하지 않는다.
-- 수익률은 시간가중수익률이라 입금이 수익으로 잡히지 않는다. 정산 화면에 "수익률", "순손익(입금 제외)", "이번 시대 입금(출처별)", "누적 수익률"을 함께 보여준다 (`settlement.*` 문구).
+- 화면 타이머가 `tickIntervalMs(getSpeed())`마다 `advanceTick()`을 부른다 (1배 5,000ms, 2배 2,500ms). 게임 시간 단위는 그대로.
+- **배속 선택**: 주식창 계좌 바에 '1배'와 '2배' 두 버튼을 나란히 (하나를 켜면 다른 하나가 꺼짐). **탭을 옮겨도 유지**(`SPEED_RESETS_ON_TAB_LEAVE=false`). 2배일 때 다른 탭 상단에 작은 "x2".
+- 일시정지 사유는 `tutorial`과 `background`뿐. 앱이 백그라운드로 가면 `pause('background')` + 음악 `setBackground(true)`, 돌아오면 `resume('background')` + `setBackground(false)` (몰아서 따라잡지 않는다).
+- **입력이 없을 때 자동 일시정지**: 일정 시간(예: 3~5분, 테스트로 정함) 터치가 없으면 `pause('background')`, 화면을 다시 만지면 확인 후 `resume('background')`.
+- 시대 시작 안내: "처음 7분은 뉴스가 없어요" (`era.graceNotice`, 제안 문구).
+- **저장 빈도**: `advanceTick()` 결과의 `saveNeeded`가 true이거나 `pendingSaveReasons`가 비어 있지 않으면 바로 `savePublicGame()`. 엔진이 알리는 때: 매매, 입금, 뉴스 발표, 백그라운드 전환, 30초 경과, 시대 종료.
+- 불러오기 `status`: `resumed`(이어 하기) / `settled_on_version_change`(앱 업데이트로 저장 시점 가격에 정산 + 작업 수입 합산 → 정산 화면 → 다음 시대, 마지막이면 `finalSummary`) / `restarted_legacy`(아주 옛 세이브).
 
-## 6. 해설 알림 표시 형식
+## 7. 작업실
 
-- 뉴스 발표 120초 뒤 `recaps`로 온다. 시간을 멈추지 않는 작은 알림.
-- 종목마다: **발표 즉시 {instantPct} · 5초 뒤 {delayedPct} · 합계 {appliedPct}** — 이유 (i18n `recap.split`, `recap.line`)
-- 상위 3종목 + "외 N종목". 잠정 뉴스는 `tentativeNote` 문구를 붙이고, 결과 방향을 암시하는 말은 넣지 않는다.
-- 처음 한 번은 `recap.firstNotice`(게임 안 가상 수치, 투자 권유 아님) 안내.
+- 터치마다 `workTouch(Date.now())` → `{ accepted, eyes, completed }`. 눈 하나 → 눈 둘 → 완성(+3, "정산 예정 작업 수입" 카운터로 날아감). 2터치까지는 보상 없음.
+- 초당 6터치를 넘는 터치는 엔진이 무시한다(`accepted: false`). 화면 어디를 눌러도 인식.
+- "작업 수입은 시대가 끝날 때 한꺼번에 지급돼요" (`work.payoutNote`). 진행 중인 인형 상태는 탭을 옮겨도·저장해도 유지된다.
 
-## 7. 튜토리얼 문구
+## 8. 거실
 
-- 첫 진입 때 `tutorial.notice1~4`를 보여준다. 3번은 다음과 같다:
-  > 뉴스는 발표되는 순간 대부분 가격에 반영되고 몇 초 뒤 나머지가 반영되므로, 읽고 따라 사기보다 미리 공부해서 준비하는 쪽이 유리해요.
-- 진행: `waiting → reading(시간 정지, 매수 가능) → reaction → recap → done`, 단계별 문구는 `tutorial.step*`.
-- 튜토리얼 화면도 `TutorialSession.view`(공개용 뷰)만 쓴다.
+- **첫 터치 전에는 소리를 낼 수 없다** (휴대폰 브라우저 규칙). 첫 터치에서 `MusicPlayer.unlock()`. 그 전에는 `music.tapToStart` 안내.
+- LP 터치: `cycleGenre()` + LP 회전 + 장르 이름 토스트(`music.genre.*`). 끄기 없음 (음소거·볼륨은 설정).
+- 강아지 터치: `petDog(state, stage, rng)` — rng는 `createPresentationRng(seed, 'dog')`(시장 난수와 분리). 3번째 터치마다 `reaction`.
+- 음악 실제 재생은 `AudioBackend`를 구현해 붙인다 (곡이 끝나면 `onTrackEnded()`, 프레임마다 `update(dt)`).
 
-## 8. 플레이 기록 동의 화면
+## 9. 정산 창
 
-- 플레이 기록은 **기본 꺼짐**. 첫 실행 때 동의 화면(`telemetry.consentTitle/Body/agree/decline`)을 보여주고, 동의하면 `game.setConsent(true)` + 세이브 `setTelemetryConsent(save, true)`.
-- 설정 화면에서 언제든 끌 수 있게 한다 (`setConsent(false)`).
-- 만 14세 이상 대상이어도 **개인정보처리방침과 동의 화면이 필요**하다. 출시 전 전문가 검토 (`docs/telemetry.md` 6장).
-- 개인을 식별할 수 있는 정보·기기 고유 ID(광고 ID, IMEI 등)는 기록에 넣지 않는다. 플레이어 구분이 필요하면 앱이 처음 실행 때 만든 **무작위 설치 id**만 쓰고, 설정에서 초기화할 수 있게 한다.
+- **투자 결과(코인·수익률) + 작업 수입 = 합계**를 각각 보여준다 (`investmentResult`, `workIncome`, `finalTotal`, 문구 `settlement.*`).
+- '확인' → 다음 시대 (`startNextEra()`), 마지막 시대면 최종 요약(`getFinalSummary()`, 문구 `final.*`).
 
-## 9. 기타
+## 10. 플레이 기록 동의 화면
 
-- 색상 설정(빨강=상승/파랑=하락 또는 반대)은 `PublicStockView.color`가 이미 반영한다.
-- 공개용 뷰에 없는 값이 필요하면 화면에서 만들지 말고 엔진 담당에게 요청한다 (숨김 규칙을 깨지 않는지 확인 후 추가).
+- 플레이 기록은 **기본 꺼짐**. 첫 실행 때 동의 화면(`telemetry.consentTitle/Body/agree/decline`) → 동의하면 `setConsent(true)` + 세이브 `setTelemetryConsent(save, true)`. 설정에서 언제든 끌 수 있게.
+- 만 14세 이상 대상이어도 **개인정보처리방침과 동의 화면이 필요**하다 (`docs/telemetry.md` 6장).
+- 개인 식별 정보·기기 고유 ID(광고 ID, IMEI 등)를 기록에 넣지 않는다.
+
+## 11. 설정
+
+- 언어(한/영), 상승 색상 모드(기본: 한국어 빨강 상승·파랑 하락, 영어 초록 상승·빨강 하락), 마스터·음악·효과음 볼륨, 음소거, 음악 저작권 표시(`getCredits()`), 기록 동의.
+- 설정은 게임 세이브와 별개로 저장한다 (`src/settings/settings.ts`).

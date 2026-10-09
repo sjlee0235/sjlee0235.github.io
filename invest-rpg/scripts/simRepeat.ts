@@ -7,6 +7,7 @@
 //       npm run sim:repeat -- 5 200 '{}' '{"sentimentBias":0.75}'   (가상 데이터 생성 옵션을 바꿔서)
 
 import type { GameConfig } from '../src/engine/config.ts';
+import { Game } from '../src/engine/game.ts';
 import { makeSpecEra, type SpecEraOptions } from '../tests/fixtures/makeEra.ts';
 import {
   fmt, inTarget, labelOf, REFERENCE_STRATEGIES, runMany, STRATEGIES, summarize, targetLabel, TARGET_RANGE, type Strategy,
@@ -48,6 +49,22 @@ for (const s of ALL) {
   );
 }
 console.log('\n† 방향(호재/악재·분위기·단서)을 정확히 아는 전략 = 사람이 본문을 읽고 해석해서 얻을 수 있는 이득의 이론상 상한.');
+
+// 뉴스 구성: 시대당 뉴스 수와 속보 비율 (7분 유예·첫 뉴스 잠정 반영 후)
+let newsTotal = 0;
+let breakingTotal = 0;
+let eraCount = 0;
+for (let run = 1; run <= RUNS; run++) {
+  const era = makeSpecEra({ ...eraOptions, id: 'spec', seed: 1000 + run });
+  for (let i = 1; i <= SEEDS; i++) {
+    const sched = new Game({ eras: [era], seed: run * 100_000 + i, config }).newsSchedule;
+    newsTotal += sched.length;
+    breakingTotal += sched.filter((n) => n.kind === 'breaking').length;
+    eraCount++;
+  }
+}
+const breakingShare = (breakingTotal / newsTotal) * 100;
+console.log(`\n뉴스 구성: 시대당 평균 ${(newsTotal / eraCount).toFixed(1)}개, 속보 비율 ${breakingShare.toFixed(1)}% (목표 28~40%) → ${breakingShare >= 28 && breakingShare <= 40 ? '✓' : '✗'}`);
 
 const all = avgOf.get('leanAllIn')!;
 const spread = avgOf.get('leanSpread')!;
