@@ -23,7 +23,7 @@ export const TUTORIAL_NEWS_TICK = 6;
  * - waiting : 뉴스를 기다리는 중
  * - reading : 뉴스 팝업 (시간 정지). 이때 매수해 본다
  * - reaction: '확인' 후 반영·관성을 지켜보는 중
- * - report   : 주가 리포트이 나옴
+ * - report   : 주가 리포트가 나옴
  * - done    : 끝 (finish() 호출 후)
  */
 export type TutorialStage = 'waiting' | 'reading' | 'reaction' | 'report' | 'done';

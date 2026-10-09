@@ -6,7 +6,6 @@
   },
   "phase": {
     "running": "Market open",
-    "news": "Breaking news",
     "era-ended": "Era closed",
     "finished": "All eras complete",
     "paused": "Paused"
@@ -59,7 +58,12 @@
     "profitAmount": "Net profit (excluding deposits)",
     "deposits": "Deposits this era",
     "cumulative": "Cumulative return",
-    "versionChange": "The game was updated, so this era was settled at the prices from your last save. The new version applies from the next era."
+    "versionChange": "The game was updated, so this era was settled at the prices from your last save. The new version applies from the next era.",
+    "investment": "Investment result",
+    "workIncome": "Work income",
+    "total": "Total",
+    "formulaTotal": "Investment + work income = total",
+    "brokeTime": "Time without money to invest"
   },
   "news": {
     "type": {
@@ -93,7 +97,7 @@
     "stepWaiting": "News is coming soon. Please wait a moment.",
     "stepReading": "News is out! Time stops during the tutorial. Try buying a related stock.",
     "stepReaction": "Most of the move hits the price the moment the news appears, and the rest 5 seconds later. Then prices keep swinging for 10 more seconds.",
-    "stepReport": "Two minutes later, a report arrives. See which stocks moved and why.",
+    "stepReport": "Two minutes later a Market Report appears right under the news. Check which stocks moved and why.",
     "done": "Tutorial complete! In the main game, time keeps running when news breaks.",
     "replay": "Replay tutorial"
   },
@@ -132,5 +136,54 @@
     "consentBody": "We'd like to collect play data (trades, screen time, etc.) to improve game balance. We never collect your name, contact info, or device IDs. You can play the same way without agreeing.",
     "agree": "Agree",
     "decline": "Don't agree"
+  },
+  "tabs": {
+    "living_room": "Living Room",
+    "trading": "Trading",
+    "workshop": "Workshop",
+    "tv_shopping": "Shopping TV",
+    "comingSoon": "Broadcast coming soon"
+  },
+  "era": {
+    "graceNotice": "No news for the first 7 minutes. Look around the stocks and get ready.",
+    "remaining": "Time left {time}"
+  },
+  "speed": {
+    "x1": "1x",
+    "x2": "2x",
+    "badge": "x2"
+  },
+  "newsBadge": "NEWS!",
+  "work": {
+    "pending": "Work income to be paid",
+    "payoutNote": "Work income is paid all at once when the era ends.",
+    "plus": "+{coins}",
+    "eyes": "{count} eyes"
+  },
+  "music": {
+    "genre": {
+      "jazz": "Jazz",
+      "classical": "Classical",
+      "hiphop": "Hip-hop",
+      "rock": "Rock"
+    },
+    "volume": "Music volume",
+    "master": "Master volume",
+    "sfx": "Sound effects",
+    "mute": "Mute",
+    "credits": "Music credits",
+    "tapToStart": "Tap the screen once to turn on sound."
+  },
+  "order": {
+    "max": "Max",
+    "quantity": "Qty",
+    "filled": "Filled {count} shares of {name} ({amount} coins)"
+  },
+  "final": {
+    "title": "Final Results",
+    "eraLine": "{era}: investment return {pct}, work income {work} coins",
+    "total": "Final coins {coins}",
+    "totalWork": "Total work income {coins} coins",
+    "cumulative": "Cumulative investment return {pct}"
   }
 }

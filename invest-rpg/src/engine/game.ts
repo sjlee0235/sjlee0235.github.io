@@ -744,7 +744,7 @@ export class Game {
   }
 
   /**
-   * 화면(앱) 이벤트 기록. 예) 뉴스 팝업을 닫을 때 game.track('news_popup', { newsId, dwellMs, closedBy })
+   * 화면(앱) 이벤트 기록. 예) 탭을 옮길 때 game.track('tab_switch', { from, to, dwellMs })
    * clientMs는 실제 시각(앱이 Date.now() 등으로 넣는다. 엔진은 시계를 쓰지 않음)
    */
   track<K extends AppEventType>(type: K, data: AppEventMap[K], clientMs?: number): void {

@@ -84,7 +84,7 @@ describe('공개용 뷰: 플레이 중 숨김', () => {
     }
   });
 
-  it('주가 리포트은 방향과 % (발표 즉시 / 5초 뒤 / 합계)를 담는다', () => {
+  it('주가 리포트는 방향과 % (발표 즉시 / 5초 뒤 / 합계)를 담는다', () => {
     const g = playPublic(4);
     const reports = g.getNewsArchive().flatMap((a) => (a.report ? [a.report] : []));
     expect(reports.length).toBeGreaterThan(0);

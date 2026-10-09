@@ -49,7 +49,7 @@ export const LEAN_PROB = 0.65;
 export const INSTANT_REACTION_SHARE = 0.75;
 /** 자동 저장 간격(초). 이 시간이 지나면 저장이 필요하다고 알린다 (game.pendingSaveReasons) */
 export const AUTOSAVE_SECONDS = 30;
-/** 뉴스 발표 몇 초 뒤에 주가 리포트을 만드는가 */
+/** 뉴스 발표 몇 초 뒤에 주가 리포트를 만드는가 */
 export const REPORT_DELAY_SECONDS = 120;
 /** (기본 OFF) 주문이 N틱 뒤 가격으로 체결 */
 export const ORDER_DELAY_TICKS = 0;

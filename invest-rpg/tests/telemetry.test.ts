@@ -118,11 +118,11 @@ describe('플레이 기록 (텔레메트리)', () => {
     const buf = new TelemetryBuffer();
     const game = new Game({ eras: [era], seed: 1, telemetry: buf, telemetryConsent: true });
     for (let i = 0; i < 5; i++) game.advanceTick();
-    game.track('screen_view', { screen: 'chart', dwellMs: 3200, targetId: game.activeStocks[0]!.id }, 1_700_000_000_000);
+    game.track('screen_view', { screen: 'order_panel', dwellMs: 3200, targetId: game.activeStocks[0]!.id }, 1_700_000_000_000);
     const last = buf.peek().at(-1)!;
     expect(last).toMatchObject({ type: 'screen_view', tick: 5, eraId: 'tel', clientMs: 1_700_000_000_000 });
     // 기록을 안 붙이면 아무 일도 없다
-    new Game({ eras: [era], seed: 1 }).track('screen_view', { screen: 'market', dwellMs: 1 });
+    new Game({ eras: [era], seed: 1 }).track('screen_view', { screen: 'trading', dwellMs: 1 });
   });
 
   it('일시정지·재개, 관심 종목 토글도 기록', () => {
@@ -174,7 +174,7 @@ describe('플레이 기록 (텔레메트리)', () => {
     const game = new Game({ eras: [era], seed: 1, telemetry: buf });
     for (let i = 0; i < 50; i++) game.advanceTick();
     game.buy(game.activeStocks[0]!.id, 1);
-    game.track('screen_view', { screen: 'market', dwellMs: 10 });
+    game.track('screen_view', { screen: 'trading', dwellMs: 10 });
     expect(game.isRecording).toBe(false);
     expect(buf.size).toBe(0);
   });
@@ -195,7 +195,7 @@ describe('플레이 기록 (텔레메트리)', () => {
     // 동의 철회 → 더 기록하지 않음
     const n = buf.size;
     game.setConsent(false);
-    game.track('screen_view', { screen: 'market', dwellMs: 10 });
+    game.track('screen_view', { screen: 'trading', dwellMs: 10 });
     expect(buf.size).toBe(n);
   });
 

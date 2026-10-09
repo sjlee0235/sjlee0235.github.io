@@ -199,23 +199,31 @@ export interface EngineEventMap {
 
 // ───────── 앱(화면) 이벤트 ─────────
 
+/** 화면 = 하단 탭 4개 + 그 위에 뜨는 창 */
 export type ScreenId =
-  | 'market' | 'stock-detail' | 'chart' | 'portfolio' | 'news-archive' | 'report' | 'settlement' | 'settings' | 'tutorial';
+  | 'living_room' | 'trading' | 'workshop' | 'tv_shopping'
+  | 'order_panel' | 'settlement' | 'era_debrief' | 'final_summary' | 'settings' | 'tutorial';
 
 export interface AppEventMap {
   /** 앱 세션: 켜기/끄기/백그라운드/복귀 */
   app_session: { phase: 'start' | 'end' | 'background' | 'foreground'; reason?: string };
-  /** 뉴스 팝업을 닫을 때: 몇 ms 봤는지, 무엇을 눌러 닫았는지 */
-  news_popup: { newsId: string; dwellMs: number; closedBy: 'confirm' | 'dismiss' | 'trade' | 'timeout' };
-  /** 관련 테마를 눌러 봄 */
-  related_theme_tap: { newsId: string; themeId: string };
-  /** 화면을 떠날 때: 어떤 화면을 몇 ms 봤는지 */
+  /** 탭 전환 (from → to), 앞 탭에 머문 시간 */
+  tab_switch: { from: ScreenId; to: ScreenId; dwellMs: number };
+  /** 화면·창을 떠날 때: 어떤 화면을 몇 ms 봤는지 */
   screen_view: { screen: ScreenId; dwellMs: number; targetId?: string };
-  /** 주가 리포트을 열어 봄 / 그냥 지나감 */
-  report_view: { newsId: string; opened: boolean; dwellMs: number };
+  /** 뉴스 피드에서 접힌 뉴스를 펼침 (리포트까지 보임) */
+  feed_expand: { newsId: string; hasReport: boolean };
+  /** NEWS! 배지를 눌러 주식창으로 이동 */
+  news_badge_click: { fromTab: ScreenId; unreadCount: number };
+  /** 주문 패널의 '최대' 버튼 */
+  max_button: { stockId: string; side: 'buy' | 'sell'; quantity: number };
   /** 주문 창을 열었다가 주문 없이 닫음 (망설임) */
   order_abandoned: { stockId: string; side: 'buy' | 'sell'; dwellMs: number };
-  /** 설정 변경 (색상 등) */
+  /** 거실 LP 터치 (바뀐 장르) */
+  lp_touch: { genre: string };
+  /** 거실 강아지 터치 (3번째마다 반응 이름, 아니면 null) */
+  dog_touch: { reaction: string | null };
+  /** 설정 변경 (언어, 색상, 볼륨 등) */
   setting_changed: { key: string; value: string };
   /** 튜토리얼 단계 진입·건너뛰기·다시 보기 */
   tutorial_step: { step: string; action: 'enter' | 'skip' | 'replay' | 'complete' };

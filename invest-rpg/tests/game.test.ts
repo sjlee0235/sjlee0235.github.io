@@ -175,14 +175,14 @@ describe('주가 리포트', () => {
     }
   });
 
-  it('시대가 끝나 120초가 남지 않으면 주가 리포트을 만들지 않는다', () => {
+  it('시대가 끝나 120초가 남지 않으면 주가 리포트를 만들지 않는다', () => {
     const { game, reports } = collect(3);
     const last = game.shownNews.at(-1)!;
     const made = reports.some((r) => r.newsId === last.news.id);
     expect(made).toBe(last.tick + 24 <= 1440);
   });
 
-  it('보관함: 뉴스·태그·강도·주가 리포트을 함께 담는다', () => {
+  it('보관함: 뉴스·태그·강도·주가 리포트를 함께 담는다', () => {
     const { game } = collect(1);
     const archive = game.getNewsArchive();
     expect(archive.length).toBe(game.shownNews.length);

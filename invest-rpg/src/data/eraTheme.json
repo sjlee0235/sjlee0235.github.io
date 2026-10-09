@@ -1,0 +1,44 @@
+{
+  "note": "시대별 화면 디자인 구조 (그림은 나중에). htsSkin.colors는 화면 단계에서 CSS 변수로 쓴다. 전체 톤은 어둡고 저채도.",
+  "eras": {
+    "2000s": {
+      "dogStage": "puppy",
+      "livingRoomVariant": "living_2000s",
+      "workshopVariant": "workshop_2000s",
+      "tvVariant": "tv_crt",
+      "htsSkin": {
+        "id": "hts_classic_gray",
+        "colors": {
+          "frame": "#8a8c8e", "panel": "#9fa1a3", "bevelLight": "#c4c6c8", "bevelDark": "#4e5052",
+          "text": "#1c1d1e", "titleBar": "#2f3f5a", "titleText": "#d8dadc", "rowAlt": "#939597"
+        }
+      }
+    },
+    "2010s": {
+      "dogStage": "adult",
+      "livingRoomVariant": "living_2010s",
+      "workshopVariant": "workshop_2010s",
+      "tvVariant": "tv_flat",
+      "htsSkin": {
+        "id": "hts_flat_gray",
+        "colors": {
+          "frame": "#6f7376", "panel": "#7c8083", "bevelLight": "#9a9ea1", "bevelDark": "#45494c",
+          "text": "#141516", "titleBar": "#3a4650", "titleText": "#d0d3d6", "rowAlt": "#74787b"
+        }
+      }
+    },
+    "2020s": {
+      "dogStage": "senior",
+      "livingRoomVariant": "living_2020s",
+      "workshopVariant": "workshop_2020s",
+      "tvVariant": "tv_large_flat",
+      "htsSkin": {
+        "id": "hts_dark_gray",
+        "colors": {
+          "frame": "#2c2f33", "panel": "#373b40", "bevelLight": "#4d5258", "bevelDark": "#1b1d20",
+          "text": "#c9ccd0", "titleBar": "#20262d", "titleText": "#aeb4ba", "rowAlt": "#32363b"
+        }
+      }
+    }
+  }
+}

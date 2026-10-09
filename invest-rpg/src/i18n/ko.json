@@ -6,7 +6,6 @@
   },
   "phase": {
     "running": "장 운영 중",
-    "news": "속보",
     "era-ended": "시대 마감",
     "finished": "모든 시대 종료",
     "paused": "일시정지됨"
@@ -59,7 +58,12 @@
     "profitAmount": "순손익 (입금 제외)",
     "deposits": "이번 시대 입금",
     "cumulative": "누적 수익률",
-    "versionChange": "게임이 업데이트되어 저장 시점의 가격으로 이 시대를 정산했어요. 다음 시대부터 새 버전이 적용돼요."
+    "versionChange": "게임이 업데이트되어 저장 시점의 가격으로 이 시대를 정산했어요. 다음 시대부터 새 버전이 적용돼요.",
+    "investment": "투자 결과",
+    "workIncome": "작업 수입",
+    "total": "합계",
+    "formulaTotal": "투자 결과 + 작업 수입 = 합계",
+    "brokeTime": "투자할 돈이 없던 시간"
   },
   "news": {
     "type": {
@@ -93,7 +97,7 @@
     "stepWaiting": "곧 뉴스가 발표돼요. 잠시 기다려 보세요.",
     "stepReading": "뉴스가 떴어요! 튜토리얼에서는 시간이 멈춰요. 관련 종목을 한 번 사 보세요.",
     "stepReaction": "뉴스가 뜨는 순간 대부분이 가격에 반영되고, 5초 뒤 나머지가 반영돼요. 이후 10초 동안 출렁임이 이어져요.",
-    "stepReport": "2분 뒤에는 주가 리포트이 와요. 어떤 종목이 왜 움직였는지 확인해 보세요.",
+    "stepReport": "2분 뒤에는 뉴스 바로 아래에 주가 리포트가 붙어요. 어떤 종목이 왜 움직였는지 확인해 보세요.",
     "done": "튜토리얼 끝! 본게임에서는 뉴스가 떠도 시간이 멈추지 않아요.",
     "replay": "튜토리얼 다시 보기"
   },
@@ -132,5 +136,54 @@
     "consentBody": "게임 밸런스를 개선하기 위해 플레이 기록(매매, 화면 이용 시간 등)을 모으려고 해요. 이름·연락처·기기 고유 번호는 모으지 않아요. 동의하지 않아도 게임을 그대로 즐길 수 있어요.",
     "agree": "동의",
     "decline": "동의하지 않음"
+  },
+  "tabs": {
+    "living_room": "거실",
+    "trading": "주식창",
+    "workshop": "작업실",
+    "tv_shopping": "TV홈쇼핑",
+    "comingSoon": "방송 준비 중"
+  },
+  "era": {
+    "graceNotice": "처음 7분은 뉴스가 없어요. 종목을 둘러보며 준비해 보세요.",
+    "remaining": "남은 시간 {time}"
+  },
+  "speed": {
+    "x1": "1배",
+    "x2": "2배",
+    "badge": "x2"
+  },
+  "newsBadge": "NEWS!",
+  "work": {
+    "pending": "정산 예정 작업 수입",
+    "payoutNote": "작업 수입은 시대가 끝날 때 한꺼번에 지급돼요.",
+    "plus": "+{coins}",
+    "eyes": "눈 {count}개"
+  },
+  "music": {
+    "genre": {
+      "jazz": "재즈",
+      "classical": "클래식",
+      "hiphop": "힙합",
+      "rock": "락"
+    },
+    "volume": "음악 볼륨",
+    "master": "전체 볼륨",
+    "sfx": "효과음 볼륨",
+    "mute": "음소거",
+    "credits": "음악 저작권 표시",
+    "tapToStart": "화면을 한 번 누르면 소리가 나요."
+  },
+  "order": {
+    "max": "최대",
+    "quantity": "수량",
+    "filled": "{name} {count}주 체결 ({amount} 코인)"
+  },
+  "final": {
+    "title": "최종 결과",
+    "eraLine": "{era}: 투자 수익률 {pct}, 작업 수입 {work} 코인",
+    "total": "최종 코인 {coins}",
+    "totalWork": "작업 수입 합계 {coins} 코인",
+    "cumulative": "누적 투자 수익률 {pct}"
   }
 }

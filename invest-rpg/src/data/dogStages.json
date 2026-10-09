@@ -1,0 +1,20 @@
+{
+  "note": "강아지 성장 단계별 반응. reactions = 3번째 터치마다 고르는 반응 후보, speedMultiplier = 애니메이션 속도 배율(화면에서 사용).",
+  "stages": {
+    "puppy": {
+      "description": "2000년대: 활발한 강아지",
+      "reactions": ["tail_wag", "afterimage_sway", "heart_pop", "ear_perk"],
+      "speedMultiplier": 1.3
+    },
+    "adult": {
+      "description": "2010년대: 성견",
+      "reactions": ["tail_wag", "afterimage_sway", "heart_pop", "ear_perk"],
+      "speedMultiplier": 1.0
+    },
+    "senior": {
+      "description": "2020년대: 노견. 느리고 부드러운 반응",
+      "reactions": ["tail_wag", "afterimage_sway", "heart_pop", "ear_perk"],
+      "speedMultiplier": 0.6
+    }
+  }
+}

@@ -14,7 +14,9 @@
     "sim:carry": "node scripts/simCarry.ts",
     "telemetry:report": "node scripts/telemetryReport.ts",
     "lint:content": "node scripts/lintContent.ts",
-    "check": "npm run typecheck && npm test"
+    "check": "npm run typecheck && npm test",
+    "lint:audio": "node scripts/lintAudio.ts",
+    "audio:placeholder": "node scripts/audioPlaceholder.ts"
   },
   "devDependencies": {
     "typescript": "^7.0.2",
