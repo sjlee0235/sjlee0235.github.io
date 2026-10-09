@@ -1,8 +1,9 @@
 // 뉴스 엔진: 언제 어떤 뉴스가 뜨는지, 반영 시점과 크기를 관리한다.
 //
 // 일정 만들기 (판 시작 때 시드로 한 번에 정함)
-//   1) 뉴스 자리(슬롯): 첫 뉴스는 1~3분, 그 뒤로는 4~7분 간격 (무작위)
-//   2) 빈 슬롯마다: 진행 중인 스토리가 없으면 P_START_STORY(85%) 확률로 새 스토리(잠정 뉴스)를 시작,
+//   1) 뉴스 자리(슬롯): 시대 시작 7분은 뉴스 없음(유예). 첫 뉴스는 정확히 7분, 그 뒤로는 4~7분 간격 (무작위)
+//   1-1) 첫 슬롯은 항상 잠정 뉴스: 사용 가능한 opener 스토리 중 시드 기반 무작위로 고른다 (P_START_STORY 무시)
+//   2) 그 밖의 빈 슬롯마다: 진행 중인 스토리가 없으면 P_START_STORY(85%) 확률로 새 스토리(잠정 뉴스)를 시작,
 //      아니면 속보를 넣는다. → 슬롯 기준 속보 약 1/3, 잠정 약 1/3, 결과 약 1/3
 //   3) 스토리: 잠정 뉴스 이후 15분 안에 오는 빈 슬롯 중 하나에 결과 뉴스를 넣는다 (간격 규칙 그대로).
 //      결과는 서로 반대인 2개 중 추첨: leansTo(잠정 뉴스의 단서가 가리키는 쪽) 70%, 다른 쪽 30%.
@@ -50,7 +51,7 @@ export function makeNewsSlots(rules: TickRules, rng: Rng, extraDelay = 0): numbe
   // 마지막 뉴스도 반영과 관성이 시대 안에서 끝나도록 한다
   const last = rules.ticksPerEra - rules.reactionTicks - extraDelay - rules.inertiaTicks;
   const slots: number[] = [];
-  let t = rng.int(rules.firstNewsMinTicks, rules.firstNewsMaxTicks);
+  let t = rules.firstNewsTick;
   while (t <= last) {
     slots.push(t);
     t += rng.int(rules.newsGapMinTicks, rules.newsGapMaxTicks);
@@ -95,8 +96,7 @@ export function buildNewsSchedule(active: ActiveEra, rng: Rng, config: GameConfi
     return out;
   };
 
-  const placeStory = (i: number, free: number[]) => {
-    const story = storyQ.shift()!;
+  const placeStory = (i: number, free: number[], story: Story) => {
     const outcome = story.outcomes[pickWeighted(outcomeWeights(story, config.leansToChance), rng)]!;
     const outcomeSlot = free[rng.int(0, free.length - 1)]!;
     const byId = new Map(story.news.map((n) => [n.id, n]));
@@ -122,6 +122,18 @@ export function buildNewsSchedule(active: ActiveEra, rng: Rng, config: GameConfi
     busyUntil = outcomeSlot;
   };
 
+  // 첫 슬롯: opener 스토리의 잠정 뉴스로 강제 (opener가 없으면 아무 스토리, 그것도 없으면 아래 일반 규칙)
+  if (config.firstNewsType === 'tentative' && slots.length > 0) {
+    const free = freeAfter(0);
+    const openers = storyQ.filter((s) => s.opener);
+    const pool = openers.length > 0 ? openers : storyQ;
+    if (pool.length > 0 && free.length > 0) {
+      const story = pool[rng.int(0, pool.length - 1)]!;
+      storyQ.splice(storyQ.indexOf(story), 1);
+      placeStory(0, free, story);
+    }
+  }
+
   for (let i = 0; i < slots.length; i++) {
     if (assigned[i]) continue;
     const roll = rng.next(); // 슬롯마다 항상 1개 뽑아 순서를 안정적으로
@@ -129,7 +141,7 @@ export function buildNewsSchedule(active: ActiveEra, rng: Rng, config: GameConfi
     const free = canStory ? freeAfter(i) : [];
     const wantStory = canStory && free.length > 0 && (roll < config.pStartStory || breakingQ.length === 0);
     if (wantStory) {
-      placeStory(i, free);
+      placeStory(i, free, storyQ.shift()!);
     } else if (breakingQ.length > 0) {
       assigned[i] = { tick: slots[i]!, news: breakingQ.shift()!, kind: 'breaking', tag: 'breaking', isHistorical: true };
     }

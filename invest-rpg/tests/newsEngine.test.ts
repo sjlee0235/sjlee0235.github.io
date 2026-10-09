@@ -13,12 +13,11 @@ const activeFor = (seed: number) => applyDraw(era, drawEra(era, seed, config), c
 const scheduleFor = (seed: number, cfg = config) => buildNewsSchedule(activeFor(seed), createRng(seed), cfg);
 
 describe('뉴스 슬롯', () => {
-  it('[시드 200개] 첫 뉴스 1~3분, 간격 4~7분, 최대 30슬롯, 평균 약 22개', () => {
+  it('[시드 200개] 첫 뉴스는 정확히 7분(84틱), 간격 4~7분, 평균 약 21개', () => {
     let total = 0;
     for (const seed of SEEDS) {
       const slots = makeNewsSlots(rules, createRng(seed));
-      expect(slots[0]).toBeGreaterThanOrEqual(12);
-      expect(slots[0]).toBeLessThanOrEqual(36);
+      expect(slots[0]).toBe(84);
       for (let i = 1; i < slots.length; i++) {
         const gap = slots[i]! - slots[i - 1]!;
         if (gap < 48 || gap > 84) throw new Error(`seed ${seed}: ${gap}`);
@@ -27,7 +26,43 @@ describe('뉴스 슬롯', () => {
       total += slots.length;
     }
     expect(total / 200).toBeGreaterThan(20);
-    expect(total / 200).toBeLessThan(24);
+    expect(total / 200).toBeLessThan(23);
+  });
+});
+
+describe('시대 시작 7분 유예와 첫 잠정 뉴스', () => {
+  it('상수: 유예 420초, 첫 뉴스 420초, 첫 뉴스 종류 잠정', () => {
+    expect(config.gracePeriodSeconds).toBe(420);
+    expect(config.firstNewsAtSeconds).toBe(420);
+    expect(config.firstNewsType).toBe('tentative');
+    expect(rules.gracePeriodTicks).toBe(84);
+  });
+
+  it('[시드 200개] 420초 전 뉴스 0개, 첫 뉴스는 정확히 420초·잠정·opener, 그 결과 뉴스는 15분 안', () => {
+    const openerIds = new Set(era.stories.filter((s) => s.opener).map((s) => s.id));
+    const usedOpeners = new Set<string>();
+    for (const seed of SEEDS) {
+      const s = scheduleFor(seed);
+      expect(s.filter((n) => n.tick < 84)).toEqual([]);
+      const first = s[0]!;
+      expect(first.tick).toBe(84);
+      expect(first.kind).toBe('tentative');
+      expect(openerIds.has(first.storyId!)).toBe(true);
+      usedOpeners.add(first.storyId!);
+      const outcome = s.find((n) => n.kind === 'outcome' && n.storyId === first.storyId)!;
+      expect(outcome.tick - first.tick).toBeLessThanOrEqual(180);
+    }
+    // opener 여러 개 중 시드에 따라 다르게 고른다
+    expect(usedOpeners.size).toBeGreaterThan(1);
+  });
+
+  it('opener 스토리가 하나도 쓸 수 없으면 추첨을 다시 한다 (추첨 조건)', () => {
+    const noOpener = { ...era, stories: era.stories.map((s) => ({ ...s, opener: false })) };
+    const d = drawEra(noOpener, 1, config);
+    expect(d.ok).toBe(false);
+    expect(d.warning).toMatch(/opener/);
+    const ok = drawEra(era, 1, config);
+    expect(ok.usableOpeners).toBeGreaterThanOrEqual(1);
   });
 });
 

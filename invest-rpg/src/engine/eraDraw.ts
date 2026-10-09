@@ -24,6 +24,8 @@ export interface EraDraw {
   /** 이번 판에 쓸 수 있는 속보·스토리 수 */
   usableBreaking: number;
   usableStories: number;
+  /** 이번 판에 쓸 수 있는 opener 스토리 수 (옛 세이브에는 없음) */
+  usableOpeners?: number;
   /** 조건을 모두 만족했는가 */
   ok: boolean;
   /** 조건을 못 맞췄을 때의 경고 */
@@ -99,15 +101,19 @@ export function drawEra(era: Era, seed: number, config: GameConfig): EraDraw {
     const active = new Set(activeThemeIds);
     const core = era.themes.filter((t) => active.has(t.id) && t.relevance === 'core').length;
     const usableBreaking = era.breaking.filter((n) => effectiveNews(n, active, rules.minEffectiveThemes)).length;
-    const usableStories = era.stories.filter((s) => effectiveStory(s, active, rules.minEffectiveThemes)).length;
-    const ok = core >= rules.minCore && usableBreaking >= rules.minBreaking && usableStories >= rules.minStories;
-    const draw: EraDraw = { eraId: era.id, seed, attempt, activeThemeIds, usableBreaking, usableStories, ok };
+    const usable = era.stories.filter((s) => effectiveStory(s, active, rules.minEffectiveThemes));
+    const usableStories = usable.length;
+    const usableOpeners = usable.filter((s) => s.opener).length;
+    const ok = core >= rules.minCore && usableBreaking >= rules.minBreaking && usableStories >= rules.minStories
+      && usableOpeners >= rules.minOpenerStories;
+    const draw: EraDraw = { eraId: era.id, seed, attempt, activeThemeIds, usableBreaking, usableStories, usableOpeners, ok };
     if (ok) return draw;
     // 가장 나은 추첨: core 조건을 먼저 보고, 그다음 속보·스토리 충족 정도
     const score =
       (core >= rules.minCore ? 1000 : 0) +
       Math.min(1, usableBreaking / rules.minBreaking) * 10 +
-      Math.min(1, usableStories / rules.minStories) * 10;
+      Math.min(1, usableStories / rules.minStories) * 10 +
+      (usableOpeners >= rules.minOpenerStories ? 5 : 0);
     if (score > bestScore) {
       best = draw;
       bestScore = score;
@@ -116,6 +122,6 @@ export function drawEra(era: Era, seed: number, config: GameConfig): EraDraw {
   const b = best!;
   return {
     ...b,
-    warning: `추첨 ${rules.maxAttempts}회 안에 조건을 못 맞춤: 속보 ${b.usableBreaking}/${rules.minBreaking}, 스토리 ${b.usableStories}/${rules.minStories}`,
+    warning: `추첨 ${rules.maxAttempts}회 안에 조건을 못 맞춤: 속보 ${b.usableBreaking}/${rules.minBreaking}, 스토리 ${b.usableStories}/${rules.minStories}, opener ${b.usableOpeners ?? 0}/${rules.minOpenerStories}`,
   };
 }

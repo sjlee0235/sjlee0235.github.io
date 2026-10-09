@@ -23,6 +23,31 @@ describe('시대 시작', () => {
   });
 });
 
+describe('시대마다 7분 유예', () => {
+  it('[시드 10개] 시대가 바뀌어도 매번: 420초 전에는 뉴스 없고 가격은 움직이며, 첫 뉴스는 420초의 잠정 뉴스', () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const game = newGame(seed);
+      for (let e = 0; e < 2; e++) {
+        let moved = false;
+        let first: AdvanceResult | null = null;
+        while (game.phase === 'running') {
+          const r = game.advanceTick();
+          if (!r.advanced) continue;
+          if (r.tick < 84) {
+            expect(r.news).toBeNull();
+            if (r.changes.some((c) => c.price !== c.prevPrice)) moved = true;
+          }
+          if (r.news && !first) first = r;
+        }
+        expect(moved).toBe(true);
+        expect(first && first.advanced && first.tick).toBe(84);
+        expect(first && first.advanced && first.news!.kind).toBe('tentative');
+        if (game.hasNextEra) game.startNextEra();
+      }
+    }
+  });
+});
+
 describe('뉴스 반영 타이밍 (시간은 멈추지 않음)', () => {
   it('[시드 30개] 발표 틱 k에는 평소 변동 + 발표 순간 즉시 몫, k+1에 나머지 반영, k+2·k+3 관성, 이후 일반', () => {
     for (let seed = 1; seed <= 30; seed++) {

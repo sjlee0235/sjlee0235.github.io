@@ -52,7 +52,8 @@ export class TutorialSession {
       eras: [TUTORIAL_ERA],
       seed: TUTORIAL_SEED,
       // 짧은 판: 5분 (뉴스 30초 + 해설 120초가 들어가도록)
-      config: { eraSeconds: 300, ...config },
+      // 튜토리얼은 시대가 아니므로 7분 유예를 쓰지 않는다 (뉴스는 고정 일정 30초)
+      config: { eraSeconds: 300, gracePeriodSeconds: 0, firstNewsAtSeconds: 30, ...config },
       draws: { [TUTORIAL_ERA.id]: draw },
       pauseOnNews: true,
       ...(options.telemetry ? { telemetry: options.telemetry, telemetryMode: 'tutorial' as const } : {}),

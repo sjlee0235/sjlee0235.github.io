@@ -118,14 +118,14 @@ export function makeSpecEra(options: SpecEraOptions = {}): Era {
   const rng = createRng(deriveSeed(options.seed ?? 1, 'spec-era', id));
   const bias = options.sentimentBias ?? 0.75;
   const themes = themeList(id, rng);
-  // 종목명: "2글자 중립 수식어 + 업종". 풀 순서와 상관없도록 따로 섞는다 (데이터 생성 난수와 분리)
+  // 종목명: "2글자 수식어 + 업종주" / "... Stock". 풀 순서와 상관없도록 따로 섞는다 (데이터 생성 난수와 분리)
   const nameRng = createRng(deriveSeed(options.seed ?? 1, 'spec-names', id));
   const mods = shuffle(NEUTRAL_MODIFIERS, nameRng);
   const inds = shuffle(INDUSTRIES, nameRng);
   const stocks: Stock[] = themes.map((t, i) => ({
     id: `${id}-s${i}`,
     themeId: t.id,
-    name: { ko: `${mods[i]!.ko} ${inds[i]!.ko}`, en: `${mods[i]!.en} ${inds[i]!.en}` },
+    name: { ko: `${mods[i]!.ko} ${inds[i]!.ko}주`, en: `${mods[i]!.en} ${inds[i]!.en} Stock` },
     description: { ko: '테스트용 가상 회사다.', en: 'A test company.' },
   }));
 
@@ -153,6 +153,8 @@ export function makeSpecEra(options: SpecEraOptions = {}): Era {
         { newsId: other.id, isHistorical: false },
       ],
       leansTo: lean.id,
+      // 앞의 4개는 시대 첫 뉴스로 쓸 수 있는 opener 스토리
+      ...(i < 4 ? { opener: true } : {}),
     };
   });
 

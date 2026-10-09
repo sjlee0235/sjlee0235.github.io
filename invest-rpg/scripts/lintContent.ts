@@ -25,8 +25,11 @@ const RULE_LABEL: Record<string, string> = {
   date: '본문 속 연도·월 표기',
   sentimentBias: '테마별 호재/악재 비율 (분위기 편향 75% ±10%p 밖)',
   peripheralHits: '비주류 테마 영향 횟수 2회 미만',
-  stockName: '종목명 형식 ("2글자 중립 수식어 + 업종", 끝에 \'주\' 금지, 평가·전망 어감 단어 금지)',
-  stockDescription: '종목 설명의 전망·평가 표현',
+  stockName: '종목명 형식 (한국어 "2글자 수식어 + 업종주", 영어 "... Stock", 평가·전망 어감 단어 금지)',
+  stockNameHint: '[경고] 종목명 수식어가 뉴스 방향을 암시할 수 있음',
+  stockDescription: '기업 설명 (1~2줄·80자 안팎, 전망·평가 표현 금지)',
+  opener: 'opener 스토리 (시대당 3개 이상)',
+  leanHistorical: '단서 쪽 결과 = 실제 역사 (B5)',
   newsDirection: '뉴스 제목·본문의 주가 방향 표현 (호재, 악재, 수혜, 수혜주, 타격주, 상승 예상, 하락 예상)',
 };
 

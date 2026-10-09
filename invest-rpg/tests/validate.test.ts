@@ -96,22 +96,40 @@ describe('콘텐츠 점검 (lint:content)', () => {
     expect(r.some((i) => i.rule === 'pool' && i.message.includes('core 테마 25개'))).toBe(true);
   });
 
-  it('가상 시대(중립 종목명)는 금지어 점검을 통과한다', () => {
-    expect(lintWords(makeSpecEra({ id: 'w' }))).toEqual([]);
+  it('가상 시대는 금지어 점검에서 고칠 것(오류)이 없다 (경고는 있을 수 있음)', () => {
+    expect(lintWords(makeSpecEra({ id: 'w' })).filter((i) => i.severity !== 'warning')).toEqual([]);
   });
 
-  it('종목명: 형식("2글자 수식어 + 업종"), 끝의 "주", 평가·전망 어감 단어를 잡는다', () => {
+  it('종목명: 한국어 "2글자 수식어 + 업종주", 영어 "... Stock", 평가·전망 어감 단어 금지, 방향 암시 단어는 경고', () => {
     const era = makeSpecEra({ id: 'w' });
-    const bad = (ko: string, desc = '선박을 만든다.') => lintWords({
-      ...era, stocks: [{ ...era.stocks[0]!, name: { ko, en: 'x' }, description: { ko: desc, en: 'x' } }], breaking: [], stories: [],
+    const check = (ko: string, en = 'Sea Shipyard Stock', desc = '선박을 만든다.') => lintWords({
+      ...era, stocks: [{ ...era.stocks[0]!, name: { ko, en }, description: { ko: desc, en: 'x' } }], breaking: [], stories: [],
     });
-    expect(bad('평화 방산')).toEqual([]);
-    expect(bad('온유 제약')).toEqual([]);
-    expect(bad('최강 방산').map((i) => i.rule)).toContain('stockName');
-    expect(bad('평화 방산주').map((i) => i.rule)).toContain('stockName');
-    expect(bad('평화방산').map((i) => i.rule)).toContain('stockName');
-    expect(bad('바다나라 조선').map((i) => i.rule)).toContain('stockName');
-    expect(bad('바다 조선', '앞으로 성장이 유망한 회사다.').map((i) => i.rule)).toContain('stockDescription');
+    const errors = (...a: Parameters<typeof check>) => check(...a).filter((i) => i.severity !== 'warning').map((i) => i.rule);
+    const warnings = (...a: Parameters<typeof check>) => check(...a).filter((i) => i.severity === 'warning').map((i) => i.rule);
+    expect(errors('온유 제약주')).toEqual([]);
+    expect(errors('바다 조선주')).toEqual([]);
+    expect(errors('평화 방산주')).toEqual([]);
+    expect(warnings('평화 방산주')).toContain('stockNameHint'); // "평화"는 막지 않고 경고만
+    expect(errors('평화 방산')).toContain('stockName'); // '주'로 끝나야 함
+    expect(errors('최강 방산주')).toContain('stockName');
+    expect(errors('평화방산주')).toContain('stockName');
+    expect(errors('바다나라 조선주')).toContain('stockName'); // 수식어 2글자
+    expect(errors('바다 조선주', 'Sea Shipyard')).toContain('stockName'); // 영어는 Stock으로 끝남
+    expect(errors('바다 조선주', 'Sea Shipyard Stock', '앞으로 성장이 유망한 회사다.')).toContain('stockDescription');
+    expect(errors('바다 조선주', 'Sea Shipyard Stock', '가'.repeat(91))).toContain('stockDescription');
+    expect(warnings('바다 조선주', 'Sea Shipyard Stock', '가'.repeat(85))).toContain('stockDescription');
+    expect(errors('바다 조선주', 'Sea Shipyard Stock', '가'.repeat(85))).toEqual([]);
+  });
+
+  it('opener 스토리는 시대당 3개 이상, 단서 쪽 결과는 실제 역사', () => {
+    const era = makeSpecEra({ id: 'w' });
+    expect(lintEra(era).map((i) => i.rule)).not.toContain('opener');
+    const few = { ...era, stories: era.stories.map((s, i) => ({ ...s, opener: i < 2 })) };
+    expect(lintEra(few).map((i) => i.rule)).toContain('opener');
+    expect(lintEra(era).map((i) => i.rule)).not.toContain('leanHistorical');
+    const flipped = { ...era, stories: era.stories.map((s) => ({ ...s, outcomes: s.outcomes.map((o) => ({ ...o, isHistorical: !o.isHistorical })) })) };
+    expect(lintEra(flipped).map((i) => i.rule)).toContain('leanHistorical');
   });
 
   it('뉴스 제목·본문의 주가 방향 표현(호재·악재·수혜·수혜주·타격주·상승 예상·하락 예상)을 잡고, 사건 표현("유가 급등")은 허용', () => {

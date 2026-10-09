@@ -22,6 +22,12 @@ export const INERTIA_TICKS = 2;
 export const INERTIA_PROBS = { same: 50, opposite: 25, flat: 25 } as const;
 /** 뉴스와 다음 뉴스 사이 가격 한도(%). 발표 시점 가격 기준 ±30% */
 export const NEWS_BAND_PCT = 30;
+/** 시대 시작 후 뉴스가 나오지 않는 유예 시간(초). 7분 = 84틱. 가격은 평소처럼 움직인다 */
+export const GRACE_PERIOD_SEC = 420;
+/** 첫 뉴스 발표 시각(초). 유예가 끝나는 정확히 7분 */
+export const FIRST_NEWS_AT_SEC = 420;
+/** 첫 뉴스 종류: 항상 잠정 뉴스(스토리의 시작). opener 스토리 중에서 고른다 */
+export const FIRST_NEWS_TYPE = 'tentative' as const;
 /** 뉴스 간격(초): 4분 ~ 7분 */
 export const NEWS_GAP_MIN_SECONDS = 240;
 export const NEWS_GAP_MAX_SECONDS = 420;
@@ -66,9 +72,10 @@ export interface DrawRules {
   minCore: number;
   /** 뉴스가 이번 판에 쓰이려면 필요한 유효 영향 테마 최소 개수 */
   minEffectiveThemes: number;
-  /** 추첨 통과 조건: 사용 가능한 속보 / 스토리 최소 개수 */
+  /** 추첨 통과 조건: 사용 가능한 속보 / 스토리 / opener 스토리 최소 개수 */
   minBreaking: number;
   minStories: number;
+  minOpenerStories: number;
   /** 최대 재추첨 횟수 */
   maxAttempts: number;
 }
@@ -86,9 +93,12 @@ export interface GameConfig {
   /** 윈도우 안 누적 변동률(합)의 최대 크기 (0.1% 단위). 30 = ±3.0% */
   windowMaxRate: number;
 
-  /** 시대 시작 후 첫 뉴스가 뜨는 시점 범위(초) */
-  firstNewsMinSeconds: number;
-  firstNewsMaxSeconds: number;
+  /** 시대 시작 후 뉴스가 없는 유예 시간(초) */
+  gracePeriodSeconds: number;
+  /** 첫 뉴스 발표 시각(초). 유예 시간 이상이어야 한다 */
+  firstNewsAtSeconds: number;
+  /** 첫 뉴스 종류 ('tentative' = opener 스토리의 잠정 뉴스로 강제) */
+  firstNewsType: 'tentative' | 'any';
   /** 뉴스와 뉴스 사이 간격 범위(초) */
   newsGapMinSeconds: number;
   newsGapMaxSeconds: number;
@@ -154,8 +164,9 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
   tickMaxRate: toRate(MAX_TICK_MOVE),
   windowSeconds: WINDOW_TICKS * TICK_SECONDS,
   windowMaxRate: toRate(WINDOW_CAP),
-  firstNewsMinSeconds: 60,
-  firstNewsMaxSeconds: 180,
+  gracePeriodSeconds: GRACE_PERIOD_SEC,
+  firstNewsAtSeconds: FIRST_NEWS_AT_SEC,
+  firstNewsType: FIRST_NEWS_TYPE,
   newsGapMinSeconds: NEWS_GAP_MIN_SECONDS,
   newsGapMaxSeconds: NEWS_GAP_MAX_SECONDS,
   newsReactionTicks: NEWS_REACTION_TICKS,
@@ -181,6 +192,7 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
     minEffectiveThemes: 3,
     minBreaking: 10,
     minStories: 8,
+    minOpenerStories: 1,
     maxAttempts: 50,
   },
   startPrice: 1000,
@@ -200,8 +212,8 @@ export function makeConfig(overrides: Partial<GameConfig> = {}): GameConfig {
 export interface TickRules {
   ticksPerEra: number;
   windowTicks: number;
-  firstNewsMinTicks: number;
-  firstNewsMaxTicks: number;
+  gracePeriodTicks: number;
+  firstNewsTick: number;
   newsGapMinTicks: number;
   newsGapMaxTicks: number;
   reactionTicks: number;
@@ -225,8 +237,8 @@ export function getTickRules(config: GameConfig): TickRules {
   const r: TickRules = {
     ticksPerEra: toTicks(config, config.eraSeconds, 'eraSeconds'),
     windowTicks: toTicks(config, config.windowSeconds, 'windowSeconds'),
-    firstNewsMinTicks: toTicks(config, config.firstNewsMinSeconds, 'firstNewsMinSeconds'),
-    firstNewsMaxTicks: toTicks(config, config.firstNewsMaxSeconds, 'firstNewsMaxSeconds'),
+    gracePeriodTicks: toTicks(config, config.gracePeriodSeconds, 'gracePeriodSeconds'),
+    firstNewsTick: toTicks(config, config.firstNewsAtSeconds, 'firstNewsAtSeconds'),
     newsGapMinTicks: toTicks(config, config.newsGapMinSeconds, 'newsGapMinSeconds'),
     newsGapMaxTicks: toTicks(config, config.newsGapMaxSeconds, 'newsGapMaxSeconds'),
     reactionTicks: config.newsReactionTicks,
@@ -238,9 +250,9 @@ export function getTickRules(config: GameConfig): TickRules {
     autosaveTicks: toTicks(config, config.autosaveSeconds, 'autosaveSeconds'),
   };
   if (r.reactionTicks < 1) throw new Error('설정 오류: 뉴스 반영은 발표 후 1틱 이상이어야 함');
-  if (r.firstNewsMinTicks > r.firstNewsMaxTicks || r.newsGapMinTicks > r.newsGapMaxTicks) {
-    throw new Error('설정 오류: 뉴스 시점 범위의 최소가 최대보다 큼');
-  }
+  if (r.newsGapMinTicks > r.newsGapMaxTicks) throw new Error('설정 오류: 뉴스 간격의 최소가 최대보다 큼');
+  if (r.firstNewsTick < r.gracePeriodTicks) throw new Error('설정 오류: 첫 뉴스가 유예 시간 안에 있음');
+  if (r.firstNewsTick < 1) throw new Error('설정 오류: 첫 뉴스는 1틱 이후여야 함');
   const lastEffectTick = r.reactionTicks + config.indirectExtraDelayTicks + r.inertiaTicks;
   if (r.newsGapMinTicks <= lastEffectTick) {
     throw new Error('설정 오류: 뉴스 간격이 반영+관성 시간보다 짧으면 뉴스 효과가 겹침');

@@ -123,6 +123,11 @@ export interface Story {
   /** 잠정 뉴스 본문의 단서가 가리키는 결과 newsId (가중치가 큰 쪽) */
   leansTo: string;
   clues?: StoryClue[];
+  /**
+   * 시대 첫 뉴스로 쓸 수 있는 스토리 (초기 투자 방향을 잡기 좋게, 단서가 읽기 쉽고 사건이 직관적인 것).
+   * 시대 첫 뉴스(7분)는 사용 가능한 opener 스토리 중에서 시드 기반 무작위로 고른다. 시대당 3개 이상 권장
+   */
+  opener?: boolean;
   memo?: string;
 }
 
