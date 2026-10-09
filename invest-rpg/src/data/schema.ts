@@ -30,7 +30,7 @@ export interface Stock {
   description: LocalizedText;
 }
 
-/** 뉴스 영향 대상으로 쓰면 "모든 종목"에 적용되는 특별한 테마 id */
+/** 뉴스 영향 대상으로 쓰면 "모든 종목"에 적용되는 특별한 테마 id (가급적 테마별로 나눠 쓰는 것을 권장) */
 export const MARKET_THEME_ID = 'market';
 
 /**
@@ -41,18 +41,18 @@ export const MARKET_THEME_ID = 'market';
 export type EffectLink = 'direct' | 'indirect';
 
 export interface NewsEffect {
-  /** 테마 id, 또는 "market"(시장 전체: 모든 종목에 적용) */
+  /** 테마 id, 또는 "market"(모든 종목에 같은 값) */
   themeId: string;
-  /** 영향도: -10 ~ +10 정수. 변동률 = impact × 3%. 시장 영향과 테마 영향은 합산된다 */
+  /** 영향도: -10 ~ +10 정수. 실제 변동률 = 영향도 × 3% × 배율(무작위) */
   impact: number;
   link: EffectLink;
-  /** 해설: 왜 이 테마에 호재/악재인지 (연습 모드 '해설 보기'에 쓰임) */
-  explanation: LocalizedText;
+  /** 이 테마에 대한 한 줄 해설 (선택) */
+  explanation?: LocalizedText;
 }
 
-/** 뉴스의 사실 근거 메모 (검증용, 게임 화면에는 안 나옴) */
+/** 뉴스의 사실 근거 메모 (검증용, 게임 화면에는 안 나옴. 실명은 쓰지 않고 docs/ 팩트체크 문서에만 둔다) */
 export interface NewsSource {
-  /** 참고한 실제 사건 */
+  /** 참고한 실제 사건 (서술형) */
   event: string;
   /** 실제 사건 날짜 (YYYY, YYYY-MM, YYYY-MM-DD 등) */
   date: string;
@@ -60,40 +60,63 @@ export interface NewsSource {
   impactRationale: string;
   /** 사실관계나 수치가 확실하지 않으면 true ("확인 필요") */
   needsVerification: boolean;
-  /** 실제로는 일어나지 않은 가상의 결과면 true (스토리라인의 다른 갈래 등) */
-  fictional?: boolean;
 }
+
+/**
+ * 뉴스 종류
+ * - theme : 특정 테마들에 대한 뉴스
+ * - market: 시장 전체 뉴스 (금리·전쟁·유가·환율 등). 테마마다 방향이 다를 수 있다
+ */
+export type NewsCategory = 'theme' | 'market';
 
 export interface News {
   id: string;
+  /** 기본값 theme */
+  category?: NewsCategory;
   title: LocalizedText;
   /** 2~3줄 본문 */
   body: LocalizedText;
   effects: NewsEffect[];
+  /**
+   * 해설 (연습 모드 '해설 보기'). 3~4문장, 중학생 눈높이, 투자 권유 금지.
+   * 영향이 모두 직접(1차)인 뉴스(= 연습 모드에 나오는 뉴스)는 필수
+   */
+  explanation?: LocalizedText;
+  /** 결과 뉴스가 낌새와 반대로 반응할 때 그 이유를 설명하는 한 줄 (예: 소문에 사고 사실에 판다) */
+  reactionNote?: LocalizedText;
   source: NewsSource;
 }
 
-/** 스토리라인 결과의 방향 (상황이 나빠지는 쪽 / 좋아지는 쪽) */
-export type StorylineTone = 'positive' | 'negative';
-
-export interface StorylineBranch {
-  tone: StorylineTone;
-  /** 이 결과가 뽑힐 상대적 가중치 (기본 1). 두 갈래가 1:1이면 50% */
+/** 스토리 결과 후보 */
+export interface StoryOutcome {
+  /** story.news 안의 뉴스 id */
+  newsId: string;
+  /** 상대 가중치. 생략하면 실제 역사 쪽이 70%, 나머지가 30%를 나눠 갖는다 */
   weight?: number;
-  news: News;
+  /** 실제로 일어난 결과면 true. false면 화면에 "가상 시나리오" 태그 */
+  isHistorical: boolean;
+}
+
+/** 낌새와 결과 사이에 나오는 단서 뉴스. 실제로 뽑힌 결과를 가리킬 때만 나온다 */
+export interface StoryClue {
+  /** story.news 안의 뉴스 id */
+  newsId: string;
+  /** 이 단서가 암시하는 결과의 newsId */
+  pointsTo: string;
 }
 
 /**
- * 낌새 → 결과 스토리라인.
- * 낌새 뉴스(signals)가 순서대로 나온 뒤, 첫 낌새로부터 15분 안에
- * 결과 뉴스(branches 중 하나, 무작위)가 나온다.
+ * 낌새 → (단서) → 결과 스토리 (실전 모드 전용).
+ * 낌새 뉴스가 나온 뒤 15분 안의 뉴스 자리 중 하나에서 결과 뉴스가 나온다.
  */
 export interface Storyline {
   id: string;
-  /** 낌새 뉴스. 아직 확실하지 않으므로 영향도가 결과 뉴스보다 작아야 한다 */
-  signals: News[];
-  /** 가능한 결과들 (2개 이상) */
-  branches: StorylineBranch[];
+  /** 낌새 뉴스. 영향도 1~3. 본문에서 판단 근거가 읽히도록 쓴다 */
+  signal: News;
+  /** 결과·단서 뉴스 본문들 */
+  news: News[];
+  outcomes: StoryOutcome[];
+  clues?: StoryClue[];
   memo?: string;
 }
 
@@ -108,6 +131,11 @@ export interface Era {
   stocks: Stock[];
   /** 단독 뉴스 */
   newsPool: News[];
-  /** 낌새 → 결과 스토리라인 */
+  /** 낌새 → 결과 스토리 */
   storylines: Storyline[];
+}
+
+/** 영향이 모두 직접(1차)인 뉴스인가 (= 연습 모드에 나올 수 있는 뉴스) */
+export function isAllDirect(news: News): boolean {
+  return news.effects.length > 0 && news.effects.every((e) => e.link === 'direct');
 }

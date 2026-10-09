@@ -6,12 +6,12 @@ import type { Era, News, NewsEffect, Sentiment, Stock, Storyline, Theme } from '
 export interface MakeEraOptions {
   id?: string;
   order?: number;
-  /** 단독 뉴스 개수 (기본 50) */
+  /** 단독 뉴스 개수 (기본 50). 짝수 번째는 직접 뉴스(연습용), 홀수 번째는 간접 영향이 섞인 뉴스 */
   newsCount?: number;
-  /** 스토리라인 개수 (기본 0) */
+  /** 스토리 개수 (기본 0) */
   storylineCount?: number;
-  /** 스토리라인당 낌새 뉴스 수 (기본 1) */
-  signalsPerStoryline?: number;
+  /** 스토리에 단서 뉴스를 넣을지 (기본 false) */
+  withClues?: boolean;
   /** 단독 뉴스 i번째의 영향을 직접 정하고 싶을 때 */
   effectsFor?: (newsIndex: number, themeIds: string[]) => NewsEffect[];
 }
@@ -22,20 +22,46 @@ const SENTIMENTS: Sentiment[] = [
   ...Array<Sentiment>(6).fill('neutral'),
 ];
 
-const EXPLAIN = { ko: '해설', en: 'Explanation' };
+const EXPLANATION = { ko: '첫 문장이에요. 둘째 문장이에요. 셋째 문장이에요.', en: 'First. Second. Third.' };
 
 export function effect(themeId: string, impact: number, link: 'direct' | 'indirect' = 'direct'): NewsEffect {
-  return { themeId, impact, link, explanation: EXPLAIN };
+  return { themeId, impact, link };
 }
 
-export function makeNews(id: string, effects: NewsEffect[]): News {
-  return {
+export function makeNews(id: string, effects: NewsEffect[], extra: Partial<News> = {}): News {
+  const n: News = {
     id,
     title: { ko: `뉴스 ${id}`, en: `News ${id}` },
     body: { ko: '본문', en: 'Body' },
     effects,
     source: { event: 'fake', date: '2000', impactRationale: 'test', needsVerification: false },
+    ...extra,
   };
+  if (effects.length > 0 && effects.every((e) => e.link === 'direct') && !n.explanation) n.explanation = EXPLANATION;
+  return n;
+}
+
+export function makeStory(id: string, themeId: string, withClues = false): Storyline {
+  const story: Storyline = {
+    id,
+    signal: makeNews(`${id}-sig`, [effect(themeId, 2)]),
+    news: [
+      makeNews(`${id}-hist`, [effect(themeId, 7)]),
+      makeNews(`${id}-fict`, [effect(themeId, -7)]),
+    ],
+    outcomes: [
+      { newsId: `${id}-hist`, isHistorical: true },
+      { newsId: `${id}-fict`, isHistorical: false },
+    ],
+  };
+  if (withClues) {
+    story.news.push(makeNews(`${id}-clue-hist`, [effect(themeId, 1)]), makeNews(`${id}-clue-fict`, [effect(themeId, -1)]));
+    story.clues = [
+      { newsId: `${id}-clue-hist`, pointsTo: `${id}-hist` },
+      { newsId: `${id}-clue-fict`, pointsTo: `${id}-fict` },
+    ];
+  }
+  return story;
 }
 
 export function makeEra(options: MakeEraOptions = {}): Era {
@@ -55,26 +81,18 @@ export function makeEra(options: MakeEraOptions = {}): Era {
     description: { ko: '테스트용 종목', en: 'Test stock' },
   }));
 
-  // 기본: 뉴스 i는 테마 (i % 20)에 +5(1차), 테마 ((i+1) % 20)에 -4(2차)
-  const defaultEffects = (i: number): NewsEffect[] => [
-    effect(themeIds[i % 20]!, 5, 'direct'),
-    effect(themeIds[(i + 1) % 20]!, -4, 'indirect'),
-  ];
+  // 기본: 짝수 뉴스는 테마 (i % 20)에 +5(직접), 홀수 뉴스는 +5(직접)와 다음 테마 -4(간접)
+  const defaultEffects = (i: number): NewsEffect[] =>
+    i % 2 === 0
+      ? [effect(themeIds[i % 20]!, 5)]
+      : [effect(themeIds[i % 20]!, 5), effect(themeIds[(i + 1) % 20]!, -4, 'indirect')];
   const newsPool: News[] = Array.from({ length: newsCount }, (_, i) =>
     makeNews(`${id}-n${i}`, options.effectsFor ? options.effectsFor(i, themeIds) : defaultEffects(i)),
   );
 
-  const signalsPer = options.signalsPerStoryline ?? 1;
-  const storylines: Storyline[] = Array.from({ length: options.storylineCount ?? 0 }, (_, i) => ({
-    id: `${id}-story${i}`,
-    signals: Array.from({ length: signalsPer }, (_, k) =>
-      makeNews(`${id}-story${i}-sig${k}`, [effect(themeIds[i % 20]!, 2)]),
-    ),
-    branches: [
-      { tone: 'positive' as const, news: makeNews(`${id}-story${i}-pos`, [effect(themeIds[i % 20]!, 7)]) },
-      { tone: 'negative' as const, news: makeNews(`${id}-story${i}-neg`, [effect(themeIds[i % 20]!, -7)]) },
-    ],
-  }));
+  const storylines = Array.from({ length: options.storylineCount ?? 0 }, (_, i) =>
+    makeStory(`${id}-story${i}`, themeIds[i % 20]!, options.withClues),
+  );
 
   return {
     id,

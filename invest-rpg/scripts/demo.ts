@@ -26,19 +26,21 @@ const clock = (tick: number) => {
   const s = tick * game.config.tickSeconds;
   return `${Math.floor(s / 3600)}:${String(Math.floor((s % 3600) / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 };
-const KIND = { standalone: '속보', signal: '낌새', outcome: '결과' } as const;
+const KIND = { standalone: '속보', signal: '낌새', clue: '단서', outcome: '결과' } as const;
 
 function onNews(s: ScheduledNews) {
-  console.log(`[${clock(s.tick)}] (${KIND[s.kind]}) ${s.news.title.ko}`);
-  for (const g of game.getNewsGuide(s.news)) {
-    const tag = g.link === 'direct' ? '1차' : '2차';
-    console.log(`           ${g.direction === 'positive' ? '▲' : '▼'} ${g.name.ko} (${tag}) — ${g.explanation.ko}`);
-  }
+  const popup = game.getNewsPopup(s);
+  const fiction = popup.isHistorical ? '' : ' [가상 시나리오]';
+  console.log(`[${clock(s.tick)}] (${KIND[s.kind]}) ${s.news.title.ko}${fiction}`);
+  const themes = popup.relatedThemes.map((t) => `${t.direction === 'positive' ? '▲' : '▼'}${t.name.ko}${t.link === 'direct' ? '' : '(2차)'}`);
+  console.log(`           관련 테마: ${themes.join(' ')}`);
+  if (popup.explanation) console.log(`           해설: ${popup.explanation.ko}`);
+  if (popup.reactionNote) console.log(`           반응: ${popup.reactionNote.ko}`);
 }
 
 function trade(s: ScheduledNews) {
   for (const h of game.account.getHoldings()) game.sell(h.stockId, h.quantity);
-  const best = [...s.news.effects].filter((e) => e.themeId !== 'market').sort((a, b) => b.impact - a.impact)[0];
+  const best = [...s.news.effects].sort((a, b) => b.impact - a.impact)[0];
   const id = best && best.impact > 0 ? stockOfTheme(best.themeId) : undefined;
   if (!id) {
     console.log('           → 호재 종목이 없어 현금 보유');
@@ -53,7 +55,7 @@ function trade(s: ScheduledNews) {
 
 console.log(`\n=== ${localize(era.displayName, 'ko')} | ${mode === 'practice' ? '연습' : '실전'} 모드 | 시드 ${seed} ===`);
 console.log(
-  `1틱 ${game.config.tickSeconds}초, 시대 ${game.rules.ticksPerEra}틱(2시간), 시작 자금 ${n(game.account.cash)} 비트\n`,
+  `1틱 ${game.config.tickSeconds}초, ${game.rules.ticksPerEra}틱(${(game.rules.ticksPerEra * game.config.tickSeconds) / 60}분), 시작 자금 ${n(game.account.cash)} 비트, 수수료 ${game.config.feeRate * 100}%\n`,
 );
 
 while (game.phase !== 'era-ended') {
@@ -90,7 +92,7 @@ while (game.phase !== 'era-ended') {
   if (r.settlement) {
     const st = r.settlement;
     console.log(`\n=== 시대 마감 (${clock(r.tick)}) — 보유 종목 자동 청산 ===`);
-    console.log(`시작 자산 ${n(st.startAssets)} → 종료 자산 ${n(st.endAssets)} 비트  (수익률 ${signed(st.returnPct, 2)}%)`);
+    console.log(`시작 자산 ${n(st.startCash)} → 종료 자산 ${n(st.endAssets)} 비트  (수익률 ${signed(st.returnPct, 2)}%)`);
     console.log(`이번 시대 뉴스 ${game.shownNews.length}개 (낌새 ${game.shownNews.filter((x) => x.kind === 'signal').length}개)`);
     console.log('\n시대 종료 시 종목 가격 (시작가 1,000)');
     for (const item of game.getStockList().sort((a, b) => b.price - a.price)) {

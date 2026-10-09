@@ -1,16 +1,18 @@
 // 주가 엔진: 한 시대 동안 종목 20개의 가격을 틱 단위로 움직인다.
 //
 // 규칙 요약
-// - 평소: 매 틱 종목별로 -3.0% ~ +3.0% (0.1% 단위) 랜덤 변동.
-// - 1분 윈도우 안 변동률 합이 ±3%를 넘지 않도록, 남은 한도 안으로 잘라낸다(clamp).
-// - 뉴스 반영 틱: 영향받는 종목은 랜덤 대신 "영향도 × 3%"가 정확히 적용되고,
-//   그 종목의 윈도우는 리셋되어 다음 틱부터 새 1분 윈도우가 시작된다.
-// - 뉴스 반영 후 관성: 이어지는 20초(4틱) 동안 각 틱은
-//   60% 같은 방향 / 20% 반대 방향 / 20% 변동 없음. 크기는 0.1~3.0% 랜덤, 1분 한도 적용.
+// - 평소: 매 틱 종목별로 -1.5% ~ +1.5% (0.1% 단위) 랜덤 변동.
+// - 1분(12틱) 윈도우 안 변동률 합이 ±3%를 넘지 않게 한다.
+//   넘으려 하면 한도에서 자르지(clamp) 않고, 넘친 만큼 반대 방향으로 튕겨낸다(반사, reflect).
+//   예) 남은 한도 +0.5%인데 +1.2%가 나오면 → 0.5 - (1.2 - 0.5) = -0.2%
+// - 뉴스 반영 틱: 영향받는 종목은 랜덤 대신 뉴스 엔진이 계산한 변동률(영향도×3%×배율)이 그대로 적용되고,
+//   그 종목의 윈도우는 리셋된다.
+// - 뉴스 반영 후 관성: 이어지는 20초(4틱) 동안 각 틱은 60% 같은 방향 / 20% 반대 / 20% 변동 없음.
+//   크기는 일반 틱 범위(0.1~1.5%) 안. 관성 틱은 1분 한도에서 제외하고, 관성이 끝나면 윈도우를 다시 리셋한다.
 // - 가격 = 정수, 최소 1. (반올림은 0.5에서 올림)
 
 import type { Stock } from '../data/schema.ts';
-import { getTickRules, type GameConfig, type TickRules } from './config.ts';
+import { getTickRules, type GameConfig, type GameMode, type TickRules } from './config.ts';
 import type { Rng } from './rng.ts';
 
 export type ChangeCause = 'random' | 'news' | 'momentum';
@@ -64,6 +66,19 @@ export function applyRate(price: number, rate: number, minPrice: number): number
   return Math.max(minPrice, Math.round((price * (1000 + rate)) / 1000));
 }
 
+/**
+ * 랜덤 변동을 1분 한도 안으로 넣는다. 한도를 넘으면 넘친 만큼 반대로 튕겨낸다(반사).
+ * 반사해도 범위를 벗어나는 드문 경우에만 마지막 안전장치로 자른다.
+ */
+export function reflectIntoWindow(wanted: number, windowSum: number, tickMax: number, windowMax: number): number {
+  const upper = windowMax - windowSum; // 위쪽으로 남은 한도
+  const lower = -windowMax - windowSum; // 아래쪽으로 남은 한도
+  let rate = wanted;
+  if (rate > upper) rate = 2 * upper - rate;
+  else if (rate < lower) rate = 2 * lower - rate;
+  return Math.max(Math.max(-tickMax, lower), Math.min(Math.min(tickMax, upper), rate));
+}
+
 export class PriceEngine {
   /** 마지막으로 끝난 틱 번호 (0 = 아직 한 번도 안 움직임) */
   tick = 0;
@@ -73,10 +88,10 @@ export class PriceEngine {
   private readonly config: GameConfig;
   private readonly rules: TickRules;
 
-  constructor(stocks: readonly Stock[], rng: Rng, config: GameConfig) {
+  constructor(stocks: readonly Stock[], rng: Rng, config: GameConfig, mode: GameMode = 'real') {
     this.rng = rng;
     this.config = config;
-    this.rules = getTickRules(config);
+    this.rules = getTickRules(config, mode);
     this.states = stocks.map((s) => ({
       stockId: s.id,
       themeId: s.themeId,
@@ -94,10 +109,11 @@ export class PriceEngine {
 
   /**
    * 한 틱 진행한다.
-   * @param themeImpacts 이번 틱에 반영할 뉴스 영향도 (테마 id → 영향도). 없으면 평소 변동만.
+   * @param newsRates 이번 틱에 반영할 뉴스 변동률 (테마 id → 0.1% 단위 변동률). 없으면 평소 변동만.
    */
-  step(themeImpacts?: ReadonlyMap<string, number>): TickResult {
+  step(newsRates?: ReadonlyMap<string, number>): TickResult {
     const c = this.config;
+    const maxNewsRate = c.impactMax * c.impactUnitRate;
     this.tick++;
     const changes: StockTickChange[] = [];
 
@@ -106,49 +122,39 @@ export class PriceEngine {
       // → 뉴스·관성 여부와 관계없이 다른 종목들의 난수 순서가 흔들리지 않는다.
       const drawn = this.rng.int(-c.tickMaxRate, c.tickMaxRate);
       const roll = this.rng.next();
-      const magnitude = this.rng.int(1, c.tickMaxRate);
+      const magnitude = this.rng.int(c.momentumRate[0], c.momentumRate[1]);
 
       const prevPrice = s.price;
-      const impact = themeImpacts?.get(s.themeId);
+      const newsRate = newsRates?.get(s.themeId);
       let rate: number;
       let cause: ChangeCause;
       let momentum: MomentumDecision | undefined;
 
-      if (impact !== undefined && impact !== 0) {
-        const clamped = Math.max(-c.impactMax, Math.min(c.impactMax, impact));
-        rate = clamped * c.impactUnitRate;
+      if (newsRate !== undefined && newsRate !== 0) {
+        rate = Math.max(-maxNewsRate, Math.min(maxNewsRate, newsRate));
         cause = 'news';
-        // 윈도우 리셋: 다음 틱부터 새 1분 윈도우. 관성 시작.
-        s.windowSum = 0;
-        s.windowElapsed = 0;
+        this.resetWindow(s);
         s.momentumLeft = this.rules.momentumTicks;
         s.momentumDir = rate > 0 ? 1 : -1;
-      } else {
-        if (s.windowElapsed >= this.rules.windowTicks) {
-          s.windowSum = 0;
-          s.windowElapsed = 0;
-        }
-        let wanted: number;
-        if (s.momentumLeft > 0) {
-          s.momentumLeft--;
-          cause = 'momentum';
-          if (roll < c.momentumKeepChance) {
-            momentum = 'keep';
-            wanted = s.momentumDir * magnitude;
-          } else if (roll < c.momentumKeepChance + c.momentumReverseChance) {
-            momentum = 'reverse';
-            wanted = -s.momentumDir * magnitude;
-          } else {
-            momentum = 'flat';
-            wanted = 0;
-          }
+      } else if (s.momentumLeft > 0) {
+        // 관성 구간: 1분 한도에서 제외
+        s.momentumLeft--;
+        cause = 'momentum';
+        if (roll < c.momentumKeepChance) {
+          momentum = 'keep';
+          rate = s.momentumDir * magnitude;
+        } else if (roll < c.momentumKeepChance + c.momentumReverseChance) {
+          momentum = 'reverse';
+          rate = -s.momentumDir * magnitude;
         } else {
-          cause = 'random';
-          wanted = drawn;
+          momentum = 'flat';
+          rate = 0;
         }
-        const lo = Math.max(-c.tickMaxRate, -c.windowMaxRate - s.windowSum);
-        const hi = Math.min(c.tickMaxRate, c.windowMaxRate - s.windowSum);
-        rate = Math.max(lo, Math.min(hi, wanted));
+        if (s.momentumLeft === 0) this.resetWindow(s); // 관성이 끝나면 새 1분 윈도우
+      } else {
+        if (s.windowElapsed >= this.rules.windowTicks) this.resetWindow(s);
+        rate = reflectIntoWindow(drawn, s.windowSum, c.tickMaxRate, c.windowMaxRate);
+        cause = 'random';
         s.windowSum += rate;
         s.windowElapsed++;
       }
@@ -165,6 +171,11 @@ export class PriceEngine {
     }
 
     return { tick: this.tick, changes };
+  }
+
+  private resetWindow(s: StockPriceState): void {
+    s.windowSum = 0;
+    s.windowElapsed = 0;
   }
 
   getPrice(stockId: string): number {

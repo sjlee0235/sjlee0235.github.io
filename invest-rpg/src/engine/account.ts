@@ -180,6 +180,15 @@ export class Account {
     return [...this.performance.values()].map((p) => ({ ...p }));
   }
 
+  /** 계좌를 처음 상태로 되돌린다 (현금 = cash, 보유·거래·성과 기록 모두 삭제) */
+  reset(cash: number): void {
+    this.cash = cash;
+    this.holdings.clear();
+    this.performance.clear();
+    this.trades.length = 0;
+    this.seq = 0;
+  }
+
   /** 새 시대 시작 시 호출: 종목별 성과 기록을 비운다 (현금·거래 기록은 유지) */
   resetPerformance(): void {
     this.performance.clear();
