@@ -441,8 +441,8 @@
         "en": "Nasdaq Plunges as the Dot-com Bubble Bursts"
       },
       "body": {
-        "ko": "미국 기술주 중심의 나스닥 지수가 사상 최고치를 찍은 지 한 달 만에 급락했다. 이익 없이 가입자 수만 내세우던 인터넷 기업들의 주가가 하루에 수십 퍼센트씩 빠지고 있다. 국내 벤처 종목들도 동반 하락세다.",
-        "en": "The tech-heavy Nasdaq has tumbled just a month after hitting a record high. Internet companies that boasted user counts but no profits are losing tens of percent in a single day. Korean venture stocks are falling in tandem."
+        "ko": "미국 기술주 중심의 나스닥 지수가 사상 최고치를 찍은 지 한 달 만에 급락했다. 이익 없이 가입자 수만 내세우던 인터넷 기업들의 주가가 하루에 수십 퍼센트씩 빠지고 있고, 반도체 등 기술주 전반도 동반 하락세다.",
+        "en": "The tech-heavy Nasdaq has tumbled just a month after hitting a record high. Internet companies that boasted user counts but no profits are losing tens of percent a day, and chipmakers and other tech stocks are falling with them."
       },
       "effects": [
         {
@@ -450,8 +450,8 @@
           "impact": -9,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "수익 없이 기대만으로 오른 인터넷 기업 주가가 거품이 꺼지며 직접 타격을 받는다.",
+            "en": "Internet stocks that rose on hope rather than profit take the direct hit as the bubble bursts."
           }
         },
         {
@@ -459,54 +459,220 @@
           "impact": -3,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "mobile",
-          "impact": -2,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "기사에 나온 대로 기술주 전반이 함께 팔리며 반도체도 하락한다.",
+            "en": "As the article says, tech stocks are sold across the board, chipmakers included."
           }
         },
         {
           "themeId": "investment-bank",
           "impact": -2,
-          "link": "direct",
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "벤처에 투자하고 상장을 주선하던 투자은행은 투자 손실과 일감 감소를 겪는다.",
+            "en": "Investment banks that funded and listed these ventures suffer losses and fewer deals."
           }
         }
       ],
       "source": {
         "event": "미국 닷컴 버블 붕괴 (국내 코스닥 동반 폭락)",
         "date": "2000-03",
-        "impactRationale": "나스닥 2000-03-10 종가 5,048.62로 고점 → 2002-10 1,114선까지 약 -78%. 2년에 걸친 하락을 뉴스 1개에 담기 위해 닷컴 -9(-27%)로 압축. 반도체·휴대폰 등 기술주 동반 약세 -2~-3. 국내 코스닥 2000년 연간 하락률(약 -80%)은 확인 필요.",
+        "impactRationale": "나스닥 2000-03-10 종가 5,048.62 고점 → 2002-10 1,114선 약 -78%. 2년 하락을 뉴스 1개에 압축해 닷컴 -9(-27%). 국내 코스닥 2000년 하락률(약 -80%)은 확인 필요.",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n02-sept-11",
+      "id": "2000s-n02-inter-korean-summit",
+      "title": {
+        "ko": "남북 정상 첫 만남…한반도에 화해 분위기",
+        "en": "First Inter-Korean Summit Brings a Mood of Reconciliation"
+      },
+      "body": {
+        "ko": "분단 이후 처음으로 남북 정상이 평양에서 만나 공동선언에 서명했다. 이산가족 상봉과 경제 협력을 확대하기로 했으며, 철도 연결 등 대규모 사업 구상도 거론되고 있다.",
+        "en": "For the first time since the division, the leaders of the two Koreas met in Pyongyang and signed a joint declaration. They agreed on family reunions and wider economic cooperation, and large projects such as reconnecting railways are being discussed."
+      },
+      "effects": [
+        {
+          "themeId": "market",
+          "impact": 1,
+          "link": "indirect",
+          "explanation": {
+            "ko": "전쟁 위험이 줄면 '코리아 디스카운트'가 완화되어 외국인 투자가 늘 수 있다.",
+            "en": "Lower war risk can ease the 'Korea discount' and draw more foreign investment."
+          }
+        },
+        {
+          "themeId": "defense",
+          "impact": -4,
+          "link": "indirect",
+          "explanation": {
+            "ko": "긴장이 풀리면 무기 수요와 국방 예산 증가 기대가 줄어든다.",
+            "en": "Easing tension lowers expectations for weapons demand and defense budgets."
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": 3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "철도·도로 연결 같은 경협 사업은 건설사의 새 일감이 될 수 있다.",
+            "en": "Cross-border rail and road projects could become new work for builders."
+          }
+        }
+      ],
+      "source": {
+        "event": "제1차 남북정상회담 (6·15 남북공동선언)",
+        "date": "2000-06-13 ~ 2000-06-15",
+        "impactRationale": "당일 증시 반응과 방산·건설 테마 등락폭은 확인 필요. 2차 해석 연습용으로 영향도를 작게 잡음.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n03-us-rate-cut",
+      "title": {
+        "ko": "미국, 깜짝 금리 인하…'돈 풀어 경기 살린다'",
+        "en": "U.S. Delivers Surprise Rate Cut to Revive the Economy"
+      },
+      "body": {
+        "ko": "미국 중앙은행이 정례 회의를 기다리지 않고 기준금리를 0.5%포인트 전격 인하했다. 시장에서는 돈이 풀리면서 주식 투자가 늘어날 것이라는 기대가 커지고 있다.",
+        "en": "The U.S. central bank cut its key rate by half a percentage point without waiting for its regular meeting. Markets expect cheaper money to push more cash into stocks."
+      },
+      "effects": [
+        {
+          "themeId": "market",
+          "impact": 2,
+          "link": "direct",
+          "explanation": {
+            "ko": "기사에 나온 대로 금리가 내려가면 예금 대신 주식으로 돈이 몰려 시장 전체가 오르기 쉽다.",
+            "en": "As the article notes, lower rates push money from deposits into stocks, lifting the whole market."
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": 3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "대출 이자가 싸지면 집을 사려는 사람이 늘어 건설·부동산 경기가 살아난다.",
+            "en": "Cheaper loans bring more home buyers, reviving construction and real estate."
+          }
+        },
+        {
+          "themeId": "investment-bank",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "증시가 살아나면 주식 거래와 기업 상장이 늘어 투자은행의 수입이 커진다.",
+            "en": "A livelier market means more trading and listings, boosting investment bank income."
+          }
+        }
+      ],
+      "source": {
+        "event": "미국 연준 기준금리 긴급 인하 (6.5% → 6.0%)",
+        "date": "2001-01-03",
+        "impactRationale": "2001년 한 해 11차례 인하로 6.5% → 1.75%. 발표 당일 나스닥 약 +14% 급등(확인 필요). 시장 +2(+6%).",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n04-dram-crash",
+      "title": {
+        "ko": "D램 값 1년 새 80% 폭락…반도체 업계 '혹한기'",
+        "en": "DRAM Prices Collapse 80% in a Year as Chipmakers Freeze"
+      },
+      "body": {
+        "ko": "PC 판매 부진으로 메모리 반도체 가격이 1년 만에 80% 넘게 떨어졌다. 반도체 회사들은 감산과 투자 축소를 검토하고 있다. 반면 부품값이 싸지면서 완제품 업체들은 원가 부담을 덜게 됐다.",
+        "en": "With PC sales slumping, memory chip prices have fallen more than 80% in a year. Chipmakers are weighing output and investment cuts, while device makers now pay less for parts."
+      },
+      "effects": [
+        {
+          "themeId": "semiconductor",
+          "impact": -6,
+          "link": "direct",
+          "explanation": {
+            "ko": "팔고 있는 메모리 칩 가격이 폭락하면 반도체 회사의 이익이 바로 줄어든다.",
+            "en": "When the price of the chips it sells collapses, a chipmaker's profit shrinks immediately."
+          }
+        },
+        {
+          "themeId": "mobile",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "휴대폰에 들어가는 메모리가 싸지면 휴대폰 회사의 원가가 내려간다.",
+            "en": "Cheaper memory means lower costs for phone makers that use it."
+          }
+        }
+      ],
+      "source": {
+        "event": "2001년 D램 가격 급락 (IT 버블 붕괴 후 PC 수요 감소)",
+        "date": "2001",
+        "impactRationale": "D램 현물가 2001년 중 대폭 하락(정확한 하락률 확인 필요). 반도체 -6(-18%).",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n05-imf-repaid",
+      "title": {
+        "ko": "IMF 구제금융 조기 상환…'외환위기 졸업'",
+        "en": "Korea Repays IMF Bailout Early, 'Graduating' from the Crisis"
+      },
+      "body": {
+        "ko": "정부가 외환위기 때 빌린 국제통화기금(IMF) 자금을 예정보다 3년 가까이 앞당겨 모두 갚았다. 국가 신용도가 올라가면서 외국인 투자자들의 관심이 다시 커지고 있다.",
+        "en": "The government has fully repaid the International Monetary Fund loans taken during the currency crisis, nearly three years ahead of schedule. With the country's credit standing up, foreign investors are returning."
+      },
+      "effects": [
+        {
+          "themeId": "market",
+          "impact": 2,
+          "link": "direct",
+          "explanation": {
+            "ko": "나라의 신용이 좋아졌다는 소식에 외국인 돈이 들어와 시장 전체가 힘을 받는다.",
+            "en": "Better national credit draws foreign money, supporting the whole market."
+          }
+        },
+        {
+          "themeId": "investment-bank",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "금융 시장에 대한 신뢰가 회복되면 금융회사의 자금 조달이 쉬워진다.",
+            "en": "Restored confidence in financial markets makes funding easier for financial firms."
+          }
+        }
+      ],
+      "source": {
+        "event": "한국, IMF 차입금 전액 조기 상환",
+        "date": "2001-08-23",
+        "impactRationale": "IMF 차입금 약 195억 달러 상환 완료(금액·당일 지수 반응 확인 필요). 상징적 뉴스라 시장 +2로 작게.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n06-sept-11",
       "title": {
         "ko": "미국 뉴욕 테러…세계 금융시장 충격",
         "en": "Terror Attacks on New York Shock Global Markets"
       },
       "body": {
-        "ko": "납치된 여객기들이 뉴욕과 워싱턴의 주요 건물에 충돌하는 사상 초유의 테러가 발생했다. 미국 증시는 거래를 중단했고, 항공·여행 수요가 얼어붙을 것이라는 전망이 나온다. 각국은 군사 대응과 안보 예산 확대를 검토하고 있다.",
-        "en": "Hijacked airliners have crashed into landmark buildings in New York and Washington in an unprecedented terror attack. U.S. stock markets have halted trading, and analysts expect air travel demand to freeze. Governments are weighing military responses and bigger security budgets."
+        "ko": "납치된 여객기들이 뉴욕과 워싱턴의 주요 건물에 충돌하는 사상 초유의 테러가 발생했다. 각국 증시가 폭락했고 항공·여행 예약 취소가 쏟아지고 있다. 군사 대응이 예고되면서 방산주와 안전자산인 금으로 돈이 몰린다.",
+        "en": "Hijacked airliners have crashed into landmark buildings in New York and Washington in an unprecedented terror attack. Stock markets have plunged and flight and travel bookings are being cancelled en masse. With military action expected, money is flowing into defense stocks and gold."
       },
       "effects": [
+        {
+          "themeId": "market",
+          "impact": -2,
+          "link": "direct",
+          "explanation": {
+            "ko": "큰 충격과 불확실성에 투자자들이 주식을 팔아 시장 전체가 떨어진다.",
+            "en": "Shock and uncertainty make investors dump stocks across the market."
+          }
+        },
         {
           "themeId": "airline",
           "impact": -9,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "여객기가 테러에 쓰이며 비행기 이용 공포와 예약 취소가 항공사를 직격한다.",
+            "en": "With airliners used as weapons, fear of flying and cancellations hit airlines directly."
           }
         },
         {
@@ -514,8 +680,8 @@
           "impact": -7,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "해외여행 취소가 쏟아지며 여행사 매출이 급감한다.",
+            "en": "A flood of trip cancellations slashes travel agency sales."
           }
         },
         {
@@ -523,8 +689,8 @@
           "impact": 6,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "군사 대응과 안보 예산 확대가 예고되어 방산 수요가 늘어난다.",
+            "en": "Expected military action and bigger security budgets raise demand for defense goods."
           }
         },
         {
@@ -532,36 +698,73 @@
           "impact": 4,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "investment-bank",
-          "impact": -3,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "불안할 때 가치가 유지되는 안전자산인 금으로 돈이 몰린다.",
+            "en": "Money flows into gold, a safe asset that holds value in turbulent times."
           }
         }
       ],
       "source": {
         "event": "9·11 테러",
         "date": "2001-09-11",
-        "impactRationale": "뉴욕증시 휴장 후 재개장일(2001-09-17) 다우 -7.1%(-684.81p). 국내 코스피 2001-09-12 약 -12% 폭락(확인 필요). 미국 항공주는 재개장 첫 주 수십 % 급락(정확한 폭 확인 필요) → 항공 -9(-27%). 방산 상승·금값 상승 폭은 확인 필요.",
+        "impactRationale": "뉴욕증시 휴장 후 재개장일(2001-09-17) 다우 -7.1%(-684.81p). 국내 코스피 2001-09-12 약 -12% 폭락(확인 필요). 항공주 급락 폭 확인 필요.",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n03-sars",
+      "id": "2000s-n07-world-cup",
+      "title": {
+        "ko": "한국, 월드컵 4강 신화…거리마다 붉은 물결",
+        "en": "Korea Reaches World Cup Semifinals as Streets Turn Red"
+      },
+      "body": {
+        "ko": "한국 축구대표팀이 사상 첫 월드컵 4강에 올랐다. 경기 날마다 수백만 명이 거리 응원에 나서면서 치킨과 맥주 주문이 폭주했고, 대회를 보러 온 외국인 관광객도 크게 늘었다.",
+        "en": "Korea's national football team has reached the World Cup semifinals for the first time. Millions pour into the streets on match days, chicken and beer orders are surging, and foreign visitors have increased sharply."
+      },
+      "effects": [
+        {
+          "themeId": "livestock",
+          "impact": 3,
+          "link": "direct",
+          "explanation": {
+            "ko": "응원 열기에 치킨 소비가 폭증하며 닭고기 업체 매출이 는다.",
+            "en": "Cheering crowds send chicken consumption soaring, lifting poultry sales."
+          }
+        },
+        {
+          "themeId": "travel",
+          "impact": 3,
+          "link": "direct",
+          "explanation": {
+            "ko": "대회를 보러 온 외국인 관광객이 늘어 관광 수요가 커진다.",
+            "en": "More foreign fans visiting for the tournament boost tourism demand."
+          }
+        },
+        {
+          "themeId": "hallyu",
+          "impact": 3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "세계에 한국이 알려지면 한국 드라마·음악에 대한 관심도 함께 커진다.",
+            "en": "Global attention on Korea raises interest in Korean dramas and music too."
+          }
+        }
+      ],
+      "source": {
+        "event": "2002 한일 월드컵 대한민국 4강 진출",
+        "date": "2002-06",
+        "impactRationale": "실제 증시 영향은 미미했다는 평가가 많음(확인 필요). 게임 연출용으로 영향도를 작게 잡음.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n08-sars",
       "title": {
         "ko": "사스 아시아 확산…WHO 여행 자제 권고",
         "en": "SARS Spreads Across Asia; WHO Advises Against Travel"
       },
       "body": {
-        "ko": "원인 불명의 중증 호흡기 질환이 중국 남부와 홍콩을 거쳐 아시아 전역으로 번지고 있다. 세계보건기구(WHO)는 이례적으로 특정 지역 여행 자제를 권고했다. 항공편 예약 취소가 잇따르는 가운데 백신·진단 관련 연구에 관심이 쏠리고 있다.",
-        "en": "A mysterious severe respiratory illness is spreading from southern China and Hong Kong across Asia. In a rare move, the World Health Organization has advised against travel to affected areas. As flight cancellations pile up, attention is turning to vaccine and diagnostic research."
+        "ko": "원인 불명의 중증 호흡기 질환이 중국 남부와 홍콩을 거쳐 아시아 전역으로 번지고 있다. 세계보건기구(WHO)는 이례적으로 특정 지역 여행 자제를 권고했고, 항공편 예약 취소가 잇따른다. 백신·진단 기업에는 관심이 쏠리고 있다.",
+        "en": "A mysterious severe respiratory illness is spreading from southern China and Hong Kong across Asia. The World Health Organization has taken the rare step of advising against travel to affected areas, and flight cancellations are piling up. Vaccine and diagnostics firms are drawing attention."
       },
       "effects": [
         {
@@ -569,8 +772,8 @@
           "impact": -7,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "여행 자제 권고로 해외여행 수요가 급감한다.",
+            "en": "The travel advisory sharply cuts demand for overseas trips."
           }
         },
         {
@@ -578,8 +781,8 @@
           "impact": -6,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "항공편 예약 취소가 쏟아져 항공사 매출이 줄어든다.",
+            "en": "Flight cancellations pile up and airline revenue falls."
           }
         },
         {
@@ -587,27 +790,27 @@
           "impact": 5,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "전염병이 돌면 백신·진단 키트 수요 기대가 커진다.",
+            "en": "An epidemic raises expectations for vaccine and test-kit demand."
           }
         }
       ],
       "source": {
         "event": "중증급성호흡기증후군(SARS) 유행",
         "date": "2003-03 ~ 2003-04",
-        "impactRationale": "WHO 국제 경보 2003-03-12, 여행 자제 권고 2003-04 초(날짜 확인 필요). WHO 집계 누적 약 8,096명 감염·774명 사망. 아시아 항공 여객 2003년 4~5월 급감(수치 확인 필요) → 여행 -7, 항공 -6. 실제로 사스 백신은 상용화되지 않았으므로 백신 +5는 '기대감' 수준으로 낮게 잡음.",
+        "impactRationale": "WHO 국제 경보 2003-03-12, 여행 자제 권고 2003-04 초(날짜 확인 필요). 누적 약 8,096명 감염·774명 사망. 실제 사스 백신은 상용화되지 않아 백신 +5는 기대감 수준.",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n04-card-crisis",
+      "id": "2000s-n09-card-crisis",
       "title": {
         "ko": "카드 연체율 사상 최고…'신용불량자 300만 시대'",
         "en": "Card Delinquencies Hit Record as Defaulters Top 3 Million"
       },
       "body": {
-        "ko": "길거리 모집으로 무분별하게 발급된 신용카드의 빚이 한꺼번에 터지고 있다. 대형 카드사가 유동성 위기에 빠져 채권단에 지원을 요청했고, 소비 심리도 급격히 얼어붙었다. 정부는 카드사 건전성 규제를 대폭 강화하기로 했다.",
-        "en": "Debt from credit cards handed out freely at street booths is coming due all at once. A major card issuer has run short of cash and asked its creditors for a rescue, and consumer sentiment has frozen. The government plans to sharply tighten rules on card companies."
+        "ko": "길거리 모집으로 무분별하게 발급된 신용카드의 빚이 한꺼번에 터지고 있다. 대형 카드사가 유동성 위기에 빠져 채권단에 지원을 요청했다. 정부는 카드사 규제를 대폭 강화하기로 했다.",
+        "en": "Debt from credit cards handed out freely at street booths is coming due all at once. A major card issuer has run short of cash and asked creditors for a rescue. The government plans to sharply tighten rules on card companies."
       },
       "effects": [
         {
@@ -615,54 +818,137 @@
           "impact": -8,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "investment-bank",
-          "impact": -3,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "빌려준 돈을 못 받는 연체가 늘면 카드사가 직접 손실을 본다.",
+            "en": "Rising unpaid balances mean direct losses for card companies."
           }
         },
         {
           "themeId": "travel",
           "impact": -2,
-          "link": "direct",
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "빚 부담에 사람들이 지갑을 닫으면 여행 같은 여가 소비부터 줄인다.",
+            "en": "When people cut back under debt, leisure spending like travel goes first."
           }
         },
         {
           "themeId": "auto",
           "impact": -2,
-          "link": "direct",
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "할부로 사던 자동차 같은 큰 물건의 소비가 위축된다.",
+            "en": "Big-ticket purchases bought on installments, like cars, slow down."
+          }
+        },
+        {
+          "themeId": "investment-bank",
+          "impact": -2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "카드사에 돈을 빌려준 금융회사들도 손실을 걱정하게 된다.",
+            "en": "Financial firms that lent to card companies face possible losses too."
           }
         }
       ],
       "source": {
-        "event": "국내 신용카드 대란 (2003-11 대형 카드사 LG카드 유동성 위기·채권단 지원)",
+        "event": "국내 신용카드 대란 (2003-11 LG카드 유동성 위기)",
         "date": "2003",
-        "impactRationale": "신용불량자 2003년 말 약 370만 명대(확인 필요). 카드사 주가 고점 대비 큰 폭 하락(폭 확인 필요) → 카드 -8(-24%). 금융권 부실 우려 -3, 소비 위축으로 여행·자동차 -2.",
+        "impactRationale": "신용불량자 2003년 말 약 370만 명대(확인 필요). 카드사 주가 하락 폭 확인 필요 → 카드 -8.",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n05-hallyu-japan",
+      "id": "2000s-n10-bird-flu",
+      "title": {
+        "ko": "국내 첫 고병원성 조류독감…닭·오리 대량 살처분",
+        "en": "Korea's First Deadly Bird Flu Outbreak Leads to Mass Culling"
+      },
+      "body": {
+        "ko": "충북의 한 농장에서 고병원성 조류인플루엔자가 확인돼 방역 당국이 주변 가금류를 살처분하고 있다. 닭고기·계란 소비가 급감하면서 축산 업체의 피해가 커지고 있다.",
+        "en": "Highly pathogenic avian influenza has been confirmed at a farm in North Chungcheong, and authorities are culling poultry in the area. Chicken and egg consumption has plunged, deepening losses for livestock firms."
+      },
+      "effects": [
+        {
+          "themeId": "livestock",
+          "impact": -7,
+          "link": "direct",
+          "explanation": {
+            "ko": "가축 살처분과 소비 급감으로 축산 업체 매출이 직접 줄어든다.",
+            "en": "Culling and collapsing demand directly cut livestock sales."
+          }
+        },
+        {
+          "themeId": "vaccine",
+          "impact": 3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "사람 감염에 대비해 백신·치료제를 비축하자는 목소리가 커질 수 있다.",
+            "en": "Calls to stockpile vaccines and antivirals in case of human infection may grow."
+          }
+        }
+      ],
+      "source": {
+        "event": "국내 첫 고병원성 조류인플루엔자(H5N1) 발생 (충북 음성)",
+        "date": "2003-12",
+        "impactRationale": "정확한 발생일과 살처분 규모, 관련주 하락 폭 확인 필요 → 축산 -7.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n11-ktx-opens",
+      "title": {
+        "ko": "고속철도 개통…서울~부산 2시간대 시대",
+        "en": "High-Speed Rail Opens, Putting Seoul–Busan Under Three Hours"
+      },
+      "body": {
+        "ko": "고속철도가 개통되면서 서울에서 부산까지 2시간대에 갈 수 있게 됐다. 항공 국내선 승객이 크게 줄 것으로 예상되며, 주말 국내 여행 수요는 늘어날 전망이다.",
+        "en": "With high-speed rail now open, Seoul to Busan takes under three hours. Domestic air passengers are expected to fall sharply, while weekend domestic trips are likely to rise."
+      },
+      "effects": [
+        {
+          "themeId": "airline",
+          "impact": -4,
+          "link": "direct",
+          "explanation": {
+            "ko": "기사에 나온 대로 기차가 빨라지면 국내선 비행기 승객이 기차로 옮겨 간다.",
+            "en": "As the article says, faster trains pull passengers away from domestic flights."
+          }
+        },
+        {
+          "themeId": "travel",
+          "impact": 3,
+          "link": "direct",
+          "explanation": {
+            "ko": "이동이 편해지면 주말 국내 여행 상품 수요가 늘어난다.",
+            "en": "Easier travel boosts demand for weekend domestic tours."
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "역 주변 개발과 추가 노선 공사로 건설 일감이 생긴다.",
+            "en": "Station-area development and new lines create construction work."
+          }
+        }
+      ],
+      "source": {
+        "event": "KTX 개통",
+        "date": "2004-04-01",
+        "impactRationale": "개통 후 서울-대구·부산 항공 국내선 수요 감소(감소율 확인 필요).",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n12-hallyu-japan",
       "title": {
         "ko": "한국 드라마 일본 열풍…촬영지마다 관광객 북적",
         "en": "Korean Drama Craze in Japan Sends Tourists Flocking"
       },
       "body": {
-        "ko": "일본 공영방송에서 방영된 한국 드라마가 폭발적인 인기를 끌면서 촬영지를 찾는 일본인 관광객이 급증하고 있다. 한국 배우의 음반과 화보, 관련 상품 매출도 크게 늘었다. 업계는 한류가 일시적 유행을 넘어 하나의 산업이 되고 있다고 평가한다.",
-        "en": "A Korean drama aired on Japan's public broadcaster has become a sensation, and Japanese tourists are pouring into its filming locations. Sales of albums, photo books and merchandise featuring Korean actors have surged. The industry says the Korean Wave is becoming a business, not a passing fad."
+        "ko": "일본 공영방송에서 방영된 한국 드라마가 폭발적인 인기를 끌면서 촬영지를 찾는 일본인 관광객이 급증하고 있다. 한국 배우의 음반과 화보 매출도 크게 늘었다.",
+        "en": "A Korean drama aired on Japan's public broadcaster has become a sensation, and Japanese tourists are pouring into its filming locations. Sales of albums and photo books featuring Korean actors have surged."
       },
       "effects": [
         {
@@ -670,8 +956,8 @@
           "impact": 8,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "드라마·배우 관련 판권과 상품이 팔리면서 엔터테인먼트 회사 매출이 는다.",
+            "en": "Rights and merchandise sales from the drama lift entertainment companies."
           }
         },
         {
@@ -679,128 +965,128 @@
           "impact": 4,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "촬영지를 찾는 관광객이 늘어 여행 상품이 잘 팔린다.",
+            "en": "More visitors to filming sites mean more tour packages sold."
           }
         },
         {
           "themeId": "airline",
           "impact": 2,
-          "link": "direct",
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "관광객이 비행기로 오기 때문에 한일 노선 승객도 함께 늘어난다.",
+            "en": "Since tourists fly in, Korea–Japan routes see more passengers."
           }
         }
       ],
       "source": {
-        "event": "드라마 '겨울연가' 일본 NHK 방영으로 한류 붐 (2003 위성 방송, 2004 지상파 방송)",
+        "event": "드라마 '겨울연가' 일본 NHK 방영으로 한류 붐 (2003 위성, 2004 지상파)",
         "date": "2004-04",
-        "impactRationale": "2004년 일본인 방한 관광객 증가(수치 확인 필요). 엔터테인먼트 관련 코스닥 종목 급등(폭 확인 필요) → 한류 +8(+24%). 관광 수요 증가로 여행 +4, 항공 +2.",
+        "impactRationale": "2004년 일본인 방한 관광객 증가(수치 확인 필요). 엔터 관련주 급등 폭 확인 필요 → 한류 +8.",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n06-stem-cell-scandal",
+      "id": "2000s-n13-online-game-china",
       "title": {
-        "ko": "세계적 줄기세포 논문 조작 의혹…연구 성과 '원점'",
-        "en": "Landmark Stem Cell Papers Suspected of Fabrication"
+        "ko": "국산 온라인게임, 중국서 동시접속 수십만…수출 신기록",
+        "en": "Korean Online Games Hit Hundreds of Thousands of Players in China"
       },
       "body": {
-        "ko": "세계적인 학술지에 실린 국내 연구팀의 인간 배아줄기세포 논문이 조작됐다는 의혹이 제기됐다. 대학 조사위원회는 핵심 데이터가 존재하지 않는다는 결론을 내렸다. 기대감에 급등했던 바이오 종목들이 일제히 폭락하고 있다.",
-        "en": "A Korean team's human embryonic stem cell papers, published in a leading journal, are suspected of being fabricated. A university panel has concluded that the key data do not exist. Biotech stocks that soared on hope are now collapsing across the board."
+        "ko": "국산 온라인 롤플레잉 게임이 중국에서 동시 접속자 수십만 명을 기록하며 게임 수출이 사상 최대를 기록했다. 업계는 아시아 시장 확대에 속도를 내고 있다.",
+        "en": "Korean online role-playing games are drawing hundreds of thousands of simultaneous players in China, pushing game exports to a record. The industry is accelerating its push into Asia."
       },
       "effects": [
         {
-          "themeId": "stem-cell",
-          "impact": -9,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "vaccine",
-          "impact": -2,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        }
-      ],
-      "source": {
-        "event": "황우석 연구팀 줄기세포 논문 조작 사건 (사이언스 2004·2005 논문)",
-        "date": "2005-12 ~ 2006-01",
-        "impactRationale": "2005-12 조작 의혹 확산, 서울대 조사위 2005-12-23 중간발표·2006-01-10 최종발표로 조작 확인. 줄기세포 테마주 고점 대비 큰 폭 하락(구체 폭 확인 필요) → 줄기세포 -9(-27%). 바이오 전반 심리 위축으로 백신 -2.",
-        "needsVerification": true
-      }
-    },
-    {
-      "id": "2000s-n07-nk-nuclear-test",
-      "title": {
-        "ko": "북한 첫 핵실험 강행…한반도 긴장 최고조",
-        "en": "North Korea Conducts First Nuclear Test"
-      },
-      "body": {
-        "ko": "북한이 지하 핵실험을 실시했다고 발표했다. 국내 증시는 장중 급락했고 원화 가치도 크게 떨어졌다. 정부는 긴급 안보회의를 소집하고 국방 태세를 강화했다.",
-        "en": "North Korea has announced that it carried out an underground nuclear test. Korean stocks fell sharply during the session and the won weakened. The government convened an emergency security meeting and raised its defense posture."
-      },
-      "effects": [
-        {
-          "themeId": "defense",
+          "themeId": "online-game",
           "impact": 7,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "해외 이용자가 늘면 게임 회사의 매출이 직접 늘어난다.",
+            "en": "More overseas players directly raise a game company's revenue."
           }
         },
         {
-          "themeId": "gold",
-          "impact": 3,
-          "link": "direct",
+          "themeId": "dotcom",
+          "impact": 2,
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "travel",
-          "impact": -3,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "investment-bank",
-          "impact": -2,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "인터넷으로 돈을 버는 성공 사례가 나오면 인터넷 기업 전반의 평가가 좋아진다.",
+            "en": "A proven way to make money online lifts how investors value internet firms overall."
           }
         }
       ],
       "source": {
-        "event": "북한 1차 핵실험",
-        "date": "2006-10-09",
-        "impactRationale": "당일 코스피 약 -2.4% 하락(확인 필요), 방산 관련주 급등(폭 확인 필요) → 방산 +7(+21%). 지정학 위험으로 금 +3, 외국인 관광 위축 우려로 여행 -3, 증시 하락으로 금융 -2.",
+        "event": "국산 MMORPG 중국 흥행과 게임 수출 증가",
+        "date": "2002 ~ 2004",
+        "impactRationale": "게임 수출액·동시접속자 수치 확인 필요. 특정 게임명은 쓰지 않음.",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n08-china-boom",
+      "id": "2000s-n14-hurricane-katrina",
+      "title": {
+        "ko": "초대형 허리케인, 미국 멕시코만 강타",
+        "en": "Massive Hurricane Slams the U.S. Gulf of Mexico Coast"
+      },
+      "body": {
+        "ko": "초대형 허리케인이 미국 남부 멕시코만 연안을 강타해 도시 대부분이 물에 잠겼다. 이 지역의 원유 생산 시설과 정유 공장 상당수가 가동을 멈췄다.",
+        "en": "A massive hurricane has struck the U.S. Gulf Coast, flooding most of a major city. Much of the region's oil production and many refineries have shut down."
+      },
+      "effects": [
+        {
+          "themeId": "refining",
+          "impact": 5,
+          "link": "indirect",
+          "explanation": {
+            "ko": "미국 정유 공장이 멈추면 휘발유 공급이 줄어 값이 오르고, 문을 연 다른 정유사의 이익이 커진다.",
+            "en": "With U.S. refineries offline, fuel supply drops and prices rise, fattening margins for refiners still running."
+          }
+        },
+        {
+          "themeId": "airline",
+          "impact": -3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "기름값이 오르면 항공유 비용이 늘어 항공사 이익이 줄어든다.",
+            "en": "Higher fuel prices raise jet fuel costs and squeeze airline profits."
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "피해 지역 복구 공사로 건설 수요가 생긴다.",
+            "en": "Rebuilding the damaged region creates construction demand."
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "복구 공사에 철근 같은 자재가 많이 필요해진다.",
+            "en": "Reconstruction needs large amounts of materials like steel rebar."
+          }
+        }
+      ],
+      "source": {
+        "event": "허리케인 카트리나 상륙",
+        "date": "2005-08-29",
+        "impactRationale": "직후 WTI 장중 70달러 돌파(2005-08-30, 확인 필요). 모두 2차 해석 영향.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n15-china-boom",
       "title": {
         "ko": "중국 경제 두 자릿수 성장…철강·선박 '없어서 못 판다'",
         "en": "China's Double-Digit Growth Leaves Steel and Ships in Short Supply"
       },
       "body": {
-        "ko": "중국이 올림픽을 앞둔 대규모 건설과 수출 확대로 두 자릿수 성장을 이어가고 있다. 철강 가격이 치솟고, 원자재를 실어 나를 배가 모자라 국내 조선소에는 수년 치 일감이 쌓였다. 증권가에서는 '중국 관련주'가 시장을 이끈다는 분석이 나온다.",
-        "en": "China keeps posting double-digit growth on pre-Olympic construction and booming exports. Steel prices are soaring, and with too few ships to carry raw materials, Korean shipyards have years of orders stacked up. Analysts say 'China plays' are now leading the market."
+        "ko": "중국이 올림픽을 앞둔 대규모 건설과 수출 확대로 두 자릿수 성장을 이어가고 있다. 철강 가격이 치솟고, 원자재를 실어 나를 배가 모자라 국내 조선소에는 수년 치 일감이 쌓였다.",
+        "en": "China keeps posting double-digit growth on pre-Olympic construction and booming exports. Steel prices are soaring, and with too few ships to carry raw materials, Korean shipyards have years of orders stacked up."
       },
       "effects": [
         {
@@ -808,8 +1094,8 @@
           "impact": 8,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "배 주문이 몰려 조선소에 수년 치 일감이 생긴다.",
+            "en": "A rush of ship orders fills shipyards with years of work."
           }
         },
         {
@@ -817,36 +1103,156 @@
           "impact": 7,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "중국 건설 붐으로 철강 수요와 가격이 함께 오른다.",
+            "en": "China's building boom lifts both steel demand and prices."
           }
         },
         {
           "themeId": "refining",
           "impact": 3,
-          "link": "direct",
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "공장과 배가 많이 돌아가면 석유 수요가 늘어 기름값이 오른다.",
+            "en": "More factories and ships running means more oil demand and higher fuel prices."
           }
         }
       ],
       "source": {
-        "event": "중국 고성장과 조선·철강 슈퍼사이클 (코스피 2000 첫 돌파 2007-07-25)",
+        "event": "중국 고성장과 조선·철강 슈퍼사이클",
         "date": "2007",
-        "impactRationale": "중국 2007년 GDP 성장률 약 14%(수정치 기준, 확인 필요). 국내 조선주 2007년 큰 폭 상승(폭 확인 필요) → 조선 +8(+24%), 철강 +7(+21%). 원자재 수요 증가로 정유 +3.",
+        "impactRationale": "중국 2007년 GDP 성장률 약 14%(수정치, 확인 필요). 국내 조선주 2007년 급등(폭 확인 필요).",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n09-oil-147",
+      "id": "2000s-n16-smartphone-unveiled",
+      "title": {
+        "ko": "미국 IT기업, 버튼 없는 터치스크린 휴대폰 공개",
+        "en": "U.S. Tech Firm Unveils Buttonless Touchscreen Phone"
+      },
+      "body": {
+        "ko": "미국의 한 IT 기업이 키패드 없이 화면을 손가락으로 조작하는 휴대폰을 공개했다. 인터넷과 음악 재생을 한 기기에 담았으며, 대용량 메모리를 탑재했다.",
+        "en": "A U.S. tech company has unveiled a phone with no keypad, controlled by touching the screen. It combines internet and music in one device and comes with large built-in memory."
+      },
+      "effects": [
+        {
+          "themeId": "mobile",
+          "impact": -3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "새로운 방식의 경쟁 제품이 나오면 기존 휴대폰 회사의 시장이 위협받는다.",
+            "en": "A new kind of rival product threatens existing phone makers' market share."
+          }
+        },
+        {
+          "themeId": "semiconductor",
+          "impact": 3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "대용량 메모리를 쓰는 기기가 늘면 메모리 반도체 수요가 커진다.",
+            "en": "More devices with large memory raise demand for memory chips."
+          }
+        }
+      ],
+      "source": {
+        "event": "미국 IT기업의 터치스크린 스마트폰 공개 (애플 아이폰)",
+        "date": "2007-01-09",
+        "impactRationale": "발표 당시 국내 휴대폰·반도체 주가 반응은 크지 않았을 수 있음(확인 필요). 2차 해석 연습용.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n17-korea-us-fta",
+      "title": {
+        "ko": "한미 FTA 타결…자동차 웃고 축산 울고",
+        "en": "Korea–U.S. Free Trade Deal Reached: Carmakers Cheer, Farmers Worry"
+      },
+      "body": {
+        "ko": "한국과 미국이 자유무역협정(FTA)을 타결했다. 자동차 관세가 사라져 미국 수출에 유리해진 반면, 값싼 미국산 고기가 들어오면서 국내 축산 농가의 피해가 우려된다.",
+        "en": "Korea and the United States have concluded a free trade agreement. Car tariffs will disappear, helping exports to the U.S., while cheaper American meat is expected to hurt domestic livestock farmers."
+      },
+      "effects": [
+        {
+          "themeId": "auto",
+          "impact": 5,
+          "link": "direct",
+          "explanation": {
+            "ko": "미국에 차를 팔 때 내던 관세가 없어져 가격 경쟁력이 생긴다.",
+            "en": "Without tariffs on cars sold in the U.S., Korean cars become more price-competitive."
+          }
+        },
+        {
+          "themeId": "livestock",
+          "impact": -5,
+          "link": "direct",
+          "explanation": {
+            "ko": "값싼 수입 고기와 경쟁해야 해서 국내 축산 업체가 불리해진다.",
+            "en": "Domestic livestock firms must now compete with cheaper imported meat."
+          }
+        },
+        {
+          "themeId": "market",
+          "impact": 1,
+          "link": "indirect",
+          "explanation": {
+            "ko": "무역이 늘면 경제 전반의 성장 기대가 조금 커진다.",
+            "en": "More trade slightly raises expectations for overall economic growth."
+          }
+        }
+      ],
+      "source": {
+        "event": "한미 FTA 협상 타결",
+        "date": "2007-04-02",
+        "impactRationale": "타결 당일 자동차·축산 관련주 반응 확인 필요.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n18-kospi-2000",
+      "title": {
+        "ko": "코스피 사상 첫 2,000 돌파…'펀드 열풍'",
+        "en": "KOSPI Tops 2,000 for the First Time Amid a Fund Craze"
+      },
+      "body": {
+        "ko": "종합주가지수가 사상 처음으로 2,000선을 넘어섰다. 적금 대신 주식형 펀드에 가입하는 사람이 급증하면서 증권사 창구가 붐비고 있다.",
+        "en": "The KOSPI has crossed 2,000 for the first time ever. People are piling into equity funds instead of savings accounts, and brokerage counters are packed."
+      },
+      "effects": [
+        {
+          "themeId": "market",
+          "impact": 2,
+          "link": "direct",
+          "explanation": {
+            "ko": "펀드로 들어온 돈이 주식을 사들이며 시장 전체가 오른다.",
+            "en": "Money pouring into funds buys stocks and lifts the whole market."
+          }
+        },
+        {
+          "themeId": "investment-bank",
+          "impact": 4,
+          "link": "direct",
+          "explanation": {
+            "ko": "거래와 펀드 가입이 늘면 증권·투자은행의 수수료 수입이 크게 는다.",
+            "en": "More trading and fund sales sharply raise brokerage and banking fees."
+          }
+        }
+      ],
+      "source": {
+        "event": "코스피 2,000 첫 돌파",
+        "date": "2007-07-25",
+        "impactRationale": "장중 2,000 돌파 일자 확인 필요. 시장 +2, 투자은행 +4.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n19-oil-147",
       "title": {
         "ko": "국제유가 배럴당 147달러 돌파…사상 최고치",
         "en": "Oil Breaks $147 a Barrel, an All-Time High"
       },
       "body": {
-        "ko": "국제유가가 사상 처음으로 배럴당 147달러를 넘어섰다. 항공사들은 유류할증료를 올리고 일부 노선을 줄이기 시작했으며, 대형차를 중심으로 자동차 판매도 급감하고 있다. 반면 정유사와 대체에너지 기업에는 투자자들의 관심이 몰리고 있다.",
-        "en": "Crude oil has topped $147 a barrel for the first time ever. Airlines are raising fuel surcharges and cutting routes, and car sales, especially of large models, are falling fast. Meanwhile, investors are piling into refiners and alternative energy firms."
+        "ko": "국제유가가 사상 처음으로 배럴당 147달러를 넘어섰다. 항공사들은 유류할증료를 올리고 일부 노선을 줄이기 시작했으며, 대형차를 중심으로 자동차 판매도 급감하고 있다. 반면 정유사와 태양광 등 대체에너지 기업에는 투자자들의 관심이 몰린다.",
+        "en": "Crude oil has topped $147 a barrel for the first time ever. Airlines are raising fuel surcharges and cutting routes, and car sales, especially of large models, are falling fast. Meanwhile, investors are piling into refiners and alternative energy firms such as solar."
       },
       "effects": [
         {
@@ -854,8 +1260,8 @@
           "impact": 7,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "원유값이 오르면 정유사가 가진 기름 재고의 가치와 판매 가격이 오른다.",
+            "en": "Rising crude lifts the value of refiners' inventory and their selling prices."
           }
         },
         {
@@ -863,8 +1269,8 @@
           "impact": -7,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "항공유 값이 비용의 큰 부분이라 유가 급등이 항공사 이익을 직접 깎는다.",
+            "en": "Jet fuel is a big cost, so an oil spike directly cuts airline profits."
           }
         },
         {
@@ -872,8 +1278,8 @@
           "impact": 5,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "기름이 비싸지면 태양광 같은 대체에너지가 상대적으로 경제성이 생긴다.",
+            "en": "Expensive oil makes alternatives like solar relatively more economical."
           }
         },
         {
@@ -881,36 +1287,36 @@
           "impact": -3,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "기름값 부담에 대형차를 중심으로 자동차 판매가 줄어든다.",
+            "en": "Fuel costs cut car sales, especially of large models."
           }
         },
         {
           "themeId": "travel",
-          "impact": -2,
-          "link": "direct",
+          "impact": -3,
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "유류할증료로 항공권이 비싸지면 해외여행 수요가 줄어든다.",
+            "en": "Fuel surcharges make plane tickets pricier, reducing overseas travel."
           }
         }
       ],
       "source": {
         "event": "WTI 장중 사상 최고 배럴당 147.27달러",
         "date": "2008-07-11",
-        "impactRationale": "WTI 2007년 초 50달러대 → 2008-07 147달러로 약 2.5배. 항공주는 연료비 부담으로 큰 폭 하락(폭 확인 필요) → 항공 -7, 정유 +7. 대체에너지 관심으로 태양광 +5. 대형차 판매 감소로 자동차 -3.",
+        "impactRationale": "WTI 2007년 초 50달러대 → 2008-07 147달러. 업종별 등락 폭 확인 필요.",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n10-green-growth",
+      "id": "2000s-n20-green-growth",
       "title": {
         "ko": "정부, '저탄소 녹색성장' 국가 비전 선포",
         "en": "Government Unveils 'Low-Carbon Green Growth' Vision"
       },
       "body": {
-        "ko": "정부가 앞으로의 국가 비전으로 '저탄소 녹색성장'을 제시했다. 태양광·풍력 등 신재생에너지에 대규모로 투자하고 관련 산업을 집중 육성하겠다는 계획이다. 발표 직후 신재생에너지 관련 종목들이 강세를 보였다.",
-        "en": "The government has named 'low-carbon green growth' as the nation's new long-term vision. It plans massive investment in solar, wind and other renewables, along with focused support for the industry. Renewable energy stocks rallied right after the announcement."
+        "ko": "정부가 앞으로의 국가 비전으로 '저탄소 녹색성장'을 제시했다. 태양광·풍력 등 신재생에너지에 대규모로 투자하고, 친환경 인프라 건설도 늘리겠다는 계획이다.",
+        "en": "The government has named 'low-carbon green growth' as the nation's long-term vision. It plans massive investment in solar, wind and other renewables, along with more eco-friendly infrastructure."
       },
       "effects": [
         {
@@ -918,109 +1324,201 @@
           "impact": 7,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "정부가 직접 태양광 투자를 늘린다고 했으니 관련 기업 일감이 늘어난다.",
+            "en": "The government is directly boosting solar investment, bringing more work to the industry."
           }
         },
         {
           "themeId": "refining",
           "impact": -2,
-          "link": "direct",
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "화석연료를 줄이는 방향이라 장기적으로 석유 수요가 줄어들 수 있다.",
+            "en": "A shift away from fossil fuels could reduce oil demand in the long run."
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "친환경 인프라를 짓는 공사가 건설사의 새 일감이 된다.",
+            "en": "Building green infrastructure creates new projects for builders."
           }
         }
       ],
       "source": {
         "event": "광복절 경축사 '저탄소 녹색성장' 국가비전 선포",
         "date": "2008-08-15",
-        "impactRationale": "녹색성장 테마주 발표 전후 급등(폭 확인 필요) → 태양광 +7(+21%). 화석연료 의존을 줄이는 방향이므로 정유 -2(작은 값, 근거 약함·확인 필요).",
+        "impactRationale": "녹색성장 테마주 급등 폭 확인 필요. 정유 -2는 근거 약함.",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n11-ib-bankruptcy",
+      "id": "2000s-n21-won-plunge",
       "title": {
-        "ko": "미국 4위 투자은행 파산…월가 '검은 월요일'",
-        "en": "Fourth-Largest U.S. Investment Bank Collapses on 'Black Monday'"
+        "ko": "원·달러 환율 1,500원 돌파…외환위기 이후 최고",
+        "en": "Won Plunges Past 1,500 per Dollar, Weakest Since the Currency Crisis"
       },
       "body": {
-        "ko": "150년이 넘는 역사를 가진 미국 대형 투자은행이 파산보호를 신청했다. 부실 주택담보대출에서 시작된 위기가 금융 시스템 전체로 번지면서 세계 증시가 일제히 폭락했다. 안전자산인 금으로 돈이 몰리고 있다.",
-        "en": "A major U.S. investment bank with more than 150 years of history has filed for bankruptcy protection. A crisis that began with bad mortgages is spreading through the entire financial system, sending stock markets worldwide into a tailspin. Money is rushing into gold as a safe haven."
+        "ko": "금융위기 여파로 원·달러 환율이 1,500원을 넘어섰다. 외국인 투자자들이 국내 주식을 팔고 달러를 챙겨 떠나면서 원화 가치가 급락하고 있다.",
+        "en": "In the wake of the financial crisis, the won has weakened past 1,500 per dollar. Foreign investors are selling Korean stocks and taking dollars out, sending the currency tumbling."
       },
       "effects": [
         {
-          "themeId": "investment-bank",
-          "impact": -10,
-          "link": "direct",
+          "themeId": "auto",
+          "impact": 4,
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "construction",
-          "impact": -6,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "credit-card",
-          "impact": -4,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "원화가 싸지면 해외에서 같은 값에 팔아도 원화로 바꾼 돈이 많아져 수출 기업이 유리하다.",
+            "en": "A cheaper won means exporters earn more won for the same overseas sale."
           }
         },
         {
           "themeId": "shipbuilding",
+          "impact": 3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "배는 달러로 팔기 때문에 원화 약세가 조선사 이익을 키운다.",
+            "en": "Ships are sold in dollars, so a weak won boosts shipbuilders' profits."
+          }
+        },
+        {
+          "themeId": "travel",
+          "impact": -5,
+          "link": "indirect",
+          "explanation": {
+            "ko": "달러가 비싸지면 해외여행 비용이 크게 올라 여행 수요가 줄어든다.",
+            "en": "An expensive dollar makes overseas trips far costlier, cutting demand."
+          }
+        },
+        {
+          "themeId": "airline",
           "impact": -4,
-          "link": "direct",
+          "link": "indirect",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "auto",
-          "impact": -3,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "gold",
-          "impact": 5,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "항공사는 비행기 리스료와 기름값을 달러로 내기 때문에 비용이 늘어난다.",
+            "en": "Airlines pay leases and fuel in dollars, so their costs rise."
           }
         }
       ],
       "source": {
-        "event": "리먼 브라더스 파산보호 신청 (서브프라임 글로벌 금융위기)",
-        "date": "2008-09-15",
-        "impactRationale": "당일 다우 -4.4%(-504.48p). 코스피는 추석 연휴 후 2008-09-16 약 -6.1%(확인 필요). 미국 금융주 폭락 → 투자은행 -10(-30%, 최대치). 부동산 부실 직격 건설 -6, 신용 경색으로 카드 -4, 선박 발주 급감으로 조선 -4, 소비 위축 자동차 -3. 안전자산 선호로 금 +5.",
+        "event": "원·달러 환율 1,500원대 (금융위기)",
+        "date": "2008-11",
+        "impactRationale": "1,500원 돌파 일자와 종가(2008-11 하순) 확인 필요. 모두 2차 해석 영향.",
         "needsVerification": true
       }
     },
     {
-      "id": "2000s-n12-h1n1-pandemic",
+      "id": "2000s-n22-china-stimulus",
+      "title": {
+        "ko": "중국, 4조 위안 경기부양책 발표…철도·도로 건설 대폭 확대",
+        "en": "China Unveils 4 Trillion Yuan Stimulus with Massive Rail and Road Building"
+      },
+      "body": {
+        "ko": "중국 정부가 금융위기에 맞서 4조 위안 규모의 경기부양책을 발표했다. 철도·도로·공항 등 인프라 건설을 크게 늘려 철강 등 원자재 수요가 다시 살아날 전망이다.",
+        "en": "China has announced a 4 trillion yuan stimulus package to fight the financial crisis. A huge expansion of railways, roads and airports is expected to revive demand for steel and other materials."
+      },
+      "effects": [
+        {
+          "themeId": "steel",
+          "impact": 6,
+          "link": "direct",
+          "explanation": {
+            "ko": "기사에 나온 대로 인프라 건설이 늘면 철강 수요가 크게 늘어난다.",
+            "en": "As the article says, more infrastructure building sharply raises steel demand."
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": 4,
+          "link": "indirect",
+          "explanation": {
+            "ko": "중국 인프라 공사에 국내 건설사가 참여하거나 건설 경기 전반이 살아날 수 있다.",
+            "en": "Korean builders may win Chinese projects, and construction sentiment improves overall."
+          }
+        },
+        {
+          "themeId": "shipbuilding",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "원자재 물동량이 늘면 이를 실어 나를 배 수요도 늘어난다.",
+            "en": "More raw materials to ship means more demand for ships."
+          }
+        },
+        {
+          "themeId": "market",
+          "impact": 1,
+          "link": "indirect",
+          "explanation": {
+            "ko": "세계 2위 경제가 돈을 풀면 위기 속 투자 심리가 조금 살아난다.",
+            "en": "A huge stimulus from a major economy lifts investor sentiment a little."
+          }
+        }
+      ],
+      "source": {
+        "event": "중국 4조 위안 경기부양책",
+        "date": "2008-11-09",
+        "impactRationale": "발표 직후 철강·건설주 반응 확인 필요.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n23-bok-rate-low",
+      "title": {
+        "ko": "한은, 기준금리 사상 최저 2%로 인하",
+        "en": "Bank of Korea Cuts Key Rate to a Record-Low 2%"
+      },
+      "body": {
+        "ko": "한국은행이 기준금리를 사상 최저인 연 2%로 내렸다. 금융위기로 얼어붙은 경기를 살리기 위한 조치로, 시장에서는 주식으로 돈이 돌아올 것이라는 기대가 나온다.",
+        "en": "The Bank of Korea has cut its key rate to a record-low 2%. The move aims to revive an economy frozen by the financial crisis, and markets expect money to flow back into stocks."
+      },
+      "effects": [
+        {
+          "themeId": "market",
+          "impact": 2,
+          "link": "direct",
+          "explanation": {
+            "ko": "금리가 낮아지면 예금 이자보다 주식 수익을 찾는 돈이 늘어 시장 전체에 호재다.",
+            "en": "Lower rates send money hunting for stock returns instead of deposit interest."
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": 3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "대출 이자가 내려가면 집을 사거나 짓는 수요가 늘어난다.",
+            "en": "Cheaper loans increase demand to buy and build homes."
+          }
+        },
+        {
+          "themeId": "credit-card",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "이자 부담이 줄면 카드 대금을 못 갚는 사람이 줄고 카드사 자금 조달 비용도 낮아진다.",
+            "en": "Lower interest means fewer defaults and cheaper funding for card companies."
+          }
+        }
+      ],
+      "source": {
+        "event": "한국은행 기준금리 2.0%로 인하",
+        "date": "2009-02-12",
+        "impactRationale": "인하 폭(2.5% → 2.0%) 확인 필요.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n24-h1n1-pandemic",
       "title": {
         "ko": "WHO, 신종 인플루엔자 '대유행' 선언…백신 확보 비상",
         "en": "WHO Declares Swine Flu a Pandemic as Nations Race for Vaccines"
       },
       "body": {
         "ko": "세계보건기구가 신종 인플루엔자 A(H1N1)에 대해 최고 경보 단계인 '대유행(팬데믹)'을 선언했다. 각국이 백신 확보 경쟁에 나서면서 백신 생산 기업에 주문이 밀려들고 있다. 여행 취소와 돼지고기 소비 기피도 이어지고 있다.",
-        "en": "The World Health Organization has raised its alert for the new H1N1 influenza to the highest level, declaring a pandemic. As countries scramble to secure vaccines, orders are flooding into vaccine makers. Trip cancellations and avoidance of pork are also spreading."
+        "en": "The World Health Organization has raised its alert for the new H1N1 influenza to the highest level, declaring a pandemic. As countries scramble for vaccines, orders are flooding into vaccine makers. Trip cancellations and avoidance of pork are also spreading."
       },
       "effects": [
         {
@@ -1028,8 +1526,8 @@
           "impact": 8,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "각국이 백신을 사려고 경쟁하니 백신 회사 주문이 크게 늘어난다.",
+            "en": "Countries racing to buy vaccines send orders soaring for vaccine makers."
           }
         },
         {
@@ -1037,17 +1535,8 @@
           "impact": -5,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
-          }
-        },
-        {
-          "themeId": "airline",
-          "impact": -4,
-          "link": "direct",
-          "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "전염병을 피하려 여행을 취소하는 사람이 늘어난다.",
+            "en": "More people cancel trips to avoid infection."
           }
         },
         {
@@ -1055,18 +1544,1035 @@
           "impact": -4,
           "link": "direct",
           "explanation": {
-            "ko": "(해설 작성 예정)",
-            "en": "(explanation TBD)"
+            "ko": "'돼지 독감'이라는 이름 때문에 돼지고기 소비를 꺼리게 된다.",
+            "en": "The 'swine flu' name makes people avoid pork."
+          }
+        },
+        {
+          "themeId": "airline",
+          "impact": -4,
+          "link": "indirect",
+          "explanation": {
+            "ko": "여행이 줄면 비행기를 타는 사람도 줄어 항공사 매출이 감소한다.",
+            "en": "Fewer trips mean fewer flyers and lower airline revenue."
           }
         }
       ],
       "source": {
         "event": "WHO 신종플루(H1N1) 대유행 6단계 선언",
         "date": "2009-06-11",
-        "impactRationale": "국내 백신 생산 관련 종목 2009년 급등(폭 확인 필요) → 백신 +8(+24%). '돼지 인플루엔자' 명칭 탓에 돼지고기 소비 위축 → 축산 -4. 해외여행 수요 감소로 여행 -5, 항공 -4.",
+        "impactRationale": "국내 백신 관련주 2009년 급등 폭 확인 필요.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n25-stem-cell-scandal",
+      "title": {
+        "ko": "세계적 줄기세포 논문 조작 의혹…연구 성과 '원점'",
+        "en": "Landmark Stem Cell Papers Suspected of Fabrication"
+      },
+      "body": {
+        "ko": "세계적인 학술지에 실린 국내 연구팀의 인간 배아줄기세포 논문이 조작됐다는 의혹이 제기됐다. 대학 조사위원회는 핵심 데이터가 존재하지 않는다는 결론을 내렸다. 기대감에 급등했던 줄기세포 관련 종목들이 일제히 폭락하고 있다.",
+        "en": "A Korean team's human embryonic stem cell papers, published in a leading journal, are suspected of being fabricated. A university panel has concluded that the key data do not exist. Stem cell stocks that soared on hope are now collapsing."
+      },
+      "effects": [
+        {
+          "themeId": "stem-cell",
+          "impact": -9,
+          "link": "direct",
+          "explanation": {
+            "ko": "주가를 떠받치던 연구 성과가 거짓으로 드러나 기대가 한꺼번에 사라진다.",
+            "en": "The research that propped up the stocks turns out to be false, erasing expectations at once."
+          }
+        },
+        {
+          "themeId": "vaccine",
+          "impact": -2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "바이오 업계 전체에 대한 신뢰가 떨어져 다른 제약·바이오 종목도 팔린다.",
+            "en": "Trust in biotech as a whole drops, so other pharma and bio stocks are sold too."
+          }
+        }
+      ],
+      "source": {
+        "event": "황우석 연구팀 줄기세포 논문 조작 사건",
+        "date": "2005-12 ~ 2006-01",
+        "impactRationale": "서울대 조사위 2005-12-23 중간발표·2006-01-10 최종발표. 테마주 하락 폭 확인 필요. (실명은 메모에만 기록)",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n26-stem-cell-paper",
+      "title": {
+        "ko": "국내 연구팀, 세계 최초 인간 배아줄기세포 배양 성공 발표",
+        "en": "Korean Team Claims World-First Human Embryonic Stem Cell Breakthrough"
+      },
+      "body": {
+        "ko": "국내 연구팀이 세계적 학술지에 인간 배아줄기세포를 배양하는 데 성공했다는 논문을 발표했다. 난치병 치료의 길이 열릴 것이라는 기대에 관련 종목이 들썩이고 있다.",
+        "en": "A Korean research team has published a paper in a leading journal claiming success in culturing human embryonic stem cells. Hopes of curing intractable diseases are lifting related stocks."
+      },
+      "effects": [
+        {
+          "themeId": "stem-cell",
+          "impact": 7,
+          "link": "direct",
+          "explanation": {
+            "ko": "치료제 개발 기대가 커지며 줄기세포 기업 주가가 오른다.",
+            "en": "Hopes for new treatments push stem cell company shares higher."
+          }
+        },
+        {
+          "themeId": "vaccine",
+          "impact": 2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "바이오 분야 전체에 대한 관심이 커지며 다른 제약·바이오 종목도 덩달아 오른다.",
+            "en": "Rising interest in biotech lifts other pharma and bio stocks as well."
+          }
+        }
+      ],
+      "source": {
+        "event": "줄기세포 논문 사이언스 게재 (이후 조작으로 판명)",
+        "date": "2004-02",
+        "impactRationale": "2004-02 사이언스 논문 게재. 이후 2005-12 조작 사건으로 이어짐. 테마주 상승 폭 확인 필요.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n27-us-automaker-bankrupt",
+      "title": {
+        "ko": "미국 대형 자동차 회사 파산보호 신청",
+        "en": "Major U.S. Automaker Files for Bankruptcy Protection"
+      },
+      "body": {
+        "ko": "100년 역사의 미국 대형 자동차 회사가 파산보호를 신청했다. 공장 폐쇄와 대규모 감원이 이어질 전망이다. 국내 증시도 투자 심리가 위축되며 약세를 보였다.",
+        "en": "A century-old U.S. automaker has filed for bankruptcy protection. Plant closures and mass layoffs are expected. Korean stocks also slipped as sentiment soured."
+      },
+      "effects": [
+        {
+          "themeId": "market",
+          "impact": -1,
+          "link": "direct",
+          "explanation": {
+            "ko": "큰 기업의 파산 소식에 투자 심리가 위축되어 시장 전체가 약해진다.",
+            "en": "News of a giant's bankruptcy dampens sentiment across the market."
+          }
+        },
+        {
+          "themeId": "auto",
+          "impact": 4,
+          "link": "indirect",
+          "explanation": {
+            "ko": "경쟁사가 무너지면 그 빈자리를 다른 자동차 회사가 차지할 수 있다(반사이익).",
+            "en": "When a rival collapses, other carmakers can win its customers."
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": -2,
+          "link": "indirect",
+          "explanation": {
+            "ko": "자동차 생산이 줄면 차체에 쓰이는 강판 수요도 줄어든다.",
+            "en": "Less car production means less demand for automotive steel sheet."
+          }
+        }
+      ],
+      "source": {
+        "event": "미국 GM 파산보호 신청",
+        "date": "2009-06-01",
+        "impactRationale": "국내 완성차의 미국 점유율 상승(반사이익) 여부와 주가 반응 확인 필요.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n28-nk-missile",
+      "title": {
+        "ko": "북한, 동해상으로 미사일 연속 발사",
+        "en": "North Korea Fires a Series of Missiles into the East Sea"
+      },
+      "body": {
+        "ko": "북한이 장거리 미사일을 포함해 여러 발의 미사일을 동해상으로 발사했다. 정부는 긴급 안보회의를 열었고, 증시는 장 초반 약세를 보였다.",
+        "en": "North Korea has fired several missiles, including a long-range one, into the East Sea. The government held an emergency security meeting, and stocks opened lower."
+      },
+      "effects": [
+        {
+          "themeId": "defense",
+          "impact": 4,
+          "link": "direct",
+          "explanation": {
+            "ko": "안보 위협이 커지면 국방력 강화 기대로 방산주가 오른다.",
+            "en": "A rising security threat lifts defense stocks on hopes of a stronger military."
+          }
+        },
+        {
+          "themeId": "market",
+          "impact": -1,
+          "link": "direct",
+          "explanation": {
+            "ko": "안보 불안에 투자자들이 위험을 줄이려 주식을 판다.",
+            "en": "Security worries make investors trim risky stocks."
+          }
+        }
+      ],
+      "source": {
+        "event": "북한 대포동 2호 등 미사일 발사",
+        "date": "2006-07-05",
+        "impactRationale": "당일 코스피·방산주 반응 확인 필요.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n29-grain-prices",
+      "title": {
+        "ko": "옥수수·콩 국제가격 사상 최고…'애그플레이션' 공포",
+        "en": "Corn and Soybean Prices Hit Records Amid 'Agflation' Fears"
+      },
+      "body": {
+        "ko": "국제 곡물 가격이 사상 최고치를 경신했다. 바이오 연료 수요 증가와 이상 기후가 겹친 탓이다. 밀가루와 식용유 등 식료품 가격이 줄줄이 오르고 있다.",
+        "en": "Global grain prices have hit record highs as demand for biofuels and extreme weather collide. Prices of flour, cooking oil and other groceries are rising one after another."
+      },
+      "effects": [
+        {
+          "themeId": "livestock",
+          "impact": -5,
+          "link": "indirect",
+          "explanation": {
+            "ko": "옥수수·콩은 가축 사료의 원료라 사료값이 올라 축산 업체 비용이 커진다.",
+            "en": "Corn and soy are livestock feed, so higher prices raise farmers' costs."
+          }
+        },
+        {
+          "themeId": "market",
+          "impact": -1,
+          "link": "indirect",
+          "explanation": {
+            "ko": "물가가 오르면 금리 인상 걱정이 생겨 시장 전체에 부담이 된다.",
+            "en": "Rising prices raise fears of rate hikes, weighing on the whole market."
+          }
+        }
+      ],
+      "source": {
+        "event": "2007~2008 세계 식량가격 위기",
+        "date": "2008-04",
+        "impactRationale": "곡물가 최고치 시점(품목별 상이) 확인 필요. 모두 2차 해석 영향.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n30-china-wto",
+      "title": {
+        "ko": "중국, WTO 공식 가입…'세계의 공장' 문 활짝",
+        "en": "China Formally Joins the WTO, Opening the 'World's Factory'"
+      },
+      "body": {
+        "ko": "중국이 세계무역기구(WTO)에 정식 가입했다. 관세가 낮아지고 외국 기업의 진출이 쉬워지면서 중국의 수출과 생산이 크게 늘 전망이다.",
+        "en": "China has formally joined the World Trade Organization. With lower tariffs and easier entry for foreign companies, China's exports and production are expected to grow sharply."
+      },
+      "effects": [
+        {
+          "themeId": "steel",
+          "impact": 3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "중국 공장과 도시가 커지면 철강 수요가 늘어난다.",
+            "en": "Growing Chinese factories and cities need more steel."
+          }
+        },
+        {
+          "themeId": "shipbuilding",
+          "impact": 3,
+          "link": "indirect",
+          "explanation": {
+            "ko": "중국의 수출입이 늘면 화물을 나를 배가 더 필요해진다.",
+            "en": "More Chinese trade means more ships are needed to carry cargo."
+          }
+        },
+        {
+          "themeId": "market",
+          "impact": 1,
+          "link": "indirect",
+          "explanation": {
+            "ko": "가장 가까운 큰 시장이 열리면 한국 경제 전반에 기회가 생긴다.",
+            "en": "The opening of a huge neighboring market creates opportunities for Korea's economy."
+          }
+        }
+      ],
+      "source": {
+        "event": "중국 WTO 가입",
+        "date": "2001-12-11",
+        "impactRationale": "가입 당일 시장 반응은 작았을 수 있음(확인 필요). 장기적 영향을 2차 해석으로 압축.",
         "needsVerification": true
       }
     }
   ],
-  "storylines": []
+  "storylines": [
+    {
+      "id": "2000s-story-iraq-war",
+      "memo": "이라크전. 낌새 2개(공개 비난 → 병력 집결) 후 결과. 실제 결과(개전)는 '불확실성 해소' 반등을 반영.",
+      "signals": [
+        {
+          "id": "2000s-s1-iraq-sig1",
+          "title": {
+            "ko": "미국 대통령, 이라크 대량살상무기 개발 공개 비난",
+            "en": "U.S. President Publicly Accuses Iraq of Developing Weapons of Mass Destruction"
+          },
+          "body": {
+            "ko": "미국 대통령이 유엔 연설에서 이라크가 대량살상무기를 개발하고 있다며 강하게 비난했다. 필요하면 군사 행동도 불사하겠다는 뜻을 내비쳤다. 중동 산유국 지역의 긴장이 높아지고 있다.",
+            "en": "In a speech at the United Nations, the U.S. president sharply accused Iraq of developing weapons of mass destruction and hinted at military action if needed. Tension is rising in the oil-producing Middle East."
+          },
+          "effects": [
+            {
+              "themeId": "defense",
+              "impact": 2,
+              "link": "direct",
+              "explanation": {
+                "ko": "전쟁 가능성이 거론되면 무기 수요 기대가 생긴다.",
+                "en": "Talk of war raises hopes for weapons demand."
+              }
+            },
+            {
+              "themeId": "market",
+              "impact": -1,
+              "link": "direct",
+              "explanation": {
+                "ko": "전쟁 우려는 불확실성을 키워 주식 시장에 부담이 된다.",
+                "en": "War fears add uncertainty and weigh on stocks."
+              }
+            },
+            {
+              "themeId": "refining",
+              "impact": 2,
+              "link": "indirect",
+              "explanation": {
+                "ko": "중동은 원유 생산지라 긴장이 커지면 유가가 오를 수 있다.",
+                "en": "The Middle East produces oil, so rising tension can push prices up."
+              }
+            }
+          ],
+          "source": {
+            "event": "미국 대통령 유엔 연설 등 이라크 압박",
+            "date": "2002-09-12",
+            "impactRationale": "낌새 뉴스라 영향도 ±2 이내로 작게.",
+            "needsVerification": true
+          }
+        },
+        {
+          "id": "2000s-s1-iraq-sig2",
+          "title": {
+            "ko": "걸프 지역에 미군 병력 대규모 집결…항공모함 잇따라 배치",
+            "en": "U.S. Troops Mass in the Gulf as Aircraft Carriers Deploy"
+          },
+          "body": {
+            "ko": "미군 수십만 명과 항공모함들이 걸프 지역으로 속속 이동하고 있다. 외교적 해결 시한이 다가오면서 국제유가가 들썩이고, 항공사들은 중동 노선 운항을 줄이기 시작했다.",
+            "en": "Hundreds of thousands of U.S. troops and several aircraft carriers are moving into the Gulf. As the deadline for a diplomatic solution nears, oil prices are jumpy and airlines have begun cutting Middle East routes."
+          },
+          "effects": [
+            {
+              "themeId": "defense",
+              "impact": 3,
+              "link": "direct",
+              "explanation": {
+                "ko": "실제 병력 이동이 시작되며 군수품 수요 기대가 커진다.",
+                "en": "Actual troop movements raise expectations for military supply demand."
+              }
+            },
+            {
+              "themeId": "refining",
+              "impact": 3,
+              "link": "direct",
+              "explanation": {
+                "ko": "기사에 나온 대로 유가가 들썩이면 정유사 재고 가치가 오른다.",
+                "en": "As the article notes, jumpy oil prices raise the value of refiners' stock."
+              }
+            },
+            {
+              "themeId": "airline",
+              "impact": -2,
+              "link": "direct",
+              "explanation": {
+                "ko": "중동 노선 감축과 유가 불안이 항공사에 부담이 된다.",
+                "en": "Route cuts and oil jitters weigh on airlines."
+              }
+            },
+            {
+              "themeId": "market",
+              "impact": -1,
+              "link": "direct",
+              "explanation": {
+                "ko": "전쟁이 가까워질수록 투자자들은 위험 자산을 줄인다.",
+                "en": "As war approaches, investors cut risky assets."
+              }
+            }
+          ],
+          "source": {
+            "event": "걸프 지역 미군 증강 배치",
+            "date": "2003-01 ~ 2003-02",
+            "impactRationale": "낌새 뉴스. 병력 규모(수십만 명) 확인 필요.",
+            "needsVerification": true
+          }
+        }
+      ],
+      "branches": [
+        {
+          "tone": "negative",
+          "news": {
+            "id": "2000s-s1-iraq-war-begins",
+            "title": {
+              "ko": "이라크전 개전…'불확실성 끝났다' 증시는 오히려 반등",
+              "en": "Iraq War Begins, but Markets Rally as 'Uncertainty Ends'"
+            },
+            "body": {
+              "ko": "미·영 연합군이 이라크 공습을 시작했다. 그러나 전쟁이 빨리 끝날 것이라는 전망에 국제유가는 오히려 급락했고, 증시는 '불확실성 해소'를 반기며 반등했다. 방산 업체에는 군수품 주문이 이어지고 있다.",
+              "en": "U.S.-British forces have begun airstrikes on Iraq. Yet on expectations of a quick war, oil prices plunged and stocks rebounded as uncertainty lifted. Defense contractors continue to receive orders."
+            },
+            "effects": [
+              {
+                "themeId": "market",
+                "impact": 2,
+                "link": "direct",
+                "explanation": {
+                  "ko": "기사에 나온 대로 걱정하던 일이 실제로 일어나 불확실성이 사라지자 시장이 반등한다('소문에 사서 뉴스에 팔아라').",
+                  "en": "As reported, once the feared event happens, uncertainty fades and the market rebounds ('buy the rumor, sell the news')."
+                }
+              },
+              {
+                "themeId": "refining",
+                "impact": -4,
+                "link": "direct",
+                "explanation": {
+                  "ko": "유가가 급락하면 정유사의 재고 가치가 떨어진다.",
+                  "en": "Falling oil prices reduce the value of refiners' inventory."
+                }
+              },
+              {
+                "themeId": "defense",
+                "impact": 5,
+                "link": "direct",
+                "explanation": {
+                  "ko": "실제 전쟁으로 군수품 주문이 늘어난다.",
+                  "en": "An actual war brings more military orders."
+                }
+              },
+              {
+                "themeId": "airline",
+                "impact": 3,
+                "link": "indirect",
+                "explanation": {
+                  "ko": "유가가 내려가면 항공유 비용이 줄어 항공사에 유리하다.",
+                  "en": "Lower oil prices cut jet fuel costs, helping airlines."
+                }
+              }
+            ],
+            "source": {
+              "event": "이라크전 개전",
+              "date": "2003-03-20",
+              "impactRationale": "개전 전후 유가 급락·증시 반등은 실제 기록(구체 수치 확인 필요). 직관과 반대인 사례로 교육적 가치.",
+              "needsVerification": true
+            }
+          }
+        },
+        {
+          "tone": "positive",
+          "news": {
+            "id": "2000s-s1-iraq-crisis-averted",
+            "title": {
+              "ko": "이라크, 무기사찰 전면 수용…전쟁 위기 극적 해소",
+              "en": "Iraq Accepts Full Weapons Inspections; War Crisis Dramatically Averted"
+            },
+            "body": {
+              "ko": "이라크가 국제사회의 무기사찰을 조건 없이 전면 수용하겠다고 발표했다. 전쟁 위기가 극적으로 해소되면서 유가는 급락하고 세계 증시는 일제히 올랐다.",
+              "en": "Iraq has announced it will accept international weapons inspections without conditions. With the war crisis dramatically averted, oil prices fell sharply and stock markets rose worldwide."
+            },
+            "effects": [
+              {
+                "themeId": "market",
+                "impact": 3,
+                "link": "direct",
+                "explanation": {
+                  "ko": "전쟁 걱정이 사라지자 투자자들이 다시 주식을 산다.",
+                  "en": "With war fears gone, investors buy stocks again."
+                }
+              },
+              {
+                "themeId": "defense",
+                "impact": -5,
+                "link": "direct",
+                "explanation": {
+                  "ko": "전쟁 가능성이 사라져 군수품 수요 기대가 꺼진다.",
+                  "en": "With war off the table, hopes for military demand fade."
+                }
+              },
+              {
+                "themeId": "refining",
+                "impact": -5,
+                "link": "direct",
+                "explanation": {
+                  "ko": "기사에 나온 대로 유가가 급락해 정유사에 불리하다.",
+                  "en": "As reported, oil prices drop sharply, hurting refiners."
+                }
+              },
+              {
+                "themeId": "airline",
+                "impact": 4,
+                "link": "indirect",
+                "explanation": {
+                  "ko": "유가 하락과 여행 불안 해소가 겹쳐 항공사가 웃는다.",
+                  "en": "Cheaper fuel and calmer travel worries both help airlines."
+                }
+              },
+              {
+                "themeId": "travel",
+                "impact": 3,
+                "link": "indirect",
+                "explanation": {
+                  "ko": "전쟁 걱정이 사라지면 미뤘던 해외여행 수요가 살아난다.",
+                  "en": "With war fears gone, postponed overseas trips come back."
+                }
+              }
+            ],
+            "source": {
+              "event": "가상 결과: 이라크 무기사찰 수용으로 전쟁 회피",
+              "date": "2003",
+              "impactRationale": "실제로는 개전함. 가상 갈래.",
+              "needsVerification": true,
+              "fictional": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "2000s-story-nk-nuclear",
+      "memo": "북한 1차 핵실험. 낌새 1개(예고 성명) 후 결과.",
+      "signals": [
+        {
+          "id": "2000s-s2-nk-sig",
+          "title": {
+            "ko": "북한 '핵실험 하겠다' 공식 성명…한반도 긴장 고조",
+            "en": "North Korea Officially Announces Plans for a Nuclear Test"
+          },
+          "body": {
+            "ko": "북한 외무성이 앞으로 핵실험을 하겠다는 공식 성명을 발표했다. 정부는 사실 여부와 시점을 확인하고 있으며, 주변국들은 강하게 반발하고 있다.",
+            "en": "North Korea's foreign ministry has officially announced it will conduct a nuclear test. The government is checking whether and when it may happen, and neighboring countries are protesting strongly."
+          },
+          "effects": [
+            {
+              "themeId": "defense",
+              "impact": 3,
+              "link": "direct",
+              "explanation": {
+                "ko": "안보 위협이 커질 것이라는 예고에 방산주가 오른다.",
+                "en": "A warning of greater security threats lifts defense stocks."
+              }
+            },
+            {
+              "themeId": "market",
+              "impact": -2,
+              "link": "direct",
+              "explanation": {
+                "ko": "실제 핵실험 가능성에 투자자들이 위험을 줄인다.",
+                "en": "The chance of an actual test makes investors cut risk."
+              }
+            },
+            {
+              "themeId": "gold",
+              "impact": 2,
+              "link": "direct",
+              "explanation": {
+                "ko": "불안할 때 찾는 안전자산인 금 수요가 늘어난다.",
+                "en": "Demand rises for gold, the safe asset people seek in uncertain times."
+              }
+            }
+          ],
+          "source": {
+            "event": "북한 외무성 핵실험 예고 성명",
+            "date": "2006-10-03",
+            "impactRationale": "낌새 뉴스. 당일 증시 반응 확인 필요.",
+            "needsVerification": true
+          }
+        }
+      ],
+      "branches": [
+        {
+          "tone": "negative",
+          "news": {
+            "id": "2000s-s2-nk-test",
+            "title": {
+              "ko": "북한 첫 핵실험 강행…한반도 긴장 최고조",
+              "en": "North Korea Conducts First Nuclear Test"
+            },
+            "body": {
+              "ko": "북한이 지하 핵실험을 실시했다고 발표했다. 국내 증시는 장중 급락했고 원화 가치도 크게 떨어졌다. 정부는 긴급 안보회의를 소집하고 국방 태세를 강화했다.",
+              "en": "North Korea has announced that it carried out an underground nuclear test. Korean stocks fell sharply during the session and the won weakened. The government convened an emergency security meeting and raised its defense posture."
+            },
+            "effects": [
+              {
+                "themeId": "defense",
+                "impact": 7,
+                "link": "direct",
+                "explanation": {
+                  "ko": "국방 태세 강화로 무기·장비 수요가 늘어날 것으로 기대된다.",
+                  "en": "A stronger defense posture is expected to raise demand for weapons and equipment."
+                }
+              },
+              {
+                "themeId": "market",
+                "impact": -2,
+                "link": "direct",
+                "explanation": {
+                  "ko": "기사에 나온 대로 증시가 급락한다.",
+                  "en": "As reported, the stock market drops sharply."
+                }
+              },
+              {
+                "themeId": "gold",
+                "impact": 3,
+                "link": "direct",
+                "explanation": {
+                  "ko": "안보 불안에 안전자산인 금으로 돈이 몰린다.",
+                  "en": "Security fears send money into gold as a safe asset."
+                }
+              },
+              {
+                "themeId": "travel",
+                "impact": -3,
+                "link": "indirect",
+                "explanation": {
+                  "ko": "한반도가 위험하다는 인식에 외국인 관광객이 발길을 돌린다.",
+                  "en": "Seeing the peninsula as risky, foreign tourists stay away."
+                }
+              }
+            ],
+            "source": {
+              "event": "북한 1차 핵실험",
+              "date": "2006-10-09",
+              "impactRationale": "당일 코스피 약 -2.4%(확인 필요), 방산주 급등 폭 확인 필요.",
+              "needsVerification": true
+            }
+          }
+        },
+        {
+          "tone": "positive",
+          "news": {
+            "id": "2000s-s2-nk-talks",
+            "title": {
+              "ko": "북한, 핵실험 계획 철회…6자회담 복귀 선언",
+              "en": "North Korea Drops Test Plan and Returns to Six-Party Talks"
+            },
+            "body": {
+              "ko": "북한이 핵실험 계획을 접고 6자회담에 복귀하겠다고 밝혔다. 긴장이 빠르게 풀리면서 증시는 반등했고, 남북 경제협력 재개 기대도 나오고 있다.",
+              "en": "North Korea says it will drop its nuclear test plan and return to the six-party talks. With tension easing quickly, stocks rebounded and hopes for renewed inter-Korean economic cooperation are emerging."
+            },
+            "effects": [
+              {
+                "themeId": "defense",
+                "impact": -5,
+                "link": "direct",
+                "explanation": {
+                  "ko": "긴장이 풀리면 방산 수요 기대가 사라진다.",
+                  "en": "As tension eases, expectations for defense demand fade."
+                }
+              },
+              {
+                "themeId": "market",
+                "impact": 2,
+                "link": "direct",
+                "explanation": {
+                  "ko": "기사에 나온 대로 안보 불안이 줄어 증시가 반등한다.",
+                  "en": "As reported, easing security fears lift the market."
+                }
+              },
+              {
+                "themeId": "construction",
+                "impact": 2,
+                "link": "indirect",
+                "explanation": {
+                  "ko": "남북 경협이 재개되면 북한 인프라 공사 기대가 생긴다.",
+                  "en": "Renewed cooperation raises hopes for infrastructure projects in the North."
+                }
+              }
+            ],
+            "source": {
+              "event": "가상 결과: 핵실험 대신 6자회담 복귀",
+              "date": "2006-10",
+              "impactRationale": "실제로는 10-09 핵실험 후 10-31 6자회담 복귀 합의. 핵실험 '대신' 복귀는 가상.",
+              "needsVerification": true,
+              "fictional": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "2000s-story-financial-crisis",
+      "memo": "서브프라임 → 대형 투자은행 위기. 낌새 2개 후 결과. 시장(-3)과 테마 영향이 합산됨에 주의.",
+      "signals": [
+        {
+          "id": "2000s-s3-subprime-sig1",
+          "title": {
+            "ko": "미국 서브프라임 대출업체 연쇄 파산…집값 하락 본격화",
+            "en": "U.S. Subprime Lenders Collapse One After Another as Home Prices Fall"
+          },
+          "body": {
+            "ko": "신용이 낮은 사람에게 집값의 대부분을 빌려주던 미국 대출업체들이 잇따라 파산하고 있다. 집값이 떨어지면서 대출을 갚지 못하는 사람이 늘고, 관련 상품에 투자한 금융회사들의 손실 우려가 커지고 있다.",
+            "en": "U.S. lenders that loaned most of a home's price to low-credit borrowers are going bankrupt one after another. As home prices fall, more borrowers can't repay, and fears are growing for financial firms that invested in these loans."
+          },
+          "effects": [
+            {
+              "themeId": "investment-bank",
+              "impact": -3,
+              "link": "direct",
+              "explanation": {
+                "ko": "부실 대출 상품에 투자한 금융회사들이 손실을 볼 수 있다.",
+                "en": "Financial firms that bought these bad-loan products may face losses."
+              }
+            },
+            {
+              "themeId": "market",
+              "impact": -1,
+              "link": "direct",
+              "explanation": {
+                "ko": "금융 불안은 시장 전체의 투자 심리를 위축시킨다.",
+                "en": "Financial instability dampens sentiment across the market."
+              }
+            },
+            {
+              "themeId": "construction",
+              "impact": -2,
+              "link": "indirect",
+              "explanation": {
+                "ko": "집값이 떨어지면 새 집을 지어도 팔리지 않아 건설사가 어려워진다.",
+                "en": "Falling home prices make new homes hard to sell, hurting builders."
+              }
+            }
+          ],
+          "source": {
+            "event": "미국 서브프라임 모기지 업체 연쇄 파산",
+            "date": "2007-04 ~ 2007-08",
+            "impactRationale": "낌새 뉴스. 2007-04 대형 서브프라임 업체 파산, 2007-08 유럽 은행 펀드 환매 중단(확인 필요).",
+            "needsVerification": true
+          }
+        },
+        {
+          "id": "2000s-s3-subprime-sig2",
+          "title": {
+            "ko": "미국 5위 투자은행, 유동성 위기로 헐값 매각",
+            "en": "Fifth-Largest U.S. Investment Bank Sold at a Fire-Sale Price"
+          },
+          "body": {
+            "ko": "미국 5위 투자은행이 자금난을 견디지 못하고 경쟁 은행에 헐값으로 넘어갔다. 다음 차례는 어디냐는 공포가 월가에 퍼지고 있으며, 안전자산인 금값이 오르고 있다.",
+            "en": "The fifth-largest U.S. investment bank, unable to survive a cash crunch, has been sold to a rival for a fraction of its value. Wall Street fears who will be next, and gold prices are rising."
+          },
+          "effects": [
+            {
+              "themeId": "investment-bank",
+              "impact": -4,
+              "link": "direct",
+              "explanation": {
+                "ko": "비슷한 처지의 투자은행들도 무너질 수 있다는 공포가 퍼진다.",
+                "en": "Fear spreads that other investment banks in similar shape could fall."
+              }
+            },
+            {
+              "themeId": "market",
+              "impact": -1,
+              "link": "direct",
+              "explanation": {
+                "ko": "금융 위기 확산 걱정에 주식 시장 전체가 약해진다.",
+                "en": "Worries about a spreading crisis weaken the whole market."
+              }
+            },
+            {
+              "themeId": "gold",
+              "impact": 2,
+              "link": "direct",
+              "explanation": {
+                "ko": "기사에 나온 대로 불안할 때 금으로 돈이 몰린다.",
+                "en": "As reported, money flows into gold in times of fear."
+              }
+            }
+          ],
+          "source": {
+            "event": "미국 베어스턴스 매각",
+            "date": "2008-03-16",
+            "impactRationale": "낌새 뉴스. 매각 가격(주당 2달러 → 이후 10달러) 확인 필요.",
+            "needsVerification": true
+          }
+        }
+      ],
+      "branches": [
+        {
+          "tone": "negative",
+          "news": {
+            "id": "2000s-s3-ib-bankruptcy",
+            "title": {
+              "ko": "미국 4위 투자은행 파산…월가 '검은 월요일'",
+              "en": "Fourth-Largest U.S. Investment Bank Collapses on 'Black Monday'"
+            },
+            "body": {
+              "ko": "150년이 넘는 역사를 가진 미국 대형 투자은행이 파산보호를 신청했다. 부실 주택담보대출에서 시작된 위기가 금융 시스템 전체로 번지면서 세계 증시가 일제히 폭락했다. 안전자산인 금으로 돈이 몰리고 있다.",
+              "en": "A major U.S. investment bank with more than 150 years of history has filed for bankruptcy protection. A crisis that began with bad mortgages is spreading through the entire financial system, sending stock markets worldwide into a tailspin. Money is rushing into gold."
+            },
+            "effects": [
+              {
+                "themeId": "market",
+                "impact": -3,
+                "link": "direct",
+                "explanation": {
+                  "ko": "기사에 나온 대로 세계 증시가 함께 폭락한다.",
+                  "en": "As reported, stock markets around the world crash together."
+                }
+              },
+              {
+                "themeId": "investment-bank",
+                "impact": -10,
+                "link": "direct",
+                "explanation": {
+                  "ko": "대형 투자은행의 파산으로 금융회사 전체가 직격탄을 맞는다.",
+                  "en": "A major bank's collapse hits financial firms head-on."
+                }
+              },
+              {
+                "themeId": "gold",
+                "impact": 7,
+                "link": "direct",
+                "explanation": {
+                  "ko": "공포가 극에 달하면 가장 안전한 자산인 금으로 돈이 몰린다.",
+                  "en": "At peak fear, money rushes into gold, the safest asset."
+                }
+              },
+              {
+                "themeId": "construction",
+                "impact": -4,
+                "link": "indirect",
+                "explanation": {
+                  "ko": "주택 시장 붕괴가 위기의 시작이라 건설·부동산이 함께 무너진다.",
+                  "en": "The crisis began with housing, so construction and real estate collapse too."
+                }
+              },
+              {
+                "themeId": "credit-card",
+                "impact": -3,
+                "link": "indirect",
+                "explanation": {
+                  "ko": "돈줄이 막히면 카드사도 자금을 구하기 어렵고 연체가 늘어난다.",
+                  "en": "With credit frozen, card companies struggle to fund themselves and defaults rise."
+                }
+              },
+              {
+                "themeId": "shipbuilding",
+                "impact": -3,
+                "link": "indirect",
+                "explanation": {
+                  "ko": "경기가 얼어붙으면 선박 주문이 취소되거나 줄어든다.",
+                  "en": "As the economy freezes, ship orders are cancelled or cut."
+                }
+              }
+            ],
+            "source": {
+              "event": "리먼 브라더스 파산보호 신청",
+              "date": "2008-09-15",
+              "impactRationale": "당일 다우 -4.4%(-504.48p). 코스피는 추석 후 2008-09-16 약 -6.1%(확인 필요). 시장 -3과 합산되어 투자은행은 -10(최대치)으로 잘림.",
+              "needsVerification": true
+            }
+          }
+        },
+        {
+          "tone": "positive",
+          "news": {
+            "id": "2000s-s3-ib-rescue",
+            "title": {
+              "ko": "미 정부, 대형 투자은행 긴급 구제 합의…시장 '안도'",
+              "en": "U.S. Agrees to Emergency Rescue of a Major Investment Bank; Markets Relieved"
+            },
+            "body": {
+              "ko": "미국 정부가 파산 위기에 몰린 대형 투자은행에 공적자금을 투입하기로 했다. 연쇄 파산 공포가 잦아들면서 증시는 반등했고, 피난처였던 금값은 하락했다.",
+              "en": "The U.S. government has agreed to inject public funds into a major investment bank on the brink of collapse. As fears of a chain of failures subside, stocks rebounded and gold, the safe haven, fell."
+            },
+            "effects": [
+              {
+                "themeId": "investment-bank",
+                "impact": 6,
+                "link": "direct",
+                "explanation": {
+                  "ko": "정부가 직접 살려주기로 해 금융회사 파산 공포가 줄어든다.",
+                  "en": "With the government stepping in, fear of bank failures recedes."
+                }
+              },
+              {
+                "themeId": "market",
+                "impact": 2,
+                "link": "direct",
+                "explanation": {
+                  "ko": "기사에 나온 대로 위기 공포가 줄어 증시가 반등한다.",
+                  "en": "As reported, easing fear lifts the stock market."
+                }
+              },
+              {
+                "themeId": "gold",
+                "impact": -3,
+                "link": "direct",
+                "explanation": {
+                  "ko": "불안이 줄면 피난처였던 금에서 돈이 빠져나간다.",
+                  "en": "As fear fades, money leaves gold, the safe haven."
+                }
+              },
+              {
+                "themeId": "construction",
+                "impact": 2,
+                "link": "indirect",
+                "explanation": {
+                  "ko": "금융이 안정되면 막혔던 부동산 대출이 다시 돌기 시작한다.",
+                  "en": "A stable financial system restarts frozen property lending."
+                }
+              }
+            ],
+            "source": {
+              "event": "가상 결과: 리먼 구제",
+              "date": "2008-09",
+              "impactRationale": "실제로는 리먼은 구제받지 못하고 파산함(다음 날 AIG는 구제). 가상 갈래.",
+              "needsVerification": true,
+              "fictional": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "2000s-story-bok-rate-hike",
+      "memo": "한은 금리 인상. 낌새 1개(총재 발언) 후 결과. 시장 전체 영향 연습용(1차 위주).",
+      "signals": [
+        {
+          "id": "2000s-s4-rate-sig",
+          "title": {
+            "ko": "한은 총재 '부동산 과열·물가 우려'…금리 인상 시사",
+            "en": "Bank of Korea Governor Hints at Rate Hike over Housing and Inflation"
+          },
+          "body": {
+            "ko": "한국은행 총재가 부동산 과열과 물가 상승을 우려하며 금리 인상 가능성을 내비쳤다. 금리가 오르면 대출 이자 부담이 커지는 건설·부동산 업계가 긴장하고 있다.",
+            "en": "The Bank of Korea governor voiced concern about an overheated housing market and inflation, hinting at a possible rate hike. Builders and property developers, who would face higher loan costs, are on edge."
+          },
+          "effects": [
+            {
+              "themeId": "construction",
+              "impact": -2,
+              "link": "direct",
+              "explanation": {
+                "ko": "기사에 나온 대로 금리가 오르면 대출 부담이 커져 건설·부동산이 위축된다.",
+                "en": "As the article says, higher rates raise loan costs and cool construction and property."
+              }
+            },
+            {
+              "themeId": "market",
+              "impact": -1,
+              "link": "direct",
+              "explanation": {
+                "ko": "금리 인상 가능성은 주식보다 예금을 매력적으로 만들어 시장에 부담이 된다.",
+                "en": "A possible hike makes deposits more attractive than stocks, weighing on the market."
+              }
+            }
+          ],
+          "source": {
+            "event": "한국은행 총재 금리 인상 시사 발언",
+            "date": "2005-09 ~ 2005-10",
+            "impactRationale": "낌새 뉴스. 발언 시점·내용 확인 필요.",
+            "needsVerification": true
+          }
+        }
+      ],
+      "branches": [
+        {
+          "tone": "negative",
+          "news": {
+            "id": "2000s-s4-rate-hike",
+            "title": {
+              "ko": "한은, 기준금리 0.25%p 인상…3년여 만에 처음",
+              "en": "Bank of Korea Raises Key Rate by 0.25 Points, First Hike in Over Three Years"
+            },
+            "body": {
+              "ko": "한국은행이 기준금리를 0.25%포인트 올렸다. 3년여 만의 인상으로, 대출 이자가 오르면서 건설·부동산 시장과 카드 대출이 위축될 전망이다. 증시는 약세로 반응했다.",
+              "en": "The Bank of Korea has raised its key rate by 0.25 percentage points, its first hike in over three years. Higher loan rates are expected to cool construction, property and card lending. Stocks reacted with losses."
+            },
+            "effects": [
+              {
+                "themeId": "market",
+                "impact": -2,
+                "link": "direct",
+                "explanation": {
+                  "ko": "기사에 나온 대로 금리가 오르면 주식 대신 예금으로 돈이 옮겨 가 시장이 약해진다.",
+                  "en": "As reported, higher rates pull money from stocks into deposits."
+                }
+              },
+              {
+                "themeId": "construction",
+                "impact": -3,
+                "link": "direct",
+                "explanation": {
+                  "ko": "대출 이자가 오르면 집을 사려는 사람이 줄어 건설사가 어려워진다.",
+                  "en": "Higher loan rates mean fewer home buyers, hurting builders."
+                }
+              },
+              {
+                "themeId": "credit-card",
+                "impact": -3,
+                "link": "direct",
+                "explanation": {
+                  "ko": "카드사는 돈을 빌려 다시 빌려주는데, 빌리는 비용이 올라 이익이 줄어든다.",
+                  "en": "Card companies borrow to lend; higher borrowing costs squeeze their profit."
+                }
+              }
+            ],
+            "source": {
+              "event": "한국은행 기준금리 인상 (3.25% → 3.50%)",
+              "date": "2005-10-11",
+              "impactRationale": "인상 전후 금리 수준 확인 필요.",
+              "needsVerification": true
+            }
+          }
+        },
+        {
+          "tone": "positive",
+          "news": {
+            "id": "2000s-s4-rate-hold",
+            "title": {
+              "ko": "한은, 기준금리 동결…'경기 회복이 우선'",
+              "en": "Bank of Korea Holds Rates, Saying Recovery Comes First"
+            },
+            "body": {
+              "ko": "한국은행이 시장의 예상과 달리 기준금리를 동결했다. 경기 회복을 우선하겠다는 판단으로, 금리 인상을 걱정하던 건설·부동산 업계와 증시가 안도하고 있다.",
+              "en": "Contrary to market expectations, the Bank of Korea has held its key rate, prioritizing economic recovery. Builders, property firms and stock investors who feared a hike are relieved."
+            },
+            "effects": [
+              {
+                "themeId": "market",
+                "impact": 2,
+                "link": "direct",
+                "explanation": {
+                  "ko": "걱정하던 금리 인상이 없자 시장이 안도하며 오른다.",
+                  "en": "With the feared hike off the table, the market rises in relief."
+                }
+              },
+              {
+                "themeId": "construction",
+                "impact": 3,
+                "link": "direct",
+                "explanation": {
+                  "ko": "대출 이자 부담이 커지지 않아 건설·부동산이 숨통을 튼다.",
+                  "en": "Loan costs stay put, giving construction and property breathing room."
+                }
+              }
+            ],
+            "source": {
+              "event": "가상 결과: 금리 동결",
+              "date": "2005-10",
+              "impactRationale": "실제로는 2005-10-11 인상. 가상 갈래.",
+              "needsVerification": true,
+              "fictional": true
+            }
+          }
+        }
+      ]
+    }
+  ]
 }
