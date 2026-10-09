@@ -1,0 +1,19 @@
+{
+  "name": "invest-rpg",
+  "version": "0.1.0",
+  "private": true,
+  "description": "2D 픽셀 RPG풍 투자 시뮬레이션 게임 (W1: 게임 규칙 엔진)",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.engine.json",
+    "demo": "node scripts/demo.ts",
+    "check": "npm run typecheck && npm test"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
+  }
+}
