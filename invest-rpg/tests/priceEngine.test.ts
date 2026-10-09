@@ -38,7 +38,7 @@ describe('상수', () => {
     expect(INERTIA_PROBS).toEqual({ same: 50, opposite: 25, flat: 25 });
     expect(rules.ticksPerEra).toBe(1440);
     expect(rules.chartHistoryLength).toBe(240);
-    expect(rules.recapDelayTicks).toBe(24);
+    expect(rules.reportDelayTicks).toBe(24);
   });
 
   it('틱 길이로 나누어떨어지지 않는 설정은 오류', () => {

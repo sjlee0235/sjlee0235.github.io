@@ -61,7 +61,7 @@ describe('플레이 기록 (텔레메트리)', () => {
       const reacted = ofType(events, 'news_reacted').find((e) => e.data.newsId === p.data.newsId)!;
       expect(reacted.tick).toBe(p.tick + 1);
     }
-    expect(ofType(events, 'recap_created').length).toBe(game.getNewsArchive().filter((a) => a.recap).length);
+    expect(ofType(events, 'report_created').length).toBe(game.getNewsArchive().filter((a) => a.report).length);
   });
 
   it('매매: 체결마다 trade(매매 순간 상황 포함), 거부된 주문은 trade_rejected', () => {
@@ -132,7 +132,7 @@ describe('플레이 기록 (텔레메트리)', () => {
     game.suspend();
     game.resume();
     game.toggleFavorite(game.activeStocks[0]!.id);
-    expect(buf.peek().slice(2).map((e) => e.type)).toEqual(['suspended', 'resumed', 'favorite_toggled']);
+    expect(buf.peek().slice(2).map((e) => e.type)).toEqual(['paused', 'resumed', 'favorite_toggled']);
   });
 
   it('밸런스 지문: 설정이 바뀌면 달라지고, 같으면 같다', () => {
@@ -159,7 +159,7 @@ describe('플레이 기록 (텔레메트리)', () => {
     const events = buf.peek();
     expect(events[0]!.data).toMatchObject({ mode: 'tutorial' });
     const steps = events.filter((e) => e.type === 'tutorial_step').map((e) => (e.data as { step: string }).step);
-    expect(steps).toEqual(['waiting', 'reading', 'reaction', 'recap', 'done']);
+    expect(steps).toEqual(['waiting', 'reading', 'reaction', 'report', 'done']);
   });
 
   it('세이브에서 이어 하기: restored=true', () => {

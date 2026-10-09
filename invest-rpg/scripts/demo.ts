@@ -7,7 +7,7 @@
 import { ALL_ERAS } from '../src/data/eras/index.ts';
 import type { Game } from '../src/engine/game.ts';
 import { PublicGame } from '../src/engine/publicView.ts';
-import type { RecapNotice } from '../src/engine/recap.ts';
+import type { StockReport } from '../src/engine/report.ts';
 import { TutorialSession } from '../src/engine/tutorial.ts';
 import { localize, t } from '../src/i18n/index.ts';
 import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
@@ -22,15 +22,15 @@ const clock = (tick: number) => {
 };
 const TYPE = { breaking: '속보', tentative: '잠정', clue: '후속', outcome: '결과' } as const;
 
-function printRecap(game: Game, r: RecapNotice) {
+function printReport(game: Game, r: StockReport) {
   const name = (id: string) => localize(game.activeStocks.find((s) => s.id === id)!.name, 'ko');
-  console.log(`[${clock(r.recapTick)}] 해설 알림 (${TYPE[r.tag]})`);
+  console.log(`[${clock(r.reportTick)}] 주가 리포트 (${TYPE[r.tag]})`);
   for (const it of r.items) {
-    const reason = it.reason?.ko ?? t('ko', 'recap.auto', { newsTerm: it.auto.newsTerm, theme: it.auto.themeName.ko, effect: t('ko', it.auto.positive ? 'recap.benefit' : 'recap.burden') });
-    console.log(`           ${t('ko', 'recap.line', { stock: name(it.stockId), pct: signed(it.appliedPct), reason })}`);
+    const reason = it.reason?.ko ?? t('ko', 'report.auto', { newsTerm: it.auto.newsTerm, theme: it.auto.themeName.ko, effect: t('ko', it.auto.positive ? 'report.benefit' : 'report.burden') });
+    console.log(`           ${t('ko', 'report.line', { stock: name(it.stockId), pct: signed(it.appliedPct), reason })}`);
   }
-  if (r.moreCount > 0) console.log(`           ${t('ko', 'recap.more', { count: r.moreCount })}`);
-  if (r.tentativeNote) console.log(`           (${t('ko', 'recap.tentativeNote')})`);
+  if (r.moreCount > 0) console.log(`           ${t('ko', 'report.more', { count: r.moreCount })}`);
+  if (r.tentativeNote) console.log(`           (${t('ko', 'report.tentativeNote')})`);
 }
 
 if (process.argv[2] === 'tutorial') {
@@ -47,7 +47,7 @@ if (process.argv[2] === 'tutorial') {
   const r = tut.advanceTick();
   if (r.advanced) for (const c of r.changes.filter((x) => x.cause === 'news')) console.log(`  5초 뒤 나머지: ${c.stockId} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)})`);
   while (tut.stage === 'reaction') tut.advanceTick();
-  printRecap(tut.game, tut.recap!);
+  printReport(tut.game, tut.report!);
   console.log(`\n${t('ko', 'tutorial.done')}`);
 } else {
   // 화면과 똑같이 공개용 뷰(PublicGame)만 써서 진행한다
@@ -65,14 +65,14 @@ if (process.argv[2] === 'tutorial') {
       const tag = r.news.fictional ? ` [${t('ko', 'news.fictionalTag')}]` : '';
       console.log(`[${clock(r.tick)}] (${TYPE[r.news.kind]}) ${r.news.title.ko}${tag}`);
     }
-    for (const rc of r.recaps) {
-      console.log(`[${clock(rc.recapTick)}] 해설 알림`);
+    for (const rc of r.reports) {
+      console.log(`[${clock(rc.reportTick)}] 주가 리포트`);
       for (const it of rc.items) {
-        const reason = it.reason?.ko ?? t('ko', 'recap.auto', { newsTerm: it.auto.newsTerm, theme: it.auto.industry.ko, effect: t('ko', it.auto.positive ? 'recap.benefit' : 'recap.burden') });
-        console.log(`           ${it.stockName.ko} ${t('ko', 'recap.split', { instant: signed(it.instantPct), delayed: signed(it.delayedPct), total: signed(it.appliedPct) })} — ${reason}`);
+        const reason = it.reason?.ko ?? t('ko', 'report.auto', { newsTerm: it.auto.newsTerm, theme: it.auto.industry.ko, effect: t('ko', it.auto.positive ? 'report.benefit' : 'report.burden') });
+        console.log(`           ${it.stockName.ko} ${t('ko', 'report.split', { instant: signed(it.instantPct), delayed: signed(it.delayedPct), total: signed(it.appliedPct) })} — ${reason}`);
       }
-      if (rc.moreCount > 0) console.log(`           ${t('ko', 'recap.more', { count: rc.moreCount })}`);
-      if (rc.tentativeNote) console.log(`           (${t('ko', 'recap.tentativeNote')})`);
+      if (rc.moreCount > 0) console.log(`           ${t('ko', 'report.more', { count: rc.moreCount })}`);
+      if (rc.tentativeNote) console.log(`           (${t('ko', 'report.tentativeNote')})`);
     }
     if (r.settlement) console.log(`\n=== 시대 마감 — 시작 ${n(r.settlement.startCash)} → 종료 ${n(r.settlement.endAssets)} 코인 (${signed(r.settlement.returnPct)}) ===`);
   }

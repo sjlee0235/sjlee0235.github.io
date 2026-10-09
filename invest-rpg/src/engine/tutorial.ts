@@ -1,4 +1,4 @@
-// 튜토리얼: 게임 첫 진입 때 한 번만. 시나리오 하나 — 뉴스 1개 → 매수 → 반영 확인 → 해설 알림.
+// 튜토리얼: 게임 첫 진입 때 한 번만. 시나리오 하나 — 뉴스 1개 → 매수 → 반영 확인 → 주가 리포트.
 // - 고정 시드, 고정 종목 5개, 스크립트로 정해진 뉴스 1개 (가상 시나리오)
 // - 뉴스가 뜨면 시간이 멈춘다 (pauseOnNews). 본게임은 멈추지 않는다
 // - 튜토리얼 전용 지갑 (본게임에 이월되지 않음)
@@ -10,7 +10,7 @@ import type { GameConfig } from './config.ts';
 import type { EraDraw } from './eraDraw.ts';
 import { Game } from './game.ts';
 import { PublicGame } from './publicView.ts';
-import type { RecapNotice } from './recap.ts';
+import type { StockReport } from './report.ts';
 import type { TelemetrySink } from './telemetry.ts';
 
 export const TUTORIAL_SEED = 20_000_101;
@@ -23,17 +23,17 @@ export const TUTORIAL_NEWS_TICK = 6;
  * - waiting : 뉴스를 기다리는 중
  * - reading : 뉴스 팝업 (시간 정지). 이때 매수해 본다
  * - reaction: '확인' 후 반영·관성을 지켜보는 중
- * - recap   : 해설 알림이 나옴
+ * - report   : 주가 리포트이 나옴
  * - done    : 끝 (finish() 호출 후)
  */
-export type TutorialStage = 'waiting' | 'reading' | 'reaction' | 'recap' | 'done';
+export type TutorialStage = 'waiting' | 'reading' | 'reaction' | 'report' | 'done';
 
 export class TutorialSession {
   /** 엔진 내부용 (테스트·데모). 화면은 view만 쓴다 */
   readonly game: Game;
   /** 화면용 공개 뷰 */
   readonly view: PublicGame;
-  recap: RecapNotice | null = null;
+  report: StockReport | null = null;
   private finished = false;
 
   private lastStage: TutorialStage | null = null;
@@ -67,8 +67,8 @@ export class TutorialSession {
 
   get stage(): TutorialStage {
     if (this.finished) return 'done';
-    if (this.recap) return 'recap';
-    if (this.game.phase === 'news') return 'reading';
+    if (this.report) return 'report';
+    if (this.game.pendingNews) return 'reading';
     if (this.game.shownNews.length > 0) return 'reaction';
     return 'waiting';
   }
@@ -76,7 +76,7 @@ export class TutorialSession {
   /** 한 틱 진행 (뉴스 팝업 중에는 멈춰 있음) */
   advanceTick() {
     const r = this.game.advanceTick();
-    if (r.advanced && r.recaps.length > 0) this.recap = r.recaps[0]!;
+    if (r.advanced && r.reports.length > 0) this.report = r.reports[0]!;
     this.trackStage();
     return r;
   }

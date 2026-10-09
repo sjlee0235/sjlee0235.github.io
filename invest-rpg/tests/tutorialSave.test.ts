@@ -4,7 +4,7 @@ import { TUTORIAL_NEWS_TICK, TutorialSession } from '../src/engine/tutorial.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
 
 describe('튜토리얼', () => {
-  it('뉴스 1개 → (시간 정지 중) 매수 → 반영 확인 → 해설 알림', () => {
+  it('뉴스 1개 → (시간 정지 중) 매수 → 반영 확인 → 주가 리포트', () => {
     const t = new TutorialSession();
     expect(t.stage).toBe('waiting');
     expect(t.game.activeStocks).toHaveLength(5);
@@ -27,9 +27,9 @@ describe('튜토리얼', () => {
     expect(r.changes.find((c) => c.stockId === 'tut-game')!.cause).toBe('random');
 
     while (t.stage === 'reaction') t.advanceTick();
-    expect(t.stage).toBe('recap');
-    expect(t.recap!.items.length).toBe(3);
-    expect(t.recap!.items[0]!.reason?.ko).toBeTruthy();
+    expect(t.stage).toBe('report');
+    expect(t.report!.items.length).toBe(3);
+    expect(t.report!.items[0]!.reason?.ko).toBeTruthy();
     t.finish();
     expect(t.stage).toBe('done');
   });
@@ -40,7 +40,7 @@ describe('튜토리얼', () => {
       while (t.stage === 'waiting') t.advanceTick();
       t.confirmNews();
       while (t.stage === 'reaction') t.advanceTick();
-      return t.recap;
+      return t.report;
     };
     expect(run()).toEqual(run());
   });

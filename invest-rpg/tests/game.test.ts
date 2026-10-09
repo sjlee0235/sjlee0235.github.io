@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Game, type AdvanceResult } from '../src/engine/game.ts';
-import type { RecapNotice } from '../src/engine/recap.ts';
+import type { StockReport } from '../src/engine/report.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
 
 const twoEras = () => [makeSpecEra({ id: 'e2', order: 2, seed: 2 }), makeSpecEra({ id: 'e1', order: 1, seed: 1 })];
@@ -126,10 +126,10 @@ describe('뉴스 반영 타이밍 (시간은 멈추지 않음)', () => {
   });
 });
 
-describe('해설 알림', () => {
+describe('주가 리포트', () => {
   const collect = (seed: number) => {
     const game = newGame(seed);
-    const recaps: RecapNotice[] = [];
+    const reports: StockReport[] = [];
     const applied = new Map<string, Map<string, number>>();
     let lastNews: string | null = null;
     while (game.phase !== 'era-ended') {
@@ -145,17 +145,17 @@ describe('해설 알림', () => {
         lastNews = r.news.news.id;
         applied.set(lastNews, new Map(r.instantChanges.map((c) => [c.stockId, c.rate])));
       }
-      recaps.push(...r.recaps);
+      reports.push(...r.reports);
     }
-    return { game, recaps, applied };
+    return { game, reports, applied };
   };
 
   it('[시드 20개] 발표 120초(24틱) 뒤, 최대 3개, 반영률 절댓값 순, appliedPct = 실제 적용값', () => {
     for (let seed = 1; seed <= 20; seed++) {
-      const { game, recaps, applied } = collect(seed);
-      expect(recaps.length).toBeGreaterThan(0);
-      for (const n of recaps) {
-        expect(n.recapTick - n.publishedTick).toBe(24);
+      const { game, reports, applied } = collect(seed);
+      expect(reports.length).toBeGreaterThan(0);
+      for (const n of reports) {
+        expect(n.reportTick - n.publishedTick).toBe(24);
         expect(n.items.length).toBeLessThanOrEqual(3);
         const abs = n.items.map((i) => Math.abs(i.appliedPct));
         expect([...abs].sort((a, b) => b - a)).toEqual(abs);
@@ -175,21 +175,21 @@ describe('해설 알림', () => {
     }
   });
 
-  it('시대가 끝나 120초가 남지 않으면 해설 알림을 만들지 않는다', () => {
-    const { game, recaps } = collect(3);
+  it('시대가 끝나 120초가 남지 않으면 주가 리포트을 만들지 않는다', () => {
+    const { game, reports } = collect(3);
     const last = game.shownNews.at(-1)!;
-    const made = recaps.some((r) => r.newsId === last.news.id);
+    const made = reports.some((r) => r.newsId === last.news.id);
     expect(made).toBe(last.tick + 24 <= 1440);
   });
 
-  it('보관함: 뉴스·태그·강도·해설 알림을 함께 담는다', () => {
+  it('보관함: 뉴스·태그·강도·주가 리포트을 함께 담는다', () => {
     const { game } = collect(1);
     const archive = game.getNewsArchive();
     expect(archive.length).toBe(game.shownNews.length);
     for (const a of archive) {
       expect(['breaking', 'tentative', 'outcome']).toContain(a.tag);
       for (const e of a.effects) expect([1, 2, 3]).toContain(e.strength);
-      if (a.tick + 24 <= 1440) expect(a.recap?.newsId).toBe(a.news.id);
+      if (a.tick + 24 <= 1440) expect(a.report?.newsId).toBe(a.news.id);
     }
     expect(archive.some((a) => a.tag === 'tentative')).toBe(true);
     expect(archive.some((a) => a.tag === 'outcome' && a.relatedTentativeId)).toBe(true);
@@ -216,7 +216,7 @@ describe('일시정지·매매·정산', () => {
     const game = newGame();
     for (let i = 0; i < 10; i++) game.advanceTick();
     game.suspend();
-    for (let i = 0; i < 300; i++) expect(game.advanceTick()).toMatchObject({ advanced: false, suspended: true });
+    for (let i = 0; i < 300; i++) expect(game.advanceTick()).toMatchObject({ advanced: false, paused: true, pauseReasons: ['background'] });
     expect(game.tick).toBe(10);
     expect(game.buy(game.activeStocks[0]!.id, 1)).toEqual({ ok: false, error: 'not-tradable' });
     game.resume();

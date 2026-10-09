@@ -59,7 +59,7 @@ export interface NewsEffect {
   /** 부호 있는 정수 -10~10. 공식: |impact| = max(1, round(magnitude × 계수)), 계수 3→1.0 / 2→0.6 / 1→0.3 */
   impact: number;
   link: EffectLink;
-  /** 해설 알림에 쓰는 한 줄 이유. 영향도 절댓값 상위 4개 항목은 한국어 필수 */
+  /** 주가 리포트에 쓰는 한 줄 이유. 영향도 절댓값 상위 4개 항목은 한국어 필수 */
   reason?: Partial<LocalizedText>;
   /** 공식에서 ±1 조정했다면 그 이유 */
   adjustNote?: string;

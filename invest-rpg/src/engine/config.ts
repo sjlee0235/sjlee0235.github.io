@@ -49,8 +49,8 @@ export const LEAN_PROB = 0.65;
 export const INSTANT_REACTION_SHARE = 0.75;
 /** 자동 저장 간격(초). 이 시간이 지나면 저장이 필요하다고 알린다 (game.pendingSaveReasons) */
 export const AUTOSAVE_SECONDS = 30;
-/** 뉴스 발표 몇 초 뒤에 해설 알림을 만드는가 */
-export const RECAP_DELAY_SECONDS = 120;
+/** 뉴스 발표 몇 초 뒤에 주가 리포트을 만드는가 */
+export const REPORT_DELAY_SECONDS = 120;
 /** (기본 OFF) 주문이 N틱 뒤 가격으로 체결 */
 export const ORDER_DELAY_TICKS = 0;
 /** (기본 OFF) 간접(강도 2·1) 영향을 직접 영향보다 N틱 늦게 반영 */
@@ -58,6 +58,11 @@ export const INDIRECT_EXTRA_DELAY_TICKS = 0;
 
 /** 연결 강도별 영향도 계수: |영향도| = max(1, round(magnitude × 계수)) */
 export const STRENGTH_COEF = { 3: 1.0, 2: 0.6, 1: 0.3 } as const;
+
+/** 배속별 실제 틱 간격(ms). 게임 시간 1틱(5초)은 그대로이고 실제 시간만 줄어든다. 1배 5000ms, 2배 2500ms */
+export function tickIntervalMs(speed: 1 | 2, tickSeconds: number = TICK_SECONDS): number {
+  return (tickSeconds * 1000) / speed;
+}
 
 /** % 값을 0.1% 단위 정수로. 1.5 → 15 */
 const toRate = (percent: number) => Math.round(percent * 10);
@@ -134,9 +139,9 @@ export interface GameConfig {
 
   /** 자동 저장 간격(초) */
   autosaveSeconds: number;
-  /** 해설 알림: 발표 후 몇 초 뒤, 최대 몇 종목 */
-  recapDelaySeconds: number;
-  recapMaxItems: number;
+  /** 주가 리포트: 발표 후 몇 초 뒤, 최대 몇 종목 */
+  reportDelaySeconds: number;
+  reportMaxItems: number;
 
   /** 시대 시작 추첨 규칙 */
   draw: DrawRules;
@@ -184,8 +189,8 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
   impactMax: 10,
   impactMultiplier: { strong: [0.6, 1.4] as const, weak: [0.4, 1.6] as const },
   autosaveSeconds: AUTOSAVE_SECONDS,
-  recapDelaySeconds: RECAP_DELAY_SECONDS,
-  recapMaxItems: 3,
+  reportDelaySeconds: REPORT_DELAY_SECONDS,
+  reportMaxItems: 3,
   draw: {
     sentimentCounts: { positive: 7, negative: 7, neutral: 6 },
     minCore: 11,
@@ -220,7 +225,7 @@ export interface TickRules {
   inertiaTicks: number;
   storyOutcomeWithinTicks: number;
   noNewTentativeLastTicks: number;
-  recapDelayTicks: number;
+  reportDelayTicks: number;
   chartHistoryLength: number;
   autosaveTicks: number;
 }
@@ -245,7 +250,7 @@ export function getTickRules(config: GameConfig): TickRules {
     inertiaTicks: config.inertiaTicks,
     storyOutcomeWithinTicks: toTicks(config, config.storyOutcomeWithinSeconds, 'storyOutcomeWithinSeconds'),
     noNewTentativeLastTicks: toTicks(config, config.noNewTentativeLastSeconds, 'noNewTentativeLastSeconds'),
-    recapDelayTicks: toTicks(config, config.recapDelaySeconds, 'recapDelaySeconds'),
+    reportDelayTicks: toTicks(config, config.reportDelaySeconds, 'reportDelaySeconds'),
     chartHistoryLength: toTicks(config, config.chartHistorySeconds, 'chartHistorySeconds'),
     autosaveTicks: toTicks(config, config.autosaveSeconds, 'autosaveSeconds'),
   };

@@ -11,7 +11,7 @@
 //   담지 않는 것: effects, impact, magnitude, link, sentiment, relevance, leansTo, outcomes, weight, isHistorical, themeId
 // - 종목: id(판마다 바뀌는 무작위 문자열), 이름, 설명, 가격, 즐겨찾기 여부. 테마 id·분위기·비중은 담지 않는다.
 // - 종목 목록: 즐겨찾기 먼저, 그 안팎은 이름 가나다순. 데이터에 저장된 순서(분위기별로 묶여 있을 수 있음)는 드러나지 않는다.
-// - 해설 알림(발표 120초 뒤): 반영이 끝난 사실이라 방향과 %를 보여준다 (발표 즉시분 / 5초 뒤분 / 합계).
+// - 주가 리포트(발표 120초 뒤): 반영이 끝난 사실이라 방향과 %를 보여준다 (발표 즉시분 / 5초 뒤분 / 합계).
 // - 시대가 끝난 뒤에만 getEraDebrief()로 분위기·비중, 스토리 단서와 실제 결과, 실제 역사 여부, 해설 전체를 공개한다.
 
 import type { LocalizedText, Locale } from '../data/schema.ts';
@@ -20,10 +20,12 @@ import { changeColor, type ChangeColor } from './colors.ts';
 import type { GameConfig } from './config.ts';
 import type { Era } from '../data/schema.ts';
 import type { EraSettlement } from './eraManager.ts';
-import { Game, type GameOptions, type GamePhase, type GameTradeResult, type SaveReason } from './game.ts';
+import {
+  Game, type GameOptions, type GamePhase, type GameSpeed, type GameTradeResult, type PauseReason, type SaveReason,
+} from './game.ts';
 import type { ScheduledNews } from './newsEngine.ts';
 import type { PricePoint } from './priceEngine.ts';
-import type { RecapNotice } from './recap.ts';
+import type { StockReport } from './report.ts';
 import { cumulativeReturnPct } from './returns.ts';
 import { deriveSeed } from './rng.ts';
 import { restoreGame, saveGame, type RestoreOptions, type SaveData } from './save.ts';
@@ -42,6 +44,18 @@ export interface PublicNewsView {
   elapsedSeconds: number;
   /** 결과 뉴스만: 실제와 다른 가상 시나리오인가 (발표된 뒤에만 존재) */
   fictional?: boolean;
+  /** 결과 뉴스만: 이 결과로 이어진 잠정 뉴스의 공개 id (결과가 나온 뒤라 정답 누설 없음) */
+  relatedTentativeId?: string;
+}
+
+/** 뉴스 피드 한 줄 (최신순): 뉴스와, 발표 120초 뒤 그 바로 아래 붙는 주가 리포트 */
+export interface PublicFeedEntry {
+  news: PublicNewsView;
+  report?: PublicStockReport;
+  /** 아직 안 읽은 뉴스 (NEWS! 알림 대상) */
+  unread: boolean;
+  /** 아직 안 읽은 리포트 (피드 안 강조 표시만) */
+  reportUnread: boolean;
 }
 
 export interface PublicStockView {
@@ -58,7 +72,7 @@ export interface PublicStockView {
   quantity: number;
 }
 
-export interface PublicRecapItem {
+export interface PublicStockReportItem {
   stockId: string;
   stockName: LocalizedText;
   /** 합계 = instantPct + delayedPct */
@@ -72,17 +86,19 @@ export interface PublicRecapItem {
   auto: { newsTerm: string; industry: LocalizedText; positive: boolean };
 }
 
-export interface PublicRecap {
+export interface PublicStockReport {
   newsId: string;
   kind: PublicNewsKind;
   publishedTick: number;
-  recapTick: number;
-  items: PublicRecapItem[];
+  reportTick: number;
+  items: PublicStockReportItem[];
   moreCount: number;
   /** 잠정 뉴스: "잠정 발표라 결과에 따라 달라질 수 있어요" 문구 (결과 방향은 암시하지 않음) */
   tentativeNote: boolean;
   /** 결과 뉴스가 예상과 반대로 반응한 이유 */
   reactionNote?: LocalizedText;
+  /** 결과 뉴스의 리포트만: 이어진 잠정 뉴스의 공개 id */
+  relatedTentativeId?: string;
 }
 
 export interface PublicSettlement {
@@ -125,7 +141,7 @@ export type PublicTradeResult =
   | { ok: false; error: TradeError | 'unknown-stock' | 'not-tradable' };
 
 export type PublicAdvanceResult =
-  | { advanced: false; phase: GamePhase; suspended: boolean }
+  | { advanced: false; phase: GamePhase; paused: boolean; pauseReasons: PauseReason[] }
   | {
       advanced: true;
       tick: number;
@@ -134,7 +150,7 @@ export type PublicAdvanceResult =
       /** 모든 종목의 새 가격 (뉴스 발표 순간 반영분 포함) */
       prices: { id: string; price: number; lastTickPct: number }[];
       news: PublicNewsView | null;
-      recaps: PublicRecap[];
+      reports: PublicStockReport[];
       settlement: PublicSettlement | null;
       /** 저장이 필요하면 true (saveGame 호출) */
       saveNeeded: boolean;
@@ -168,7 +184,7 @@ export interface PublicEraDebrief {
     /** 영향 테마별 영향도·연결 강도 (사후 공개) */
     effects: { stockId: string; stockName: LocalizedText; impact: number; strength: 1 | 2 | 3 }[];
     /** 해설 전체 (상위 3개 제한 없음) */
-    recap: PublicRecap;
+    report: PublicStockReport;
   }[];
 }
 
@@ -214,6 +230,9 @@ export class PublicGame {
   get isSuspended(): boolean {
     return this.g.isSuspended;
   }
+  get isPaused(): boolean {
+    return this.g.isPaused;
+  }
   get tick(): number {
     return this.g.tick;
   }
@@ -256,17 +275,53 @@ export class PublicGame {
       remainingSeconds: this.remainingSeconds,
       prices: this.g.getStockList().map((it) => ({ id: this.pub(it.stock.id), price: it.price, lastTickPct: it.lastTickPct })),
       news: r.news ? this.newsView(r.news) : null,
-      recaps: r.recaps.map((n) => this.recapView(n)),
+      reports: r.reports.map((n) => this.reportView(n)),
       settlement: r.settlement ? this.settlementView(r.settlement) : null,
       saveNeeded: this.g.pendingSaveReasons.length > 0,
     };
   }
 
+  /** 일시정지 (사유: 'tutorial' / 'background'). 주가 리포트는 시간을 멈추지 않는다 */
+  pause(reason: PauseReason): void {
+    this.g.pause(reason);
+  }
+  resume(reason: PauseReason = 'background'): void {
+    this.g.resume(reason);
+  }
+  /** 앱이 백그라운드로 갈 때 (= pause('background')) */
   suspend(): void {
     this.g.suspend();
   }
-  resume(): void {
-    this.g.resume();
+
+  /** 1배 / 2배 (실제 시간만 바뀐다. 틱 간격은 config의 tickIntervalMs(speed)) */
+  setSpeed(speed: GameSpeed): void {
+    this.g.setSpeed(speed);
+  }
+  getSpeed(): GameSpeed {
+    return this.g.getSpeed();
+  }
+
+  // ───────── 뉴스 피드 ─────────
+
+  /** 뉴스 피드 (최신순). 리포트는 해당 뉴스 바로 아래 붙는다 */
+  getFeed(): PublicFeedEntry[] {
+    return this.g.getFeed().map((e) => {
+      const v: PublicFeedEntry = { news: this.newsView(e.scheduled), unread: e.unread, reportUnread: e.reportUnread };
+      if (e.report) v.report = this.reportView(e.report);
+      return v;
+    });
+  }
+  /** 읽지 않은 뉴스 수 (NEWS! 알림) */
+  getUnreadCount(): number {
+    return this.g.getUnreadCount();
+  }
+  /** 읽지 않은 주가 리포트 수 (피드 안 강조 표시만, NEWS! 알림에는 쓰지 않는다) */
+  getUnreadReportCount(): number {
+    return this.g.getUnreadReportCount();
+  }
+  /** 모두 읽음 (주식창 탭에 들어가면) */
+  markAllRead(): void {
+    this.g.markAllRead();
   }
   /** (튜토리얼) 뉴스 팝업 확인 */
   confirmNews(): PublicNewsView {
@@ -347,10 +402,10 @@ export class PublicGame {
 
   // ───────── 뉴스·해설·사후 공개 ─────────
 
-  getNewsArchive(): { news: PublicNewsView; recap?: PublicRecap }[] {
+  getNewsArchive(): { news: PublicNewsView; report?: PublicStockReport }[] {
     return this.g.shownNews.map((s) => {
-      const recap = this.g.getRecap(s.news.id);
-      return recap ? { news: this.newsView(s), recap: this.recapView(recap) } : { news: this.newsView(s) };
+      const report = this.g.getReport(s.news.id);
+      return report ? { news: this.newsView(s), report: this.reportView(report) } : { news: this.newsView(s) };
     });
   }
 
@@ -390,7 +445,7 @@ export class PublicGame {
             const stock = stockOfTheme.get(e.themeId)!;
             return { stockId: this.pub(stock.id), stockName: stock.name, impact: e.impact, strength: e.link.strength };
           }),
-        recap: this.recapView(n.recap),
+        report: this.reportView(n.report),
       })),
     };
   }
@@ -457,16 +512,19 @@ export class PublicGame {
       publishedTick: s.tick,
       elapsedSeconds: s.tick * this.g.config.tickSeconds,
     };
-    if (s.kind === 'outcome') v.fictional = !s.isHistorical;
+    if (s.kind === 'outcome') {
+      v.fictional = !s.isHistorical;
+      if (s.relatedTentativeId) v.relatedTentativeId = this.newsPub(s.relatedTentativeId);
+    }
     return v;
   }
 
-  private recapView(n: RecapNotice): PublicRecap {
-    const r: PublicRecap = {
+  private reportView(n: StockReport): PublicStockReport {
+    const r: PublicStockReport = {
       newsId: this.newsPub(n.newsId),
       kind: n.tag,
       publishedTick: n.publishedTick,
-      recapTick: n.recapTick,
+      reportTick: n.reportTick,
       items: n.items.map((it) => ({
         stockId: this.pub(it.stockId),
         stockName: this.stockName(it.stockId),
@@ -480,6 +538,7 @@ export class PublicGame {
       tentativeNote: n.tentativeNote,
     };
     if (n.reactionNote) r.reactionNote = n.reactionNote;
+    if (n.tag === 'outcome' && n.relatedTentativeId) r.relatedTentativeId = this.newsPub(n.relatedTentativeId);
     return r;
   }
 

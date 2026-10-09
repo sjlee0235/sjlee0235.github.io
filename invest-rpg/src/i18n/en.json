@@ -73,14 +73,14 @@
     "archive": "News archive",
     "relatedTentative": "Related tentative news"
   },
-  "recap": {
-    "title": "News recap",
+  "report": {
+    "title": "Market Report",
     "line": "{stock} {pct} — {reason}",
     "auto": "{theme} {effect} from {newsTerm}",
     "benefit": "benefits",
     "burden": "is burdened",
     "more": "+{count} more",
-    "firstNotice": "Recap figures are what actually moved inside the game. They are not real market data or investment advice.",
+    "firstNotice": "Market Report figures are what actually moved inside the game. They are not real market data or investment advice.",
     "tentativeNote": "This was a tentative report, so the effect was small. The outcome report may change things a lot.",
     "split": "On announcement {instant} · 5s later {delayed} · Total {total}"
   },
@@ -93,7 +93,7 @@
     "stepWaiting": "News is coming soon. Please wait a moment.",
     "stepReading": "News is out! Time stops during the tutorial. Try buying a related stock.",
     "stepReaction": "Most of the move hits the price the moment the news appears, and the rest 5 seconds later. Then prices keep swinging for 10 more seconds.",
-    "stepRecap": "Two minutes later, a recap arrives. See which stocks moved and why.",
+    "stepReport": "Two minutes later, a report arrives. See which stocks moved and why.",
     "done": "Tutorial complete! In the main game, time keeps running when news breaks.",
     "replay": "Replay tutorial"
   },
@@ -117,7 +117,7 @@
     "actual": "What happened",
     "followed": "It went the way the clue pointed",
     "notFollowed": "It went against the clue",
-    "allRecaps": "All news explanations",
+    "allReports": "All news explanations",
     "positive": "Positive",
     "negative": "Negative",
     "strength": {

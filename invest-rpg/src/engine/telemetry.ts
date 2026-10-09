@@ -132,8 +132,8 @@ export interface EngineEventMap {
   };
   /** 5초 뒤 나머지 몫 반영 */
   news_reacted: { newsId: string; applied: StockRate[] };
-  /** 해설 알림 생성 (화면에 띄울 수 있게 됨) */
-  recap_created: { newsId: string; stockIds: string[] };
+  /** 주가 리포트 생성 (화면에 띄울 수 있게 됨) */
+  report_created: { newsId: string; stockIds: string[] };
   /** 체결된 매매 */
   trade: {
     side: 'buy' | 'sell';
@@ -157,9 +157,11 @@ export interface EngineEventMap {
   /** 거부된 주문 (잔고 부족 등). 화면이 헷갈리게 만드는 곳을 찾는 데 쓴다 */
   trade_rejected: { side: 'buy' | 'sell'; stockId: string; quantity: number; error: string };
   favorite_toggled: { stockId: string; on: boolean };
-  /** 앱이 백그라운드로 감 / 돌아옴 */
-  suspended: Record<string, never>;
-  resumed: Record<string, never>;
+  /** 일시정지 / 재개 (사유: tutorial = 튜토리얼 뉴스 확인 대기, background = 앱이 백그라운드) */
+  paused: { reason: 'tutorial' | 'background' };
+  resumed: { reason: 'tutorial' | 'background' };
+  /** 배속 변경 (1배 / 2배) */
+  speed_changed: { speed: 1 | 2 };
   /** 1분마다 자산 상태 (그래프·이탈 분석용) */
   asset_snapshot: { cash: number; holdingsValue: number; positions: number };
   /** 시대 종료 정산 */
@@ -185,7 +187,7 @@ export interface EngineEventMap {
 // ───────── 앱(화면) 이벤트 ─────────
 
 export type ScreenId =
-  | 'market' | 'stock-detail' | 'chart' | 'portfolio' | 'news-archive' | 'recap' | 'settlement' | 'settings' | 'tutorial';
+  | 'market' | 'stock-detail' | 'chart' | 'portfolio' | 'news-archive' | 'report' | 'settlement' | 'settings' | 'tutorial';
 
 export interface AppEventMap {
   /** 앱 세션: 켜기/끄기/백그라운드/복귀 */
@@ -196,8 +198,8 @@ export interface AppEventMap {
   related_theme_tap: { newsId: string; themeId: string };
   /** 화면을 떠날 때: 어떤 화면을 몇 ms 봤는지 */
   screen_view: { screen: ScreenId; dwellMs: number; targetId?: string };
-  /** 해설 알림을 열어 봄 / 그냥 지나감 */
-  recap_view: { newsId: string; opened: boolean; dwellMs: number };
+  /** 주가 리포트을 열어 봄 / 그냥 지나감 */
+  report_view: { newsId: string; opened: boolean; dwellMs: number };
   /** 주문 창을 열었다가 주문 없이 닫음 (망설임) */
   order_abandoned: { stockId: string; side: 'buy' | 'sell'; dwellMs: number };
   /** 설정 변경 (색상 등) */

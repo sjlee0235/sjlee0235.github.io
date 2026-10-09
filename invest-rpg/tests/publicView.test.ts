@@ -63,11 +63,11 @@ describe('공개용 뷰: 플레이 중 숨김', () => {
     }
   }, 60_000);
 
-  it('뉴스 뷰는 id·종류·제목·본문·발표 시각만, 결과 뉴스만 발표 뒤 가상 시나리오 태그', () => {
+  it('뉴스 뷰는 id·종류·제목·본문·발표 시각만, 결과 뉴스만 가상 시나리오 태그와 관련 잠정 뉴스 id', () => {
     const g = playPublic(2);
     let sawOutcome = false;
     for (const { news } of g.getNewsArchive()) {
-      const allowed = ['id', 'kind', 'title', 'body', 'publishedTick', 'elapsedSeconds', ...(news.kind === 'outcome' ? ['fictional'] : [])];
+      const allowed = ['id', 'kind', 'title', 'body', 'publishedTick', 'elapsedSeconds', ...(news.kind === 'outcome' ? ['fictional', 'relatedTentativeId'] : [])];
       expect(Object.keys(news).sort()).toEqual(allowed.sort());
       expect(news.id).toMatch(/^n[0-9a-z]+$/);
       if (news.kind === 'outcome') sawOutcome = true;
@@ -84,11 +84,11 @@ describe('공개용 뷰: 플레이 중 숨김', () => {
     }
   });
 
-  it('해설 알림은 방향과 % (발표 즉시 / 5초 뒤 / 합계)를 담는다', () => {
+  it('주가 리포트은 방향과 % (발표 즉시 / 5초 뒤 / 합계)를 담는다', () => {
     const g = playPublic(4);
-    const recaps = g.getNewsArchive().flatMap((a) => (a.recap ? [a.recap] : []));
-    expect(recaps.length).toBeGreaterThan(0);
-    for (const r of recaps) {
+    const reports = g.getNewsArchive().flatMap((a) => (a.report ? [a.report] : []));
+    expect(reports.length).toBeGreaterThan(0);
+    for (const r of reports) {
       for (const it of r.items) expect(it.appliedPct).toBeCloseTo(it.instantPct + it.delayedPct, 9);
       expectClean(r, internalIds);
     }
@@ -199,8 +199,8 @@ describe('시대 종료 후 공개 (getEraDebrief)', () => {
     for (const s of d.stories) expect(typeof s.followedLean).toBe('boolean');
     expect(d.news).toHaveLength(g.getNewsArchive().length);
     // 해설 전체: 상위 3개 제한 없이 영향받은 활성 종목 모두
-    expect(d.news.some((n) => n.recap.items.length > 3)).toBe(true);
-    for (const n of d.news) expect(n.recap.moreCount).toBe(0);
+    expect(d.news.some((n) => n.report.items.length > 3)).toBe(true);
+    for (const n of d.news) expect(n.report.moreCount).toBe(0);
     // 사후 공개라 분위기·방향은 보여주지만, 내부 id는 쓰지 않는다
     const json = JSON.stringify(d);
     for (const id of internalIds) expect(json.includes(`"${id}"`), `내부 id ${id}`).toBe(false);

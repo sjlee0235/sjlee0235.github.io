@@ -29,10 +29,10 @@ describe('다국어', () => {
     }
   });
 
-  it('해설 알림 템플릿', () => {
-    expect(t('ko', 'recap.line', { stock: '하늘 배터리', pct: '+21.3%', reason: '주문 증가 기대' })).toBe('하늘 배터리 +21.3% — 주문 증가 기대');
-    expect(t('ko', 'recap.auto', { newsTerm: '경유', theme: '정유', effect: t('ko', 'recap.burden') })).toBe('경유의 영향으로 정유 부담');
-    expect(t('en', 'recap.line', { stock: 'A', pct: '-3.0%', reason: 'r' })).toBe('A -3.0% — r');
+  it('주가 리포트 템플릿', () => {
+    expect(t('ko', 'report.line', { stock: '하늘 배터리', pct: '+21.3%', reason: '주문 증가 기대' })).toBe('하늘 배터리 +21.3% — 주문 증가 기대');
+    expect(t('ko', 'report.auto', { newsTerm: '경유', theme: '정유', effect: t('ko', 'report.burden') })).toBe('경유의 영향으로 정유 부담');
+    expect(t('en', 'report.line', { stock: 'A', pct: '-3.0%', reason: 'r' })).toBe('A -3.0% — r');
   });
 
   it('튜토리얼 안내 4가지와 가상 시나리오 안내가 두 언어에 있다', () => {

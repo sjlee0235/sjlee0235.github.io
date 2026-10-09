@@ -3,16 +3,18 @@
 //   Game은 뉴스의 영향 테마·방향, 테마 분위기 등 플레이 중 숨겨야 할 정보를 그대로 들고 있기 때문이다.
 //
 // 엔진은 실제 시계를 쓰지 않는다. 화면 쪽 타이머가 5초마다 advanceTick()을 부른다.
-// - 뉴스가 떠도 시간은 멈추지 않는다. (튜토리얼만 pauseOnNews로 예외)
+// - 뉴스가 떠도, 주가 리포트가 붙어도 시간은 멈추지 않는다.
+// - 시간이 멈추는 경우는 일시정지 사유가 하나라도 있을 때뿐: 'tutorial'(튜토리얼 뉴스 확인 대기), 'background'(앱이 백그라운드)
+// - 배속(1배/2배)은 실제 시간만 바꾼다. 게임 시간 단위(5초 틱, 7분 유예, 120초 리포트)와 결과는 그대로
 // - 뉴스 발표(틱 k): 영향의 75%가 그 순간 바로 반영(instantChanges) → 틱 k+1에 나머지 반영 → 틱 k+2, k+3 관성 → 일반 움직임
-// - 뉴스 발표 120초 뒤 해설 알림(recap)이 AdvanceResult.recaps로 나온다
+// - 뉴스 발표 120초 뒤 주가 리포트(report)이 AdvanceResult.reports로 나온다
 //
 // 상태(phase)
-//   running   : 시간이 흐르는 중
-//   news      : (튜토리얼 전용) 뉴스 팝업 열림, 시간 정지
+//   running   : 시대 진행 중 (일시정지 사유가 있으면 틱이 멈춘다)
 //   era-ended : 시대 종료. 자동 청산·정산 완료. startNextEra()로 다음 시대
 //   finished  : 마지막 시대까지 끝남
-// suspend()   : 앱이 백그라운드로 갔을 때. 틱·뉴스·해설 타이머·매매 모두 정지, resume()으로 재개
+// pause('background') / resume('background') : 앱이 백그라운드로 갔을 때 (suspend()/resume()과 같음). 틱·뉴스·매매 정지
+// pause('tutorial')   : 튜토리얼 뉴스 확인 대기. 틱은 멈추지만 매매는 된다
 
 import type { Era, LinkStrength, LocalizedText, News, Stock, Theme } from '../data/schema.ts';
 import { effectKind } from '../data/schema.ts';
@@ -26,7 +28,7 @@ import type { ActiveEra, EraDraw } from './eraDraw.ts';
 import { settleEra, sortEras, startEraSession, type EraSession, type EraSettlement } from './eraManager.ts';
 import type { NewsTag, ScheduledKind, ScheduledNews } from './newsEngine.ts';
 import type { PricePoint, StockTickChange } from './priceEngine.ts';
-import { buildRecap, type AppliedRate, type RecapNotice } from './recap.ts';
+import { buildReport, type AppliedRate, type StockReport } from './report.ts';
 import { applyDeposit, cumulativeReturnPct, startTwr, twrPct, type TwrState } from './returns.ts';
 import {
   balanceHash, ENGINE_VERSION, TELEMETRY_SCHEMA_VERSION,
@@ -35,7 +37,21 @@ import {
 } from './telemetry.ts';
 import { addFavorite, sortByFavorites, toggleFavorite } from './watchlist.ts';
 
-export type GamePhase = 'running' | 'news' | 'era-ended' | 'finished';
+export type GamePhase = 'running' | 'era-ended' | 'finished';
+
+/** 일시정지 사유. 하나라도 있으면 시간이 멈춘다 (주가 리포트는 시간을 멈추지 않는다) */
+export type PauseReason = 'tutorial' | 'background';
+
+/** 배속: 실제 시간만 바뀐다 (게임 결과는 같다) */
+export type GameSpeed = 1 | 2;
+
+/** 뉴스 피드 한 줄: 뉴스와 (발표 120초 뒤 붙는) 주가 리포트 */
+export interface FeedEntry {
+  scheduled: ScheduledNews;
+  report?: StockReport;
+  unread: boolean;
+  reportUnread: boolean;
+}
 
 export interface GameOptions {
   eras: readonly Era[];
@@ -85,7 +101,7 @@ export interface OrderFill {
 }
 
 export type AdvanceResult =
-  | { advanced: false; phase: GamePhase; suspended: boolean }
+  | { advanced: false; phase: GamePhase; paused: boolean; pauseReasons: PauseReason[] }
   | {
       advanced: true;
       tick: number;
@@ -94,8 +110,8 @@ export type AdvanceResult =
       news: ScheduledNews | null;
       /** 뉴스 발표 순간 바로 반영된 가격 변화 (뉴스가 없으면 빈 배열) */
       instantChanges: StockTickChange[];
-      /** 이 틱에 만들어진 해설 알림 */
-      recaps: RecapNotice[];
+      /** 이 틱에 만들어진 주가 리포트 */
+      reports: StockReport[];
       /** (주문 지연 옵션) 이 틱에 체결된 주문 */
       fills: OrderFill[];
       settlement: EraSettlement | null;
@@ -130,8 +146,8 @@ export interface NewsArchiveEntry {
   /** 영향 테마별 연결 강도 */
   effects: { themeId: string; strength: LinkStrength; kind: 'direct' | 'indirect' }[];
   relatedTentativeId?: string;
-  /** 해설 알림 (발표 120초 뒤에 생김) */
-  recap?: RecapNotice;
+  /** 주가 리포트 (발표 120초 뒤에 생김) */
+  report?: StockReport;
 }
 
 /** 이번 시대에 플레이어가 한 행동: 매매 또는 입금 (세이브·리플레이용) */
@@ -151,6 +167,9 @@ export interface GameStateSnapshot {
   performance: StockPerformance[];
   favorites: string[];
   twr: TwrState;
+  /** 뉴스 피드 읽음 상태 (내부 뉴스 id) */
+  readNewsIds: string[];
+  readReportIds: string[];
 }
 
 /** 시대 종료 후 공개 (사후 학습용, 내부 id 그대로) */
@@ -173,7 +192,7 @@ export interface EraDebrief {
     clue: News | null;
   }[];
   /** 이번 판 뉴스 전부와 해설 전체 (상위 3개 제한 없음) */
-  news: { scheduled: ScheduledNews; recap: RecapNotice }[];
+  news: { scheduled: ScheduledNews; report: StockReport }[];
 }
 
 interface PendingOrder {
@@ -192,13 +211,16 @@ export class Game {
   colorScheme: ColorScheme;
   private session: EraSession;
   private _phase: GamePhase = 'running';
-  private _suspended = false;
+  private readonly pauseReasons = new Set<PauseReason>();
+  private _speed: GameSpeed = 1;
+  private readNews = new Set<string>();
+  private readReports = new Set<string>();
   private readonly _settlements: EraSettlement[] = [];
   private readonly options: GameOptions;
   /** 뉴스 id → (종목 id → 실제 적용된 변동률: 즉시 / 5초 뒤) */
   private applied = new Map<string, Map<string, AppliedRate>>();
-  private pendingRecaps: { tick: number; scheduled: ScheduledNews }[] = [];
-  private recaps = new Map<string, RecapNotice>();
+  private pendingReports: { tick: number; scheduled: ScheduledNews }[] = [];
+  private reports = new Map<string, StockReport>();
   private orders: PendingOrder[] = [];
   private readonly _draws: Record<string, EraDraw> = {};
   private telemetry: TelemetrySink | null;
@@ -273,8 +295,16 @@ export class Game {
   get phase(): GamePhase {
     return this._phase;
   }
+  /** 일시정지 사유가 하나라도 있는가 */
+  get isPaused(): boolean {
+    return this.pauseReasons.size > 0;
+  }
+  get currentPauseReasons(): PauseReason[] {
+    return [...this.pauseReasons].sort();
+  }
+  /** 앱이 백그라운드라 멈춘 상태인가 */
   get isSuspended(): boolean {
-    return this._suspended;
+    return this.pauseReasons.has('background');
   }
   get era(): Era {
     return this.session.era;
@@ -372,8 +402,8 @@ export class Game {
   // ───────── 시간 진행 ─────────
 
   advanceTick(): AdvanceResult {
-    if (this._suspended || this._phase !== 'running') {
-      return { advanced: false, phase: this._phase, suspended: this._suspended };
+    if (this.isPaused || this._phase !== 'running') {
+      return { advanced: false, phase: this._phase, paused: this.isPaused, pauseReasons: this.currentPauseReasons };
     }
     const nextTick = this.tick + 1;
     const due = this.session.news.consumeRatesFor(nextTick);
@@ -412,27 +442,27 @@ export class Game {
             instant: this.stockRates(instant?.rates ?? new Map(), instantChanges),
           });
         }
-        const recapTick = tick + this.rules.recapDelayTicks;
-        if (recapTick <= this.rules.ticksPerEra) this.pendingRecaps.push({ tick: recapTick, scheduled: news });
-        if (this.options.pauseOnNews) this._phase = 'news';
+        const reportTick = tick + this.rules.reportDelayTicks;
+        if (reportTick <= this.rules.ticksPerEra) this.pendingReports.push({ tick: reportTick, scheduled: news });
+        if (this.options.pauseOnNews) this.pause('tutorial');
       }
     }
 
-    const recaps: RecapNotice[] = [];
-    for (const p of this.pendingRecaps.filter((r) => r.tick === tick)) {
-      const notice = buildRecap(
+    const reports: StockReport[] = [];
+    for (const p of this.pendingReports.filter((r) => r.tick === tick)) {
+      const notice = buildReport(
         p.scheduled,
         this.applied.get(p.scheduled.news.id) ?? new Map(),
         this.session.active.stocks,
         new Map(this.session.active.themes.map((t) => [t.id, t])),
         tick,
-        this.config.recapMaxItems,
+        this.config.reportMaxItems,
       );
-      this.recaps.set(notice.newsId, notice);
-      recaps.push(notice);
-      if (this.isRecording) this.emit('recap_created', { newsId: notice.newsId, stockIds: notice.items.map((i) => i.stockId) });
+      this.reports.set(notice.newsId, notice);
+      reports.push(notice);
+      if (this.isRecording) this.emit('report_created', { newsId: notice.newsId, stockIds: notice.items.map((i) => i.stockId) });
     }
-    this.pendingRecaps = this.pendingRecaps.filter((r) => r.tick !== tick);
+    this.pendingReports = this.pendingReports.filter((r) => r.tick !== tick);
 
     this.updateStats(tick);
     if (tick - this.lastSavedTick >= this.rules.autosaveTicks) this.saveReasons.add('interval');
@@ -468,19 +498,81 @@ export class Game {
         });
       }
     }
-    return { advanced: true, tick, changes, news, instantChanges, recaps, fills, settlement };
+    return { advanced: true, tick, changes, news, instantChanges, reports, fills, settlement };
   }
 
-  /** 앱이 백그라운드로 갈 때. 시간·매매가 멈추고, 저장이 필요하다고 알린다 */
+  /**
+   * 일시정지. 사유: 'tutorial'(튜토리얼 뉴스 확인 대기) / 'background'(앱이 백그라운드).
+   * 사유가 하나라도 남아 있으면 시간이 멈춘다. 'background'는 저장이 필요하다고 알린다.
+   */
+  pause(reason: PauseReason): void {
+    if (this.pauseReasons.has(reason)) return;
+    this.pauseReasons.add(reason);
+    if (reason === 'background') this.saveReasons.add('background');
+    if (this.isRecording) this.emit('paused', { reason });
+  }
+
+  resume(reason: PauseReason = 'background'): void {
+    if (!this.pauseReasons.delete(reason)) return;
+    if (this.isRecording) this.emit('resumed', { reason });
+  }
+
+  /** 앱이 백그라운드로 갈 때 (= pause('background')) */
   suspend(): void {
-    if (!this._suspended && this.isRecording) this.emit('suspended', {});
-    this._suspended = true;
-    this.saveReasons.add('background');
+    this.pause('background');
   }
 
-  resume(): void {
-    if (this._suspended && this.isRecording) this.emit('resumed', {});
-    this._suspended = false;
+  // ───────── 배속 ─────────
+
+  /** 1배 / 2배. 실제 시간만 바뀐다 (틱 간격은 tickIntervalMs(speed)) */
+  setSpeed(speed: GameSpeed): void {
+    if (speed !== 1 && speed !== 2) throw new Error(`지원하지 않는 배속: ${speed}`);
+    if (speed === this._speed) return;
+    this._speed = speed;
+    if (this.isRecording) this.emit('speed_changed', { speed });
+  }
+
+  getSpeed(): GameSpeed {
+    return this._speed;
+  }
+
+  // ───────── 뉴스 피드 ─────────
+
+  /** 뉴스 피드 (최신순): 뉴스와, 발표 120초 뒤 그 아래 붙는 주가 리포트 */
+  getFeed(): FeedEntry[] {
+    return this.session.news.shown
+      .map((s): FeedEntry => {
+        const report = this.reports.get(s.news.id);
+        const entry: FeedEntry = { scheduled: s, unread: !this.readNews.has(s.news.id), reportUnread: false };
+        if (report) {
+          entry.report = report;
+          entry.reportUnread = !this.readReports.has(s.news.id);
+        }
+        return entry;
+      })
+      .reverse();
+  }
+
+  /** 읽지 않은 뉴스 수 (NEWS! 알림은 이것만 본다) */
+  getUnreadCount(): number {
+    return this.session.news.shown.filter((s) => !this.readNews.has(s.news.id)).length;
+  }
+
+  /** 읽지 않은 주가 리포트 수 (피드 안 강조 표시용) */
+  getUnreadReportCount(): number {
+    return [...this.reports.keys()].filter((id) => !this.readReports.has(id)).length;
+  }
+
+  /** 지금까지 나온 뉴스와 리포트를 모두 읽음 처리 (주식창에 들어가면) */
+  markAllRead(): void {
+    for (const s of this.session.news.shown) this.readNews.add(s.news.id);
+    for (const id of this.reports.keys()) this.readReports.add(id);
+  }
+
+  /** (세이브 불러오기용) 읽음 상태를 되돌린다 */
+  restoreReadState(readNewsIds: readonly string[], readReportIds: readonly string[]): void {
+    this.readNews = new Set(readNewsIds);
+    this.readReports = new Set(readReportIds);
   }
 
   /**
@@ -490,7 +582,7 @@ export class Game {
    * 결제·광고 SDK 연동은 엔진 밖(앱) 일이다. 엔진은 결과 금액만 받는다.
    */
   deposit(amount: number, source: DepositSource): DepositResult {
-    const inEra = this._phase === 'running' || this._phase === 'news';
+    const inEra = this._phase === 'running';
     const assetsBefore = inEra ? this.totalAssets : 0;
     const r = this.account.deposit(amount, source, this.tick);
     if (!r.ok) return r;
@@ -512,9 +604,9 @@ export class Game {
 
   /** (튜토리얼) 뉴스 팝업 '확인'. 1틱(5초) 뒤 반영 */
   confirmNews(): ScheduledNews {
-    if (this._phase !== 'news') throw new Error('열린 뉴스 팝업이 없음');
+    if (!this.session.news.pendingNews) throw new Error('확인할 튜토리얼 뉴스가 없음');
     const s = this.session.news.confirm(this.tick);
-    this._phase = 'running';
+    this.resume('tutorial');
     return s;
   }
 
@@ -530,9 +622,9 @@ export class Game {
 
   // ───────── 뉴스 팝업·해설·보관함 ─────────
 
-  /** 이 뉴스의 해설 알림 (발표 120초 뒤에 생김, 없으면 undefined) */
-  getRecap(newsId: string): RecapNotice | undefined {
-    return this.recaps.get(newsId);
+  /** 이 뉴스의 주가 리포트 (발표 120초 뒤에 생김, 없으면 undefined) */
+  getReport(newsId: string): StockReport | undefined {
+    return this.reports.get(newsId);
   }
 
   /**
@@ -569,15 +661,15 @@ export class Game {
       stories,
       news: shown.map((s) => ({
         scheduled: s,
-        recap: buildRecap(
+        report: buildReport(
           s, this.applied.get(s.news.id) ?? new Map(), active.stocks, themeById,
-          this.recaps.get(s.news.id)?.recapTick ?? this.tick, Number.POSITIVE_INFINITY,
+          this.reports.get(s.news.id)?.reportTick ?? this.tick, Number.POSITIVE_INFINITY,
         ),
       })),
     };
   }
 
-  /** 뉴스 보관함 (내부용): 지금까지 뜬 뉴스와 (있으면) 해설 알림 */
+  /** 뉴스 보관함 (내부용): 지금까지 뜬 뉴스와 (있으면) 주가 리포트 */
   getNewsArchive(): NewsArchiveEntry[] {
     return this.session.news.shown.map((s) => {
       const entry: NewsArchiveEntry = {
@@ -590,8 +682,8 @@ export class Game {
         effects: s.news.effects.map((e) => ({ themeId: e.themeId, strength: e.link.strength, kind: effectKind(e) })),
       };
       if (s.relatedTentativeId) entry.relatedTentativeId = s.relatedTentativeId;
-      const recap = this.recaps.get(s.news.id);
-      if (recap) entry.recap = recap;
+      const report = this.reports.get(s.news.id);
+      if (report) entry.report = report;
       return entry;
     });
   }
@@ -657,6 +749,8 @@ export class Game {
       performance: this.account.getPerformance(),
       favorites: [...this.session.favorites],
       twr: { ...this.twr, deposits: { ...this.twr.deposits } },
+      readNewsIds: [...this.readNews].sort(),
+      readReportIds: [...this.readReports].sort(),
     };
   }
 
@@ -674,7 +768,7 @@ export class Game {
 
   // ───────── 내부 ─────────
 
-  /** 뉴스별로 실제 적용된 변동률 기록 (해설 알림용) */
+  /** 뉴스별로 실제 적용된 변동률 기록 (주가 리포트용) */
   private recordApplied(
     newsId: string, rates: ReadonlyMap<string, number>, changes: readonly StockTickChange[], part: 'instant' | 'delayed',
   ): void {
@@ -698,8 +792,10 @@ export class Game {
     if (!era) throw new Error(`없는 시대 순번: ${index}`);
     this.account.resetPerformance();
     this.applied = new Map();
-    this.pendingRecaps = [];
-    this.recaps = new Map();
+    this.pendingReports = [];
+    this.reports = new Map();
+    this.readNews = new Set();
+    this.readReports = new Set();
     this.orders = [];
     this.stats = Game.emptyStats(this.account.cash);
     this._eraActions = [];
@@ -733,7 +829,7 @@ export class Game {
 
   private checkTradable(stockId: string): GameTradeError | null {
     // 튜토리얼에서는 뉴스 팝업으로 시간이 멈춘 동안에도 매매할 수 있다
-    if (this._suspended || this._phase === 'era-ended' || this._phase === 'finished') return 'not-tradable';
+    if (this.isSuspended || this._phase === 'era-ended' || this._phase === 'finished') return 'not-tradable';
     if (!this.session.prices.hasStock(stockId)) return 'unknown-stock';
     return null;
   }

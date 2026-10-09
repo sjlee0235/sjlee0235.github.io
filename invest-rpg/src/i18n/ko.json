@@ -73,14 +73,14 @@
     "archive": "뉴스 보관함",
     "relatedTentative": "관련 잠정 뉴스"
   },
-  "recap": {
-    "title": "뉴스 해설",
+  "report": {
+    "title": "주가 리포트",
     "line": "{stock} {pct} — {reason}",
     "auto": "{newsTerm}의 영향으로 {theme} {effect}",
     "benefit": "수혜",
     "burden": "부담",
     "more": "외 {count}종목",
-    "firstNotice": "해설의 반영률은 게임 안에서 실제로 반영된 값이에요. 실제 시장 수치나 투자 권유가 아닙니다.",
+    "firstNotice": "주가 리포트의 반영률은 게임 안에서 실제로 반영된 값이에요. 실제 시장 수치나 투자 권유가 아닙니다.",
     "tentativeNote": "잠정 발표라 영향이 작았고, 결과 발표에 따라 크게 달라질 수 있어요.",
     "split": "발표 즉시 {instant} · 5초 뒤 {delayed} · 합계 {total}"
   },
@@ -93,7 +93,7 @@
     "stepWaiting": "곧 뉴스가 발표돼요. 잠시 기다려 보세요.",
     "stepReading": "뉴스가 떴어요! 튜토리얼에서는 시간이 멈춰요. 관련 종목을 한 번 사 보세요.",
     "stepReaction": "뉴스가 뜨는 순간 대부분이 가격에 반영되고, 5초 뒤 나머지가 반영돼요. 이후 10초 동안 출렁임이 이어져요.",
-    "stepRecap": "2분 뒤에는 해설 알림이 와요. 어떤 종목이 왜 움직였는지 확인해 보세요.",
+    "stepReport": "2분 뒤에는 주가 리포트이 와요. 어떤 종목이 왜 움직였는지 확인해 보세요.",
     "done": "튜토리얼 끝! 본게임에서는 뉴스가 떠도 시간이 멈추지 않아요.",
     "replay": "튜토리얼 다시 보기"
   },
@@ -117,7 +117,7 @@
     "actual": "실제 결과",
     "followed": "단서대로 나왔어요",
     "notFollowed": "단서와 반대로 나왔어요",
-    "allRecaps": "뉴스별 해설 전체",
+    "allReports": "뉴스별 해설 전체",
     "positive": "호재",
     "negative": "악재",
     "strength": {

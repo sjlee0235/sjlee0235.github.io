@@ -55,6 +55,8 @@ export interface GameSnapshot {
   state: GameStateSnapshot;
   /** 저장 순간 상태 지문 (리플레이 결과 확인용) */
   stateHash: string;
+  /** 배속 (1배/2배). 게임 결과와 무관한 설정이라 지문에는 넣지 않는다 */
+  speed?: 1 | 2;
 }
 
 export interface SaveData {
@@ -122,6 +124,7 @@ export function snapshotGame(game: Game): GameSnapshot {
     actions: game.eraActions.map((a) => ({ ...a })),
     state: game.captureState(),
     stateHash: stateHash(game),
+    speed: game.getSpeed(),
   };
 }
 
@@ -182,6 +185,8 @@ export function restoreGame(
     });
     if (fastForward(game, g.state.tick, g.actions)) {
       game.restoreFavorites(g.state.favorites);
+      game.restoreReadState(g.state.readNewsIds ?? [], g.state.readReportIds ?? []);
+      if (g.speed) game.setSpeed(g.speed);
       if (stateHash(game) === g.stateHash) {
         game.markSaved();
         return finish({ status: 'resumed', game });
