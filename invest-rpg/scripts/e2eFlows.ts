@@ -2,6 +2,7 @@
 // 1) 앱 업데이트로 시대 중간에 정산된 뒤 '확인' → 다음 시대가 실제로 흘러간다
 // 2) 마지막 시대까지 끝낸 판을 다시 열면 최종 요약이 보이고, 새 판이 저장되지 않는다
 // 3) 숨긴 탭에서 열면 처음부터 일시정지
+// 4) 매매 흐름(최대 매수·즐겨찾기·전량 매도)과 NEWS! → 주식창
 // 시간을 기다리지 않도록 디버그 기능(window.__debug)을 쓴다.
 
 import { chromium, type Page } from 'playwright';
@@ -95,6 +96,44 @@ try {
     await open(page, '?debug=1&seed=8&fresh=1');
     const paused = await page.evaluate(() => (window as unknown as { __debug: { app: { game: { isPaused: boolean } } } }).__debug.app.game.isPaused);
     check(paused, '숨긴 탭에서 열면 처음부터 일시정지');
+    await ctx.close();
+  }
+  // ── 4) 매매: 종목 누르기 → 최대 → 매수 → 즐겨찾기 자동 → 매도 최대 → 전량 매도 / NEWS! → 주식창 ──
+  {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const page = await ctx.newPage();
+    const errors: string[] = [];
+    page.on('pageerror', (e) => errors.push(String(e)));
+    await open(page, '?debug=1&seed=9&fresh=1');
+    const name = (await page.locator('.stock-row .c-name').nth(3).textContent())!;
+    await page.locator('.stock-row').nth(3).click();
+    check(await page.locator('.order-box.open').isVisible(), '종목을 누르면 주문 패널이 열린다');
+    await page.locator('.op-max').click();
+    const qty = Number(await page.locator('.op-qty').inputValue());
+    await page.locator('.op-exec').click();
+    await page.waitForTimeout(150);
+    const toast = (await page.locator('.toast').last().textContent()) ?? '';
+    check(toast.includes(`${qty}주 체결`), `최대(${qty}주) 매수 체결 안내: "${toast}"`);
+    const firstRow = (await page.locator('.stock-row .c-name').first().textContent())!;
+    check(firstRow === name && (await page.locator('.stock-row .star.on').count()) === 1, '산 종목은 즐겨찾기로 맨 위에');
+    const cashAfterBuy = await page.evaluate(() => (window as unknown as { __debug: { app: { game: { cash: number } } } }).__debug.app.game.cash);
+    check(cashAfterBuy < 1000, `최대 매수 뒤 남은 현금이 1주 값보다 적다 (${cashAfterBuy})`);
+    await page.locator('.side-sell').first().click();
+    await page.locator('.op-max').click();
+    check(Number(await page.locator('.op-qty').inputValue()) === qty, '매도 최대 = 보유 수량 전부');
+    await page.locator('.op-exec').click();
+    await page.waitForTimeout(150);
+    const holdings = await page.evaluate(() => (window as unknown as { __debug: { app: { game: { getPortfolio(): { holdings: unknown[] } } } } }).__debug.app.game.getPortfolio().holdings.length);
+    check(holdings === 0, '전량 매도 뒤 보유 종목 없음');
+    // NEWS! 배지
+    await dbg(page, 'tab', 'living_room');
+    await dbg(page, 'nextNews');
+    await page.waitForTimeout(100);
+    check(await page.locator('.news-badge').isVisible(), '거실에서 안 읽은 뉴스가 있으면 NEWS!');
+    await page.locator('.news-badge').click();
+    check((await page.getAttribute('#app', 'data-tab')) === 'trading', 'NEWS!를 누르면 주식창으로');
+    check((await page.locator('.news').count()) >= 1, '주식창 피드에 뉴스가 있다');
+    check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
   }
 } finally {
