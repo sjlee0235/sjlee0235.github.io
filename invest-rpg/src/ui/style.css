@@ -421,11 +421,12 @@ button { cursor: pointer; }
 
 /* ───────── 디버그 패널 (개발 전용) ───────── */
 .debug-panel {
-  position: fixed; right: 4px; top: 50%; z-index: 50;
+  position: fixed; right: 4px; top: 30%; z-index: 50;
   background: #000c; color: #9f9; font: 11px var(--mono);
   padding: 4px; border: 1px solid #3a3; max-width: 230px;
 }
-.debug-panel.min .dbg-row:first-of-type { display: none; }
+.debug-panel.min .dbg-row { display: none; } /* 처음엔 'DEBUG' 버튼만 (화면 버튼을 가리지 않게), 누르면 펼침 */
+.dbg-title { background: none; border: 0; color: #9f9; font: inherit; padding: 0; }
 .dbg-row { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; margin-top: 3px; }
 .debug-panel .btn { background: #222; color: #9f9; border-color: #4a4 #131 #131 #4a4; }
 .debug-panel input, .debug-panel select { width: 60px; background: #111; color: #9f9; border: 1px solid #3a3; }

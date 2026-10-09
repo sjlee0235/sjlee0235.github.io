@@ -66,8 +66,8 @@ export function mountDebug(app: App, info: { seed: number; eraNames: string[] })
   };
   const panel = h(
     'div',
-    { class: 'debug-panel' },
-    h('div', { class: 'dbg-title' }, 'DEBUG'),
+    { class: 'debug-panel min' },
+    h('button', { class: 'dbg-title', onclick: () => panel.classList.toggle('min') }, 'DEBUG'),
     h('div', { class: 'dbg-row' }, 'seed ', seedInput, ' era ', eraSel, btn('새 게임', () => go({ seed: seedInput.value, era: eraSel.value, fresh: '1' }))),
     h(
       'div',
@@ -80,7 +80,6 @@ export function mountDebug(app: App, info: { seed: number; eraNames: string[] })
       btn('+5분', () => api.advanceSeconds(300)),
       btn('시대 끝', () => api.endEra()),
       btn('+1000코인', () => api.coins(1000)),
-      btn('닫기', () => panel.classList.toggle('min')),
     ),
   );
   document.body.append(panel);
