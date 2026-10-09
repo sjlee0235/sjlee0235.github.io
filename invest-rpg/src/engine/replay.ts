@@ -12,6 +12,7 @@
 
 import type { Era } from '../data/schema.ts';
 import type { GameConfig } from './config.ts';
+import type { EraDraw } from './eraDraw.ts';
 import { Game } from './game.ts';
 import type { EngineEventMap, TelemetryEvent } from './telemetry.ts';
 
@@ -58,10 +59,22 @@ export function replay(
   if (!start) throw new Error('game_start 기록이 없음');
   const s = start.data as EngineEventMap['game_start'];
   if (s.mode !== 'main') throw new Error('본게임 기록만 리플레이할 수 있음');
-  const game = new Game({ eras, seed: s.seed, config, startEraIndex: s.startEraIndex, startCash: s.startCash });
+  // 추첨 결과는 기록(era_start)에 있는 그대로 쓴다 (세이브에서 새 시드로 다시 시작한 판도 추첨은 예전 그대로이므로)
+  const draws: Record<string, EraDraw> = {};
+  for (const e of events) {
+    if (e.type !== 'era_start') continue;
+    const d = e.data as EngineEventMap['era_start'];
+    draws[e.eraId] = {
+      eraId: e.eraId, seed: s.seed, attempt: d.drawAttempt, activeThemeIds: d.activeThemeIds,
+      usableBreaking: d.usableBreaking, usableStories: d.usableStories, ok: d.drawOk,
+    };
+  }
+  const game = new Game({ eras, seed: s.seed, config, startEraIndex: s.startEraIndex, startCash: s.startCash, draws });
   if (game.config.orderDelayTicks > 0) throw new Error('주문 지연 옵션이 켜진 기록은 리플레이하지 않음');
   const lastEra = untilEraIndex ?? Math.max(s.startEraIndex, ...trades.map((t) => t.eraIndex));
-  const queue = [...trades].sort((a, b) => a.eraIndex - b.eraIndex || a.tick - b.tick);
+  // 세이브에서 이어 한 기록이면, 이어 하기 전 매매도 함께 넣는다
+  const prior: ReplayTrade[] = (s.priorTrades ?? []).map((t) => ({ ...t, eraIndex: s.startEraIndex }));
+  const queue = [...prior, ...trades].sort((a, b) => a.eraIndex - b.eraIndex || a.tick - b.tick);
   let failedTrades = 0;
   const returns: number[] = [];
 

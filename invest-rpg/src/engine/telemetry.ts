@@ -87,6 +87,10 @@ export interface EngineEventMap {
     startEraIndex: number;
     /** 세이브에서 이어 하기인가 */
     restored: boolean;
+    /** 이어 하기: 이어 한 틱 (처음부터면 null) */
+    resumeTick: number | null;
+    /** 이어 하기: 그 시대에서 이어 하기 전에 한 매매 (리플레이용) */
+    priorTrades: { tick: number; side: 'buy' | 'sell'; stockId: string; quantity: number }[];
   };
   /** 시대 시작과 그 판의 추첨 결과 */
   era_start: {

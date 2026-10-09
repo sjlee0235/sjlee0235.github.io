@@ -144,6 +144,14 @@ export interface NewsArchiveEntry {
   recap?: RecapNotice;
 }
 
+/** 이번 시대에 플레이어가 직접 한 매매 (세이브·리플레이용) */
+export interface SavedTrade {
+  tick: number;
+  side: 'buy' | 'sell';
+  stockId: string;
+  quantity: number;
+}
+
 interface PendingOrder {
   executeTick: number;
   side: 'buy' | 'sell';
@@ -169,9 +177,10 @@ export class Game {
   private recaps = new Map<string, RecapNotice>();
   private orders: PendingOrder[] = [];
   private readonly _draws: Record<string, EraDraw> = {};
-  private readonly telemetry: TelemetrySink | null;
+  private telemetry: TelemetrySink | null;
   private telemetrySeq = 0;
   private stats: EraStats = Game.emptyStats(0);
+  private _eraTrades: SavedTrade[] = [];
 
   constructor(options: GameOptions) {
     if (options.eras.length === 0) throw new Error('시대 데이터가 없음');
@@ -193,9 +202,31 @@ export class Game {
         startCash: this.account.cash,
         startEraIndex,
         restored: options.restored ?? false,
+        resumeTick: null,
+        priorTrades: [],
       });
     }
     this.session = this.beginEra(startEraIndex);
+  }
+
+  /**
+   * (세이브 불러오기용) 시대 중간까지 되감은 뒤에 기록을 붙인다.
+   * game_start에 이어 한 틱과 그 전 매매를 담아, 기록만으로도 리플레이할 수 있게 한다.
+   */
+  attachTelemetry(sink: TelemetrySink, mode: 'main' | 'tutorial' = 'main'): void {
+    this.telemetry = sink;
+    this.emitRaw('game_start', this.session.era.id, this.session.index, this.tick, {
+      mode,
+      seed: this.seed,
+      engineVersion: ENGINE_VERSION,
+      balanceHash: balanceHash(this.config),
+      startCash: this.session.startCash,
+      startEraIndex: this.session.index,
+      restored: true,
+      resumeTick: this.tick,
+      priorTrades: this._eraTrades.map((t) => ({ ...t })),
+    });
+    this.emitEraStart();
   }
 
   // ───────── 상태 조회 ─────────
@@ -256,6 +287,10 @@ export class Game {
   }
   get settlements(): readonly EraSettlement[] {
     return this._settlements;
+  }
+  /** 이번 시대에 직접 한 매매 목록 (세이브용) */
+  get eraTrades(): readonly SavedTrade[] {
+    return this._eraTrades;
   }
   get hasNextEra(): boolean {
     return this.session.index + 1 < this.eras.length;
@@ -325,7 +360,7 @@ export class Game {
     }
     this.pendingRecaps = this.pendingRecaps.filter((r) => r.tick !== tick);
 
-    if (this.telemetry) this.updateStats(tick);
+    this.updateStats(tick);
 
     let settlement: EraSettlement | null = null;
     if (tick >= this.rules.ticksPerEra) {
@@ -335,8 +370,11 @@ export class Game {
       settlement = settleEra(this.session, this.account);
       this._settlements.push(settlement);
       this._phase = 'era-ended';
+      for (const t of settlement.liquidations) {
+        const holdTicks = this.recordTradeStats(t, true);
+        if (contexts) this.emitTrade(t, contexts.get(t.stockId)!, true, holdTicks);
+      }
       if (contexts) {
-        for (const t of settlement.liquidations) this.emitTrade(t, contexts.get(t.stockId)!, true);
         const st = this.stats;
         this.emit('era_end', {
           endAssets: settlement.endAssets,
@@ -456,6 +494,11 @@ export class Game {
     if (this.telemetry) this.emit('favorite_toggled', { stockId, on: this.session.favorites.includes(stockId) });
   }
 
+  /** (세이브 불러오기용) 관심 종목 목록을 저장된 그대로 되돌린다 */
+  restoreFavorites(stockIds: readonly string[]): void {
+    this.session.favorites = stockIds.filter((id) => this.session.prices.hasStock(id));
+  }
+
   getStockList(): StockListItem[] {
     const { active, prices, favorites } = this.session;
     const themes = new Map(active.themes.map((t) => [t.id, t]));
@@ -515,6 +558,7 @@ export class Game {
     this.recaps = new Map();
     this.orders = [];
     this.stats = Game.emptyStats(this.account.cash);
+    this._eraTrades = [];
     const session = startEraSession(era, index, this.seed, this.config, this.account.cash, {
       ...(this.options.draws?.[era.id] ? { draw: this.options.draws[era.id] } : {}),
       ...(this.options.pauseOnNews ? { pauseOnNews: true } : {}),
@@ -523,19 +567,22 @@ export class Game {
     this._draws[era.id] = session.draw;
     this.session = session;
     this._phase = 'running';
-    if (this.telemetry) {
-      const core = new Set(era.themes.filter((t) => t.relevance === 'core').map((t) => t.id));
-      this.emit('era_start', {
-        startCash: session.startCash,
-        drawAttempt: session.draw.attempt,
-        drawOk: session.draw.ok,
-        activeThemeIds: [...session.draw.activeThemeIds],
-        coreCount: session.draw.activeThemeIds.filter((id) => core.has(id)).length,
-        usableBreaking: session.draw.usableBreaking,
-        usableStories: session.draw.usableStories,
-      });
-    }
+    if (this.telemetry) this.emitEraStart();
     return session;
+  }
+
+  private emitEraStart(): void {
+    const { era, draw, startCash } = this.session;
+    const core = new Set(era.themes.filter((t) => t.relevance === 'core').map((t) => t.id));
+    this.emit('era_start', {
+      startCash,
+      drawAttempt: draw.attempt,
+      drawOk: draw.ok,
+      activeThemeIds: [...draw.activeThemeIds],
+      coreCount: draw.activeThemeIds.filter((id) => core.has(id)).length,
+      usableBreaking: draw.usableBreaking,
+      usableStories: draw.usableStories,
+    });
   }
 
   private checkTradable(stockId: string): GameTradeError | null {
@@ -564,9 +611,12 @@ export class Game {
     const context = this.telemetry ? this.decisionContext(stockId) : null;
     const r = side === 'buy' ? this.account.buy(stockId, quantity, price, this.tick) : this.account.sell(stockId, quantity, price, this.tick);
     if (r.ok && side === 'buy') this.session.favorites = addFavorite(this.session.favorites, stockId);
-    if (context) {
-      if (r.ok) this.emitTrade(r.trade, context, false);
-      else this.emit('trade_rejected', { side, stockId, quantity, error: r.error });
+    if (r.ok) {
+      this._eraTrades.push({ tick: this.tick, side, stockId, quantity });
+      const holdTicks = this.recordTradeStats(r.trade, false);
+      if (context) this.emitTrade(r.trade, context, false, holdTicks);
+    } else if (context) {
+      this.emit('trade_rejected', { side, stockId, quantity, error: r.error });
     }
     return r;
   }
@@ -609,7 +659,7 @@ export class Game {
     st.peak = Math.max(st.peak, assets);
     st.trough = Math.min(st.trough, assets);
     st.maxDrawdownPct = Math.max(st.maxDrawdownPct, st.peak === 0 ? 0 : ((st.peak - assets) / st.peak) * 100);
-    if (tick % this.rules.windowTicks === 0) {
+    if (this.telemetry && tick % this.rules.windowTicks === 0) {
       const holdings = this.account.getHoldings();
       this.emit('asset_snapshot', {
         cash: this.account.cash,
@@ -646,22 +696,25 @@ export class Game {
     };
   }
 
-  private emitTrade(t: TradeRecord, context: DecisionContext, auto: boolean): void {
+  /** 매매 통계 갱신. 매도면 그 포지션을 들고 있던 틱 수를 돌려준다 */
+  private recordTradeStats(t: TradeRecord, auto: boolean): number | null {
     const st = this.stats;
     st.fees += t.fee;
     if (!auto) {
       if (t.side === 'buy') st.buys++;
       else st.sells++;
     }
-    const quantityAfter = this.account.getQuantity(t.stockId);
-    let holdTicks: number | null = null;
     if (t.side === 'buy') {
       if (!st.firstBuyTick.has(t.stockId)) st.firstBuyTick.set(t.stockId, this.tick);
-    } else {
-      const first = st.firstBuyTick.get(t.stockId);
-      holdTicks = first === undefined ? null : this.tick - first;
-      if (quantityAfter === 0) st.firstBuyTick.delete(t.stockId);
+      return null;
     }
+    const first = st.firstBuyTick.get(t.stockId);
+    if (this.account.getQuantity(t.stockId) === 0) st.firstBuyTick.delete(t.stockId);
+    return first === undefined ? null : this.tick - first;
+  }
+
+  private emitTrade(t: TradeRecord, context: DecisionContext, auto: boolean, holdTicks: number | null): void {
+    const quantityAfter = this.account.getQuantity(t.stockId);
     this.emit('trade', {
       side: t.side,
       stockId: t.stockId,
