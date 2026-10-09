@@ -1,0 +1,39 @@
+{
+  "note": "그림 매니페스트: 에셋 키 → 파일. 크기는 기준 해상도(180×320) 픽셀. frames > 1이면 가로로 이어 붙인 스프라이트 시트(시트 너비 = width × frames). 진짜 그림은 같은 파일명으로 덮어쓰면 된다. 사양: docs/art_spec.md, 임시 그림 생성: npm run art:placeholder",
+  "baseWidth": 180,
+  "baseHeight": 320,
+  "assets": {
+    "bg.living_2000s":   { "file": "art/bg/living_2000s.png",   "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#3b3430", "label": "LIVING 2000S" },
+    "bg.living_2010s":   { "file": "art/bg/living_2010s.png",   "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#33363a", "label": "LIVING 2010S" },
+    "bg.living_2020s":   { "file": "art/bg/living_2020s.png",   "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#2a2d31", "label": "LIVING 2020S" },
+    "bg.workshop_2000s": { "file": "art/bg/workshop_2000s.png", "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#3a3328", "label": "WORKSHOP 2000S" },
+    "bg.workshop_2010s": { "file": "art/bg/workshop_2010s.png", "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#34352f", "label": "WORKSHOP 2010S" },
+    "bg.workshop_2020s": { "file": "art/bg/workshop_2020s.png", "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#2b2e2c", "label": "WORKSHOP 2020S" },
+    "bg.tv_room":        { "file": "art/bg/tv_room.png",        "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#26282d", "label": "TV ROOM" },
+
+    "lp.player":   { "file": "art/sprites/lp_player.png",  "width": 56, "height": 44, "frames": 4, "kind": "lp",    "color": "#5a4a3c", "label": "LP" },
+    "dog.puppy":   { "file": "art/sprites/dog_puppy.png",  "width": 56, "height": 48, "frames": 6, "kind": "dog",   "color": "#8a7356", "label": "PUPPY",  "frameNames": ["idle0", "idle1", "pet", "tail0", "tail1", "ear"] },
+    "dog.adult":   { "file": "art/sprites/dog_adult.png",  "width": 56, "height": 48, "frames": 6, "kind": "dog",   "color": "#7a6650", "label": "ADULT",  "frameNames": ["idle0", "idle1", "pet", "tail0", "tail1", "ear"] },
+    "dog.senior":  { "file": "art/sprites/dog_senior.png", "width": 56, "height": 48, "frames": 6, "kind": "dog",   "color": "#8c8478", "label": "SENIOR", "frameNames": ["idle0", "idle1", "pet", "tail0", "tail1", "ear"] },
+    "fx.heart":    { "file": "art/sprites/fx_heart.png",   "width": 12, "height": 12, "frames": 1, "kind": "heart", "color": "#b5525a", "label": "" },
+    "fx.pet":      { "file": "art/sprites/fx_pet.png",     "width": 16, "height": 12, "frames": 3, "kind": "block", "color": "#c9b48a", "label": "P" },
+
+    "doll.body":   { "file": "art/sprites/doll.png",       "width": 40, "height": 48, "frames": 4, "kind": "doll",  "color": "#9c7c6a", "label": "DOLL", "frameNames": ["no_eyes", "one_eye", "two_eyes", "done"] },
+    "doll.eye":    { "file": "art/sprites/doll_eye.png",   "width": 6,  "height": 6,  "frames": 1, "kind": "eye",   "color": "#1a1a1a", "label": "" },
+
+    "tv.tv_crt":        { "file": "art/sprites/tv_crt.png",        "width": 140, "height": 116, "frames": 1, "kind": "tv", "color": "#4a4440", "label": "TV CRT",   "screen": [20, 18, 100, 70] },
+    "tv.tv_flat":       { "file": "art/sprites/tv_flat.png",       "width": 156, "height": 100, "frames": 1, "kind": "tv", "color": "#3a3c40", "label": "TV FLAT",  "screen": [8, 8, 140, 78] },
+    "tv.tv_large_flat": { "file": "art/sprites/tv_large_flat.png", "width": 172, "height": 108, "frames": 1, "kind": "tv", "color": "#2e3034", "label": "TV LARGE", "screen": [4, 4, 164, 92] },
+    "tv.noise":         { "file": "art/sprites/tv_noise.png",      "width": 100, "height": 70,  "frames": 4, "kind": "noise", "color": "#808080", "label": "" },
+
+    "icon.coin":        { "file": "art/ui/coin.png",       "width": 12, "height": 12, "frames": 1, "kind": "coin",  "color": "#d9822b", "label": "" },
+    "icon.star_on":     { "file": "art/ui/star_on.png",    "width": 9,  "height": 9,  "frames": 1, "kind": "star",  "color": "#d6b04a", "label": "" },
+    "icon.star_off":    { "file": "art/ui/star_off.png",   "width": 9,  "height": 9,  "frames": 1, "kind": "star",  "color": "#5c5e62", "label": "" },
+    "icon.settings":    { "file": "art/ui/settings.png",   "width": 12, "height": 12, "frames": 1, "kind": "gear",  "color": "#9a9ca0", "label": "" },
+    "icon.tab_living_room": { "file": "art/ui/tab_living_room.png", "width": 16, "height": 16, "frames": 1, "kind": "block", "color": "#7a6450", "label": "L" },
+    "icon.tab_trading":     { "file": "art/ui/tab_trading.png",     "width": 16, "height": 16, "frames": 1, "kind": "block", "color": "#4f6378", "label": "T" },
+    "icon.tab_workshop":    { "file": "art/ui/tab_workshop.png",    "width": 16, "height": 16, "frames": 1, "kind": "block", "color": "#6f6a4a", "label": "W" },
+    "icon.tab_tv_shopping": { "file": "art/ui/tab_tv_shopping.png", "width": 16, "height": 16, "frames": 1, "kind": "block", "color": "#5a4f62", "label": "S" },
+    "badge.news":       { "file": "art/ui/news_badge.png", "width": 30, "height": 12, "frames": 2, "kind": "block", "color": "#a8423a", "label": "NEWS" }
+  }
+}
