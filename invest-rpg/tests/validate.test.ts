@@ -1,91 +1,98 @@
 import { describe, expect, it } from 'vitest';
-import { countSentences, maxNewsSlots, validateEra, validateEras } from '../src/data/validate.ts';
-import { effect, makeEra, makeNews } from './fixtures/makeEra.ts';
+import { lintEra } from '../src/data/lint.ts';
+import { validateEra, validateEras } from '../src/data/validate.ts';
+import { effect, makeNews, makeSpecEra } from './fixtures/makeEra.ts';
 
-describe('데이터 검사기', () => {
-  it('규칙에 맞는 가상 시대는 오류가 없다', () => {
-    expect(validateEra(makeEra({ newsCount: 50, storylineCount: 3, withClues: true })).errors).toEqual([]);
+describe('데이터 구조 검사 (validate)', () => {
+  it('기획 조건대로 만든 가상 시대는 오류가 없다', () => {
+    expect(validateEra(makeSpecEra()).errors).toEqual([]);
   });
 
-  it('최대 뉴스 자리: 실전 40, 연습 10', () => {
-    expect(maxNewsSlots('real')).toBe(40);
-    expect(maxNewsSlots('practice')).toBe(10);
+  it('magnitude 범위: 속보 3~10, 잠정 1~3, 결과 7~10', () => {
+    const era = makeSpecEra();
+    era.breaking[0]!.magnitude = 2;
+    era.stories[0]!.tentative.magnitude = 4;
+    era.stories[1]!.news[0]!.magnitude = 6;
+    const errors = validateEra(era).errors;
+    expect(errors.some((e) => e.includes('magnitude 2'))).toBe(true);
+    expect(errors.some((e) => e.includes('magnitude 4'))).toBe(true);
+    expect(errors.some((e) => e.includes('magnitude 6'))).toBe(true);
   });
 
-  it('테마 개수·감성 비율이 틀리면 오류', () => {
-    const era = makeEra();
-    era.themes[0]!.sentiment = 'neutral';
-    expect(validateEra(era).errors.some((e) => e.includes('positive 테마 6개'))).toBe(true);
+  it('스토리: 결과 정확히 2개, leansTo가 결과 중 하나, 두 결과는 서로 반대 방향', () => {
+    const era = makeSpecEra();
+    era.stories[0]!.leansTo = 'nope';
+    const same = era.stories[1]!;
+    same.news[1]!.effects = same.news[0]!.effects.map((e) => ({ ...e }));
+    era.stories[2]!.outcomes.pop();
+    const errors = validateEra(era).errors;
+    expect(errors.some((e) => e.includes('leansTo nope'))).toBe(true);
+    expect(errors.some((e) => e.includes('방향이 같음'))).toBe(true);
+    expect(errors.some((e) => e.includes('정확히 2개'))).toBe(true);
   });
 
-  it('영향도가 -10~10 정수가 아니거나 0이면 오류', () => {
-    for (const bad of [11, 2.5, 0]) {
-      const era = makeEra({ effectsFor: (_i, ids) => [effect(ids[0]!, bad)] });
-      expect(validateEra(era).errors.length).toBeGreaterThan(0);
+  it('영향도 0·범위 밖, 없는 테마, 잘못된 강도는 오류', () => {
+    const era = makeSpecEra();
+    era.breaking[0]!.effects[0]!.impact = 0;
+    era.breaking[1]!.effects[0]!.themeId = 'nope';
+    (era.breaking[2]!.effects[0]!.link as { strength: number }).strength = 4;
+    const errors = validateEra(era).errors;
+    expect(errors.some((e) => e.includes('영향도 0'))).toBe(true);
+    expect(errors.some((e) => e.includes('없는 테마 nope'))).toBe(true);
+    expect(errors.some((e) => e.includes('연결 강도'))).toBe(true);
+  });
+
+  it('추첨이 불가능한 풀(분위기별 개수 부족)은 오류', () => {
+    const era = makeSpecEra();
+    era.themes.filter((t) => t.sentiment === 'neutral').slice(0, 5).forEach((t) => (t.sentiment = 'positive'));
+    expect(validateEra(era).errors.some((e) => e.includes('neutral 테마 5개'))).toBe(true);
+  });
+
+  it('여러 시대 id·order 중복', () => {
+    const r = validateEras([makeSpecEra({ id: 'a', order: 1 }), makeSpecEra({ id: 'a', order: 1 })]);
+    expect(r.errors.some((e) => e.includes('시대 id 중복'))).toBe(true);
+  });
+});
+
+describe('콘텐츠 점검 (lint:content)', () => {
+  const rules = (era = makeSpecEra()) => new Set(lintEra(era).map((i) => i.rule));
+
+  it('가상 시대는 분위기 편향·비주류 외에는 깨끗하다', () => {
+    const r = rules();
+    for (const rule of ['pool', 'effectCount', 'formula', 'newsTerm', 'themeTerm', 'chain', 'reasonKo', 'date', 'existsEvidence']) {
+      expect(r.has(rule), rule).toBe(false);
     }
   });
 
-  it('직접 영향 테마가 8개를 넘으면 오류', () => {
-    const era = makeEra({ effectsFor: (_i, ids) => ids.slice(0, 9).map((id) => effect(id, 2)) });
-    expect(validateEra(era).errors.some((e) => e.includes('직접 영향 테마 9개'))).toBe(true);
+  it('영향 테마 수, 영향도 공식, chain 누락, newsTerm 불일치, 본문 날짜를 잡는다', () => {
+    const era = makeSpecEra();
+    era.breaking[0]!.effects = era.breaking[0]!.effects.slice(0, 3);
+    era.breaking[1]!.effects[0]!.impact = era.breaking[1]!.effects[0]!.impact + 3;
+    era.breaking[2]!.effects.find((e) => e.link.strength !== 3)!.link.chain = '';
+    era.breaking[3]!.body.ko = '전혀 다른 본문 2008년 3월';
+    const r = lintEra(era);
+    expect(r.some((i) => i.rule === 'effectCount' && i.where === era.breaking[0]!.id)).toBe(true);
+    expect(r.some((i) => i.rule === 'formula')).toBe(true);
+    expect(r.some((i) => i.rule === 'chain')).toBe(true);
+    expect(r.some((i) => i.rule === 'newsTerm' && i.where.startsWith(era.breaking[3]!.id))).toBe(true);
+    expect(r.some((i) => i.rule === 'date' && i.message.includes('2008년'))).toBe(true);
   });
 
-  it('연습용(직접) 뉴스는 해설 필수, 3~4문장', () => {
-    const era = makeEra();
-    delete era.newsPool[0]!.explanation;
-    era.newsPool[2]!.explanation = { ko: '한 문장뿐이에요.', en: 'Only one.' };
-    era.newsPool[4]!.explanation = { ko: '하나. 둘. 셋. 넷. 다섯.', en: 'A. B. C.' };
-    const errors = validateEra(era).errors;
-    expect(errors.some((e) => e.includes('test-n0') && e.includes('해설(explanation)이 필수'))).toBe(true);
-    expect(errors.some((e) => e.includes('test-n2') && e.includes('1문장'))).toBe(true);
-    expect(errors.some((e) => e.includes('test-n4') && e.includes('5문장'))).toBe(true);
+  it('±1 조정은 adjustNote가 있으면 허용', () => {
+    const era = makeSpecEra();
+    const n = makeNews('adj', 'breaking', 5, [effect('t0', 6, 3), effect('t1', 5), effect('t2', 5), effect('t3', 5), effect('t4', 5), effect('t5', 5)]);
+    era.breaking.push(n);
+    expect(lintEra(era).some((i) => i.rule === 'formula' && i.where.startsWith('adj'))).toBe(true);
+    n.effects[0]!.adjustNote = '실제 등락이 더 컸음';
+    expect(lintEra(era).some((i) => i.rule === 'formula' && i.where.startsWith('adj'))).toBe(false);
   });
 
-  it('문장 수 세기 (소수점은 문장 끝이 아님)', () => {
-    expect(countSentences('금리가 0.5%포인트 내렸어요. 그래서 올랐어요.')).toBe(2);
-    expect(countSentences('One. Two! Three?')).toBe(3);
-  });
-
-  it('낌새 영향도는 1~3, 결과는 낌새보다 커야 함', () => {
-    const era = makeEra({ storylineCount: 1 });
-    era.storylines[0]!.signal = makeNews('big', [effect('t0', 4)]);
-    expect(validateEra(era).errors.some((e) => e.includes('낌새: 영향도는 1~3'))).toBe(true);
-
-    const era2 = makeEra({ storylineCount: 1 });
-    era2.storylines[0]!.signal = makeNews('s', [effect('t0', 3)]);
-    era2.storylines[0]!.news[0] = makeNews('test-story0-hist', [effect('t0', 2)]);
-    expect(validateEra(era2).errors.some((e) => e.includes('결과 영향도가 낌새보다 커야'))).toBe(true);
-  });
-
-  it('결과 연결: 2개 이상, 실제 역사 쪽 필수, newsId가 목록에 있어야 함', () => {
-    const era = makeEra({ storylineCount: 1 });
-    era.storylines[0]!.outcomes = [{ newsId: 'nope', isHistorical: false }];
-    const errors = validateEra(era).errors;
-    expect(errors.some((e) => e.includes('2개 이상'))).toBe(true);
-    expect(errors.some((e) => e.includes('실제 역사 쪽'))).toBe(true);
-    expect(errors.some((e) => e.includes('nope가 news 목록에 없음'))).toBe(true);
-  });
-
-  it('단서는 존재하는 결과를 가리켜야 함', () => {
-    const era = makeEra({ storylineCount: 1, withClues: true });
-    era.storylines[0]!.clues![0]!.pointsTo = 'nowhere';
-    expect(validateEra(era).errors.some((e) => e.includes('nowhere'))).toBe(true);
-  });
-
-  it('공급량 부족은 경고: 실전 36자리, 연습 14개', () => {
-    const r = validateEra(makeEra({ newsCount: 10, storylineCount: 2 }));
-    expect(r.errors).toEqual([]);
-    expect(r.warnings.some((w) => w.includes('실전 모드 뉴스 공급 14자리'))).toBe(true);
-    expect(r.warnings.some((w) => w.includes('연습 모드 뉴스 공급 5개'))).toBe(true);
-  });
-
-  it('영향도 분포가 40/40/20에서 크게 벗어나면 경고', () => {
-    const r = validateEra(makeEra({ effectsFor: (_i, ids) => [effect(ids[0]!, 9)] }));
-    expect(r.warnings.some((w) => w.includes('영향도 분포 high'))).toBe(true);
-  });
-
-  it('여러 시대의 id·order 중복을 잡는다', () => {
-    const r = validateEras([makeEra({ id: 'a', order: 1 }), makeEra({ id: 'a', order: 1 })]);
-    expect(r.errors.some((e) => e.includes('시대 id 중복'))).toBe(true);
+  it('상위 4개 reason 누락, 비주류 테마 영향 2회 미만, 풀 구성을 잡는다', () => {
+    const era = makeSpecEra();
+    for (const e of era.breaking[0]!.effects) delete e.reason;
+    era.themes[30]!.relevance = 'core';
+    const r = lintEra(era);
+    expect(r.filter((i) => i.rule === 'reasonKo' && i.where.startsWith(era.breaking[0]!.id))).toHaveLength(4);
+    expect(r.some((i) => i.rule === 'pool' && i.message.includes('core 테마 25개'))).toBe(true);
   });
 });

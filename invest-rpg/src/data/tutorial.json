@@ -1,0 +1,37 @@
+{
+  "id": "tutorial",
+  "order": 0,
+  "displayName": { "ko": "튜토리얼", "en": "Tutorial" },
+  "period": { "startYear": 0, "endYear": 0 },
+  "themes": [
+    { "id": "battery", "sentiment": "positive", "relevance": "core", "name": { "ko": "배터리", "en": "Batteries" }, "keywords": { "ko": ["배터리", "충전", "전기", "전지", "에너지 저장"], "en": ["battery", "charging", "electric", "cell", "energy storage"] }, "existsEvidence": "튜토리얼용 가상 테마" },
+    { "id": "bus", "sentiment": "positive", "relevance": "core", "name": { "ko": "버스 제조", "en": "Bus Makers" }, "keywords": { "ko": ["버스", "차량", "대중교통", "제조", "친환경 버스"], "en": ["bus", "vehicle", "public transit", "manufacturing", "eco bus"] }, "existsEvidence": "튜토리얼용 가상 테마" },
+    { "id": "oil", "sentiment": "negative", "relevance": "core", "name": { "ko": "정유", "en": "Oil Refining" }, "keywords": { "ko": ["정유", "경유", "휘발유", "주유소", "연료"], "en": ["refining", "diesel", "gasoline", "gas station", "fuel"] }, "existsEvidence": "튜토리얼용 가상 테마" },
+    { "id": "food", "sentiment": "neutral", "relevance": "peripheral", "name": { "ko": "식품", "en": "Food" }, "keywords": { "ko": ["식품", "과자", "음료", "라면", "급식"], "en": ["food", "snacks", "drinks", "noodles", "catering"] }, "existsEvidence": "튜토리얼용 가상 테마" },
+    { "id": "game", "sentiment": "neutral", "relevance": "peripheral", "name": { "ko": "게임", "en": "Games" }, "keywords": { "ko": ["게임", "온라인", "모바일", "콘솔", "이용자"], "en": ["game", "online", "mobile", "console", "players"] }, "existsEvidence": "튜토리얼용 가상 테마" }
+  ],
+  "stocks": [
+    { "id": "tut-battery", "themeId": "battery", "name": { "ko": "든든 배터리", "en": "Sturdy Battery" }, "description": { "ko": "전기 버스와 휴대 기기에 들어가는 배터리를 만든다.", "en": "Makes batteries for electric buses and portable devices." } },
+    { "id": "tut-bus", "themeId": "bus", "name": { "ko": "씽씽 버스", "en": "Zoom Bus" }, "description": { "ko": "시내버스와 고속버스를 만드는 회사다.", "en": "Builds city and intercity buses." } },
+    { "id": "tut-oil", "themeId": "oil", "name": { "ko": "검은 정유", "en": "Black Refinery" }, "description": { "ko": "경유와 휘발유를 만들어 주유소에 판다.", "en": "Produces diesel and gasoline for gas stations." } },
+    { "id": "tut-food", "themeId": "food", "name": { "ko": "든든 식품", "en": "Hearty Foods" }, "description": { "ko": "과자와 라면을 만든다.", "en": "Makes snacks and instant noodles." } },
+    { "id": "tut-game", "themeId": "game", "name": { "ko": "밤샘 게임", "en": "Allnight Games" }, "description": { "ko": "모바일 게임을 서비스한다.", "en": "Runs mobile games." } }
+  ],
+  "breaking": [
+    {
+      "id": "tut-news-ebus",
+      "type": "breaking",
+      "magnitude": 7,
+      "title": { "ko": "정부, 경유 버스 대신 전기 버스 1만 대 도입 발표", "en": "Government to Replace Diesel Buses with 10,000 Electric Buses" },
+      "body": { "ko": "정부가 시내 경유 버스를 전기 버스로 바꾸겠다고 발표했다. 버스 제조사와 배터리 회사에 주문이 몰릴 전망이고, 경유 판매는 줄어들 것으로 보인다.", "en": "The government will replace city diesel buses with electric ones. Orders are expected to pour into bus makers and battery companies, while diesel sales are likely to fall." },
+      "effects": [
+        { "themeId": "battery", "impact": 7, "link": { "strength": 3, "keywords": [{ "newsTerm": "배터리", "themeTerm": "배터리" }] }, "reason": { "ko": "전기 버스마다 큰 배터리가 필요해 주문이 늘어날 것으로 기대", "en": "Each electric bus needs a large battery, so orders are expected to rise" } },
+        { "themeId": "bus", "impact": 7, "link": { "strength": 3, "keywords": [{ "newsTerm": "버스", "themeTerm": "버스" }] }, "reason": { "ko": "버스 1만 대를 새로 만들어야 해 버스 제조사에 일감이 생김", "en": "10,000 new buses mean big orders for bus makers" } },
+        { "themeId": "oil", "impact": -4, "link": { "strength": 2, "keywords": [{ "newsTerm": "경유", "themeTerm": "경유" }], "chain": "경유 버스가 줄면 경유 판매가 줄어든다" }, "reason": { "ko": "경유 버스가 줄면 정유사의 경유 판매가 줄어듦", "en": "Fewer diesel buses mean lower diesel sales for refiners" } }
+      ],
+      "realDate": "가상",
+      "source": { "event": "튜토리얼용 가상 시나리오", "impactRationale": "직접 2개(7), 밀접 1개(round(7×0.6)=4)", "needsVerification": false }
+    }
+  ],
+  "stories": []
+}

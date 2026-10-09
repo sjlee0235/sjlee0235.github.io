@@ -8,12 +8,17 @@
     "running": "Market open",
     "news": "Breaking news",
     "era-ended": "Era closed",
-    "finished": "All eras complete"
+    "finished": "All eras complete",
+    "paused": "Paused"
   },
   "sentiment": {
     "positive": "Positive",
     "negative": "Negative",
     "neutral": "Neutral"
+  },
+  "relevance": {
+    "core": "Main theme",
+    "peripheral": "Background theme"
   },
   "trade": {
     "buy": "Buy",
@@ -21,7 +26,9 @@
     "quantity": "Quantity",
     "maxQuantity": "Max {count} shares",
     "bought": "Bought {count} shares of {name} at {price} bits.",
-    "sold": "Sold {count} shares of {name} at {price} bits."
+    "sold": "Sold {count} shares of {name} at {price} bits.",
+    "queued": "Order received. It will fill shortly at the price at that time.",
+    "fee": "Fee {fee} bits"
   },
   "error": {
     "invalid-quantity": "Quantity must be a whole number of 1 or more.",
@@ -29,10 +36,7 @@
     "insufficient-cash": "Not enough cash.",
     "insufficient-shares": "Not enough shares.",
     "unknown-stock": "Unknown stock.",
-    "not-tradable": "Trading is not available right now.",
-    "not-available-in-real": "Not available in Real mode.",
-    "ad-limit-reached": "You've used all ad rewards for this round.",
-    "ad-not-completed": "Watch the whole ad to get the reward."
+    "not-tradable": "Trading is not available right now."
   },
   "portfolio": {
     "cash": "Cash",
@@ -45,65 +49,62 @@
   },
   "settlement": {
     "title": "{era} Results",
-    "startAssets": "Starting assets",
+    "startCash": "Starting cash",
     "endAssets": "Ending assets",
     "returnPct": "Return",
     "byStock": "P/L by stock",
     "liquidated": "All holdings were automatically sold at the current price.",
     "nextEra": "Next era",
-    "deposits": "Ad rewards",
-    "profit": "Investment P/L",
-    "startCash": "Starting cash",
-    "formula": "Return = (final assets − starting cash − ad rewards) ÷ (starting cash + ad rewards)"
+    "formula": "Return = (final assets − starting cash) ÷ starting cash"
   },
   "news": {
-    "breaking": "Breaking",
-    "pausedHint": "Time resumes when you press OK."
-  },
-  "mode": {
-    "practice": "Practice",
-    "real": "Real",
-    "practiceDesc": "Practice for 30 minutes. Time stops when news breaks so you can read related themes and explanations. Each round starts with 10,000 bits.",
-    "realDesc": "Two hours per era. Time keeps running when news breaks, and prices react 10 seconds later. Your money carries over to the next era.",
-    "choose": "Choose a mode"
-  },
-  "newsGuide": {
-    "relatedThemes": "Related themes",
-    "showExplanation": "Show explanation",
-    "hideExplanation": "Hide explanation",
-    "marketWide": "Whole market",
-    "positive": "Positive",
-    "negative": "Negative",
-    "direct": "Direct effect",
-    "indirect": "Indirect effect",
-    "kind": {
-      "standalone": "Breaking",
-      "signal": "Developing",
-      "clue": "Clue",
-      "outcome": "Confirmed"
-    },
-    "appliesIn": "Prices will react in {seconds} seconds.",
-    "tag": {
-      "direct": "Direct",
-      "indirect": "Indirect",
-      "hint": "Hint",
-      "outcome": "Outcome",
-      "market": "Market"
+    "type": {
+      "breaking": "Breaking",
+      "tentative": "Tentative",
+      "clue": "Follow-up",
+      "outcome": "Outcome"
     },
     "fictionalTag": "Fictional scenario",
+    "relatedThemes": "Related themes",
+    "positive": "Positive",
+    "negative": "Negative",
+    "kind": {
+      "direct": "Direct effect",
+      "indirect": "Indirect effect"
+    },
+    "strength": {
+      "3": "Direct",
+      "2": "Close",
+      "1": "Indirect"
+    },
     "reaction": "Market reaction",
-    "archive": "News archive"
+    "archive": "News archive",
+    "relatedTentative": "Related tentative news"
   },
-  "ad": {
-    "watch": "Watch an ad for {amount} bits",
-    "rewarded": "You received {amount} bits.",
-    "remaining": "{count} ad rewards left"
+  "recap": {
+    "title": "News recap",
+    "line": "{stock} {pct} — {reason}",
+    "auto": "{theme} {effect} from {newsTerm}",
+    "benefit": "benefits",
+    "burden": "is burdened",
+    "more": "+{count} more",
+    "firstNotice": "Recap figures are what actually moved inside the game. They are not real market data or investment advice.",
+    "tentativeNote": "This was a tentative report, so the effect was small. The outcome report may change things a lot."
+  },
+  "tutorial": {
+    "title": "New here?",
+    "notice1": "News arrives without warning. Within an era, news items have no time order or connection, and even major historical events may not appear in this round.",
+    "notice2": "Only a 'tentative report' and its 'outcome report' about the same event are connected.",
+    "notice3": "News moves prices right after it is announced, so preparing by studying ahead works better than buying after you read it.",
+    "notice4": "The reaction rates on screen are fictional in-game numbers. They are not the real market or investment advice.",
+    "stepWaiting": "News is coming soon. Please wait a moment.",
+    "stepReading": "News is out! Time stops during the tutorial. Try buying a related stock.",
+    "stepReaction": "Prices react in 5 seconds, then keep swinging for 10 more seconds.",
+    "stepRecap": "Two minutes later, a recap arrives. See which stocks moved and why.",
+    "done": "Tutorial complete! In the main game, time keeps running when news breaks.",
+    "replay": "Replay tutorial"
   },
   "disclaimer": {
     "fictional": "This is a fictional scenario based on real events and is not investment advice."
-  },
-  "game": {
-    "paused": "Paused",
-    "newRound": "Start a new round"
   }
 }

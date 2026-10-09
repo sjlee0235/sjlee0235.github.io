@@ -1,51 +1,52 @@
-// 뉴스 엔진: 언제 어떤 뉴스가 뜨는지, 팝업 상태, 영향 반영 시점과 크기를 관리한다.
+// 뉴스 엔진: 언제 어떤 뉴스가 뜨는지, 반영 시점과 크기를 관리한다.
 //
 // 일정 만들기 (판 시작 때 시드로 한 번에 정함)
-//   1) 뉴스 자리: 첫 뉴스는 1~3분 사이, 그 뒤로는 3~6분 간격 (무작위)
-//   2) 자리마다 단독 뉴스 또는 스토리를 무작위 순서로 배치 (같은 뉴스 반복 없음, 풀이 바닥나면 더 안 나옴)
-//   3) 스토리(실전 전용): 낌새 → (단서) → 결과. 결과는 낌새 후 15분 안에 오는 자리 중 하나에 들어간다.
-//      - 동시에 진행되는 스토리는 1개까지 (결과가 나오기 전에는 새 낌새 없음)
-//      - 시대 종료 15분 전부터는 새 낌새를 시작하지 않는다
-//      - 결과는 가중치로 뽑는다 (기본: 실제 역사 쪽 70%)
-//      - 단서는 실제로 뽑힌 결과를 가리킬 때만, 낌새와 결과 사이 빈자리에 나온다
-//   연습 모드: 영향이 모두 직접(1차)인 단독 뉴스만. 스토리 없음.
+//   1) 뉴스 자리(슬롯): 첫 뉴스는 1~3분, 그 뒤로는 4~7분 간격 (무작위)
+//   2) 빈 슬롯마다: 진행 중인 스토리가 없으면 P_START_STORY(85%) 확률로 새 스토리(잠정 뉴스)를 시작,
+//      아니면 속보를 넣는다. → 슬롯 기준 속보 약 1/3, 잠정 약 1/3, 결과 약 1/3
+//   3) 스토리: 잠정 뉴스 이후 15분 안에 오는 빈 슬롯 중 하나에 결과 뉴스를 넣는다 (간격 규칙 그대로).
+//      결과는 서로 반대인 2개 중 추첨: leansTo(잠정 뉴스의 단서가 가리키는 쪽) 65%, 다른 쪽 35%.
+//      동시에 진행되는 스토리는 1개, 시대 종료 15분 전부터는 새 잠정 뉴스를 시작하지 않는다.
+//   4) 같은 뉴스는 다시 나오지 않고, 풀이 바닥나면 더 내보내지 않는다.
 //
 // 반영
-//   연습: 뉴스 팝업(시간 정지) → '확인' → 10초(2틱) 뒤 반영
-//   실전: 뉴스 표시(시간 계속) → 10초(2틱) 뒤 반영
-//   실제 변동률 = 영향도 × 3% × 배율. 배율은 영향마다 무작위 (실전 직접 0.6~1.4, 간접 0.4~1.6, 연습 0.85~1.15)
+//   발표(틱 k) → 틱 k+1에 한 번에 반영. 실제 변동률 = 영향도 × 3% × 배율
+//   배율: 강도 3은 0.6~1.4, 강도 2·1은 0.4~1.6 (영향마다 따로 뽑음), 결과는 ±30%로 자름
+//   (기본 OFF) 간접 영향(강도 2·1)을 N틱 더 늦게 반영하는 옵션
 
-import { isAllDirect, MARKET_THEME_ID, type Era, type News, type Storyline } from '../data/schema.ts';
-import { getTickRules, type GameConfig, type GameMode, type Range, type TickRules } from './config.ts';
+import type { News, Story } from '../data/schema.ts';
+import { getTickRules, type GameConfig, type Range, type TickRules } from './config.ts';
+import type { ActiveEra } from './eraDraw.ts';
 import { shuffle, type Rng } from './rng.ts';
 
-export type NewsKind = 'standalone' | 'signal' | 'clue' | 'outcome';
-
-/** 보관함 태그: 직접 / 간접 / 낌새·단서(hint) / 결과 / 시장 전체 */
-export type NewsTag = 'direct' | 'indirect' | 'hint' | 'outcome' | 'market';
+export type ScheduledKind = 'breaking' | 'tentative' | 'clue' | 'outcome';
+/** 보관함 태그 */
+export type NewsTag = 'breaking' | 'tentative' | 'outcome';
 
 export interface ScheduledNews {
   /** 이 틱이 끝난 직후에 뉴스가 뜬다 */
   tick: number;
+  /** 이번 판 활성 테마 영향만 남은 뉴스 */
   news: News;
-  kind: NewsKind;
+  kind: ScheduledKind;
   tag: NewsTag;
-  /** false면 실제와 다른 가상 시나리오 (화면에 "가상 시나리오" 태그) */
+  /** false면 실제와 다른 가상 시나리오 */
   isHistorical: boolean;
-  storylineId?: string;
+  storyId?: string;
+  /** 결과·단서 뉴스: 연결된 잠정 뉴스 id */
+  relatedTentativeId?: string;
+  /** 결과 뉴스: 잠정 뉴스의 단서(leansTo)대로 나왔는가 */
+  followedLean?: boolean;
 }
 
-export function tagOf(news: News, kind: NewsKind): NewsTag {
-  if (kind === 'signal' || kind === 'clue') return 'hint';
-  if (kind === 'outcome') return 'outcome';
-  if (news.category === 'market') return 'market';
-  return isAllDirect(news) ? 'direct' : 'indirect';
+export function tagOf(kind: ScheduledKind): NewsTag {
+  return kind === 'breaking' ? 'breaking' : kind === 'outcome' ? 'outcome' : 'tentative';
 }
 
-/** 시대 안에서 뉴스가 뜰 수 있는 자리(틱)들을 만든다 */
-export function makeNewsSlots(rules: TickRules, rng: Rng): number[] {
+/** 시대 안에서 뉴스가 뜰 수 있는 슬롯(틱)들 */
+export function makeNewsSlots(rules: TickRules, rng: Rng, extraDelay = 0): number[] {
   // 마지막 뉴스도 반영과 관성이 시대 안에서 끝나도록 한다
-  const last = rules.ticksPerEra - rules.newsDelayTicks - rules.momentumTicks;
+  const last = rules.ticksPerEra - rules.reactionTicks - extraDelay - rules.inertiaTicks;
   const slots: number[] = [];
   let t = rng.int(rules.firstNewsMinTicks, rules.firstNewsMaxTicks);
   while (t <= last) {
@@ -55,14 +56,11 @@ export function makeNewsSlots(rules: TickRules, rng: Rng): number[] {
   return slots;
 }
 
-/** 결과 가중치. weight가 없으면 실제 역사 쪽이 historicalChance, 나머지가 남은 확률을 나눠 갖는다 */
-export function outcomeWeights(story: Storyline, historicalChance: number): number[] {
-  const hist = story.outcomes.filter((o) => o.isHistorical).length;
-  const fict = story.outcomes.length - hist;
+/** 결과 2개의 확률. weight가 없으면 leansTo 쪽이 leansToChance, 다른 쪽이 나머지 */
+export function outcomeWeights(story: Story, leansToChance: number): number[] {
   return story.outcomes.map((o) => {
     if (o.weight !== undefined) return o.weight;
-    if (fict === 0 || hist === 0) return 1;
-    return o.isHistorical ? historicalChance / hist : (1 - historicalChance) / fict;
+    return o.newsId === story.leansTo ? leansToChance : 1 - leansToChance;
   });
 }
 
@@ -76,165 +74,133 @@ function pickWeighted(weights: readonly number[], rng: Rng): number {
   return weights.length - 1;
 }
 
-type PoolItem = { type: 'news'; news: News } | { type: 'story'; story: Storyline };
-
-/** 시대 전체 뉴스 일정표를 만든다 (같은 시드 → 같은 일정) */
-export function buildNewsSchedule(era: Era, rng: Rng, config: GameConfig, mode: GameMode): ScheduledNews[] {
-  const rules = getTickRules(config, mode);
-  const slots = makeNewsSlots(rules, rng);
-  const pool: PoolItem[] =
-    mode === 'practice'
-      ? era.newsPool.filter(isAllDirect).map((news) => ({ type: 'news', news }))
-      : [
-          ...era.newsPool.map((news): PoolItem => ({ type: 'news', news })),
-          ...era.storylines.map((story): PoolItem => ({ type: 'story', story })),
-        ];
-  const queue = shuffle(pool, rng);
+/** 이번 판 뉴스 일정표 (같은 시드 → 같은 일정) */
+export function buildNewsSchedule(active: ActiveEra, rng: Rng, config: GameConfig): ScheduledNews[] {
+  const rules = getTickRules(config);
+  const slots = makeNewsSlots(rules, rng, config.indirectExtraDelayTicks);
+  const breakingQ = shuffle(active.breaking, rng);
+  const storyQ = shuffle(active.stories, rng);
   const assigned: (ScheduledNews | undefined)[] = slots.map(() => undefined);
-  const lastSignalTick = rules.ticksPerEra - rules.noNewSignalLastTicks;
-  /** 진행 중인 스토리의 결과 자리 번호 (이 자리 전까지는 새 낌새 금지) */
-  let storyBusyUntil = -1;
+  const lastTentativeTick = rules.ticksPerEra - rules.noNewTentativeLastTicks;
+  /** 진행 중 스토리의 결과 슬롯 번호 (여기까지는 새 잠정 뉴스 금지) */
+  let busyUntil = -1;
+
+  const freeAfter = (i: number) => {
+    const out: number[] = [];
+    for (let j = i + 1; j < slots.length && slots[j]! - slots[i]! <= rules.storyOutcomeWithinTicks; j++) {
+      if (!assigned[j]) out.push(j);
+    }
+    return out;
+  };
+
+  const placeStory = (i: number, free: number[]) => {
+    const story = storyQ.shift()!;
+    const outcome = story.outcomes[pickWeighted(outcomeWeights(story, config.leansToChance), rng)]!;
+    const outcomeSlot = free[rng.int(0, free.length - 1)]!;
+    const byId = new Map(story.news.map((n) => [n.id, n]));
+    const tentativeId = story.tentative.id;
+    assigned[i] = {
+      tick: slots[i]!, news: story.tentative, kind: 'tentative', tag: 'tentative',
+      isHistorical: true, storyId: story.id,
+    };
+    const clue = (story.clues ?? []).find((c) => c.pointsTo === outcome.newsId);
+    const between = free.filter((j) => j < outcomeSlot);
+    if (clue && between.length > 0) {
+      const j = between[rng.int(0, between.length - 1)]!;
+      assigned[j] = {
+        tick: slots[j]!, news: byId.get(clue.newsId)!, kind: 'clue', tag: 'tentative',
+        isHistorical: outcome.isHistorical, storyId: story.id, relatedTentativeId: tentativeId,
+      };
+    }
+    assigned[outcomeSlot] = {
+      tick: slots[outcomeSlot]!, news: byId.get(outcome.newsId)!, kind: 'outcome', tag: 'outcome',
+      isHistorical: outcome.isHistorical, storyId: story.id, relatedTentativeId: tentativeId,
+      followedLean: outcome.newsId === story.leansTo,
+    };
+    busyUntil = outcomeSlot;
+  };
 
   for (let i = 0; i < slots.length; i++) {
-    if (assigned[i]) continue; // 스토리 단서·결과로 이미 예약된 자리
-    const tick = slots[i]!;
-
-    for (let q = 0; q < queue.length; q++) {
-      const item = queue[q]!;
-      if (item.type === 'news') {
-        assigned[i] = { tick, news: item.news, kind: 'standalone', tag: tagOf(item.news, 'standalone'), isHistorical: true };
-        queue.splice(q, 1);
-        break;
-      }
-      // 스토리를 지금 시작할 수 있는가
-      if (i < storyBusyUntil || tick > lastSignalTick) continue;
-      const free: number[] = [];
-      for (let j = i + 1; j < slots.length && slots[j]! - tick <= rules.signalOutcomeWithinTicks; j++) {
-        if (!assigned[j]) free.push(j);
-      }
-      if (free.length === 0) continue;
-
-      const story = item.story;
-      const outcome = story.outcomes[pickWeighted(outcomeWeights(story, config.historicalOutcomeChance), rng)]!;
-      const outcomeSlot = free[rng.int(0, free.length - 1)]!;
-      const byId = new Map(story.news.map((n) => [n.id, n]));
-
-      assigned[i] = { tick, news: story.signal, kind: 'signal', tag: 'hint', isHistorical: true, storylineId: story.id };
-      // 뽑힌 결과를 가리키는 단서가 있고, 낌새와 결과 사이에 빈자리가 있으면 단서를 넣는다
-      const clue = (story.clues ?? []).find((c) => c.pointsTo === outcome.newsId);
-      const between = free.filter((j) => j < outcomeSlot);
-      if (clue && between.length > 0) {
-        const j = between[rng.int(0, between.length - 1)]!;
-        assigned[j] = {
-          tick: slots[j]!,
-          news: byId.get(clue.newsId)!,
-          kind: 'clue',
-          tag: 'hint',
-          isHistorical: outcome.isHistorical,
-          storylineId: story.id,
-        };
-      }
-      assigned[outcomeSlot] = {
-        tick: slots[outcomeSlot]!,
-        news: byId.get(outcome.newsId)!,
-        kind: 'outcome',
-        tag: 'outcome',
-        isHistorical: outcome.isHistorical,
-        storylineId: story.id,
-      };
-      storyBusyUntil = outcomeSlot;
-      queue.splice(q, 1);
-      break;
+    if (assigned[i]) continue;
+    const roll = rng.next(); // 슬롯마다 항상 1개 뽑아 순서를 안정적으로
+    const canStory = i > busyUntil && slots[i]! <= lastTentativeTick && storyQ.length > 0;
+    const free = canStory ? freeAfter(i) : [];
+    const wantStory = canStory && free.length > 0 && (roll < config.pStartStory || breakingQ.length === 0);
+    if (wantStory) {
+      placeStory(i, free);
+    } else if (breakingQ.length > 0) {
+      assigned[i] = { tick: slots[i]!, news: breakingQ.shift()!, kind: 'breaking', tag: 'breaking', isHistorical: true };
     }
   }
   return assigned.filter((a): a is ScheduledNews => a !== undefined);
 }
 
-/** 영향 하나에 쓰는 배율 범위 */
-export function multiplierRange(config: GameConfig, mode: GameMode, link: 'direct' | 'indirect'): Range {
-  const m = config.impactMultiplier;
-  if (mode === 'practice') return m.practice;
-  return link === 'direct' ? m.realDirect : m.realIndirect;
+function multiplierRange(config: GameConfig, strength: number): Range {
+  return strength === 3 ? config.impactMultiplier.strong : config.impactMultiplier.weak;
 }
 
-/**
- * 뉴스 하나를 "테마 id → 실제 변동률(0.1% 단위)" 표로 바꾼다.
- * - 영향마다 배율을 무작위로 뽑아 곱한다 (시장 전체 영향은 테마마다 따로 뽑는다)
- * - 같은 테마에 여러 영향이 있으면 합산
- * - 결과는 ±(영향도 최대 × 3%) = ±30%로 자른다
- */
-export function newsToRates(
-  news: News,
-  themeIds: readonly string[],
-  config: GameConfig,
-  mode: GameMode,
-  rng: Rng,
-): Map<string, number> {
-  const raw = new Map<string, number>();
-  const add = (themeId: string, impact: number, link: 'direct' | 'indirect') => {
-    const [lo, hi] = multiplierRange(config, mode, link);
-    const mult = lo + rng.next() * (hi - lo);
-    raw.set(themeId, (raw.get(themeId) ?? 0) + impact * config.impactUnitRate * mult);
-  };
-  for (const e of news.effects) {
-    if (e.themeId === MARKET_THEME_ID) for (const id of themeIds) add(id, e.impact, e.link);
-    else add(e.themeId, e.impact, e.link);
-  }
+export interface NewsRates {
+  /** 강도 3 (직접) 영향: 테마 id → 0.1% 단위 변동률 */
+  strong: Map<string, number>;
+  /** 강도 2·1 (간접) 영향 */
+  weak: Map<string, number>;
+}
+
+/** 뉴스 하나의 실제 변동률: 영향도 × 3% × 배율(영향마다 무작위), ±30%로 자름 */
+export function newsToRates(news: News, config: GameConfig, rng: Rng): NewsRates {
   const cap = config.impactMax * config.impactUnitRate;
-  const out = new Map<string, number>();
-  for (const [k, v] of raw) {
-    const rate = Math.max(-cap, Math.min(cap, Math.round(v)));
-    if (rate !== 0) out.set(k, rate);
+  const out: NewsRates = { strong: new Map(), weak: new Map() };
+  for (const e of news.effects) {
+    const [lo, hi] = multiplierRange(config, e.link.strength);
+    const mult = lo + rng.next() * (hi - lo);
+    const rate = Math.max(-cap, Math.min(cap, Math.round(e.impact * config.impactUnitRate * mult)));
+    if (rate !== 0) (e.link.strength === 3 ? out.strong : out.weak).set(e.themeId, rate);
   }
   return out;
 }
 
-interface QueuedRates {
-  applyTick: number;
+export interface DueRates {
+  newsId: string;
   rates: Map<string, number>;
 }
 
 export class NewsEngine {
   /** 이번 판 뉴스 일정 (미리 정해짐. 화면에 미리 보여주면 안 됨) */
   readonly schedule: readonly ScheduledNews[];
-  readonly mode: GameMode;
   private nextIndex = 0;
   private pending: ScheduledNews | null = null;
-  private readonly queued: QueuedRates[] = [];
+  private readonly queued: Array<{ applyTick: number } & DueRates> = [];
   private readonly rules: TickRules;
   private readonly config: GameConfig;
-  private readonly themeIds: string[];
   private readonly impactRng: Rng;
+  private readonly pauseOnNews: boolean;
 
-  /**
-   * @param scheduleRng 일정용 난수
-   * @param impactRng  배율용 난수 (일정과 분리해서, 배율 규칙을 바꿔도 뉴스 순서는 그대로)
-   */
-  constructor(era: Era, scheduleRng: Rng, impactRng: Rng, config: GameConfig, mode: GameMode) {
+  constructor(
+    active: ActiveEra,
+    scheduleRng: Rng,
+    impactRng: Rng,
+    config: GameConfig,
+    options: { pauseOnNews?: boolean; fixedSchedule?: ScheduledNews[] } = {},
+  ) {
     this.config = config;
-    this.mode = mode;
-    this.rules = getTickRules(config, mode);
-    this.themeIds = era.themes.map((t) => t.id);
+    this.rules = getTickRules(config);
     this.impactRng = impactRng;
-    this.schedule = buildNewsSchedule(era, scheduleRng, config, mode);
+    this.pauseOnNews = options.pauseOnNews ?? false;
+    this.schedule = options.fixedSchedule ?? buildNewsSchedule(active, scheduleRng, config);
   }
 
-  /**
-   * 틱이 끝날 때마다 호출한다. 이 틱이 뉴스 자리면 그 뉴스를 돌려준다.
-   * - 연습: 팝업이 열리고(isPopupOpen) '확인'을 기다린다
-   * - 실전: 바로 반영 예약 (tick + 10초)
-   */
+  /** 틱이 끝날 때마다 호출. 이 틱이 뉴스 슬롯이면 그 뉴스를 돌려준다 */
   checkTrigger(tick: number): ScheduledNews | null {
     if (this.pending) return null;
     const next = this.schedule[this.nextIndex];
     if (!next || next.tick !== tick) return null;
     this.nextIndex++;
-    if (this.mode === 'practice') this.pending = next;
+    if (this.pauseOnNews) this.pending = next;
     else this.enqueue(next, tick);
     return next;
   }
 
-  /** 연습 모드 팝업이 열려 있는가 (열려 있으면 시간이 멈춤) */
+  /** (튜토리얼) 뉴스 팝업이 열려 시간이 멈춘 상태인가 */
   get isPopupOpen(): boolean {
     return this.pending !== null;
   }
@@ -243,7 +209,7 @@ export class NewsEngine {
     return this.pending;
   }
 
-  /** 연습 모드 '확인'. currentTick + 10초 뒤에 반영되도록 예약한다 */
+  /** (튜토리얼) 팝업 '확인'. 그 틱 기준으로 반영을 예약한다 */
   confirm(currentTick: number): ScheduledNews {
     const s = this.pending;
     if (!s) throw new Error('확인할 뉴스 팝업이 없음');
@@ -252,17 +218,11 @@ export class NewsEngine {
     return s;
   }
 
-  /** 이 틱에 반영할 변동률을 꺼낸다 (꺼내면 비워짐). 없으면 undefined */
-  consumeRatesFor(tick: number): Map<string, number> | undefined {
-    let merged: Map<string, number> | undefined;
-    for (let i = this.queued.length - 1; i >= 0; i--) {
-      const q = this.queued[i]!;
-      if (q.applyTick !== tick) continue;
-      this.queued.splice(i, 1);
-      merged ??= new Map();
-      for (const [k, v] of q.rates) merged.set(k, (merged.get(k) ?? 0) + v);
-    }
-    return merged;
+  /** 이 틱에 반영할 변동률들 (꺼내면 비워짐) */
+  consumeRatesFor(tick: number): DueRates[] {
+    const due = this.queued.filter((q) => q.applyTick === tick);
+    for (const d of due) this.queued.splice(this.queued.indexOf(d), 1);
+    return due.map(({ newsId, rates }) => ({ newsId, rates }));
   }
 
   /** 지금까지 뜬 뉴스들 (순서대로) */
@@ -271,9 +231,14 @@ export class NewsEngine {
   }
 
   private enqueue(s: ScheduledNews, fromTick: number): void {
-    this.queued.push({
-      applyTick: fromTick + this.rules.newsDelayTicks,
-      rates: newsToRates(s.news, this.themeIds, this.config, this.mode, this.impactRng),
-    });
+    const { strong, weak } = newsToRates(s.news, this.config, this.impactRng);
+    const base = fromTick + this.rules.reactionTicks;
+    const extra = this.config.indirectExtraDelayTicks;
+    if (extra > 0) {
+      this.queued.push({ applyTick: base, newsId: s.news.id, rates: strong });
+      this.queued.push({ applyTick: base + extra, newsId: s.news.id, rates: weak });
+    } else {
+      this.queued.push({ applyTick: base, newsId: s.news.id, rates: new Map([...strong, ...weak]) });
+    }
   }
 }

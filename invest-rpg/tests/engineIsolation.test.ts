@@ -15,7 +15,7 @@ function stripComments(code: string): string {
   return code.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
 }
 
-const ALLOWED_IMPORT = /^(\.\/[\w-]+\.ts|\.\.\/data\/schema\.ts)$/;
+const ALLOWED_IMPORT = /^(\.\/[\w-]+\.ts|\.\.\/data\/schema\.ts|\.\.\/data\/[\w-]+\.json)$/;
 const FORBIDDEN_CODE: Array<[RegExp, string]> = [
   [/\bwindow\b/, 'window (브라우저)'],
   [/\bdocument\b/, 'document (브라우저)'],
