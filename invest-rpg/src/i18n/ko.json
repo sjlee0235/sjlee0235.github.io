@@ -2,7 +2,8 @@
   "common": {
     "confirm": "확인",
     "cancel": "취소",
-    "coin": "{amount} 코인"
+    "coin": "{amount} 코인",
+    "close": "닫기"
   },
   "phase": {
     "running": "장 운영 중",
@@ -109,7 +110,7 @@
     "purchase": "충전",
     "ad": "광고 보상",
     "other": "기타",
-    "done": "{amount} 코인가 들어왔어요 ({source})."
+    "done": "{amount} 코인이 들어왔어요 ({source})."
   },
   "debrief": {
     "title": "{era} 돌아보기",
@@ -158,7 +159,9 @@
     "pending": "정산 예정 작업 수입",
     "payoutNote": "작업 수입은 시대가 끝날 때 한꺼번에 지급돼요.",
     "plus": "+{coins}",
-    "eyes": "눈 {count}개"
+    "eyes": "눈 {count}개",
+    "done": "완성 {count}개",
+    "pendingShort": "정산 예정"
   },
   "music": {
     "genre": {
@@ -184,6 +187,33 @@
     "eraLine": "{era}: 투자 수익률 {pct}, 작업 수입 {work} 코인",
     "total": "최종 코인 {coins}",
     "totalWork": "작업 수입 합계 {coins} 코인",
-    "cumulative": "누적 투자 수익률 {pct}"
+    "cumulative": "누적 투자 수익률 {pct}",
+    "restart": "처음부터 다시"
+  },
+  "trading": {
+    "listTitle": "종목",
+    "feedTitle": "뉴스",
+    "colName": "종목명",
+    "colChange": "등락률",
+    "chart": "차트",
+    "return": "손익률",
+    "holding": "보유 {qty}주 · 평균 {avg} · 평가 {pnl}",
+    "noHolding": "보유 없음",
+    "totalBuy": "필요 {total} 코인 (수수료 {fee})",
+    "totalSell": "받을 {total} 코인 (수수료 {fee})",
+    "exec": {
+      "buy": "매수",
+      "sell": "매도"
+    }
+  },
+  "settings": {
+    "title": "설정",
+    "language": "언어",
+    "colorMode": "상승 색상",
+    "colorAuto": "언어에 맞춤",
+    "colorKorean": "빨강 상승 · 파랑 하락",
+    "colorWestern": "초록 상승 · 빨강 하락",
+    "telemetry": "플레이 기록 보내기 (동의)",
+    "noCredits": "출처 표기가 필요한 곡이 아직 없어요."
   }
 }

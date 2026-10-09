@@ -65,3 +65,10 @@
 | 2000년대 | puppy | living_2000s | workshop_2000s | CRT | 클래식 회색 |
 | 2010년대 | adult | living_2010s | workshop_2010s | 평면 | 평면 회색 |
 | 2020년대 | senior | living_2020s | workshop_2020s | 대형 평면 | 어두운 회색 |
+
+## 8. 구현 (단계 U)
+
+- 코드: `src/ui/` (바닐라 TypeScript + Vite). 켜기: `npm run dev`, 스크린샷: `npm run shots`.
+- **설정 버튼: 상단 바 가운데** (모든 탭 같은 자리). 왼쪽 위 `NEWS!`, 오른쪽 위 코인과 겹치지 않고, 엄지가 자주 닿는 아래쪽과 멀다. 주식창에서는 계좌 바 가운데.
+- 그림 배율: 기준 180×320의 정수 배율 (360×640·390×844 모두 2배). 상단 바·탭 바 높이는 기준 픽셀 20·32에 맞춘다 (`docs/art_spec.md`).
+- 화면 로직(무엇을 어떤 글자로 보여줄지)은 `src/ui/viewModels.ts`의 순수 함수 → `tests/ui.test.ts`.

@@ -5,12 +5,22 @@
 // 진짜 그림이 준비되면 같은 파일명으로 덮어쓰기만 하면 된다 (docs/art_spec.md).
 // 외부 라이브러리 없이 Node 기본 기능(zlib)으로 PNG를 만든다. 글자는 3×5 픽셀 글꼴(영문 대문자·숫자).
 
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { deflateSync } from 'node:zlib';
 import manifest from '../src/ui/artManifest.json' with { type: 'json' };
 
-const ROOT = join(import.meta.dirname, '..', 'assets');
+declare const process: {
+  argv: string[];
+  getBuiltinModule(id: 'node:fs'): {
+    mkdirSync(path: string, o: { recursive: boolean }): void;
+    writeFileSync(path: string, data: Uint8Array): void;
+    existsSync(path: string): boolean;
+  };
+  getBuiltinModule(id: 'node:zlib'): { deflateSync(data: Uint8Array): Uint8Array };
+};
+
+const fs = process.getBuiltinModule('node:fs');
+const { deflateSync } = process.getBuiltinModule('node:zlib');
+/** npm 스크립트는 invest-rpg 폴더에서 실행된다 */
+const ROOT = 'assets';
 
 interface AssetDef {
   file: string;
@@ -42,13 +52,27 @@ function crc32(buf: Uint8Array): number {
   return (c ^ 0xffffffff) >>> 0;
 }
 
-function chunk(type: string, data: Uint8Array): Buffer {
-  const len = Buffer.alloc(4);
-  len.writeUInt32BE(data.length);
-  const td = Buffer.concat([Buffer.from(type, 'ascii'), Buffer.from(data)]);
-  const crc = Buffer.alloc(4);
-  crc.writeUInt32BE(crc32(td));
-  return Buffer.concat([len, td, crc]);
+function concat(parts: Uint8Array[]): Uint8Array {
+  const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
+  let o = 0;
+  for (const p of parts) {
+    out.set(p, o);
+    o += p.length;
+  }
+  return out;
+}
+
+function u32(n: number): Uint8Array {
+  const b = new Uint8Array(4);
+  new DataView(b.buffer).setUint32(0, n >>> 0);
+  return b;
+}
+
+const ascii = (s: string) => Uint8Array.from([...s].map((c) => c.charCodeAt(0)));
+
+function chunk(type: string, data: Uint8Array): Uint8Array {
+  const td = concat([ascii(type), data]);
+  return concat([u32(data.length), td, u32(crc32(td))]);
 }
 
 class Bitmap {
@@ -81,18 +105,13 @@ class Bitmap {
   disc(cx: number, cy: number, r: number, c: number[]): void {
     for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i++) if (i * i + j * j <= r * r + r * 0.6) this.set(cx + i, cy + j, c);
   }
-  png(): Buffer {
-    const raw = Buffer.alloc((this.w * 4 + 1) * this.h);
-    for (let y = 0; y < this.h; y++) {
-      raw[y * (this.w * 4 + 1)] = 0;
-      Buffer.from(this.px.buffer, y * this.w * 4, this.w * 4).copy(raw, y * (this.w * 4 + 1) + 1);
-    }
-    const ihdr = Buffer.alloc(13);
-    ihdr.writeUInt32BE(this.w, 0);
-    ihdr.writeUInt32BE(this.h, 4);
-    ihdr.set([8, 6, 0, 0, 0], 8); // 8비트 RGBA
-    return Buffer.concat([
-      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+  png(): Uint8Array {
+    const stride = this.w * 4 + 1;
+    const raw = new Uint8Array(stride * this.h);
+    for (let y = 0; y < this.h; y++) raw.set(this.px.subarray(y * this.w * 4, (y + 1) * this.w * 4), y * stride + 1); // 줄마다 필터 0
+    const ihdr = concat([u32(this.w), u32(this.h), Uint8Array.from([8, 6, 0, 0, 0])]); // 8비트 RGBA
+    return concat([
+      Uint8Array.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
       chunk('IHDR', ihdr),
       chunk('IDAT', deflateSync(raw)),
       chunk('IEND', new Uint8Array()),
@@ -162,8 +181,9 @@ function paintFrame(bmp: Bitmap, a: AssetDef, f: number): void {
       bmp.rect(x0, h - 40, w, 1, shade(base, 1.5));
       bmp.rect(x0, 60, w, 1, shade(base, 1.25)); // 상단 UI 안전 영역 끝 (40 + 20)
       bmp.rect(x0, h - 72, w, 1, shade(base, 1.25)); // 탭 바 안전 영역 시작 (40 + 32)
-      centerText(bmp, a.label, x0, w, Math.floor(h / 2) - 3, INK);
-      centerText(bmp, 'PLACEHOLDER', x0, w, Math.floor(h / 2) + 5, shade(INK, 0.7));
+      // 이름은 위쪽 안전 영역 바로 아래 (가운데의 LP·강아지·인형 자리와 겹치지 않게)
+      centerText(bmp, a.label, x0, w, 64, INK);
+      centerText(bmp, 'PLACEHOLDER', x0, w, 72, shade(INK, 0.7));
       break;
     }
     case 'lp': {
@@ -271,7 +291,7 @@ function paintFrame(bmp: Bitmap, a: AssetDef, f: number): void {
   }
 }
 
-function build(a: AssetDef): Buffer {
+function build(a: AssetDef): Uint8Array {
   const bmp = new Bitmap(a.width * a.frames, a.height);
   for (let f = 0; f < a.frames; f++) paintFrame(bmp, a, f);
   return bmp.png();
@@ -281,13 +301,13 @@ const force = process.argv.includes('--force');
 let made = 0;
 let kept = 0;
 for (const [key, a] of Object.entries(manifest.assets as Record<string, AssetDef>)) {
-  const out = join(ROOT, a.file);
-  if (existsSync(out) && !force) {
+  const out = `${ROOT}/${a.file}`;
+  if (fs.existsSync(out) && !force) {
     kept++;
     continue;
   }
-  mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, build(a));
+  fs.mkdirSync(out.slice(0, out.lastIndexOf('/')), { recursive: true });
+  fs.writeFileSync(out, build(a));
   made++;
   if (process.argv.includes('--verbose')) console.log(`  ${key} → assets/${a.file}`);
 }

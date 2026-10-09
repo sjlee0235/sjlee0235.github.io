@@ -1,0 +1,54 @@
+// 화면 시작점 (npm run dev → http://localhost:5173/)
+//
+// 시대 데이터: 등록된 시대(ALL_ERAS)가 있으면 그것, 없으면 개발용 가상 시대 3개 (화면에 "가상 데이터" 표시).
+// 주소 옵션 (개발 서버에서만): ?debug=1 디버그 패널, &seed=7 시드 고정, &era=1 시대 선택, &fresh=1 저장 무시
+
+import { ALL_ERAS, ERA_SEQUENCE, orderBySequence } from '../data/eras/index.ts';
+import type { Era } from '../data/schema.ts';
+import { makeSpecEra } from '../dev/specEra.ts';
+import { localize } from '../i18n/index.ts';
+import { App } from './app.ts';
+import { browserClock } from './loop.ts';
+import { BrowserStorage } from './storage.ts';
+import './style.css';
+
+function virtualEras(): Era[] {
+  return ERA_SEQUENCE.map((id, i) => {
+    const era = makeSpecEra({ id, order: i + 1, seed: 11 + i });
+    const year = id.replace('s', '');
+    return { ...era, displayName: { ko: `${year}년대 (가상 데이터)`, en: `${id} (virtual data)` } };
+  });
+}
+
+function randomSeed(): number {
+  const a = new Uint32Array(1);
+  crypto.getRandomValues(a);
+  return a[0]! >>> 1;
+}
+
+const params = new URLSearchParams(window.location.search);
+const debug = import.meta.env.DEV && params.has('debug');
+const real = orderBySequence(ALL_ERAS);
+const eras = real.length > 0 ? real : virtualEras();
+const seedParam = debug ? Number(params.get('seed')) : NaN;
+const eraParam = debug ? Number(params.get('era')) : NaN;
+
+const app = new App({
+  root: document.getElementById('app')!,
+  eras,
+  seed: Number.isFinite(seedParam) && seedParam > 0 ? seedParam : randomSeed(),
+  storage: new BrowserStorage(),
+  clock: browserClock,
+  now: () => Date.now(),
+  assetBase: import.meta.env.BASE_URL,
+  virtualData: real.length === 0,
+  ...(Number.isFinite(eraParam) && eraParam > 0 ? { startEraIndex: eraParam } : {}),
+  fresh: debug && params.has('fresh'),
+});
+app.start();
+
+if (debug) {
+  void import('./debug.ts').then(({ mountDebug }) =>
+    mountDebug(app, { seed: app.seed, eraNames: eras.map((e) => localize(e.displayName, 'ko')) }),
+  );
+}

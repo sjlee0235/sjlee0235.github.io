@@ -2,7 +2,7 @@
 
 > 화면(UI)을 만들 때 반드시 지켜야 할 것. 엔진은 이미 이 규칙대로 데이터를 내보내므로,
 > 화면은 **받은 것만 그대로 보여주고, 숨긴 것을 다시 계산하거나 추측해서 보여주지 않으면** 된다.
-> 화면 구성 전체는 `docs/screens.md`, 그림 사양은 단계 U에서 `docs/art_spec.md`.
+> 화면 구성 전체는 `docs/screens.md`, 그림 사양은 `docs/art_spec.md`. 구현은 `src/ui/` (단계 U).
 
 ---
 
@@ -55,14 +55,14 @@
 - 기본 정렬: **즐겨찾기 먼저, 그 안팎은 이름 가나다순** (`getStockList()`가 이미 이 순서). id순·추가 순서 정렬은 만들지 않는다. 종목 id는 판마다 바뀌므로 저장해 두지 않는다.
 - 등락률은 시대 시작가 대비 누적(`changePct`), 색은 `color`(설정의 상승 색상 모드 반영). 구입한 종목은 자동 즐겨찾기.
 - 종목명은 "수식어 업종주"(예: 평화 방산주), 기업 설명은 1~2줄.
-- 주문은 현재가로만, 확인 창 없이 한 번에 체결하고 짧은 안내(`order.filled`). '최대'는 매수일 때 수수료 포함 최대 수량(`maxBuyQuantity`), 매도일 때 보유 수량 전부 (`max_button` 기록). 단계 U에서 `previewOrder`, `maxQty`를 엔진에 추가한다.
+- 주문은 현재가로만, 확인 창 없이 한 번에 체결하고 짧은 안내(`order.filled`). '최대'는 `maxQty(side, id)`: 매수일 때 수수료 포함 최대 수량, 매도일 때 보유 수량 전부 (`max_button` 기록). 주문 전 금액·수수료·오류는 `previewOrder(side, id, qty)` (상태를 바꾸지 않음).
 
 ## 6. 시간·배속·저장
 
 - 화면 타이머가 `tickIntervalMs(getSpeed())`마다 `advanceTick()`을 부른다 (1배 5,000ms, 2배 2,500ms). 게임 시간 단위는 그대로.
 - **배속 선택**: 주식창 계좌 바에 '1배'와 '2배' 두 버튼을 나란히 (하나를 켜면 다른 하나가 꺼짐). **탭을 옮겨도 유지**(`SPEED_RESETS_ON_TAB_LEAVE=false`). 2배일 때 다른 탭 상단에 작은 "x2".
 - 일시정지 사유는 `tutorial`과 `background`뿐. 앱이 백그라운드로 가면 `pause('background')` + 음악 `setBackground(true)`, 돌아오면 `resume('background')` + `setBackground(false)` (몰아서 따라잡지 않는다).
-- **입력이 없을 때 자동 일시정지**: 일정 시간(예: 3~5분, 테스트로 정함) 터치가 없으면 `pause('background')`, 화면을 다시 만지면 확인 후 `resume('background')`.
+- 입력이 없을 때 자동 일시정지는 두지 않는다 (게임 시간은 흐르는 것이 기획. README 가정한 규칙 50).
 - 시대 시작 안내: "처음 7분은 뉴스가 없어요" (`era.graceNotice`, 제안 문구).
 - **저장 빈도**: `advanceTick()` 결과의 `saveNeeded`가 true이거나 `pendingSaveReasons`가 비어 있지 않으면 바로 `savePublicGame()`. 엔진이 알리는 때: 매매, 입금, 뉴스 발표, 백그라운드 전환, 30초 경과, 시대 종료.
 - 불러오기 `status`: `resumed`(이어 하기) / `settled_on_version_change`(앱 업데이트로 저장 시점 가격에 정산 + 작업 수입 합산 → 정산 화면 → 다음 시대, 마지막이면 `finalSummary`) / `restarted_legacy`(아주 옛 세이브).
