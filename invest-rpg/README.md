@@ -73,7 +73,7 @@ invest-rpg/
       eras/legacy/     #   이전 구조 데이터 (참고용, 게임에서 읽지 않음)
     i18n/              # 다국어 (ko, en)
   assets/audio/        # music/ (곡 파일, 지금은 무음 임시 파일), licenses/ (라이선스 증빙)
-  tests/               # 자동 테스트 (fixtures/makeEra.ts = 가상 시대 생성기)
+  tests/               # 자동 테스트 (가상 시대 생성기는 src/dev/specEra.ts)
   scripts/             # demo, sim, simRepeat, simCarry, simLib, lintContent, lintAudio, audioPlaceholder, telemetryReport
   docs/
     PLAN.md            # 기획 정리

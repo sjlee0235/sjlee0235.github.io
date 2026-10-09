@@ -3,7 +3,7 @@
 //       npm run sim:carry -- 50      (빠르게)
 
 import { cumulativeReturnPct } from '../src/engine/returns.ts';
-import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
+import { makeSpecEra } from '../src/dev/specEra.ts';
 import { labelOf, playCarry, quantile, REFERENCE_STRATEGIES, STRATEGIES } from './simLib.ts';
 
 declare const process: { argv: string[] };

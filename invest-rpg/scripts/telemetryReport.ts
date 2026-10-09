@@ -7,7 +7,7 @@
 
 import { dropoutTicks, eraMetrics, groupByGame, newsMetrics, type PlayerEraMetrics, type TelemetryRecord } from '../src/analytics/metrics.ts';
 import { TelemetryBuffer } from '../src/engine/telemetry.ts';
-import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
+import { makeSpecEra } from '../src/dev/specEra.ts';
 import { play, REFERENCE_STRATEGIES, STRATEGIES, STRATEGY_LABEL } from './simLib.ts';
 
 declare const process: {

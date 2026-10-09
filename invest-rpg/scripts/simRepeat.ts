@@ -8,7 +8,7 @@
 
 import type { GameConfig } from '../src/engine/config.ts';
 import { Game } from '../src/engine/game.ts';
-import { makeSpecEra, type SpecEraOptions } from '../tests/fixtures/makeEra.ts';
+import { makeSpecEra, type SpecEraOptions } from '../src/dev/specEra.ts';
 import {
   fmt, inTarget, labelOf, REFERENCE_STRATEGIES, runMany, STRATEGIES, summarize, targetLabel, TARGET_RANGE, type Strategy,
 } from './simLib.ts';

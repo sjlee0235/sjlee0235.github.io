@@ -21,7 +21,7 @@ import type { GameConfig } from './config.ts';
 import type { Era } from '../data/schema.ts';
 import type { EraSettlement } from './eraManager.ts';
 import {
-  Game, type FinalSummary, type GameOptions, type GamePhase, type GameSpeed, type GameTradeResult, type PauseReason,
+  Game, type FinalSummary, type GameOptions, type GamePhase, type GameSpeed, type GameTradeResult, type OrderPreview, type PauseReason,
   type SaveReason, type WorkStatus,
 } from './game.ts';
 import type { TouchResult } from './work.ts';
@@ -399,6 +399,21 @@ export class PublicGame {
   maxBuyQuantity(stockId: string): number {
     const id = this.internalOrNull(stockId);
     return id ? this.g.maxBuyQuantity(id) : 0;
+  }
+
+  /** 주문할 수 있는 최대 수량 ('최대' 버튼): 매수는 수수료 포함, 매도는 보유 수량 전부 */
+  maxQty(side: 'buy' | 'sell', stockId: string): number {
+    const id = this.internalOrNull(stockId);
+    return id ? this.g.maxQty(side, id) : 0;
+  }
+
+  /** 주문 미리보기: 금액·수수료·최대 수량·오류 (상태를 바꾸지 않는다) */
+  previewOrder(side: 'buy' | 'sell', stockId: string, quantity: number): OrderPreview {
+    const id = this.internalOrNull(stockId);
+    if (!id) {
+      return { side, stockId, quantity, price: 0, amount: 0, fee: 0, total: 0, maxQuantity: 0, error: 'unknown-stock' };
+    }
+    return { ...this.g.previewOrder(side, id, quantity), stockId };
   }
 
   toggleFavorite(stockId: string): void {

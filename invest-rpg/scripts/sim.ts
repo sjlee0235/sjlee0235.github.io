@@ -5,7 +5,7 @@
 
 import { ALL_ERAS } from '../src/data/eras/index.ts';
 import type { Era } from '../src/data/schema.ts';
-import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
+import { makeSpecEra } from '../src/dev/specEra.ts';
 import { fmt, labelOf, REFERENCE_STRATEGIES, runMany, STRATEGIES, STRATEGY_LABEL, summarize, targetLabel, TARGET_RANGE } from './simLib.ts';
 
 declare const process: { argv: string[] };

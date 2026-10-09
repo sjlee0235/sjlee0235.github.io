@@ -10,7 +10,7 @@ import { PublicGame } from '../src/engine/publicView.ts';
 import type { StockReport } from '../src/engine/report.ts';
 import { TutorialSession } from '../src/engine/tutorial.ts';
 import { localize, t } from '../src/i18n/index.ts';
-import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
+import { makeSpecEra } from '../src/dev/specEra.ts';
 
 declare const process: { argv: string[] };
 

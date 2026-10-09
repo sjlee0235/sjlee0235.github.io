@@ -7,7 +7,7 @@ import { lintEra, lintWords, type LintIssue } from '../src/data/lint.ts';
 import type { Era } from '../src/data/schema.ts';
 import { validateEra } from '../src/data/validate.ts';
 import { TUTORIAL_ERA } from '../src/engine/tutorial.ts';
-import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
+import { makeSpecEra } from '../src/dev/specEra.ts';
 
 declare const process: { exitCode?: number };
 

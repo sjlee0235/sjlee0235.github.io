@@ -162,6 +162,24 @@ export type GameTradeResult =
   | { ok: true; queued: true; executeTick: number }
   | { ok: false; error: GameTradeError };
 
+/** 주문 미리보기 (확인 창 없이 바로 체결하므로, 화면이 버튼 옆에 금액·오류를 미리 보여줄 때 쓴다) */
+export interface OrderPreview {
+  side: 'buy' | 'sell';
+  stockId: string;
+  quantity: number;
+  /** 현재가 (체결 가격) */
+  price: number;
+  /** 거래금액 = 현재가 × 수량 */
+  amount: number;
+  fee: number;
+  /** 매수: 나갈 코인(거래금액 + 수수료) / 매도: 들어올 코인(거래금액 - 수수료) */
+  total: number;
+  /** 지금 이 방향으로 주문할 수 있는 최대 수량 (매수: 수수료 포함, 매도: 보유 수량 전부) */
+  maxQuantity: number;
+  /** 지금 주문하면 날 오류 (없으면 null) */
+  error: GameTradeError | null;
+}
+
 export interface StockListItem {
   stock: Stock;
   theme: Theme;
@@ -851,6 +869,26 @@ export class Game {
   maxBuyQuantity(stockId: string): number {
     if (!this.session.prices.hasStock(stockId)) return 0;
     return this.account.maxBuyQuantity(this.session.prices.getPrice(stockId));
+  }
+
+  /** 주문할 수 있는 최대 수량: 매수는 수수료 포함해 살 수 있는 만큼, 매도는 보유 수량 전부 */
+  maxQty(side: 'buy' | 'sell', stockId: string): number {
+    if (!this.session.prices.hasStock(stockId)) return 0;
+    return side === 'buy' ? this.maxBuyQuantity(stockId) : this.account.getQuantity(stockId);
+  }
+
+  /** 주문 미리보기 (상태를 바꾸지 않고, 기록도 남기지 않는다) */
+  previewOrder(side: 'buy' | 'sell', stockId: string, quantity: number): OrderPreview {
+    const known = this.session.prices.hasStock(stockId);
+    const price = known ? this.session.prices.getPrice(stockId) : 0;
+    const validQty = Number.isInteger(quantity) && quantity > 0;
+    const amount = validQty ? price * quantity : 0;
+    const fee = this.account.feeFor(amount);
+    const maxQuantity = this.maxQty(side, stockId);
+    let error: GameTradeError | null = this.checkTradable(stockId);
+    if (!error && !validQty) error = 'invalid-quantity';
+    if (!error && quantity > maxQuantity) error = side === 'buy' ? 'insufficient-cash' : 'insufficient-shares';
+    return { side, stockId, quantity, price, amount, fee, total: side === 'buy' ? amount + fee : amount - fee, maxQuantity, error };
   }
 
   // ───────── 목록·차트·계좌 ─────────
