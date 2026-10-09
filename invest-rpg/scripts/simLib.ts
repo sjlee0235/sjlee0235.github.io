@@ -18,6 +18,7 @@ import type { GameConfig } from '../src/engine/config.ts';
 import { Game } from '../src/engine/game.ts';
 import type { ScheduledNews } from '../src/engine/newsEngine.ts';
 import { createRng, deriveSeed, type Rng } from '../src/engine/rng.ts';
+import type { TelemetrySink } from '../src/engine/telemetry.ts';
 
 export type Strategy =
   | 'random' | 'hold' | 'delayedFollow' | 'fastFollow' | 'sentiment' | 'antiSentiment' | 'leanForward' | 'leanReverse'
@@ -181,8 +182,10 @@ export interface PlayResult {
   usableStories: number;
 }
 
-export function play(era: Era, strategy: Strategy, seed: number, config: Partial<GameConfig> = {}): PlayResult {
-  const game = new Game({ eras: [era], seed, config });
+export function play(
+  era: Era, strategy: Strategy, seed: number, config: Partial<GameConfig> = {}, telemetry?: TelemetrySink,
+): PlayResult {
+  const game = new Game({ eras: [era], seed, config, ...(telemetry ? { telemetry } : {}) });
   const trader = makeTrader(strategy, seed, era);
   trader.onStart(game);
   while (game.phase !== 'era-ended') {

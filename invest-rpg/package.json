@@ -11,6 +11,7 @@
     "demo": "node scripts/demo.ts",
     "sim": "node scripts/sim.ts",
     "sim:repeat": "node scripts/simRepeat.ts",
+    "telemetry:report": "node scripts/telemetryReport.ts",
     "lint:content": "node scripts/lintContent.ts",
     "check": "npm run typecheck && npm test"
   },
