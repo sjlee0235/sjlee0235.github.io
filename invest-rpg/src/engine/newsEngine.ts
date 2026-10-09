@@ -5,12 +5,14 @@
 //   2) 빈 슬롯마다: 진행 중인 스토리가 없으면 P_START_STORY(85%) 확률로 새 스토리(잠정 뉴스)를 시작,
 //      아니면 속보를 넣는다. → 슬롯 기준 속보 약 1/3, 잠정 약 1/3, 결과 약 1/3
 //   3) 스토리: 잠정 뉴스 이후 15분 안에 오는 빈 슬롯 중 하나에 결과 뉴스를 넣는다 (간격 규칙 그대로).
-//      결과는 서로 반대인 2개 중 추첨: leansTo(잠정 뉴스의 단서가 가리키는 쪽) 65%, 다른 쪽 35%.
+//      결과는 서로 반대인 2개 중 추첨: leansTo(잠정 뉴스의 단서가 가리키는 쪽) 70%, 다른 쪽 30%.
 //      동시에 진행되는 스토리는 1개, 시대 종료 15분 전부터는 새 잠정 뉴스를 시작하지 않는다.
 //   4) 같은 뉴스는 다시 나오지 않고, 풀이 바닥나면 더 내보내지 않는다.
 //
 // 반영
-//   발표(틱 k) → 틱 k+1에 한 번에 반영. 실제 변동률 = 영향도 × 3% × 배율
+//   실제 변동률 = 영향도 × 3% × 배율. 이 중 instantReactionShare(기본 75%)는 발표 순간 바로(갭),
+//   나머지는 발표 1틱(5초) 뒤 틱 k+1에 한 번에 반영한다.
+//   → 뉴스를 보고 5초 안에 사도 나머지 몫만 얻는다 (실제 시장도 뉴스가 뜨는 순간 가격이 먼저 뛴다)
 //   배율: 강도 3은 0.6~1.4, 강도 2·1은 0.4~1.6 (영향마다 따로 뽑음), 결과는 ±30%로 자름
 //   (기본 OFF) 간접 영향(강도 2·1)을 N틱 더 늦게 반영하는 옵션
 
@@ -164,11 +166,31 @@ export interface DueRates {
   rates: Map<string, number>;
 }
 
+/**
+ * 변동률을 "발표 즉시 몫"과 "5초 뒤 몫"으로 나눈다 (0.1% 단위 정수).
+ * 5초 뒤 몫이 0이 되면 관성이 생기지 않으므로 최소 ±0.1%는 남긴다.
+ */
+export function splitRates(rates: ReadonlyMap<string, number>, share: number): { instant: Map<string, number>; later: Map<string, number> } {
+  const instant = new Map<string, number>();
+  const later = new Map<string, number>();
+  for (const [themeId, rate] of rates) {
+    let now = Math.trunc(rate * share);
+    if (rate - now === 0) now = rate - Math.sign(rate);
+    if (now !== 0) instant.set(themeId, now);
+    later.set(themeId, rate - now);
+  }
+  return { instant, later };
+}
+
 export class NewsEngine {
   /** 이번 판 뉴스 일정 (미리 정해짐. 화면에 미리 보여주면 안 됨) */
   readonly schedule: readonly ScheduledNews[];
   private nextIndex = 0;
   private pending: ScheduledNews | null = null;
+  /** (튜토리얼) 팝업 확인 뒤 예약할 5초 뒤 몫 */
+  private pendingLater: NewsRates | null = null;
+  /** 방금 발표된 뉴스의 즉시 반영 몫 (Game이 바로 꺼내 간다) */
+  private instant: DueRates | null = null;
   private readonly queued: Array<{ applyTick: number } & DueRates> = [];
   private readonly rules: TickRules;
   private readonly config: GameConfig;
@@ -195,9 +217,27 @@ export class NewsEngine {
     const next = this.schedule[this.nextIndex];
     if (!next || next.tick !== tick) return null;
     this.nextIndex++;
-    if (this.pauseOnNews) this.pending = next;
-    else this.enqueue(next, tick);
+    const { strong, weak } = newsToRates(next.news, this.config, this.impactRng);
+    const share = this.config.instantReactionShare;
+    const s = splitRates(strong, share);
+    const w = splitRates(weak, share);
+    const instant = new Map([...s.instant, ...w.instant]);
+    this.instant = instant.size > 0 ? { newsId: next.news.id, rates: instant } : null;
+    const later: NewsRates = { strong: s.later, weak: w.later };
+    if (this.pauseOnNews) {
+      this.pending = next;
+      this.pendingLater = later;
+    } else {
+      this.enqueue(next, later, tick);
+    }
     return next;
+  }
+
+  /** 방금 발표된 뉴스의 즉시 반영 몫 (꺼내면 비워짐) */
+  consumeInstant(): DueRates | null {
+    const d = this.instant;
+    this.instant = null;
+    return d;
   }
 
   /** (튜토리얼) 뉴스 팝업이 열려 시간이 멈춘 상태인가 */
@@ -214,7 +254,8 @@ export class NewsEngine {
     const s = this.pending;
     if (!s) throw new Error('확인할 뉴스 팝업이 없음');
     this.pending = null;
-    this.enqueue(s, currentTick);
+    this.enqueue(s, this.pendingLater!, currentTick);
+    this.pendingLater = null;
     return s;
   }
 
@@ -230,8 +271,7 @@ export class NewsEngine {
     return this.schedule.slice(0, this.nextIndex);
   }
 
-  private enqueue(s: ScheduledNews, fromTick: number): void {
-    const { strong, weak } = newsToRates(s.news, this.config, this.impactRng);
+  private enqueue(s: ScheduledNews, { strong, weak }: NewsRates, fromTick: number): void {
     const base = fromTick + this.rules.reactionTicks;
     const extra = this.config.indirectExtraDelayTicks;
     if (extra > 0) {

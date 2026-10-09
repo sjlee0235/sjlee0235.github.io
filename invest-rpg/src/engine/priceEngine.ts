@@ -5,7 +5,8 @@
 // - 1분(12틱) 윈도우 안 변동률 합이 ±3%를 넘으려 하면 넘친 만큼 반대로 튕겨낸다(반사).
 // - 뉴스 사이 한도: 뉴스가 발표된 순간의 가격 P0 기준으로, 다음 뉴스 발표 전까지 [0.7×P0, 1.3×P0] 안에 머문다.
 //   (모든 종목, 뉴스 반영·관성·일반 변동 포함) 뉴스 반영은 남은 한도까지만, 일반·관성 변동은 반사.
-// - 뉴스 반영 틱(발표 1틱 뒤): 영향받는 종목은 랜덤 대신 뉴스 변동률을 한 번에 적용, 1분 윈도우 리셋.
+// - 발표 순간(즉시 몫): 틱을 진행하지 않고 영향받는 종목 가격을 바로 옮긴다 (1분 한도·관성과 무관).
+// - 뉴스 반영 틱(발표 1틱 뒤, 나머지 몫): 영향받는 종목은 랜덤 대신 뉴스 변동률을 한 번에 적용, 1분 윈도우 리셋.
 // - 관성(반영 후 2틱): 반영 방향과 같은 방향 50% / 반대 25% / 변동 없음 25%, 크기 0.1~1.5%.
 //   관성 구간은 1분 한도에서 제외하고, 끝나면 윈도우를 새로 시작한다.
 // - 가격 = 정수, 최소 1. (반올림은 0.5에서 올림)
@@ -14,7 +15,8 @@ import type { Stock } from '../data/schema.ts';
 import { getTickRules, type GameConfig, type TickRules } from './config.ts';
 import type { Rng } from './rng.ts';
 
-export type ChangeCause = 'random' | 'news' | 'inertia';
+/** instant = 뉴스 발표 순간 즉시 반영된 몫 */
+export type ChangeCause = 'random' | 'news' | 'inertia' | 'instant';
 export type InertiaDecision = 'same' | 'opposite' | 'flat';
 
 export interface PricePoint {
@@ -105,6 +107,26 @@ export class PriceEngine {
   /** 뉴스가 발표된 순간: 모든 종목의 한도 기준가를 지금 가격으로 다시 잡는다 */
   markNewsPublished(): void {
     for (const s of this.states) s.bandBase = s.price;
+  }
+
+  /**
+   * 뉴스 발표 순간의 즉시 반영 몫. 틱은 그대로이고, 1분 한도·관성에는 영향을 주지 않는다.
+   * 한도 기준가(P0)는 반영 전 가격이므로 즉시 몫 + 5초 뒤 몫을 합쳐 ±30% 안에 머문다.
+   */
+  applyInstant(rates: ReadonlyMap<string, number>): StockTickChange[] {
+    const changes: StockTickChange[] = [];
+    for (const s of this.states) {
+      const wanted = rates.get(s.themeId);
+      if (wanted === undefined || wanted === 0) continue;
+      const [lo, hi] = this.bandRange(s);
+      const rate = Math.max(lo, Math.min(hi, wanted));
+      const prevPrice = s.price;
+      s.price = this.clampToBand(s, applyRate(prevPrice, rate, this.config.minPrice));
+      s.lastRate += rate;
+      s.history[s.history.length - 1] = { tick: this.tick, price: s.price };
+      changes.push({ stockId: s.stockId, prevPrice, price: s.price, rate, cause: 'instant', requestedRate: wanted });
+    }
+    return changes;
   }
 
   /** 뉴스 사이 한도를 0.1% 단위 변동률 범위로 (현재 가격 기준) */

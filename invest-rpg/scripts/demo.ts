@@ -35,14 +35,16 @@ function printRecap(game: Game, r: RecapNotice) {
 if (process.argv[2] === 'tutorial') {
   const tut = new TutorialSession();
   for (const k of ['notice1', 'notice2', 'notice3', 'notice4']) console.log(`· ${t('ko', `tutorial.${k}`)}`);
-  while (tut.stage === 'waiting') tut.advanceTick();
+  let w = tut.advanceTick();
+  while (tut.stage === 'waiting') w = tut.advanceTick();
   console.log(`\n[${clock(tut.game.tick)}] (시간 정지) ${tut.game.pendingNews!.news.title.ko}`);
+  if (w.advanced) for (const c of w.instantChanges) console.log(`  발표 즉시: ${c.stockId} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)})`);
   console.log(`  ${t('ko', 'tutorial.stepReading')}`);
   tut.game.buy('tut-battery', 5);
   console.log('  → 든든 배터리 5주 매수');
   tut.confirmNews();
   const r = tut.advanceTick();
-  if (r.advanced) for (const c of r.changes.filter((x) => x.cause === 'news')) console.log(`  반영: ${c.stockId} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)})`);
+  if (r.advanced) for (const c of r.changes.filter((x) => x.cause === 'news')) console.log(`  5초 뒤 나머지: ${c.stockId} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)})`);
   while (tut.stage === 'reaction') tut.advanceTick();
   printRecap(tut.game, tut.recap!);
   console.log(`\n${t('ko', 'tutorial.done')}`);
@@ -57,7 +59,7 @@ if (process.argv[2] === 'tutorial') {
     if (!r.advanced) continue;
     if (r.news) {
       const p = game.getNewsPopup(r.news);
-      console.log(`[${clock(r.tick)}] (${TYPE[r.news.kind]}) ${r.news.news.title.ko}${p.isHistorical ? '' : ` [${t('ko', 'news.fictionalTag')}]`} — 관련 테마 ${p.relatedThemes.length}개`);
+      console.log(`[${clock(r.tick)}] (${TYPE[r.news.kind]}) ${r.news.news.title.ko}${p.isHistorical ? '' : ` [${t('ko', 'news.fictionalTag')}]`} — 관련 테마 ${p.relatedThemes.length}개, 발표 즉시 반영 ${r.instantChanges.length}종목`);
     }
     for (const rc of r.recaps) printRecap(game, rc);
     if (r.settlement) console.log(`\n=== 시대 마감 — 시작 ${n(r.settlement.startCash)} → 종료 ${n(r.settlement.endAssets)} 비트 (${signed(r.settlement.returnPct)}) ===`);

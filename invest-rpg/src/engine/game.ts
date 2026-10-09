@@ -2,7 +2,7 @@
 //
 // 엔진은 실제 시계를 쓰지 않는다. 화면 쪽 타이머가 5초마다 advanceTick()을 부른다.
 // - 뉴스가 떠도 시간은 멈추지 않는다. (튜토리얼만 pauseOnNews로 예외)
-// - 뉴스 발표(틱 k) → 틱 k+1에 반영 → 틱 k+2, k+3 관성 → 일반 움직임
+// - 뉴스 발표(틱 k): 영향의 75%가 그 순간 바로 반영(instantChanges) → 틱 k+1에 나머지 반영 → 틱 k+2, k+3 관성 → 일반 움직임
 // - 뉴스 발표 120초 뒤 해설 알림(recap)이 AdvanceResult.recaps로 나온다
 //
 // 상태(phase)
@@ -57,6 +57,8 @@ export type AdvanceResult =
       changes: StockTickChange[];
       /** 이 틱이 끝나고 새로 뜬 뉴스 */
       news: ScheduledNews | null;
+      /** 뉴스 발표 순간 바로 반영된 가격 변화 (뉴스가 없으면 빈 배열) */
+      instantChanges: StockTickChange[];
       /** 이 틱에 만들어진 해설 알림 */
       recaps: RecapNotice[];
       /** (주문 지연 옵션) 이 틱에 체결된 주문 */
@@ -230,24 +232,21 @@ export class Game {
     for (const d of due) for (const [k, v] of d.rates) merged.set(k, (merged.get(k) ?? 0) + v);
     const { tick, changes } = this.session.prices.step(merged.size > 0 ? merged : undefined);
 
-    // 뉴스별로 실제 적용된 변동률 기록 (해설 알림용)
-    for (const d of due) {
-      const map = this.applied.get(d.newsId) ?? new Map<string, number>();
-      for (const ch of changes) {
-        if (ch.cause !== 'news') continue;
-        const themeId = this.themeOf(ch.stockId);
-        if (d.rates.has(themeId)) map.set(ch.stockId, (map.get(ch.stockId) ?? 0) + ch.rate);
-      }
-      this.applied.set(d.newsId, map);
-    }
+    for (const d of due) this.recordApplied(d.newsId, d.rates, changes);
 
     const fills = this.executeOrders(tick);
 
     let news: ScheduledNews | null = null;
+    let instantChanges: StockTickChange[] = [];
     if (tick < this.rules.ticksPerEra) {
       news = this.session.news.checkTrigger(tick);
       if (news) {
         this.session.prices.markNewsPublished();
+        const instant = this.session.news.consumeInstant();
+        if (instant) {
+          instantChanges = this.session.prices.applyInstant(instant.rates);
+          this.recordApplied(instant.newsId, instant.rates, instantChanges);
+        }
         const recapTick = tick + this.rules.recapDelayTicks;
         if (recapTick <= this.rules.ticksPerEra) this.pendingRecaps.push({ tick: recapTick, scheduled: news });
         if (this.options.pauseOnNews) this._phase = 'news';
@@ -275,7 +274,7 @@ export class Game {
       this._settlements.push(settlement);
       this._phase = 'era-ended';
     }
-    return { advanced: true, tick, changes, news, recaps, fills, settlement };
+    return { advanced: true, tick, changes, news, instantChanges, recaps, fills, settlement };
   }
 
   suspend(): void {
@@ -402,6 +401,16 @@ export class Game {
   }
 
   // ───────── 내부 ─────────
+
+  /** 뉴스별로 실제 적용된 변동률 기록 (해설 알림용) */
+  private recordApplied(newsId: string, rates: ReadonlyMap<string, number>, changes: readonly StockTickChange[]): void {
+    const map = this.applied.get(newsId) ?? new Map<string, number>();
+    for (const ch of changes) {
+      if (ch.cause !== 'news' && ch.cause !== 'instant') continue;
+      if (rates.has(this.themeOf(ch.stockId))) map.set(ch.stockId, (map.get(ch.stockId) ?? 0) + ch.rate);
+    }
+    this.applied.set(newsId, map);
+  }
 
   private themeOf(stockId: string): string {
     return this.session.prices.getState(stockId).themeId;

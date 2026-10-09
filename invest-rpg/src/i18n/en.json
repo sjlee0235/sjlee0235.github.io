@@ -99,7 +99,7 @@
     "notice4": "The reaction rates on screen are fictional in-game numbers. They are not the real market or investment advice.",
     "stepWaiting": "News is coming soon. Please wait a moment.",
     "stepReading": "News is out! Time stops during the tutorial. Try buying a related stock.",
-    "stepReaction": "Prices react in 5 seconds, then keep swinging for 10 more seconds.",
+    "stepReaction": "Most of the move hits the price the moment the news appears, and the rest 5 seconds later. Then prices keep swinging for 10 more seconds.",
     "stepRecap": "Two minutes later, a recap arrives. See which stocks moved and why.",
     "done": "Tutorial complete! In the main game, time keeps running when news breaks.",
     "replay": "Replay tutorial"

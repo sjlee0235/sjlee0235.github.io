@@ -100,7 +100,7 @@ export interface News {
 export interface StoryOutcome {
   /** story.news 안의 뉴스 id */
   newsId: string;
-  /** 상대 가중치. 생략하면 leansTo 쪽이 config.leansToChance(기본 65%), 다른 쪽이 나머지 */
+  /** 상대 가중치. 생략하면 leansTo 쪽이 config.leansToChance(기본 70%), 다른 쪽이 나머지 */
   weight?: number;
   /** 실제로 일어난 결과면 true. false면 화면에 "가상 시나리오" 태그 */
   isHistorical: boolean;

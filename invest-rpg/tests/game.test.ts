@@ -24,7 +24,7 @@ describe('시대 시작', () => {
 });
 
 describe('뉴스 반영 타이밍 (시간은 멈추지 않음)', () => {
-  it('[시드 30개] 발표 틱 k에는 평소 변동, k+1에 반영, k+2·k+3 관성, 이후 일반', () => {
+  it('[시드 30개] 발표 틱 k에는 평소 변동 + 발표 순간 즉시 몫, k+1에 나머지 반영, k+2·k+3 관성, 이후 일반', () => {
     for (let seed = 1; seed <= 30; seed++) {
       const game = newGame(seed);
       let r: AdvanceResult;
@@ -33,6 +33,13 @@ describe('뉴스 반영 타이밍 (시간은 멈추지 않음)', () => {
       expect(game.phase).toBe('running');
       expect(r.changes.some((c) => c.cause === 'news')).toBe(false);
       const affected = new Set(r.news!.news.effects.map((e) => e.themeId));
+      // 즉시 몫: 영향받는 종목만, 발표 직후 가격이 이미 움직여 있다
+      expect(r.instantChanges.length).toBeGreaterThan(0);
+      for (const c of r.instantChanges) {
+        expect(c.cause).toBe('instant');
+        expect(affected.has(game.activeStocks.find((s) => s.id === c.stockId)!.themeId)).toBe(true);
+        expect(game.getPrice(c.stockId)).toBe(c.price);
+      }
       const causesFor = (res: AdvanceResult) => {
         if (!res.advanced) throw new Error();
         return res.changes.filter((c) => affected.has(game.activeStocks.find((s) => s.id === c.stockId)!.themeId)).map((c) => c.cause);
@@ -51,13 +58,46 @@ describe('뉴스 반영 타이밍 (시간은 멈추지 않음)', () => {
       while (game.phase !== 'era-ended') {
         const r = game.advanceTick();
         if (!r.advanced) continue;
-        for (const ch of r.changes) {
+        const check = (ch: { stockId: string; price: number }) => {
           const p0 = base.get(ch.stockId)!;
           if (ch.price < Math.ceil(p0 * 0.7) || ch.price > Math.floor(p0 * 1.3)) throw new Error(`seed ${seed}: ${ch.price} / ${p0}`);
-        }
-        if (r.news) base = new Map(game.activeStocks.map((s) => [s.id, game.getPrice(s.id)]));
+        };
+        r.changes.forEach(check);
+        // 한도 기준가는 즉시 몫 반영 "전" 가격 (발표 틱의 일반 변동 뒤)
+        if (r.news) base = new Map(r.changes.map((c) => [c.stockId, c.price]));
+        r.instantChanges.forEach(check);
       }
     }
+  });
+
+  it('즉시 몫 0이면 이전 규칙처럼 전부 5초 뒤 반영', () => {
+    const game = new Game({ eras: [makeSpecEra({ id: 'g' })], seed: 4, config: { instantReactionShare: 0 } });
+    let r: AdvanceResult;
+    do r = game.advanceTick();
+    while (!(r.advanced && r.news));
+    expect(r.instantChanges).toEqual([]);
+  });
+
+  it('[시드 20개] 즉시 몫 : 5초 뒤 몫 ≈ 75 : 25', () => {
+    let instant = 0;
+    let total = 0;
+    for (let seed = 1; seed <= 20; seed++) {
+      const game = newGame(seed);
+      let pendingIds = new Set<string>();
+      while (game.phase !== 'era-ended') {
+        const r = game.advanceTick();
+        if (!r.advanced) continue;
+        for (const c of r.changes) if (c.cause === 'news' && pendingIds.has(c.stockId)) total += Math.abs(c.requestedRate!);
+        pendingIds = new Set();
+        for (const c of r.instantChanges) {
+          instant += Math.abs(c.requestedRate!);
+          total += Math.abs(c.requestedRate!);
+          pendingIds.add(c.stockId);
+        }
+      }
+    }
+    expect(instant / total).toBeGreaterThan(0.68);
+    expect(instant / total).toBeLessThan(0.77);
   });
 });
 
@@ -71,8 +111,15 @@ describe('해설 알림', () => {
       const r = game.advanceTick();
       if (!r.advanced) continue;
       const newsChanges = r.changes.filter((c) => c.cause === 'news');
-      if (newsChanges.length > 0 && lastNews) applied.set(lastNews, new Map(newsChanges.map((c) => [c.stockId, c.rate])));
-      if (r.news) lastNews = r.news.news.id;
+      if (newsChanges.length > 0 && lastNews) {
+        const m = applied.get(lastNews) ?? new Map<string, number>();
+        for (const c of newsChanges) m.set(c.stockId, (m.get(c.stockId) ?? 0) + c.rate);
+        applied.set(lastNews, m);
+      }
+      if (r.news) {
+        lastNews = r.news.news.id;
+        applied.set(lastNews, new Map(r.instantChanges.map((c) => [c.stockId, c.rate])));
+      }
       recaps.push(...r.recaps);
     }
     return { game, recaps, applied };
@@ -88,7 +135,7 @@ describe('해설 알림', () => {
         const abs = n.items.map((i) => Math.abs(i.appliedPct));
         expect([...abs].sort((a, b) => b - a)).toEqual(abs);
         const actual = applied.get(n.newsId)!;
-        for (const it of n.items) expect(it.appliedPct).toBe(actual.get(it.stockId)! / 10);
+        for (const it of n.items) expect(it.appliedPct).toBeCloseTo(actual.get(it.stockId)! / 10, 9);
         expect(n.items.length + n.moreCount).toBe(actual.size);
         const shown = game.shownNews.find((s) => s.news.id === n.newsId)!;
         expect(n.tentativeNote).toBe(shown.kind === 'tentative');

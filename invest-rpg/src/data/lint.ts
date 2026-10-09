@@ -26,8 +26,8 @@ export interface LintOptions {
 
 export const DEFAULT_LINT_OPTIONS: LintOptions = {
   effectCount: [6, 9],
-  sentimentBias: 0.65,
-  sentimentTolerance: 0.15,
+  sentimentBias: 0.75,
+  sentimentTolerance: 0.1,
   peripheralMinHits: 2,
   pool: { core: 24, peripheral: 12, positive: 13, negative: 13, neutral: 10 },
   reasonTopN: 4,

@@ -9,6 +9,9 @@
 //   antiSentiment: 부정 분위기 테마만 사서 보유
 //   leanForward  : 잠정 뉴스가 뜨면 단서(leansTo) 쪽 결과의 호재 종목을 미리 사고, 결과 반영 직후 판다
 //   leanReverse  : 잠정 뉴스의 반대쪽 결과에 건다
+// (참고용, 목표 없음) 사람이 실제로 할 법한 "몰빵" 변형
+//   fastTop      : 발표 즉시 가장 큰 호재 테마 1개에 전액
+//   delayedTop   : 반영 뒤(5초 뒤) 가장 큰 호재 테마 1개에 전액
 
 import type { Era, News } from '../src/data/schema.ts';
 import type { GameConfig } from '../src/engine/config.ts';
@@ -17,11 +20,15 @@ import type { ScheduledNews } from '../src/engine/newsEngine.ts';
 import { createRng, deriveSeed, type Rng } from '../src/engine/rng.ts';
 
 export type Strategy =
-  | 'random' | 'hold' | 'delayedFollow' | 'fastFollow' | 'sentiment' | 'antiSentiment' | 'leanForward' | 'leanReverse';
+  | 'random' | 'hold' | 'delayedFollow' | 'fastFollow' | 'sentiment' | 'antiSentiment' | 'leanForward' | 'leanReverse'
+  | 'fastTop' | 'delayedTop';
 
 export const STRATEGIES: Strategy[] = [
   'random', 'hold', 'delayedFollow', 'fastFollow', 'sentiment', 'antiSentiment', 'leanForward', 'leanReverse',
 ];
+
+/** 목표 없이 참고로만 보는 전략 */
+export const REFERENCE_STRATEGIES: Strategy[] = ['fastTop', 'delayedTop'];
 
 export const STRATEGY_LABEL: Record<Strategy, string> = {
   random: '무작위 매매',
@@ -32,6 +39,8 @@ export const STRATEGY_LABEL: Record<Strategy, string> = {
   antiSentiment: '역분위기',
   leanForward: '잠정 정방향',
   leanReverse: '잠정 역방향',
+  fastTop: '초고속 몰빵',
+  delayedTop: '지연 몰빵',
 };
 
 interface Trader {
@@ -66,6 +75,11 @@ function buyEvenly(game: Game, themeIds: string[]) {
 }
 
 const positives = (news: News) => news.effects.filter((e) => e.impact > 0).map((e) => e.themeId);
+/** 가장 큰 호재 테마 1개 (없으면 빈 배열) */
+const topPositive = (news: News) => {
+  const best = [...news.effects].filter((e) => e.impact > 0).sort((a, b) => b.impact - a.impact)[0];
+  return best ? [best.themeId] : [];
+};
 
 function leanNews(era: Era, game: Game, storyId: string, forward: boolean): News | undefined {
   const story = era.stories.find((s) => s.id === storyId);
@@ -111,15 +125,17 @@ export function makeTrader(strategy: Strategy, seed: number, era: Era): Trader {
         onNews: noop,
       };
     case 'fastFollow':
+    case 'fastTop':
       return {
         onStart: noop,
         onTick: noop,
         onNews(game, s) {
           sellAll(game);
-          buyEvenly(game, positives(s.news));
+          buyEvenly(game, strategy === 'fastTop' ? topPositive(s.news) : positives(s.news));
         },
       };
-    case 'delayedFollow': {
+    case 'delayedFollow':
+    case 'delayedTop': {
       let pending: ScheduledNews | null = null;
       return {
         onStart: noop,
@@ -129,7 +145,7 @@ export function makeTrader(strategy: Strategy, seed: number, era: Era): Trader {
         },
         onTick(game, tick) {
           if (pending && tick === pending.tick + game.config.newsReactionTicks) {
-            buyEvenly(game, positives(pending.news));
+            buyEvenly(game, strategy === 'delayedTop' ? topPositive(pending.news) : positives(pending.news));
             pending = null;
           }
         },
@@ -193,8 +209,34 @@ export function summarize(values: number[]) {
   return { median: quantile(s, 0.5), p10: quantile(s, 0.1), p90: quantile(s, 0.9) };
 }
 
-export function runMany(era: Era, strategy: Strategy, seeds: number, config: Partial<GameConfig> = {}): PlayResult[] {
-  return Array.from({ length: seeds }, (_, i) => play(era, strategy, i + 1, config));
+/** 게임 시드 seedOffset+1 ~ seedOffset+seeds 로 여러 판을 돌린다 (offset을 바꾸면 독립된 반복 실험) */
+export function runMany(
+  era: Era, strategy: Strategy, seeds: number, config: Partial<GameConfig> = {}, seedOffset = 0,
+): PlayResult[] {
+  return Array.from({ length: seeds }, (_, i) => play(era, strategy, seedOffset + i + 1, config));
 }
+
+/** 전략별 목표 중앙값 범위 [하한, 상한] (기획서 표) */
+export const TARGET_RANGE: Partial<Record<Strategy, readonly [number, number]>> = {
+  random: [-10, 5],
+  hold: [-10, 20],
+  delayedFollow: [-5, 15],
+  fastFollow: [30, 80],
+  sentiment: [5, 40],
+  antiSentiment: [-40, -5],
+  leanForward: [40, 120],
+  leanReverse: [-Infinity, 0],
+};
+
+export const targetLabel = (range: readonly [number, number] | undefined) => {
+  if (!range) return '(참고)';
+  const [lo, hi] = range;
+  return lo === -Infinity ? `${hi}% 미만` : `${lo > 0 ? '+' : ''}${lo}% ~ ${hi > 0 ? '+' : ''}${hi}%`;
+};
+
+export const inTarget = (s: Strategy, v: number) => {
+  const t = TARGET_RANGE[s];
+  return t ? v >= t[0] && v <= t[1] : true;
+};
 
 export const fmt = (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`.padStart(9);

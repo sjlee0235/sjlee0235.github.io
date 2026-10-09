@@ -71,7 +71,7 @@ describe('스토리 규칙', () => {
     expect(breaking / total).toBeLessThanOrEqual(0.4);
   });
 
-  it('[시드 200개] 결과는 단서(leansTo)대로 약 65%, 아니면 35%', () => {
+  it('[시드 200개] 결과는 단서(leansTo)대로 약 70%, 아니면 30%', () => {
     let lean = 0;
     let total = 0;
     for (const seed of SEEDS) for (const n of scheduleFor(seed)) {
@@ -79,14 +79,14 @@ describe('스토리 규칙', () => {
       total++;
       if (n.followedLean) lean++;
     }
-    expect(lean / total).toBeGreaterThan(0.6);
-    expect(lean / total).toBeLessThan(0.7);
+    expect(lean / total).toBeGreaterThan(0.65);
+    expect(lean / total).toBeLessThan(0.75);
   });
 
-  it('가중치 기본값: leansTo 65%, 다른 쪽 35%. 직접 주면 그 값', () => {
+  it('가중치 기본값: leansTo 70%, 다른 쪽 30%. 직접 주면 그 값', () => {
     const story = era.stories[0]!;
-    expect(config.leansToChance).toBe(0.65);
-    expect(outcomeWeights(story, 0.65)).toEqual([0.65, expect.closeTo(0.35, 10)]);
+    expect(config.leansToChance).toBe(0.7);
+    expect(outcomeWeights(story, 0.7)).toEqual([0.7, expect.closeTo(0.3, 10)]);
     expect(outcomeWeights({ ...story, outcomes: story.outcomes.map((o, i) => ({ ...o, weight: i ? 1 : 3 })) }, 0.6)).toEqual([3, 1]);
   });
 

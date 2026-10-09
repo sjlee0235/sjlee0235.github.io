@@ -2,7 +2,7 @@
 // 실제 콘텐츠(2000s.json)가 없어도 엔진 규칙을 검증할 수 있도록, 콘텐츠 기획 조건을 흉내 낸 데이터를 만든다.
 // - 테마 풀 36개: core 24 / peripheral 12, 분위기 13 / 13 / 10 (두 태그는 독립)
 // - 속보(기본 14개, magnitude 3~9), 스토리(기본 10개: 잠정 1~3 + 서로 반대인 결과 2개, 7~9)
-// - 뉴스마다 영향 테마 6~9개 (주로 core), 연결 강도 3/2/1, 영향도 공식, 분위기 편향 65%
+// - 뉴스마다 영향 테마 6~9개 (주로 core), 연결 강도 3/2/1, 영향도 공식, 분위기 편향 75%
 
 import type {
   Era, LinkStrength, News, NewsEffect, NewsType, Sentiment, Stock, Story, Theme,
@@ -97,7 +97,7 @@ function buildEffects(targets: Theme[], magnitude: number, signs: (1 | -1)[]): N
 export function makeSpecEra(options: SpecEraOptions = {}): Era {
   const id = options.id ?? 'spec';
   const rng = createRng(deriveSeed(options.seed ?? 1, 'spec-era', id));
-  const bias = options.sentimentBias ?? 0.65;
+  const bias = options.sentimentBias ?? 0.75;
   const themes = themeList(id, rng);
   const stocks: Stock[] = themes.map((t, i) => ({
     id: `${id}-s${i}`,

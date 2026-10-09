@@ -6,32 +6,22 @@
 import { ALL_ERAS } from '../src/data/eras/index.ts';
 import type { Era } from '../src/data/schema.ts';
 import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
-import { fmt, runMany, STRATEGIES, STRATEGY_LABEL, summarize, type Strategy } from './simLib.ts';
+import { fmt, REFERENCE_STRATEGIES, runMany, STRATEGIES, STRATEGY_LABEL, summarize, targetLabel, TARGET_RANGE } from './simLib.ts';
 
 declare const process: { argv: string[] };
 
 const SEEDS = Number(process.argv[2] ?? 200);
 const eras: Era[] = ALL_ERAS.length > 0 ? [...ALL_ERAS] : [makeSpecEra({ id: 'spec' })];
 
-const TARGETS: Record<Strategy, string> = {
-  random: '-10% ~ +5%',
-  hold: '-10% ~ +20%',
-  delayedFollow: '-5% ~ +15%',
-  fastFollow: '+30% ~ +80%',
-  sentiment: '+5% ~ +40%',
-  antiSentiment: '-40% ~ -5%',
-  leanForward: '+40% ~ +120%',
-  leanReverse: '0% 미만',
-};
 
 if (ALL_ERAS.length === 0) console.log('\n※ 등록된 시대 데이터가 없어 가상 시대(기획 조건 흉내)로 시뮬레이션합니다. 실제 수치는 단계 B 이후.');
 console.log(`\n밸런스 시뮬레이션 — 시드 ${SEEDS}개, 시대당(2시간) 수익률, 수수료 0.2% 포함\n`);
 
 for (const era of eras) {
   console.log(`[${era.id}] 전략           중앙값    하위10%   상위10%   목표 중앙값`);
-  for (const s of STRATEGIES) {
+  for (const s of [...STRATEGIES, ...REFERENCE_STRATEGIES]) {
     const r = summarize(runMany(era, s, SEEDS).map((x) => x.returnPct));
-    console.log(`  ${STRATEGY_LABEL[s].padEnd(12, '　')} ${fmt(r.median)} ${fmt(r.p10)} ${fmt(r.p90)}   ${TARGETS[s]}`);
+    console.log(`  ${STRATEGY_LABEL[s].padEnd(12, '　')} ${fmt(r.median)} ${fmt(r.p10)} ${fmt(r.p90)}   ${targetLabel(TARGET_RANGE[s])}`);
   }
 
   console.log('\n(참고) 기본 OFF 옵션을 켰을 때 — 추종 전략 중앙값');

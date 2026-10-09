@@ -29,10 +29,18 @@ export const NEWS_GAP_MAX_SECONDS = 420;
 export const P_START_STORY = 0.85;
 /**
  * 잠정 뉴스의 단서(leansTo)대로 결과가 나올 확률.
- * 처음 60%로 시작했으나 시뮬레이션에서 단서를 따르는 전략의 중앙값이 목표 하한(+40%)에 걸치고
- * 30%의 판에서 손해를 봐서, 단서가 의미 있도록 65%로 조정했다 (README 6장).
+ * 60%(요청값) → 65%(단서 전략이 목표 하한에 걸려서) → 70%.
+ * 발표 즉시 반영(INSTANT_REACTION_SHARE)이 들어가며 잠정 뉴스 자체의 상승분을 미리 사기 어려워져
+ * 단서 전략이 +36%로 내려가서, 목표(+40~120%)에 맞게 70%로 올렸다 (README 6장).
  */
-export const LEANS_TO_CHANCE = 0.65;
+export const LEANS_TO_CHANCE = 0.7;
+/**
+ * 뉴스 영향 중 발표 순간 바로 반영되는 몫 (나머지는 5초 뒤).
+ * 0이면 전부 5초 뒤 반영(이전 규칙). 시뮬레이션에서 0일 때 "발표 즉시 사는" 전략이 시대당 +500%를 넘어
+ * 사실상 무조건 이기는 방법이 되어, 목표(+30~80%)에 맞게 75%로 정했다 (README 6장).
+ * 사람처럼 가장 큰 호재 1종목에 몰빵해도 +80% 안팎이 되는 값이다.
+ */
+export const INSTANT_REACTION_SHARE = 0.75;
 /** 뉴스 발표 몇 초 뒤에 해설 알림을 만드는가 */
 export const RECAP_DELAY_SECONDS = 120;
 /** (기본 OFF) 주문이 N틱 뒤 가격으로 체결 */
@@ -84,6 +92,8 @@ export interface GameConfig {
   newsGapMaxSeconds: number;
   /** 발표 후 반영까지 틱 수 */
   newsReactionTicks: number;
+  /** 뉴스 영향 중 발표 순간 바로 반영되는 몫 (0 이상 1 미만). 나머지는 newsReactionTicks 뒤 */
+  instantReactionShare: number;
   /** 반영 후 관성 틱 수 */
   inertiaTicks: number;
   /** 관성 틱 확률 (0~1): 같은 방향 / 반대 방향. 나머지는 변동 없음 */
@@ -145,6 +155,7 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
   newsGapMinSeconds: NEWS_GAP_MIN_SECONDS,
   newsGapMaxSeconds: NEWS_GAP_MAX_SECONDS,
   newsReactionTicks: NEWS_REACTION_TICKS,
+  instantReactionShare: INSTANT_REACTION_SHARE,
   inertiaTicks: INERTIA_TICKS,
   inertiaSameChance: INERTIA_PROBS.same / 100,
   inertiaOppositeChance: INERTIA_PROBS.opposite / 100,
@@ -226,6 +237,9 @@ export function getTickRules(config: GameConfig): TickRules {
   const lastEffectTick = r.reactionTicks + config.indirectExtraDelayTicks + r.inertiaTicks;
   if (r.newsGapMinTicks <= lastEffectTick) {
     throw new Error('설정 오류: 뉴스 간격이 반영+관성 시간보다 짧으면 뉴스 효과가 겹침');
+  }
+  if (!(config.instantReactionShare >= 0 && config.instantReactionShare < 1)) {
+    throw new Error('설정 오류: 즉시 반영 몫은 0 이상 1 미만이어야 함');
   }
   const [mMin, mMax] = config.inertiaRate;
   if (mMin < 1 || mMax > config.tickMaxRate || mMin > mMax) {

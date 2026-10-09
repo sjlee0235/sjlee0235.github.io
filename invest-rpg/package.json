@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.engine.json",
     "demo": "node scripts/demo.ts",
     "sim": "node scripts/sim.ts",
+    "sim:repeat": "node scripts/simRepeat.ts",
     "lint:content": "node scripts/lintContent.ts",
     "check": "npm run typecheck && npm test"
   },
