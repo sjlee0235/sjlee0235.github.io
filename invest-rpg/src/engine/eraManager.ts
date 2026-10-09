@@ -94,6 +94,14 @@ export interface EraSettlement {
   liquidations: TradeRecord[];
   /** 앱 업데이트로 버전이 바뀌어 세이브 스냅샷 가격으로 정산했는가 */
   settledOnVersionChange?: boolean;
+  /** 투자 결과: 청산 후 투자 코인과 수익률(시간가중, 작업 수입 제외) */
+  investmentResult: { coins: number; returnPct: number };
+  /** 시대 종료 때 합산된 작업 수입 (즉시 지급 모드에서는 0, 대신 deposits.work에 잡힌다) */
+  workIncome: number;
+  /** 최종 코인 = 투자 결과 + 작업 수입. 다음 시대 시작 자금 */
+  finalTotal: number;
+  /** 이번 시대에 현금이 가장 싼 종목 1주 값보다 적고 보유 종목도 없던 시간(초, 게임 시간) */
+  brokeTimeSec: number;
 }
 
 /** 시대 종료: 보유 종목 전량을 주어진 가격으로 청산하고 정산 결과를 만든다 */
@@ -107,11 +115,16 @@ export function settleAccount(
 ): EraSettlement {
   const liquidations = account.liquidateAll(prices, tick);
   const endAssets = account.cash;
+  const returnPct = twrPct(twr, endAssets);
   return {
     eraId,
     startCash,
     endAssets,
-    returnPct: twrPct(twr, endAssets),
+    returnPct,
+    investmentResult: { coins: endAssets, returnPct },
+    workIncome: 0,
+    finalTotal: endAssets,
+    brokeTimeSec: 0,
     profitAmount: endAssets - startCash - depositTotal(twr.deposits),
     deposits: { ...twr.deposits },
     stocks: account.getPerformance().map((p) => ({
@@ -124,7 +137,31 @@ export function settleAccount(
   };
 }
 
-/** 시대 종료: 현재가로 청산 */
-export function settleEra(session: EraSession, account: Account, twr: TwrState): EraSettlement {
-  return settleAccount(session.era.id, session.startCash, account, session.prices.getPrices(), session.prices.tick, twr);
+/**
+ * 시대 종료 처리 (순서가 중요하다)
+ * ① 보유 종목을 주어진 가격으로 전량 청산
+ * ② 이 시대의 투자 수익률(시간가중수익률) 계산 — 작업 수입은 포함하지 않는다
+ * ③ 정산 예정 작업 수입(workPending)을 deposit(workPending, 'work')로 현금에 합산
+ * ④ 합산한 최종 코인(finalTotal)이 다음 시대의 시작 자금으로 이월된다 (계좌 현금 그대로)
+ */
+export function finalizeEra(
+  eraId: string,
+  startCash: number,
+  account: Account,
+  prices: ReadonlyMap<string, number>,
+  tick: number,
+  twr: TwrState,
+  workPending: number,
+): EraSettlement {
+  const settlement = settleAccount(eraId, startCash, account, prices, tick, twr);
+  if (workPending > 0) {
+    const r = account.deposit(workPending, 'work', tick);
+    if (!r.ok) throw new Error(`작업 수입 합산 실패: ${r.error}`);
+  }
+  return { ...settlement, workIncome: workPending, finalTotal: account.cash };
+}
+
+/** 시대 종료: 현재가로 청산 + 작업 수입 합산 */
+export function settleEra(session: EraSession, account: Account, twr: TwrState, workPending = 0): EraSettlement {
+  return finalizeEra(session.era.id, session.startCash, account, session.prices.getPrices(), session.prices.tick, twr, workPending);
 }

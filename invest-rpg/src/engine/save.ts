@@ -23,8 +23,9 @@ import type { Era } from '../data/schema.ts';
 import { Account } from './account.ts';
 import { makeConfig, type GameConfig } from './config.ts';
 import type { EraDraw } from './eraDraw.ts';
-import { settleAccount, sortEras, type EraSettlement } from './eraManager.ts';
-import { Game, type GameStateSnapshot, type SavedAction } from './game.ts';
+import { finalizeEra, sortEras, type EraSettlement } from './eraManager.ts';
+import { Game, type EraSummary, type FinalSummary, type GameStateSnapshot, type SavedAction } from './game.ts';
+import { cumulativeReturnPct } from './returns.ts';
 import { applyAction } from './replay.ts';
 import { deriveSeed } from './rng.ts';
 import { balanceHash, ENGINE_VERSION, fingerprint, type TelemetrySink } from './telemetry.ts';
@@ -47,6 +48,10 @@ export interface GameSnapshot {
   balanceHash: string;
   /** 지금 시대 이전에 끝난 시대들의 수익률 % */
   pastEraReturns: number[];
+  /** 지금 시대 이전에 끝난 시대들의 요약 (작업 수입·최종 코인 포함, 최종 요약용) */
+  pastEraSummaries?: EraSummary[];
+  /** 지금 시대가 이미 끝났다면 그 요약 */
+  currentEraSummary?: EraSummary | null;
   /** 지금 시대가 이미 끝났다면 그 수익률 % (진행 중이면 null) */
   currentEraReturnPct: number | null;
   /** 이번 시대에 한 행동 (리플레이용) */
@@ -121,6 +126,8 @@ export function snapshotGame(game: Game): GameSnapshot {
     balanceHash: balanceHash(game.config),
     pastEraReturns: ended ? returns.slice(0, -1) : returns,
     currentEraReturnPct: ended ? (returns.at(-1) ?? null) : null,
+    pastEraSummaries: ended ? game.eraSummaries.slice(0, -1) : game.eraSummaries,
+    currentEraSummary: ended ? (game.eraSummaries.at(-1) ?? null) : null,
     actions: game.eraActions.map((a) => ({ ...a })),
     state: game.captureState(),
     stateHash: stateHash(game),
@@ -144,6 +151,8 @@ export type RestoreResult =
       /** 스냅샷 가격으로 정산한 결과 (이미 끝난 시대였으면 null) */
       settlement: EraSettlement | null;
       reason: 'version' | 'replay-mismatch';
+      /** 마지막 시대였으면 최종 요약 (시대별 투자 수익률, 작업 수입, 최종 총 코인) */
+      finalSummary: FinalSummary | null;
     }
   | { status: 'restarted_legacy'; game: Game };
 
@@ -181,11 +190,13 @@ export function restoreGame(
   if (sameVersion) {
     const game = new Game({
       eras, seed: g.seed, startEraIndex: g.eraIndex, startCash: g.eraStartCash, draws: g.draws,
-      pastEraReturns: g.pastEraReturns, telemetryConsent: consent, ...(config ? { config } : {}),
+      pastEraReturns: g.pastEraReturns, ...(g.pastEraSummaries ? { pastEraSummaries: g.pastEraSummaries } : {}),
+      telemetryConsent: consent, ...(config ? { config } : {}),
     });
     if (fastForward(game, g.state.tick, g.actions)) {
       game.restoreFavorites(g.state.favorites);
       game.restoreReadState(g.state.readNewsIds ?? [], g.state.readReportIds ?? []);
+      if (g.state.work) game.restoreWorkProgress(g.state.work);
       if (g.speed) game.setSpeed(g.speed);
       if (stateHash(game) === g.stateHash) {
         game.markSaved();
@@ -209,21 +220,26 @@ function settleFromSnapshot(
 ): Extract<RestoreResult, { status: 'settled_on_version_change' }> {
   let settlement: EraSettlement | null = null;
   let cash: number;
-  let returns: number[];
+  const past: EraSummary[] = g.pastEraSummaries
+    ?? g.pastEraReturns.map((r, i) => ({ eraId: `past-${i}`, returnPct: r, workIncome: 0, finalTotal: 0 }));
+  let summaries: EraSummary[];
   if (g.currentEraReturnPct !== null) {
-    // 이미 정산이 끝난 시대 (다음 시대로 넘어가기 전에 저장됨)
+    // 이미 정산이 끝난 시대 (다음 시대로 넘어가기 전에 저장됨). 작업 수입도 이미 합산됨
     cash = g.state.cash;
-    returns = [...g.pastEraReturns, g.currentEraReturnPct];
+    summaries = [...past, g.currentEraSummary ?? { eraId: g.eraId, returnPct: g.currentEraReturnPct, workIncome: 0, finalTotal: cash }];
   } else {
+    // 스냅샷 가격으로 청산 → 투자 수익률 → 정산 예정 작업 수입 합산 (finalizeEra와 같은 순서)
     const account = new Account(0, cfg.feeRate);
     account.restoreState(g.state);
+    const pending = g.state.work?.pending ?? 0;
     settlement = {
-      ...settleAccount(g.eraId, g.eraStartCash, account, new Map(Object.entries(g.state.prices)), g.state.tick, g.state.twr),
+      ...finalizeEra(g.eraId, g.eraStartCash, account, new Map(Object.entries(g.state.prices)), g.state.tick, g.state.twr, pending),
       settledOnVersionChange: true,
     };
-    cash = settlement.endAssets;
-    returns = [...g.pastEraReturns, settlement.returnPct];
+    cash = settlement.finalTotal;
+    summaries = [...past, { eraId: g.eraId, returnPct: settlement.returnPct, workIncome: settlement.workIncome, finalTotal: cash }];
   }
+  const returns = summaries.map((x) => x.returnPct);
 
   // 다음 시대: 같은 id의 시대 다음 순서. id가 사라졌으면 순서값(order)으로 찾는다
   const sorted = sortEras(eras);
@@ -231,11 +247,19 @@ function settleFromSnapshot(
   const nextIndex = idx >= 0 ? idx + 1 : sorted.findIndex((e) => e.order > g.eraOrder);
   const game = nextIndex >= 0 && nextIndex < sorted.length
     ? new Game({
-        eras, seed: g.seed, startEraIndex: nextIndex, startCash: cash, pastEraReturns: returns,
+        eras, seed: g.seed, startEraIndex: nextIndex, startCash: cash, pastEraReturns: returns, pastEraSummaries: summaries,
         telemetryConsent: consent, ...(config ? { config } : {}),
       })
     : null;
-  return { status: 'settled_on_version_change', game, settlement, reason };
+  const finalSummary: FinalSummary | null = game
+    ? null
+    : {
+        eras: summaries,
+        totalWorkIncome: summaries.reduce((a, e) => a + e.workIncome, 0),
+        finalCoins: cash,
+        cumulativeReturnPct: cumulativeReturnPct(returns),
+      };
+  return { status: 'settled_on_version_change', game, settlement, reason, finalSummary };
 }
 
 /** 행동을 다시 넣으며 tick까지 빨리 돌린다. 행동이 하나라도 어긋나면 false */

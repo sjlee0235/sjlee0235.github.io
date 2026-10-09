@@ -17,12 +17,12 @@
 import type { GameConfig } from './config.ts';
 
 /** 이벤트 형식 버전. 필드 의미가 바뀌면 올린다 */
-export const TELEMETRY_SCHEMA_VERSION = 2;
+export const TELEMETRY_SCHEMA_VERSION = 3;
 /**
  * 엔진 규칙 버전. 같은 시드에서 가격·뉴스가 달라지는 변경(규칙·난수 순서)이 생기면 올린다.
  * 분석할 때 이 값이 다른 기록끼리는 리플레이 결과를 섞지 않는다.
  */
-export const ENGINE_VERSION = '0.4.0';
+export const ENGINE_VERSION = '0.5.0';
 
 /** 어떤 값이든 짧은 지문(해시) 문자열로. 키 순서가 달라도 같은 값이면 같은 지문 */
 export function fingerprint(value: unknown): string {
@@ -57,7 +57,9 @@ function stableStringify(v: unknown): string {
 /** 시대 안에서 플레이어가 한 행동 (세이브·리플레이용) */
 export type SavedActionData =
   | { kind: 'trade'; tick: number; side: 'buy' | 'sell'; stockId: string; quantity: number }
-  | { kind: 'deposit'; tick: number; amount: number; source: 'work' | 'purchase' | 'ad' | 'other' };
+  | { kind: 'deposit'; tick: number; amount: number; source: 'work' | 'purchase' | 'ad' | 'other' }
+  /** 작업: 이 틱에 완성한 인형 수 (지급 방식에 따라 정산 예정 또는 즉시 입금) */
+  | { kind: 'work'; tick: number; dolls: number };
 
 /** 종목 하나에 실제 적용된 변동률 (0.1% 단위) */
 export interface StockRate {
@@ -152,6 +154,8 @@ export interface EngineEventMap {
     auto: boolean;
     context: DecisionContext;
   };
+  /** 작업으로 인형 완성 (틱마다 묶어서): 완성 수, 적립 코인, 지급 방식 */
+  work_credit: { dolls: number; coins: number; payoutMode: 'era_end' | 'immediate' };
   /** 외부 유입 입금. inEra=false면 시대 사이(정산 뒤) 입금이라 다음 시대 시작 자금에 들어간다 */
   deposit: { amount: number; source: 'work' | 'purchase' | 'ad' | 'other'; cashAfter: number; inEra: boolean };
   /** 거부된 주문 (잔고 부족 등). 화면이 헷갈리게 만드는 곳을 찾는 데 쓴다 */
@@ -181,6 +185,15 @@ export interface EngineEventMap {
     /** 입금을 뺀 순손익, 출처별 입금 합계 */
     profitAmount: number;
     deposits: { work: number; purchase: number; ad: number; other: number };
+    /** 작업: 시대 종료 때 합산한 수입, 받아들인 터치 수, 상한으로 무시된 터치 수, 완성 인형 수 */
+    workIncome: number;
+    workTouches: number;
+    workRejectedTouches: number;
+    dollsCompleted: number;
+    /** 최종 코인 (투자 결과 + 작업 수입) */
+    finalTotal: number;
+    /** 파산 대기 시간(초): 현금 < 가장 싼 종목 1주 값이고 보유 종목도 없던 시간 */
+    brokeTimeSec: number;
   };
 }
 

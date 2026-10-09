@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { lintWords } from '../src/data/lint.ts';
-import { ALL_ERAS } from '../src/data/eras/index.ts';
+import { ALL_ERAS, ERA_SEQUENCE, orderBySequence } from '../src/data/eras/index.ts';
 import { validateEras } from '../src/data/validate.ts';
 import { TUTORIAL_ERA } from '../src/engine/tutorial.ts';
 
@@ -37,5 +37,11 @@ describe('게임에 들어가는 데이터', () => {
 
   it('튜토리얼과 등록된 시대 데이터가 종목명·설명·뉴스 금지어 점검을 통과한다', () => {
     for (const era of [...ALL_ERAS, TUTORIAL_ERA]) expect(lintWords(era).filter((i) => i.severity !== 'warning'), era.id).toEqual([]);
+  });
+
+  it('시대 진행 순서 데이터: 2000s → 2010s → 2020s, 등록된 시대는 모두 순서에 있다', () => {
+    expect(ERA_SEQUENCE).toEqual(['2000s', '2010s', '2020s']);
+    for (const e of ALL_ERAS) expect(ERA_SEQUENCE).toContain(e.id);
+    expect(orderBySequence([{ id: '2020s' }, { id: '2000s' }, { id: 'x' }]).map((e) => e.id)).toEqual(['2000s', '2020s']);
   });
 });

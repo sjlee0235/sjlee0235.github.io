@@ -30,6 +30,7 @@ import type { NewsTag, ScheduledKind, ScheduledNews } from './newsEngine.ts';
 import type { PricePoint, StockTickChange } from './priceEngine.ts';
 import { buildReport, type AppliedRate, type StockReport } from './report.ts';
 import { applyDeposit, cumulativeReturnPct, startTwr, twrPct, type TwrState } from './returns.ts';
+import { applyTouch, creditFor, newWorkState, TouchLimiter, type TouchResult, type WorkState } from './work.ts';
 import {
   balanceHash, ENGINE_VERSION, TELEMETRY_SCHEMA_VERSION,
   type AppEventMap, type AppEventType, type DecisionContext, type EngineEventMap, type SavedActionData,
@@ -73,10 +74,46 @@ export interface GameOptions {
   telemetryConsent?: boolean;
   /** 이전 시대들의 수익률 % (세이브 불러오기용, 누적 수익률 계산) */
   pastEraReturns?: readonly number[];
+  /** 이전 시대들의 요약 (세이브 불러오기용, 최종 요약). 있으면 pastEraReturns 대신 쓴다 */
+  pastEraSummaries?: readonly EraSummary[];
   /** 기록에 남길 모드 (기본 main) */
   telemetryMode?: 'main' | 'tutorial';
   /** 세이브에서 이어 하기인가 (기록용) */
   restored?: boolean;
+}
+
+/** 끝난 시대 하나의 요약 (최종 요약용) */
+export interface EraSummary {
+  eraId: string;
+  /** 투자 수익률 (시간가중, 작업 수입 제외) */
+  returnPct: number;
+  /** 시대 종료 때 합산된 작업 수입 */
+  workIncome: number;
+  /** 최종 코인 (투자 결과 + 작업 수입) = 다음 시대 시작 자금 */
+  finalTotal: number;
+}
+
+/** 마지막 시대가 끝난 뒤의 최종 요약 */
+export interface FinalSummary {
+  eras: EraSummary[];
+  totalWorkIncome: number;
+  finalCoins: number;
+  /** 시대별 투자 수익률의 곱 (작업 수입 제외) */
+  cumulativeReturnPct: number;
+}
+
+/** 작업실 화면용 상태 */
+export interface WorkStatus {
+  /** 지금 인형에 붙은 눈 수 (0~2) */
+  eyes: number;
+  /** 정산 예정 작업 수입 (시대 종료 때 지급) */
+  pending: number;
+  /** 이번 시대 적립 합계 / 완성 인형 수 */
+  earned: number;
+  dollsCompleted: number;
+  touchesPerDoll: number;
+  coinsPerDoll: number;
+  payoutMode: 'era_end' | 'immediate';
 }
 
 /** 시대 동안 모으는 기록용 통계 */
@@ -91,6 +128,8 @@ interface EraStats {
   fees: number;
   /** 종목별 현재 포지션을 처음 산 틱 */
   firstBuyTick: Map<string, number>;
+  /** 현금 < 가장 싼 종목 1주 값이고 보유 종목도 없던 틱 수 */
+  brokeTicks: number;
 }
 
 export interface OrderFill {
@@ -170,6 +209,8 @@ export interface GameStateSnapshot {
   /** 뉴스 피드 읽음 상태 (내부 뉴스 id) */
   readNewsIds: string[];
   readReportIds: string[];
+  /** 작업 상태 (지금 인형 진행, 정산 예정 수입 등) */
+  work: WorkState;
 }
 
 /** 시대 종료 후 공개 (사후 학습용, 내부 id 그대로) */
@@ -229,7 +270,11 @@ export class Game {
   private stats: EraStats = Game.emptyStats(0);
   private _eraActions: SavedAction[] = [];
   private twr: TwrState = startTwr(0);
-  private readonly pastEraReturns: number[];
+  private readonly pastEraSummaries: EraSummary[];
+  private work: WorkState = newWorkState();
+  private limiter: TouchLimiter;
+  /** 이번 틱에 완성한 인형 (텔레메트리는 틱마다 묶어서 보낸다) */
+  private workTelemetry = { dolls: 0, coins: 0 };
   private readonly saveReasons = new Set<SaveReason>();
   private lastSavedTick = 0;
 
@@ -243,7 +288,10 @@ export class Game {
     this.colorScheme = options.colorScheme ?? DEFAULT_COLOR_SCHEME;
     this.account = new Account(options.startCash ?? this.config.startCash, this.config.feeRate);
     this.telemetry = options.telemetry ?? null;
-    this.pastEraReturns = [...(options.pastEraReturns ?? [])];
+    this.pastEraSummaries = options.pastEraSummaries
+      ? options.pastEraSummaries.map((x) => ({ ...x }))
+      : (options.pastEraReturns ?? []).map((r, i) => ({ eraId: `past-${i}`, returnPct: r, workIncome: 0, finalTotal: 0 }));
+    this.limiter = new TouchLimiter(this.config.work.maxTouchesPerSec);
     this.session = this.beginEra(options.startEraIndex ?? 0);
     if (options.telemetryConsent) this.setConsent(true, options.restored ?? false);
   }
@@ -275,6 +323,8 @@ export class Game {
   }
 
   private emitStart(restored: boolean): void {
+    // 기록 시작 전 작업 적립은 priorActions에 들어가므로, 아직 안 보낸 묶음은 버린다 (중복 방지)
+    this.workTelemetry = { dolls: 0, coins: 0 };
     this.emitRaw('game_start', this.session.era.id, this.session.index, this.tick, {
       mode: this.options.telemetryMode ?? 'main',
       seed: this.seed,
@@ -285,7 +335,7 @@ export class Game {
       restored,
       resumeTick: this.tick === 0 && this._eraActions.length === 0 ? null : this.tick,
       priorActions: this._eraActions.map((a) => ({ ...a })),
-      pastEraReturns: [...this.pastEraReturns, ...this._settlements.map((s) => s.returnPct)],
+      pastEraReturns: this.eraReturns,
     });
     this.emitEraStart();
   }
@@ -376,11 +426,30 @@ export class Game {
   }
   /** 이전 시대 + 끝난 시대들의 수익률 % */
   get eraReturns(): number[] {
-    return [...this.pastEraReturns, ...this._settlements.map((s) => s.returnPct)];
+    return this.eraSummaries.map((s) => s.returnPct);
   }
   /** 누적 수익률 % = 시대별 시간가중수익률을 곱해서 */
   get cumulativeReturnPct(): number {
     return cumulativeReturnPct(this.eraReturns);
+  }
+  /** 끝난 시대들의 요약 (이전 시대 포함) */
+  get eraSummaries(): EraSummary[] {
+    return [
+      ...this.pastEraSummaries.map((x) => ({ ...x })),
+      ...this._settlements.map((s) => ({ eraId: s.eraId, returnPct: s.returnPct, workIncome: s.workIncome, finalTotal: s.finalTotal })),
+    ];
+  }
+  /** 마지막 시대가 끝난 뒤에만: 시대별 투자 수익률, 작업 수입, 최종 총 코인 */
+  getFinalSummary(): FinalSummary {
+    const done = this._phase === 'finished' || (this._phase === 'era-ended' && !this.hasNextEra);
+    if (!done) throw new Error('마지막 시대가 끝난 뒤에만 볼 수 있음');
+    const eras = this.eraSummaries;
+    return {
+      eras,
+      totalWorkIncome: eras.reduce((a, e) => a + e.workIncome, 0),
+      finalCoins: this.account.cash,
+      cumulativeReturnPct: cumulativeReturnPct(eras.map((e) => e.returnPct)),
+    };
   }
   /** 저장이 필요한 이유들 (비어 있으면 저장 불필요). saveGame()이 비운다 */
   get pendingSaveReasons(): readonly SaveReason[] {
@@ -405,6 +474,7 @@ export class Game {
     if (this.isPaused || this._phase !== 'running') {
       return { advanced: false, phase: this._phase, paused: this.isPaused, pauseReasons: this.currentPauseReasons };
     }
+    this.flushWorkTelemetry();
     const nextTick = this.tick + 1;
     const due = this.session.news.consumeRatesFor(nextTick);
     const merged = new Map<string, number>();
@@ -472,7 +542,10 @@ export class Game {
       const contexts = this.isRecording
         ? new Map(this.account.getHoldings().map((h) => [h.stockId, this.decisionContext(h.stockId)]))
         : null;
-      settlement = settleEra(this.session, this.account, this.twr);
+      this.flushWorkTelemetry();
+      const payout = this.config.work.payoutMode === 'era_end' ? this.work.pending : 0;
+      settlement = { ...settleEra(this.session, this.account, this.twr, payout), brokeTimeSec: this.stats.brokeTicks * this.config.tickSeconds };
+      this.work = { ...this.work, pending: 0 };
       this._settlements.push(settlement);
       this._phase = 'era-ended';
       this.saveReasons.add('era-end');
@@ -495,6 +568,12 @@ export class Game {
           investedShare: st.ticks === 0 ? 0 : st.investedTicks / st.ticks,
           profitAmount: settlement.profitAmount,
           deposits: { ...settlement.deposits },
+          workIncome: settlement.workIncome,
+          workTouches: this.work.touches,
+          workRejectedTouches: this.work.rejectedTouches,
+          dollsCompleted: this.work.dollsCompleted,
+          finalTotal: settlement.finalTotal,
+          brokeTimeSec: settlement.brokeTimeSec,
         });
       }
     }
@@ -520,6 +599,77 @@ export class Game {
   /** 앱이 백그라운드로 갈 때 (= pause('background')) */
   suspend(): void {
     this.pause('background');
+  }
+
+  // ───────── 작업 (인형 눈 붙이기) ─────────
+
+  /**
+   * 작업실 터치 한 번. nowMs = 실제 시각(ms, 화면이 넘김). 초당 상한을 넘으면 무시한다.
+   * 3번째 터치에 인형 완성 → 지급 방식에 따라 정산 예정(기본) 또는 즉시 입금. 작업 중에도 게임 시간은 흐른다
+   */
+  workTouch(nowMs: number): TouchResult {
+    if (this._phase !== 'running' || this.isSuspended) return { accepted: false, eyes: this.work.progress, completed: false };
+    if (!this.limiter.allow(nowMs)) {
+      this.work = { ...this.work, rejectedTouches: this.work.rejectedTouches + 1 };
+      return { accepted: false, eyes: this.work.progress, completed: false };
+    }
+    const { state, completed } = applyTouch(this.work, this.config.work);
+    this.work = state;
+    if (completed) this.applyWorkCredit(1);
+    return { accepted: true, eyes: this.work.progress, completed };
+  }
+
+  /**
+   * 인형 n개 완성분을 적립한다 (workTouch가 부르고, 세이브·기록 리플레이도 이것을 부른다).
+   * era_end: 정산 예정 수입에 쌓임(현금 그대로) / immediate: 바로 입금(시간가중수익률 구간 나눔)
+   */
+  applyWorkCredit(dolls: number): number {
+    if (!Number.isInteger(dolls) || dolls <= 0 || this._phase !== 'running') return 0;
+    const coins = creditFor(this.work, dolls, this.config.work);
+    const immediate = this.config.work.payoutMode === 'immediate';
+    this.work = {
+      ...this.work,
+      dollsCompleted: this.work.dollsCompleted + dolls,
+      earned: this.work.earned + coins,
+      pending: this.work.pending + (immediate ? 0 : coins),
+    };
+    if (immediate && coins > 0) {
+      const assetsBefore = this.totalAssets;
+      this.account.deposit(coins, 'work', this.tick);
+      this.twr = applyDeposit(this.twr, assetsBefore, coins, 'work');
+    }
+    const last = this._eraActions.at(-1);
+    if (last && last.kind === 'work' && last.tick === this.tick) last.dolls += dolls;
+    else this._eraActions.push({ kind: 'work', tick: this.tick, dolls });
+    this.workTelemetry.dolls += dolls;
+    this.workTelemetry.coins += coins;
+    return coins;
+  }
+
+  getWorkStatus(): WorkStatus {
+    const w = this.config.work;
+    return {
+      eyes: this.work.progress,
+      pending: this.work.pending,
+      earned: this.work.earned,
+      dollsCompleted: this.work.dollsCompleted,
+      touchesPerDoll: w.touchesPerDoll,
+      coinsPerDoll: w.coinsPerDoll,
+      payoutMode: w.payoutMode,
+    };
+  }
+
+  /** (세이브 불러오기용) 리플레이로 되살릴 수 없는 작업 상태(지금 인형 진행·터치 수)를 되돌린다 */
+  restoreWorkProgress(w: Pick<WorkState, 'progress' | 'touches' | 'rejectedTouches'>): void {
+    this.work = { ...this.work, progress: w.progress, touches: w.touches, rejectedTouches: w.rejectedTouches };
+  }
+
+  /** 묶어 둔 작업 적립을 기록으로 보낸다 (다른 기록보다 먼저 → 리플레이 순서가 실제와 같게) */
+  private flushWorkTelemetry(): void {
+    if (this.workTelemetry.dolls === 0) return;
+    const data = { ...this.workTelemetry, payoutMode: this.config.work.payoutMode };
+    this.workTelemetry = { dolls: 0, coins: 0 };
+    if (this.isRecording) this.emit('work_credit', data);
   }
 
   // ───────── 배속 ─────────
@@ -749,6 +899,7 @@ export class Game {
       performance: this.account.getPerformance(),
       favorites: [...this.session.favorites],
       twr: { ...this.twr, deposits: { ...this.twr.deposits } },
+      work: { ...this.work },
       readNewsIds: [...this.readNews].sort(),
       readReportIds: [...this.readReports].sort(),
     };
@@ -799,6 +950,7 @@ export class Game {
     this.orders = [];
     this.stats = Game.emptyStats(this.account.cash);
     this._eraActions = [];
+    this.work = newWorkState(this.work.progress);
     this.twr = startTwr(this.account.cash);
     const session = startEraSession(era, index, this.seed, this.config, this.account.cash, {
       ...(this.options.draws?.[era.id] ? { draw: this.options.draws[era.id] } : {}),
@@ -869,7 +1021,7 @@ export class Game {
   private static emptyStats(assets: number): EraStats {
     return {
       peak: assets, trough: assets, maxDrawdownPct: 0, investedTicks: 0, ticks: 0,
-      buys: 0, sells: 0, fees: 0, firstBuyTick: new Map(),
+      buys: 0, sells: 0, fees: 0, firstBuyTick: new Map(), brokeTicks: 0,
     };
   }
 
@@ -880,6 +1032,7 @@ export class Game {
   }
 
   private emit<K extends keyof EngineEventMap>(type: K, data: EngineEventMap[K]): void {
+    if (type !== 'work_credit') this.flushWorkTelemetry();
     this.emitRaw(type, this.session.era.id, this.session.index, this.tick, data);
   }
 
@@ -898,7 +1051,11 @@ export class Game {
     const st = this.stats;
     const assets = this.account.totalAssets(this.session.prices.getPrices());
     st.ticks++;
-    if (this.account.getHoldings().length > 0) st.investedTicks++;
+    const holdings = this.account.getHoldings().length;
+    if (holdings > 0) st.investedTicks++;
+    else if (this.account.cash < Math.min(...this.session.active.stocks.map((x) => this.session.prices.peek(x.id).price))) {
+      st.brokeTicks++;
+    }
     st.peak = Math.max(st.peak, assets);
     st.trough = Math.min(st.trough, assets);
     st.maxDrawdownPct = Math.max(st.maxDrawdownPct, st.peak === 0 ? 0 : ((st.peak - assets) / st.peak) * 100);

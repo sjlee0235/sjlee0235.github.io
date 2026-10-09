@@ -64,6 +64,29 @@ export function tickIntervalMs(speed: 1 | 2, tickSeconds: number = TICK_SECONDS)
   return (tickSeconds * 1000) / speed;
 }
 
+// ───────── 작업(인형 눈 붙이기) — 지급량을 바꾸면 docs/economy.md "변경 이력"에 남긴다 ─────────
+/** 작업 종류 (모든 시대 같은 값. 시대별 작업 종류는 업데이트 예정) */
+export const WORK_TYPE = 'doll_eyes' as const;
+/** 인형 하나를 완성하는 터치 수 (눈 하나, 눈 둘, 완성) */
+export const TOUCHES_PER_DOLL = 3;
+/** 인형 하나 완성 보상(코인). TV홈쇼핑을 도입하면 줄일 예정 */
+export const COINS_PER_DOLL = 3;
+/** 초당 터치 상한: 자동 클릭·과도한 연타 방지. 넘는 터치는 무시 (가정값) */
+export const MAX_TOUCHES_PER_SEC = 6;
+/** 작업 수입 지급 방식: 'era_end' = 시대 종료 때 합산(기본), 'immediate' = 완성할 때마다 즉시 입금 */
+export const WORK_PAYOUT_MODE: 'era_end' | 'immediate' = 'era_end';
+/** 시대당 작업 수입 상한(코인). null = 상한 없음 (기본, 켜지 않는다) */
+export const WORK_INCOME_CAP_PER_ERA: number | null = null;
+
+export interface WorkRules {
+  type: typeof WORK_TYPE;
+  touchesPerDoll: number;
+  coinsPerDoll: number;
+  maxTouchesPerSec: number;
+  payoutMode: 'era_end' | 'immediate';
+  incomeCapPerEra: number | null;
+}
+
 /** % 값을 0.1% 단위 정수로. 1.5 → 15 */
 const toRate = (percent: number) => Math.round(percent * 10);
 
@@ -157,6 +180,9 @@ export interface GameConfig {
   /** 차트용으로 보관하는 가격 이력 길이(초). 1200 = 20분 */
   chartHistorySeconds: number;
 
+  /** 작업(인형 눈 붙이기) 규칙 */
+  work: WorkRules;
+
   /** (기본 OFF) 주문 체결 지연 틱 */
   orderDelayTicks: number;
   /** (기본 OFF) 간접 영향 추가 지연 틱 */
@@ -205,12 +231,20 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
   startCash: 10_000,
   feeRate: 0.002,
   chartHistorySeconds: 1200,
+  work: Object.freeze({
+    type: WORK_TYPE,
+    touchesPerDoll: TOUCHES_PER_DOLL,
+    coinsPerDoll: COINS_PER_DOLL,
+    maxTouchesPerSec: MAX_TOUCHES_PER_SEC,
+    payoutMode: WORK_PAYOUT_MODE,
+    incomeCapPerEra: WORK_INCOME_CAP_PER_ERA,
+  }),
   orderDelayTicks: ORDER_DELAY_TICKS,
   indirectExtraDelayTicks: INDIRECT_EXTRA_DELAY_TICKS,
 });
 
 export function makeConfig(overrides: Partial<GameConfig> = {}): GameConfig {
-  return { ...DEFAULT_CONFIG, ...overrides };
+  return { ...DEFAULT_CONFIG, ...overrides, work: { ...DEFAULT_CONFIG.work, ...overrides.work } };
 }
 
 /** 엔진이 실제로 쓰는 틱 단위 규칙 (config의 초 값을 틱 수로 바꾼 것) */

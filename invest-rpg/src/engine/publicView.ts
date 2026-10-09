@@ -21,8 +21,10 @@ import type { GameConfig } from './config.ts';
 import type { Era } from '../data/schema.ts';
 import type { EraSettlement } from './eraManager.ts';
 import {
-  Game, type GameOptions, type GamePhase, type GameSpeed, type GameTradeResult, type PauseReason, type SaveReason,
+  Game, type FinalSummary, type GameOptions, type GamePhase, type GameSpeed, type GameTradeResult, type PauseReason,
+  type SaveReason, type WorkStatus,
 } from './game.ts';
+import type { TouchResult } from './work.ts';
 import type { ScheduledNews } from './newsEngine.ts';
 import type { PricePoint } from './priceEngine.ts';
 import type { StockReport } from './report.ts';
@@ -115,6 +117,14 @@ export interface PublicSettlement {
   cumulativeReturnPct: number;
   stocks: { id: string; name: LocalizedText; totalBought: number; pnl: number; pnlPct: number }[];
   settledOnVersionChange: boolean;
+  /** 투자 결과: 청산 후 투자 코인과 수익률 (작업 수입 제외) */
+  investmentResult: { coins: number; returnPct: number };
+  /** 시대 종료 때 합산된 작업 수입 */
+  workIncome: number;
+  /** 합계 = 투자 결과 + 작업 수입 (다음 시대 시작 자금) */
+  finalTotal: number;
+  /** 파산 대기 시간(초) */
+  brokeTimeSec: number;
 }
 
 export interface PublicPortfolio {
@@ -396,6 +406,25 @@ export class PublicGame {
   }
 
   /** 외부 유입 입금 (인형 눈 붙이기·결제·광고 보상). 결제·광고 SDK는 앱이 붙이고, 결과 금액만 여기로 */
+  // ───────── 작업실 ─────────
+
+  /** 작업실 터치 (nowMs = 실제 시각). 3번째 터치마다 인형 완성 → 정산 예정 작업 수입 +3 */
+  workTouch(nowMs: number): TouchResult {
+    return this.g.workTouch(nowMs);
+  }
+  /** 지금 인형의 눈 수, 정산 예정 작업 수입 등 */
+  getWorkStatus(): WorkStatus {
+    return this.g.getWorkStatus();
+  }
+  /** 마지막 시대가 끝난 뒤에만: 시대별 투자 수익률, 작업 수입, 최종 총 코인 */
+  getFinalSummary(): FinalSummary {
+    return this.g.getFinalSummary();
+  }
+  /** 보유 현금 (주식창 밖 탭의 오른쪽 위 표시) */
+  get cash(): number {
+    return this.g.account.cash;
+  }
+
   deposit(amount: number, source: DepositSource): DepositResult {
     return this.g.deposit(amount, source);
   }
@@ -583,6 +612,10 @@ function publicSettlement(
       return v ? [{ ...v, totalBought: x.totalBought, pnl: x.pnl, pnlPct: x.pnlPct }] : [];
     }),
     settledOnVersionChange: s.settledOnVersionChange ?? false,
+    investmentResult: { ...s.investmentResult },
+    workIncome: s.workIncome,
+    finalTotal: s.finalTotal,
+    brokeTimeSec: s.brokeTimeSec,
   };
 }
 
@@ -600,6 +633,7 @@ export type PublicRestoreResult =
       game: PublicGame | null;
       settlement: PublicSettlement | null;
       reason: 'version' | 'replay-mismatch';
+      finalSummary: FinalSummary | null;
     }
   | { status: 'restarted_legacy'; game: PublicGame };
 
@@ -617,6 +651,7 @@ export function restorePublicGame(
   return {
     status: r.status,
     reason: r.reason,
+    finalSummary: r.finalSummary,
     game: r.game ? PublicGame.wrap(r.game, locale) : null,
     // 정산된 시대는 이미 끝나 다시 매매할 일이 없으므로, 종목 id는 같은 규칙의 무작위 문자열로만 보여준다
     settlement: r.settlement

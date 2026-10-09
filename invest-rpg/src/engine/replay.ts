@@ -27,6 +27,9 @@ export function actionsFromEvents(events: readonly TelemetryEvent[]): ReplayActi
       const d = e.data as EngineEventMap['trade'];
       if (d.auto) continue;
       out.push({ kind: 'trade', eraIndex: e.eraIndex, tick: e.tick, side: d.side, stockId: d.stockId, quantity: d.quantity });
+    } else if (e.type === 'work_credit') {
+      const d = e.data as EngineEventMap['work_credit'];
+      out.push({ kind: 'work', eraIndex: e.eraIndex, tick: e.tick, dolls: d.dolls });
     } else if (e.type === 'deposit') {
       const d = e.data as EngineEventMap['deposit'];
       out.push({ kind: 'deposit', eraIndex: e.eraIndex, tick: e.tick, amount: d.amount, source: d.source });
@@ -46,6 +49,7 @@ export interface ReplayResult {
 /** 행동 하나를 게임에 적용한다. 성공하면 true */
 export function applyAction(game: Game, a: SavedActionData): boolean {
   if (a.kind === 'deposit') return game.deposit(a.amount, a.source).ok;
+  if (a.kind === 'work') return game.applyWorkCredit(a.dolls) >= 0;
   return (a.side === 'buy' ? game.buy(a.stockId, a.quantity) : game.sell(a.stockId, a.quantity)).ok;
 }
 
