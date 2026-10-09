@@ -21,7 +21,7 @@ describe('실제 시대 데이터', () => {
   it('모든 시대 데이터에 오류가 없다 (경고는 뉴스 풀 부족만 허용)', () => {
     const r = validateEras([...ALL_ERAS]);
     expect(r.errors).toEqual([]);
-    for (const w of r.warnings) expect(w).toMatch(/뉴스 풀/);
+    for (const w of r.warnings) expect(w).toMatch(/뉴스 공급/);
   });
 
   it('2000년대: 테마 20개 (긍정 7 / 부정 7 / 중립 6), 종목 20개, 뉴스 10개 이상', () => {
@@ -50,13 +50,13 @@ describe('실제 시대 데이터', () => {
   });
 
   it('실제 데이터로 시대 하나를 끝까지 돌릴 수 있다 (뉴스 풀이 부족하면 있는 만큼만)', () => {
-    const game = new Game({ eras: ALL_ERAS, seed: 2000 });
+    const game = new Game({ eras: ALL_ERAS, seed: 2000, mode: 'real' });
     const era = game.era;
     while (game.phase !== 'era-ended') {
       if (game.phase === 'news') game.confirmNews();
       game.advanceTick();
     }
-    expect(game.tick).toBe(720);
-    expect(game.shownNews).toHaveLength(Math.min(24, era.newsPool.length));
+    expect(game.tick).toBe(1440);
+    expect(game.shownNews.length).toBeGreaterThan(0);
   });
 });

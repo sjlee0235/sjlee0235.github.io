@@ -1,20 +1,25 @@
 // 게임 창구(facade): 화면 코드는 이 Game 하나만 쓰면 된다.
 //
-// 엔진은 실제 시계를 쓰지 않는다. 화면 쪽 타이머가 10초마다 advanceTick()을 부른다.
-//   - 뉴스 팝업이 열려 있으면 advanceTick()은 아무것도 하지 않는다(시간 정지).
-//   - 화면은 '확인' 버튼에서 confirmNews()를 부르고, 그때부터 10초 타이머를 새로 시작하면 된다.
+// 엔진은 실제 시계를 쓰지 않는다. 화면 쪽 타이머가 5초마다 advanceTick()을 부른다.
+//
+// 모드
+//   practice(연습): 뉴스가 뜨면 phase가 'news'가 되어 시간 정지(advanceTick이 아무것도 안 함).
+//                   화면은 getNewsGuide()로 '관련 테마'와 '해설'을 보여주고,
+//                   '확인'에서 confirmNews() → 그때부터 10초 뒤 반영.
+//   real(실전)    : 뉴스가 떠도 시간은 계속 흐르고, 뉴스가 뜬 뒤 10초 뒤 반영.
 //
 // 상태(phase)
 //   running   : 시간이 흐르는 중. 매매 가능
-//   news      : 뉴스 팝업 열림. 시간 정지, 매매 불가
-//   era-ended : 시대 종료(720틱). 자동 청산·정산 완료. startNextEra()로 다음 시대
+//   news      : (연습 모드 전용) 뉴스 팝업 열림. 시간 정지, 매매 불가
+//   era-ended : 시대 종료. 자동 청산·정산 완료. startNextEra()로 다음 시대
 //   finished  : 마지막 시대까지 끝남
 
-import type { Era, News, Stock, Theme } from '../data/schema.ts';
+import { MARKET_THEME_ID, type EffectLink, type Era, type LocalizedText, type News, type Stock, type Theme } from '../data/schema.ts';
 import { Account, type PortfolioView, type TradeError, type TradeRecord } from './account.ts';
 import { changeColor, DEFAULT_COLOR_SCHEME, type ChangeColor, type ColorScheme } from './colors.ts';
-import { makeConfig, type GameConfig } from './config.ts';
+import { getTickRules, makeConfig, type GameConfig, type GameMode, type TickRules } from './config.ts';
 import { settleEra, sortEras, startEraSession, type EraSession, type EraSettlement } from './eraManager.ts';
+import type { ScheduledNews } from './newsEngine.ts';
 import type { PricePoint, StockTickChange } from './priceEngine.ts';
 import { addFavorite, sortByFavorites, toggleFavorite } from './watchlist.ts';
 
@@ -23,6 +28,7 @@ export type GamePhase = 'running' | 'news' | 'era-ended' | 'finished';
 export interface GameOptions {
   eras: readonly Era[];
   seed: number;
+  mode: GameMode;
   config?: Partial<GameConfig>;
   colorScheme?: ColorScheme;
 }
@@ -35,13 +41,17 @@ export type AdvanceResult =
       tick: number;
       changes: StockTickChange[];
       /** 이 틱이 끝나고 새로 뜬 뉴스 (없으면 null) */
-      news: News | null;
+      news: ScheduledNews | null;
       /** 이 틱으로 시대가 끝났으면 정산 결과 */
       settlement: EraSettlement | null;
     };
 
 export type GameTradeError = TradeError | 'unknown-stock' | 'not-tradable';
 export type GameTradeResult = { ok: true; trade: TradeRecord } | { ok: false; error: GameTradeError };
+
+export type AdRewardResult =
+  | { ok: true; amount: number; cash: number }
+  | { ok: false; error: 'not-available-in-real' | 'ad-limit-reached' | 'game-finished' };
 
 export interface StockListItem {
   stock: Stock;
@@ -62,9 +72,24 @@ export interface StockListItem {
   quantity: number;
 }
 
+/** 연습 모드 뉴스 팝업용 '관련 테마'와 '해설' */
+export interface NewsGuideItem {
+  /** 테마 id 또는 "market" */
+  themeId: string;
+  /** 테마 이름 (시장 전체면 "시장 전체") */
+  name: LocalizedText;
+  direction: 'positive' | 'negative';
+  link: EffectLink;
+  explanation: LocalizedText;
+}
+
+const MARKET_NAME: LocalizedText = { ko: '시장 전체', en: 'Whole market' };
+
 export class Game {
   readonly config: GameConfig;
+  readonly rules: TickRules;
   readonly seed: number;
+  readonly mode: GameMode;
   readonly eras: readonly Era[];
   readonly account: Account;
   colorScheme: ColorScheme;
@@ -75,7 +100,9 @@ export class Game {
   constructor(options: GameOptions) {
     if (options.eras.length === 0) throw new Error('시대 데이터가 없음');
     this.config = makeConfig(options.config);
+    this.rules = getTickRules(this.config);
     this.seed = options.seed;
+    this.mode = options.mode;
     this.eras = sortEras(options.eras);
     this.colorScheme = options.colorScheme ?? DEFAULT_COLOR_SCHEME;
     this.account = new Account(this.config.startCash, this.config.feeRate);
@@ -93,19 +120,23 @@ export class Game {
   get eraIndex(): number {
     return this.session.index;
   }
-  /** 이번 시대에서 지난 틱 수 (0 ~ 720) */
+  /** 이번 시대에서 지난 틱 수 */
   get tick(): number {
     return this.session.prices.tick;
   }
   get remainingTicks(): number {
-    return this.config.ticksPerEra - this.tick;
+    return this.rules.ticksPerEra - this.tick;
   }
-  /** 열려 있는 뉴스 팝업 (없으면 null) */
-  get pendingNews(): News | null {
+  /** 이번 시대에서 흐른 게임 시간(초) */
+  get elapsedSeconds(): number {
+    return this.tick * this.config.tickSeconds;
+  }
+  /** (연습 모드) 열려 있는 뉴스 팝업 (없으면 null) */
+  get pendingNews(): ScheduledNews | null {
     return this.session.news.pendingNews;
   }
-  /** 이번 시대에 지금까지 뜬 뉴스 */
-  get shownNews(): News[] {
+  /** 이번 시대에 지금까지 뜬 뉴스 (뉴스 기록 화면용) */
+  get shownNews(): ScheduledNews[] {
     return this.session.news.shown;
   }
   get favorites(): readonly string[] {
@@ -120,32 +151,33 @@ export class Game {
 
   // ───────── 시간 진행 ─────────
 
-  /** 한 틱(10초) 진행. 뉴스 팝업 중이거나 시대가 끝났으면 아무것도 안 한다 */
+  /** 한 틱(5초) 진행. 연습 모드 뉴스 팝업 중이거나 시대가 끝났으면 아무것도 안 한다 */
   advanceTick(): AdvanceResult {
     if (this._phase !== 'running') return { advanced: false, phase: this._phase };
 
-    const impacts = this.session.news.consumeQueuedImpacts();
+    const nextTick = this.tick + 1;
+    const impacts = this.session.news.consumeImpactsFor(nextTick);
     const { tick, changes } = this.session.prices.step(impacts);
 
     let settlement: EraSettlement | null = null;
-    let news: News | null = null;
-    if (tick >= this.config.ticksPerEra) {
+    let news: ScheduledNews | null = null;
+    if (tick >= this.rules.ticksPerEra) {
       settlement = settleEra(this.session, this.account);
       this._settlements.push(settlement);
       this._phase = 'era-ended';
     } else {
       news = this.session.news.checkTrigger(tick);
-      if (news) this._phase = 'news';
+      if (news && this.mode === 'practice') this._phase = 'news';
     }
     return { advanced: true, tick, changes, news, settlement };
   }
 
-  /** 뉴스 팝업 '확인'. 영향은 다음 advanceTick()에 반영된다 */
-  confirmNews(): News {
+  /** (연습 모드) 뉴스 팝업 '확인'. 영향은 10초 뒤(2틱 뒤)에 반영된다 */
+  confirmNews(): ScheduledNews {
     if (this._phase !== 'news') throw new Error('열린 뉴스 팝업이 없음');
-    const news = this.session.news.confirm();
+    const s = this.session.news.confirm(this.tick);
     this._phase = 'running';
-    return news;
+    return s;
   }
 
   /** 시대 종료 후 다음 시대 시작. 다음 시대가 없으면 finished가 되고 false */
@@ -157,6 +189,37 @@ export class Game {
     }
     this.session = this.beginEra(this.session.index + 1);
     return true;
+  }
+
+  // ───────── 뉴스 해설 ─────────
+
+  /** 뉴스의 '관련 테마'와 해설 (연습 모드 팝업용. 기록 화면에서 복기용으로도 쓸 수 있다) */
+  getNewsGuide(news: News): NewsGuideItem[] {
+    const themes = new Map(this.session.era.themes.map((t) => [t.id, t]));
+    return news.effects
+      .filter((e) => e.impact !== 0)
+      .map((e) => ({
+        themeId: e.themeId,
+        name: e.themeId === MARKET_THEME_ID ? MARKET_NAME : themes.get(e.themeId)!.name,
+        direction: e.impact > 0 ? 'positive' : 'negative',
+        link: e.link,
+        explanation: e.explanation,
+      }));
+  }
+
+  // ───────── 광고 보상 (연습 모드) ─────────
+
+  /** 광고 시청 보상. 화면 쪽에서 광고 시청이 끝난 뒤에 호출한다 */
+  grantAdReward(): AdRewardResult {
+    if (this.mode !== 'practice') return { ok: false, error: 'not-available-in-real' };
+    if (this._phase === 'finished') return { ok: false, error: 'game-finished' };
+    const max = this.config.adRewardMaxPerEra;
+    if (max !== null && this.session.adRewards >= max) return { ok: false, error: 'ad-limit-reached' };
+    const amount = this.config.adRewardBits;
+    this.account.cash += amount;
+    this.session.deposits += amount;
+    this.session.adRewards++;
+    return { ok: true, amount, cash: this.account.cash };
   }
 
   // ───────── 매매 ─────────
@@ -214,7 +277,7 @@ export class Game {
     return this.account.getPortfolio(this.session.prices.getPrices());
   }
 
-  /** 최근 20분(120개) 가격 이력. 시대 초반엔 있는 만큼만 */
+  /** 최근 20분 가격 이력. 시대 초반엔 있는 만큼만 */
   getChart(stockId: string): PricePoint[] {
     return this.session.prices.getHistory(stockId);
   }
@@ -228,11 +291,9 @@ export class Game {
   private beginEra(index: number): EraSession {
     const era = this.eras[index]!;
     this.account.resetPerformance();
-    const session = startEraSession(era, index, this.seed, this.account.cash, this.config);
+    const session = startEraSession(era, index, this.seed, this.account.cash, this.config, this.mode);
     this.session = session;
     this._phase = 'running';
-    // 시대 시작(틱 0)에도 뉴스 시점이면 첫 뉴스가 뜬다
-    if (session.news.checkTrigger(0)) this._phase = 'news';
     return session;
   }
 

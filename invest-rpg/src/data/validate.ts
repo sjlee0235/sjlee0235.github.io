@@ -1,23 +1,34 @@
 // JSON 데이터가 규칙에 맞는지 검사한다.
 // errors = 반드시 고쳐야 하는 문제, warnings = 게임은 돌아가지만 확인이 필요한 문제.
 
-import type { Era, LocalizedText } from './schema.ts';
+import { DEFAULT_CONFIG, getTickRules } from '../engine/config.ts';
+import { MARKET_THEME_ID, type Era, type LocalizedText, type News } from './schema.ts';
 
 export interface EraRules {
   themeCount: number;
   sentimentCounts: { positive: number; negative: number; neutral: number };
-  /** 시대당 실제로 뜨는 뉴스 수. 풀이 이보다 작으면 경고 */
-  newsPerEra: number;
+  /** 시대 하나에 뉴스가 뜰 수 있는 최대 자리 수. 뉴스 공급이 이보다 적으면 경고 */
+  maxNewsSlots: number;
   impactMin: number;
   impactMax: number;
+  /** 낌새 뉴스 영향도 크기 상한 */
+  signalImpactMax: number;
+}
+
+/** 기본 설정으로 시대 하나에 생길 수 있는 뉴스 자리의 최대 개수 (첫 뉴스 최소 시점 + 최소 간격 반복) */
+export function maxNewsSlots(): number {
+  const r = getTickRules(DEFAULT_CONFIG);
+  const last = r.ticksPerEra - r.newsDelayTicks - r.momentumTicks;
+  return 1 + Math.floor((last - r.firstNewsMinTicks) / r.newsGapMinTicks);
 }
 
 export const DEFAULT_ERA_RULES: EraRules = {
   themeCount: 20,
   sentimentCounts: { positive: 7, negative: 7, neutral: 6 },
-  newsPerEra: 24,
+  maxNewsSlots: maxNewsSlots(),
   impactMin: -10,
   impactMax: 10,
+  signalImpactMax: 4,
 };
 
 export interface ValidationResult {
@@ -46,6 +57,47 @@ function findDuplicates(ids: string[]): string[] {
   return [...dup];
 }
 
+function maxAbsImpact(news: News): number {
+  return Math.max(0, ...news.effects.map((e) => Math.abs(e.impact)));
+}
+
+function hasDirect(news: News): boolean {
+  return news.effects.some((e) => e.link === 'direct');
+}
+
+function checkNews(
+  news: News,
+  where: string,
+  themeIds: Set<string>,
+  rules: EraRules,
+  errors: string[],
+  warnings: string[],
+): void {
+  checkText(news.title, `${where} title`, errors);
+  checkText(news.body, `${where} body`, errors);
+  if (news.effects.length === 0) warnings.push(`${where}: 영향받는 테마가 없음`);
+  for (const effect of news.effects) {
+    const at = `${where} [${effect.themeId}]`;
+    if (effect.themeId !== MARKET_THEME_ID && !themeIds.has(effect.themeId)) {
+      errors.push(`${where}: 없는 테마 ${effect.themeId}`);
+    }
+    if (!Number.isInteger(effect.impact) || effect.impact < rules.impactMin || effect.impact > rules.impactMax) {
+      errors.push(`${at}: 영향도 ${effect.impact}는 ${rules.impactMin}~${rules.impactMax} 정수여야 함`);
+    }
+    if (effect.impact === 0) warnings.push(`${at}: 영향도 0`);
+    if (effect.link !== 'direct' && effect.link !== 'indirect') {
+      errors.push(`${at}: link는 direct 또는 indirect여야 함 (${String(effect.link)})`);
+    }
+    checkText(effect.explanation, `${at} explanation`, errors);
+  }
+  for (const dup of findDuplicates(news.effects.map((e) => e.themeId))) {
+    warnings.push(`${where}: 같은 테마 ${dup}가 2번 이상 (영향도를 합산함)`);
+  }
+  if (!news.source?.event || !news.source?.date || !news.source?.impactRationale) {
+    errors.push(`${where}: 근거 메모(source)가 비어 있음`);
+  }
+}
+
 export function validateEra(era: Era, rules: EraRules = DEFAULT_ERA_RULES): ValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -62,6 +114,7 @@ export function validateEra(era: Era, rules: EraRules = DEFAULT_ERA_RULES): Vali
   }
   const counts = { positive: 0, negative: 0, neutral: 0 };
   for (const theme of era.themes) {
+    if (theme.id === MARKET_THEME_ID) errors.push(`${at} 테마 id "${MARKET_THEME_ID}"는 예약어라 쓸 수 없음`);
     if (!(theme.sentiment in counts)) {
       errors.push(`${at} 테마 ${theme.id}: sentiment 값이 이상함 (${String(theme.sentiment)})`);
       continue;
@@ -84,9 +137,7 @@ export function validateEra(era: Era, rules: EraRules = DEFAULT_ERA_RULES): Vali
     errors.push(`${at} 한 테마에 종목이 2개 이상: ${dup}`);
   }
   for (const stock of era.stocks) {
-    if (!themeIds.has(stock.themeId)) {
-      errors.push(`${at} 종목 ${stock.id}: 없는 테마 ${stock.themeId}`);
-    }
+    if (!themeIds.has(stock.themeId)) errors.push(`${at} 종목 ${stock.id}: 없는 테마 ${stock.themeId}`);
     checkText(stock.name, `${at} 종목 ${stock.id} name`, errors);
     checkText(stock.description, `${at} 종목 ${stock.id} description`, errors);
   }
@@ -95,39 +146,47 @@ export function validateEra(era: Era, rules: EraRules = DEFAULT_ERA_RULES): Vali
     if (!themesWithStock.has(id)) errors.push(`${at} 테마 ${id}에 종목이 없음`);
   }
 
-  // 뉴스
-  for (const dup of findDuplicates(era.newsPool.map((n) => n.id))) {
-    errors.push(`${at} 뉴스 id 중복: ${dup}`);
-  }
-  for (const news of era.newsPool) {
-    const where = `${at} 뉴스 ${news.id}`;
-    checkText(news.title, `${where} title`, errors);
-    checkText(news.body, `${where} body`, errors);
-    if (news.effects.length === 0) warnings.push(`${where}: 영향받는 테마가 없음`);
-    for (const effect of news.effects) {
-      if (!themeIds.has(effect.themeId)) {
-        errors.push(`${where}: 없는 테마 ${effect.themeId}`);
+  // 단독 뉴스
+  for (const news of era.newsPool) checkNews(news, `${at} 뉴스 ${news.id}`, themeIds, rules, errors, warnings);
+
+  // 스토리라인
+  for (const s of era.storylines) {
+    const where = `${at} 스토리라인 ${s.id}`;
+    if (s.signals.length === 0) errors.push(`${where}: 낌새 뉴스가 없음`);
+    if (s.branches.length < 2) errors.push(`${where}: 결과 갈래가 2개 이상이어야 함`);
+    for (const n of s.signals) {
+      checkNews(n, `${where} 낌새 ${n.id}`, themeIds, rules, errors, warnings);
+      if (maxAbsImpact(n) > rules.signalImpactMax) {
+        errors.push(`${where} 낌새 ${n.id}: 낌새 영향도는 ±${rules.signalImpactMax} 이하여야 함`);
       }
-      if (
-        !Number.isInteger(effect.impact) ||
-        effect.impact < rules.impactMin ||
-        effect.impact > rules.impactMax
-      ) {
-        errors.push(`${where}: 영향도 ${effect.impact}는 ${rules.impactMin}~${rules.impactMax} 정수여야 함`);
+    }
+    const signalMax = Math.max(0, ...s.signals.map(maxAbsImpact));
+    for (const b of s.branches) {
+      checkNews(b.news, `${where} 결과 ${b.news.id}`, themeIds, rules, errors, warnings);
+      if (b.tone !== 'positive' && b.tone !== 'negative') errors.push(`${where} 결과 ${b.news.id}: tone 값이 이상함`);
+      if (b.weight !== undefined && !(b.weight > 0)) errors.push(`${where} 결과 ${b.news.id}: weight는 0보다 커야 함`);
+      if (maxAbsImpact(b.news) <= signalMax) {
+        errors.push(`${where} 결과 ${b.news.id}: 결과 뉴스의 최대 영향도가 낌새 뉴스보다 커야 함`);
       }
-      if (effect.impact === 0) warnings.push(`${where}: 영향도 0인 테마 ${effect.themeId}`);
-    }
-    for (const dup of findDuplicates(news.effects.map((e) => e.themeId))) {
-      warnings.push(`${where}: 같은 테마 ${dup}가 2번 이상 (영향도를 합산함)`);
-    }
-    if (!news.source?.event || !news.source?.date || !news.source?.impactRationale) {
-      errors.push(`${where}: 근거 메모(source)가 비어 있음`);
     }
   }
-  if (era.newsPool.length < rules.newsPerEra) {
-    warnings.push(
-      `${at} 뉴스 풀 ${era.newsPool.length}개 < 시대당 필요 ${rules.newsPerEra}개 (풀이 떨어지면 뉴스가 더 안 뜸)`,
-    );
+
+  const allNews = [...era.newsPool, ...era.storylines.flatMap((s) => [...s.signals, ...s.branches.map((b) => b.news)])];
+  for (const dup of findDuplicates(allNews.map((n) => n.id))) errors.push(`${at} 뉴스 id 중복: ${dup}`);
+  for (const dup of findDuplicates(era.storylines.map((s) => s.id))) errors.push(`${at} 스토리라인 id 중복: ${dup}`);
+
+  // 뉴스 공급량: 스토리라인 1개는 (낌새 수 + 결과 1) 자리를 쓴다
+  const realSupply = era.newsPool.length + era.storylines.reduce((a, s) => a + s.signals.length + 1, 0);
+  const practiceSupply =
+    era.newsPool.filter(hasDirect).length +
+    era.storylines
+      .filter((s) => s.signals.every(hasDirect) && s.branches.every((b) => hasDirect(b.news)))
+      .reduce((a, s) => a + s.signals.length + 1, 0);
+  if (realSupply < rules.maxNewsSlots) {
+    warnings.push(`${at} 실전 모드 뉴스 공급 ${realSupply}자리 < 최대 ${rules.maxNewsSlots}자리 (부족하면 뒤쪽에 뉴스가 안 뜸)`);
+  }
+  if (practiceSupply < rules.maxNewsSlots) {
+    warnings.push(`${at} 연습 모드 뉴스 공급 ${practiceSupply}자리 < 최대 ${rules.maxNewsSlots}자리 (1차 영향 뉴스만 사용)`);
   }
 
   return { errors, warnings };

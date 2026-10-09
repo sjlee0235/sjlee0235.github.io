@@ -3,7 +3,7 @@
 import type { Era } from '../data/schema.ts';
 import type { Account, TradeRecord } from './account.ts';
 import { pct } from './account.ts';
-import type { GameConfig } from './config.ts';
+import type { GameConfig, GameMode } from './config.ts';
 import { NewsEngine } from './newsEngine.ts';
 import { PriceEngine } from './priceEngine.ts';
 import { createRng, deriveSeed } from './rng.ts';
@@ -23,10 +23,14 @@ export interface EraSession {
   favorites: string[];
   /** 시대 시작 시 총 자산 */
   startAssets: number;
+  /** 이번 시대에 투자 수익이 아닌 방법으로 들어온 돈 (광고 보상 등) */
+  deposits: number;
+  /** 이번 시대 광고 보상 횟수 */
+  adRewards: number;
 }
 
 /**
- * 시대 시작 준비. 시드는 시대 id로 나눠 쓰므로,
+ * 시대 시작 준비. 시드는 시대 id와 모드로 나눠 쓰므로,
  * 나중에 시대를 추가·삭제해도 다른 시대의 결과는 바뀌지 않는다.
  */
 export function startEraSession(
@@ -35,14 +39,17 @@ export function startEraSession(
   seed: number,
   startAssets: number,
   config: GameConfig,
+  mode: GameMode,
 ): EraSession {
   return {
     era,
     index,
     prices: new PriceEngine(era.stocks, createRng(deriveSeed(seed, 'price', era.id)), config),
-    news: new NewsEngine(era.newsPool, createRng(deriveSeed(seed, 'news', era.id)), config),
+    news: new NewsEngine(era, createRng(deriveSeed(seed, 'news', era.id, mode)), config, mode),
     favorites: [],
     startAssets,
+    deposits: 0,
+    adRewards: 0,
   };
 }
 
@@ -60,9 +67,13 @@ export interface EraSettlement {
   eraId: string;
   /** 시대 시작 자산 */
   startAssets: number;
+  /** 시대 중 추가로 들어온 돈 (광고 보상 등) */
+  deposits: number;
   /** 시대 종료 자산 (청산 후 현금) */
   endAssets: number;
-  /** 수익률 % */
+  /** 투자 손익 = 종료 자산 - 시작 자산 - 추가 입금 */
+  profit: number;
+  /** 수익률 % = 투자 손익 / (시작 자산 + 추가 입금) */
   returnPct: number;
   /** 종목별 손익 (이번 시대에 처음 거래한 순서) */
   stocks: StockSettlement[];
@@ -74,11 +85,14 @@ export interface EraSettlement {
 export function settleEra(session: EraSession, account: Account): EraSettlement {
   const liquidations = account.liquidateAll(session.prices.getPrices(), session.prices.tick);
   const endAssets = account.cash;
+  const profit = endAssets - session.startAssets - session.deposits;
   return {
     eraId: session.era.id,
     startAssets: session.startAssets,
+    deposits: session.deposits,
     endAssets,
-    returnPct: pct(endAssets - session.startAssets, session.startAssets),
+    profit,
+    returnPct: pct(profit, session.startAssets + session.deposits),
     stocks: account.getPerformance().map((p) => ({
       stockId: p.stockId,
       totalBought: p.totalBought,

@@ -1,13 +1,18 @@
 // 테스트 전용 가상 시대 데이터 생성기.
 // 실제 데이터(2000s.json 등)와 상관없이 엔진 규칙만 검증하기 위해 쓴다.
 
-import type { Era, News, NewsEffect, Sentiment, Theme, Stock } from '../../src/data/schema.ts';
+import type { Era, News, NewsEffect, Sentiment, Stock, Storyline, Theme } from '../../src/data/schema.ts';
 
 export interface MakeEraOptions {
   id?: string;
   order?: number;
+  /** 단독 뉴스 개수 (기본 50) */
   newsCount?: number;
-  /** 뉴스 i번째의 영향을 직접 정하고 싶을 때 */
+  /** 스토리라인 개수 (기본 0) */
+  storylineCount?: number;
+  /** 스토리라인당 낌새 뉴스 수 (기본 1) */
+  signalsPerStoryline?: number;
+  /** 단독 뉴스 i번째의 영향을 직접 정하고 싶을 때 */
   effectsFor?: (newsIndex: number, themeIds: string[]) => NewsEffect[];
 }
 
@@ -17,9 +22,25 @@ const SENTIMENTS: Sentiment[] = [
   ...Array<Sentiment>(6).fill('neutral'),
 ];
 
+const EXPLAIN = { ko: '해설', en: 'Explanation' };
+
+export function effect(themeId: string, impact: number, link: 'direct' | 'indirect' = 'direct'): NewsEffect {
+  return { themeId, impact, link, explanation: EXPLAIN };
+}
+
+export function makeNews(id: string, effects: NewsEffect[]): News {
+  return {
+    id,
+    title: { ko: `뉴스 ${id}`, en: `News ${id}` },
+    body: { ko: '본문', en: 'Body' },
+    effects,
+    source: { event: 'fake', date: '2000', impactRationale: 'test', needsVerification: false },
+  };
+}
+
 export function makeEra(options: MakeEraOptions = {}): Era {
   const id = options.id ?? 'test';
-  const newsCount = options.newsCount ?? 40;
+  const newsCount = options.newsCount ?? 50;
 
   const themes: Theme[] = SENTIMENTS.map((sentiment, i) => ({
     id: `t${i}`,
@@ -34,17 +55,25 @@ export function makeEra(options: MakeEraOptions = {}): Era {
     description: { ko: '테스트용 종목', en: 'Test stock' },
   }));
 
-  // 기본: 뉴스 i는 테마 (i % 20)에 +5, 테마 ((i+1) % 20)에 -4
+  // 기본: 뉴스 i는 테마 (i % 20)에 +5(1차), 테마 ((i+1) % 20)에 -4(2차)
   const defaultEffects = (i: number): NewsEffect[] => [
-    { themeId: themeIds[i % 20]!, impact: 5 },
-    { themeId: themeIds[(i + 1) % 20]!, impact: -4 },
+    effect(themeIds[i % 20]!, 5, 'direct'),
+    effect(themeIds[(i + 1) % 20]!, -4, 'indirect'),
   ];
-  const newsPool: News[] = Array.from({ length: newsCount }, (_, i) => ({
-    id: `${id}-n${i}`,
-    title: { ko: `뉴스${i}`, en: `News${i}` },
-    body: { ko: '본문', en: 'Body' },
-    effects: options.effectsFor ? options.effectsFor(i, themeIds) : defaultEffects(i),
-    source: { event: 'fake', date: '2000', impactRationale: 'test', needsVerification: false },
+  const newsPool: News[] = Array.from({ length: newsCount }, (_, i) =>
+    makeNews(`${id}-n${i}`, options.effectsFor ? options.effectsFor(i, themeIds) : defaultEffects(i)),
+  );
+
+  const signalsPer = options.signalsPerStoryline ?? 1;
+  const storylines: Storyline[] = Array.from({ length: options.storylineCount ?? 0 }, (_, i) => ({
+    id: `${id}-story${i}`,
+    signals: Array.from({ length: signalsPer }, (_, k) =>
+      makeNews(`${id}-story${i}-sig${k}`, [effect(themeIds[i % 20]!, 2)]),
+    ),
+    branches: [
+      { tone: 'positive' as const, news: makeNews(`${id}-story${i}-pos`, [effect(themeIds[i % 20]!, 7)]) },
+      { tone: 'negative' as const, news: makeNews(`${id}-story${i}-neg`, [effect(themeIds[i % 20]!, -7)]) },
+    ],
   }));
 
   return {
@@ -55,5 +84,6 @@ export function makeEra(options: MakeEraOptions = {}): Era {
     themes,
     stocks,
     newsPool,
+    storylines,
   };
 }

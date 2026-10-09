@@ -11,7 +11,7 @@ export type LocalizedText = Record<Locale, string> & Partial<Record<'ja' | 'zh',
 export type Sentiment = 'positive' | 'negative' | 'neutral';
 
 export interface Theme {
-  /** 시대 안에서 고유한 id (예: "semiconductor") */
+  /** 시대 안에서 고유한 id (예: "semiconductor"). "market"은 예약어라 쓸 수 없다 */
   id: string;
   name: LocalizedText;
   sentiment: Sentiment;
@@ -30,22 +30,38 @@ export interface Stock {
   description: LocalizedText;
 }
 
+/** 뉴스 영향 대상으로 쓰면 "모든 종목"에 적용되는 특별한 테마 id */
+export const MARKET_THEME_ID = 'market';
+
+/**
+ * 영향의 연결 방식
+ * - direct  : 1차 영향. 뉴스 내용만 읽어도 바로 알 수 있음 (예: 유가 급등 → 정유 호재)
+ * - indirect: 2차 영향. 한 번 더 생각해야 함 (예: 유가 급등 → 항공권 인상 → 여행 수요 감소)
+ */
+export type EffectLink = 'direct' | 'indirect';
+
 export interface NewsEffect {
+  /** 테마 id, 또는 "market"(시장 전체: 모든 종목에 적용) */
   themeId: string;
-  /** 영향도: -10 ~ +10 정수. 변동률 = impact × 3% */
+  /** 영향도: -10 ~ +10 정수. 변동률 = impact × 3%. 시장 영향과 테마 영향은 합산된다 */
   impact: number;
+  link: EffectLink;
+  /** 해설: 왜 이 테마에 호재/악재인지 (연습 모드 '해설 보기'에 쓰임) */
+  explanation: LocalizedText;
 }
 
 /** 뉴스의 사실 근거 메모 (검증용, 게임 화면에는 안 나옴) */
 export interface NewsSource {
   /** 참고한 실제 사건 */
   event: string;
-  /** 실제 사건 날짜 (YYYY, YYYY-MM, YYYY-MM-DD 중 하나) */
+  /** 실제 사건 날짜 (YYYY, YYYY-MM, YYYY-MM-DD 등) */
   date: string;
   /** 영향도를 이렇게 정한 근거 (관련 지수 등락폭 등) */
   impactRationale: string;
   /** 사실관계나 수치가 확실하지 않으면 true ("확인 필요") */
   needsVerification: boolean;
+  /** 실제로는 일어나지 않은 가상의 결과면 true (스토리라인의 다른 갈래 등) */
+  fictional?: boolean;
 }
 
 export interface News {
@@ -57,6 +73,30 @@ export interface News {
   source: NewsSource;
 }
 
+/** 스토리라인 결과의 방향 (상황이 나빠지는 쪽 / 좋아지는 쪽) */
+export type StorylineTone = 'positive' | 'negative';
+
+export interface StorylineBranch {
+  tone: StorylineTone;
+  /** 이 결과가 뽑힐 상대적 가중치 (기본 1). 두 갈래가 1:1이면 50% */
+  weight?: number;
+  news: News;
+}
+
+/**
+ * 낌새 → 결과 스토리라인.
+ * 낌새 뉴스(signals)가 순서대로 나온 뒤, 첫 낌새로부터 15분 안에
+ * 결과 뉴스(branches 중 하나, 무작위)가 나온다.
+ */
+export interface Storyline {
+  id: string;
+  /** 낌새 뉴스. 아직 확실하지 않으므로 영향도가 결과 뉴스보다 작아야 한다 */
+  signals: News[];
+  /** 가능한 결과들 (2개 이상) */
+  branches: StorylineBranch[];
+  memo?: string;
+}
+
 export interface Era {
   /** 예: "2000s" */
   id: string;
@@ -66,5 +106,8 @@ export interface Era {
   period: { startYear: number; endYear: number };
   themes: Theme[];
   stocks: Stock[];
+  /** 단독 뉴스 */
   newsPool: News[];
+  /** 낌새 → 결과 스토리라인 */
+  storylines: Storyline[];
 }
