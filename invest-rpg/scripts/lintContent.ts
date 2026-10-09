@@ -3,9 +3,10 @@
 // 등록된 시대가 없으면(단계 B 전) 가상 시대로 점검 결과 예시를 보여준다.
 
 import { ALL_ERAS } from '../src/data/eras/index.ts';
-import { lintEra, type LintIssue } from '../src/data/lint.ts';
+import { lintEra, lintWords, type LintIssue } from '../src/data/lint.ts';
 import type { Era } from '../src/data/schema.ts';
 import { validateEra } from '../src/data/validate.ts';
+import { TUTORIAL_ERA } from '../src/engine/tutorial.ts';
 import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
 
 declare const process: { exitCode?: number };
@@ -22,8 +23,11 @@ const RULE_LABEL: Record<string, string> = {
   reasonKo: '상위 4개 reason 누락 (한국어)',
   reasonEn: '영어 reason 누락 (나중에 가능)',
   date: '본문 속 연도·월 표기',
-  sentimentBias: '테마별 호재/악재 비율 (분위기 편향 ±15%p 밖)',
+  sentimentBias: '테마별 호재/악재 비율 (분위기 편향 75% ±10%p 밖)',
   peripheralHits: '비주류 테마 영향 횟수 2회 미만',
+  stockName: '종목명 형식 ("2글자 중립 수식어 + 업종", 끝에 \'주\' 금지, 평가·전망 어감 단어 금지)',
+  stockDescription: '종목 설명의 전망·평가 표현',
+  newsDirection: '뉴스 제목·본문의 주가 방향 표현 (호재, 악재, 수혜, 수혜주, 타격주, 상승 예상, 하락 예상)',
 };
 
 function report(era: Era, label: string) {
@@ -44,6 +48,11 @@ function report(era: Era, label: string) {
     if (list.length > 15) console.log(`      … 외 ${list.length - 15}건`);
   }
 }
+
+// 튜토리얼 데이터는 풀 크기 규칙과 무관하므로 금지어만 본다
+const tutorialIssues = lintWords(TUTORIAL_ERA);
+console.log(`\n=== 튜토리얼 금지어 점검: ${tutorialIssues.length}건 ===`);
+for (const i of tutorialIssues) console.log(`  - ${i.where}: ${i.message}`);
 
 if (ALL_ERAS.length === 0) {
   console.log('등록된 시대 데이터가 없습니다 (단계 B에서 2000년대 작성 예정). 점검 예시로 가상 시대를 검사합니다.');

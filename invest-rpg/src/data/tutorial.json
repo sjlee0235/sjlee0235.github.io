@@ -11,11 +11,11 @@
     { "id": "game", "sentiment": "neutral", "relevance": "peripheral", "name": { "ko": "게임", "en": "Games" }, "keywords": { "ko": ["게임", "온라인", "모바일", "콘솔", "이용자"], "en": ["game", "online", "mobile", "console", "players"] }, "existsEvidence": "튜토리얼용 가상 테마" }
   ],
   "stocks": [
-    { "id": "tut-battery", "themeId": "battery", "name": { "ko": "든든 배터리", "en": "Sturdy Battery" }, "description": { "ko": "전기 버스와 휴대 기기에 들어가는 배터리를 만든다.", "en": "Makes batteries for electric buses and portable devices." } },
-    { "id": "tut-bus", "themeId": "bus", "name": { "ko": "씽씽 버스", "en": "Zoom Bus" }, "description": { "ko": "시내버스와 고속버스를 만드는 회사다.", "en": "Builds city and intercity buses." } },
+    { "id": "tut-battery", "themeId": "battery", "name": { "ko": "하늘 배터리", "en": "Sky Battery" }, "description": { "ko": "전기 버스와 휴대 기기에 들어가는 배터리를 만든다.", "en": "Makes batteries for electric buses and portable devices." } },
+    { "id": "tut-bus", "themeId": "bus", "name": { "ko": "초록 버스", "en": "Green Bus" }, "description": { "ko": "시내버스와 고속버스를 만드는 회사다.", "en": "Builds city and intercity buses." } },
     { "id": "tut-oil", "themeId": "oil", "name": { "ko": "검은 정유", "en": "Black Refinery" }, "description": { "ko": "경유와 휘발유를 만들어 주유소에 판다.", "en": "Produces diesel and gasoline for gas stations." } },
-    { "id": "tut-food", "themeId": "food", "name": { "ko": "든든 식품", "en": "Hearty Foods" }, "description": { "ko": "과자와 라면을 만든다.", "en": "Makes snacks and instant noodles." } },
-    { "id": "tut-game", "themeId": "game", "name": { "ko": "밤샘 게임", "en": "Allnight Games" }, "description": { "ko": "모바일 게임을 서비스한다.", "en": "Runs mobile games." } }
+    { "id": "tut-food", "themeId": "food", "name": { "ko": "노을 식품", "en": "Dusk Foods" }, "description": { "ko": "과자와 라면을 만든다.", "en": "Makes snacks and instant noodles." } },
+    { "id": "tut-game", "themeId": "game", "name": { "ko": "구름 게임", "en": "Cloud Games" }, "description": { "ko": "모바일 게임을 서비스한다.", "en": "Runs mobile games." } }
   ],
   "breaking": [
     {

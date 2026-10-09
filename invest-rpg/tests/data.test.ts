@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { lintWords } from '../src/data/lint.ts';
 import { ALL_ERAS } from '../src/data/eras/index.ts';
 import { validateEras } from '../src/data/validate.ts';
 import { TUTORIAL_ERA } from '../src/engine/tutorial.ts';
@@ -32,5 +33,9 @@ describe('게임에 들어가는 데이터', () => {
     expect(TUTORIAL_ERA.stocks).toHaveLength(5);
     expect(TUTORIAL_ERA.breaking).toHaveLength(1);
     expect(TUTORIAL_ERA.breaking[0]!.effects.every((e) => e.reason?.ko && e.reason?.en)).toBe(true);
+  });
+
+  it('튜토리얼과 등록된 시대 데이터가 종목명·설명·뉴스 금지어 점검을 통과한다', () => {
+    for (const era of [...ALL_ERAS, TUTORIAL_ERA]) expect(lintWords(era), era.id).toEqual([]);
   });
 });

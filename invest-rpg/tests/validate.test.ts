@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lintEra } from '../src/data/lint.ts';
+import { lintEra, lintWords } from '../src/data/lint.ts';
 import { validateEra, validateEras } from '../src/data/validate.ts';
 import { effect, makeNews, makeSpecEra } from './fixtures/makeEra.ts';
 
@@ -94,5 +94,35 @@ describe('콘텐츠 점검 (lint:content)', () => {
     const r = lintEra(era);
     expect(r.filter((i) => i.rule === 'reasonKo' && i.where.startsWith(era.breaking[0]!.id))).toHaveLength(4);
     expect(r.some((i) => i.rule === 'pool' && i.message.includes('core 테마 25개'))).toBe(true);
+  });
+
+  it('가상 시대(중립 종목명)는 금지어 점검을 통과한다', () => {
+    expect(lintWords(makeSpecEra({ id: 'w' }))).toEqual([]);
+  });
+
+  it('종목명: 형식("2글자 수식어 + 업종"), 끝의 "주", 평가·전망 어감 단어를 잡는다', () => {
+    const era = makeSpecEra({ id: 'w' });
+    const bad = (ko: string, desc = '선박을 만든다.') => lintWords({
+      ...era, stocks: [{ ...era.stocks[0]!, name: { ko, en: 'x' }, description: { ko: desc, en: 'x' } }], breaking: [], stories: [],
+    });
+    expect(bad('평화 방산')).toEqual([]);
+    expect(bad('온유 제약')).toEqual([]);
+    expect(bad('최강 방산').map((i) => i.rule)).toContain('stockName');
+    expect(bad('평화 방산주').map((i) => i.rule)).toContain('stockName');
+    expect(bad('평화방산').map((i) => i.rule)).toContain('stockName');
+    expect(bad('바다나라 조선').map((i) => i.rule)).toContain('stockName');
+    expect(bad('바다 조선', '앞으로 성장이 유망한 회사다.').map((i) => i.rule)).toContain('stockDescription');
+  });
+
+  it('뉴스 제목·본문의 주가 방향 표현(호재·악재·수혜·수혜주·타격주·상승 예상·하락 예상)을 잡고, 사건 표현("유가 급등")은 허용', () => {
+    const era = makeSpecEra({ id: 'w' });
+    const withBody = (ko: string) => lintWords({
+      ...era, stocks: [], stories: [],
+      breaking: [{ ...era.breaking[0]!, title: { ko: '제목', en: 'Title' }, body: { ko, en: 'Body' } }],
+    }).map((i) => i.rule);
+    expect(withBody('중동 정세 불안으로 유가 급등')).toEqual([]);
+    for (const w of ['정유사에 호재', '항공사 악재', '수혜가 예상된다', '대표 수혜주', '타격주로 꼽힌다', '주가 상승 예상', '하락 예상']) {
+      expect(withBody(w), w).toContain('newsDirection');
+    }
   });
 });

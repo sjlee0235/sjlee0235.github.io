@@ -33,6 +33,48 @@ export const DEFAULT_LINT_OPTIONS: LintOptions = {
   reasonTopN: 4,
 };
 
+// ───────── 금지어 (정보 숨김) ─────────
+// 플레이 중 종목명·설명·뉴스 문장이 "오를 종목"을 대놓고 알려주면 공부할 이유가 사라진다.
+
+/** 종목명에 쓰면 안 되는 평가·전망 어감 단어 (색·사물·자연물 같은 중립 단어를 권장) */
+export const STOCK_NAME_BANNED = [
+  '최강', '최고', '폭등', '폭락', '급등', '급락', '유망', '위기', '호황', '불황', '대박', '성장', '번영', '승리',
+  '황금', '행운', '부도', '몰락', '위험', '든든', '튼튼', '으뜸', '일등', '쑥쑥', '씽씽', '미래', '희망', '대세',
+];
+
+/** 종목 설명에 쓰면 안 되는 전망·평가 표현 (제품·서비스 중심으로 중립 서술) */
+export const STOCK_DESCRIPTION_BANNED = [
+  '유망', '전망', '기대', '최고', '최강', '선도', '1위', '성장성', '호황', '불황', '위기', '폭등', '폭락', '급등',
+  '대박', '수혜', '저평가', '고평가', '우량', '주목', '각광',
+];
+
+/** 뉴스 제목·본문에 쓰면 안 되는, 주가 방향을 직접 알려주는 표현 ("유가 급등"처럼 사건 자체 표현은 괜찮다) */
+export const NEWS_DIRECTION_BANNED_KO = ['호재', '악재', '수혜', '수혜주', '타격주', '상승 예상', '하락 예상'];
+export const NEWS_DIRECTION_BANNED_EN = ['good news for', 'bad news for', 'beneficiar', 'bullish', 'bearish', 'expected to rise', 'expected to fall'];
+
+/** 종목명 형식: "2글자 중립 수식어 + 띄어쓰기 + 업종" (업종 끝에 '주'를 붙이지 않는다) */
+export const STOCK_NAME_PATTERN = /^[가-힣]{2} [가-힣A-Za-z0-9]+$/;
+
+/** 종목·뉴스 문장 금지어 점검 (테마 풀 크기와 무관하게 튜토리얼에도 쓴다) */
+export function lintWords(era: Era): LintIssue[] {
+  const issues: LintIssue[] = [];
+  const add = (rule: string, where: string, message: string) => issues.push({ rule, where, message });
+  for (const s of era.stocks) {
+    const name = s.name.ko;
+    if (!STOCK_NAME_PATTERN.test(name)) add('stockName', s.id, `종목명 "${name}"이 "2글자 수식어 + 업종" 형식이 아님`);
+    if (/주$/.test(name)) add('stockName', s.id, `종목명 "${name}" 끝에 '주'를 붙이지 않음`);
+    for (const w of STOCK_NAME_BANNED) if (name.includes(w)) add('stockName', s.id, `종목명 "${name}"에 평가·전망 어감 단어 "${w}"`);
+    for (const w of STOCK_DESCRIPTION_BANNED) if (s.description.ko.includes(w)) add('stockDescription', s.id, `종목 설명에 전망·평가 표현 "${w}"`);
+  }
+  for (const n of allNewsOf(era)) {
+    const ko = `${n.title.ko} ${n.body.ko}`;
+    for (const w of NEWS_DIRECTION_BANNED_KO) if (ko.includes(w)) add('newsDirection', n.id, `주가 방향을 알려주는 표현 "${w}"`);
+    const en = `${n.title.en} ${n.body.en}`.toLowerCase();
+    for (const w of NEWS_DIRECTION_BANNED_EN) if (en.includes(w)) add('newsDirection', `${n.id} (en)`, `주가 방향을 알려주는 표현 "${w}"`);
+  }
+  return issues;
+}
+
 /** 본문에 연도·월 표기가 있는가 (예: 2008년, 3월, 1997, March 2003) */
 export function findDateMentions(text: string): string[] {
   const patterns = [
@@ -142,5 +184,6 @@ export function lintEra(era: Era, opts: LintOptions = DEFAULT_LINT_OPTIONS): Lin
     }
   }
 
+  issues.push(...lintWords(era));
   return issues;
 }
