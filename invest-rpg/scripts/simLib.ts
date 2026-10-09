@@ -185,7 +185,7 @@ export interface PlayResult {
 export function play(
   era: Era, strategy: Strategy, seed: number, config: Partial<GameConfig> = {}, telemetry?: TelemetrySink,
 ): PlayResult {
-  const game = new Game({ eras: [era], seed, config, ...(telemetry ? { telemetry } : {}) });
+  const game = new Game({ eras: [era], seed, config, ...(telemetry ? { telemetry, telemetryConsent: true } : {}) });
   const trader = makeTrader(strategy, seed, era);
   trader.onStart(game);
   while (game.phase !== 'era-ended') {

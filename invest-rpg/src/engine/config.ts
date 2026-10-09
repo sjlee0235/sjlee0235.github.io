@@ -29,11 +29,11 @@ export const NEWS_GAP_MAX_SECONDS = 420;
 export const P_START_STORY = 0.85;
 /**
  * 잠정 뉴스의 단서(leansTo)대로 결과가 나올 확률.
- * 60%(요청값) → 65%(단서 전략이 목표 하한에 걸려서) → 70%.
- * 발표 즉시 반영(INSTANT_REACTION_SHARE)이 들어가며 잠정 뉴스 자체의 상승분을 미리 사기 어려워져
- * 단서 전략이 +36%로 내려가서, 목표(+40~120%)에 맞게 70%로 올렸다 (README 6장).
+ * 60%(첫 요청) → 65% → 70%(시뮬레이션 보정) → 65%(기획 결정).
+ * 한 판에 같은 스토리는 한 번뿐이라 "큰 수의 법칙"이 약하게 작용한다. 확신보다 분산 투자를 고르게 하려는 의도로
+ * 65%로 정했다. 잠정 정방향 전략의 목표도 +25~100%로 낮췄다 (README 6장).
  */
-export const LEANS_TO_CHANCE = 0.7;
+export const LEAN_PROB = 0.65;
 /**
  * 뉴스 영향 중 발표 순간 바로 반영되는 몫 (나머지는 5초 뒤).
  * 0이면 전부 5초 뒤 반영(이전 규칙). 시뮬레이션에서 0일 때 "발표 즉시 사는" 전략이 시대당 +500%를 넘어
@@ -41,6 +41,8 @@ export const LEANS_TO_CHANCE = 0.7;
  * 사람처럼 가장 큰 호재 1종목에 몰빵해도 +80% 안팎이 되는 값이다.
  */
 export const INSTANT_REACTION_SHARE = 0.75;
+/** 자동 저장 간격(초). 이 시간이 지나면 저장이 필요하다고 알린다 (game.pendingSaveReasons) */
+export const AUTOSAVE_SECONDS = 30;
 /** 뉴스 발표 몇 초 뒤에 해설 알림을 만드는가 */
 export const RECAP_DELAY_SECONDS = 120;
 /** (기본 OFF) 주문이 N틱 뒤 가격으로 체결 */
@@ -120,6 +122,8 @@ export interface GameConfig {
   /** 실제 반영 배율 범위 (균등분포): 강도 3 / 강도 2·1 */
   impactMultiplier: { strong: Range; weak: Range };
 
+  /** 자동 저장 간격(초) */
+  autosaveSeconds: number;
   /** 해설 알림: 발표 후 몇 초 뒤, 최대 몇 종목 */
   recapDelaySeconds: number;
   recapMaxItems: number;
@@ -164,10 +168,11 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
   storyOutcomeWithinSeconds: 900,
   noNewTentativeLastSeconds: 900,
   pStartStory: P_START_STORY,
-  leansToChance: LEANS_TO_CHANCE,
+  leansToChance: LEAN_PROB,
   impactUnitRate: 30,
   impactMax: 10,
   impactMultiplier: { strong: [0.6, 1.4] as const, weak: [0.4, 1.6] as const },
+  autosaveSeconds: AUTOSAVE_SECONDS,
   recapDelaySeconds: RECAP_DELAY_SECONDS,
   recapMaxItems: 3,
   draw: {
@@ -205,6 +210,7 @@ export interface TickRules {
   noNewTentativeLastTicks: number;
   recapDelayTicks: number;
   chartHistoryLength: number;
+  autosaveTicks: number;
 }
 
 function toTicks(config: GameConfig, seconds: number, name: string): number {
@@ -229,6 +235,7 @@ export function getTickRules(config: GameConfig): TickRules {
     noNewTentativeLastTicks: toTicks(config, config.noNewTentativeLastSeconds, 'noNewTentativeLastSeconds'),
     recapDelayTicks: toTicks(config, config.recapDelaySeconds, 'recapDelaySeconds'),
     chartHistoryLength: toTicks(config, config.chartHistorySeconds, 'chartHistorySeconds'),
+    autosaveTicks: toTicks(config, config.autosaveSeconds, 'autosaveSeconds'),
   };
   if (r.reactionTicks < 1) throw new Error('설정 오류: 뉴스 반영은 발표 후 1틱 이상이어야 함');
   if (r.firstNewsMinTicks > r.firstNewsMaxTicks || r.newsGapMinTicks > r.newsGapMaxTicks) {

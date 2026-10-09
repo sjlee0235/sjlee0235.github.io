@@ -7,6 +7,7 @@ import type { GameConfig } from './config.ts';
 import { applyDraw, drawEra, type ActiveEra, type EraDraw } from './eraDraw.ts';
 import { NewsEngine, type ScheduledNews } from './newsEngine.ts';
 import { PriceEngine } from './priceEngine.ts';
+import { depositTotal, twrPct, type DepositTotals, type TwrState } from './returns.ts';
 import { createRng, deriveSeed } from './rng.ts';
 
 /** order 값 기준으로 시대를 정렬한 새 배열 (1980s, 1990s, 2000s ... 순) */
@@ -79,25 +80,40 @@ export interface StockSettlement {
 
 export interface EraSettlement {
   eraId: string;
+  /** 시대 시작 자금 */
   startCash: number;
+  /** 시대 종료 자산 (전량 청산 뒤 현금) */
   endAssets: number;
-  profit: number;
-  /** 수익률 % = (최종 자산 − 시작 자금) ÷ 시작 자금 × 100 */
+  /** 수익률 % = 시간가중수익률(TWR). 입금이 없으면 (종료 자산 − 시작 자금) ÷ 시작 자금 × 100 과 같다 */
   returnPct: number;
+  /** 입금을 뺀 순손익 = 종료 자산 − 시작 자금 − 이번 시대 입금 합계 */
+  profitAmount: number;
+  /** 이번 시대 출처별 입금 합계 */
+  deposits: DepositTotals;
   stocks: StockSettlement[];
   liquidations: TradeRecord[];
+  /** 앱 업데이트로 버전이 바뀌어 세이브 스냅샷 가격으로 정산했는가 */
+  settledOnVersionChange?: boolean;
 }
 
-/** 시대 종료: 보유 종목 전량을 현재가로 청산하고 정산 결과를 만든다 */
-export function settleEra(session: EraSession, account: Account): EraSettlement {
-  const liquidations = account.liquidateAll(session.prices.getPrices(), session.prices.tick);
+/** 시대 종료: 보유 종목 전량을 주어진 가격으로 청산하고 정산 결과를 만든다 */
+export function settleAccount(
+  eraId: string,
+  startCash: number,
+  account: Account,
+  prices: ReadonlyMap<string, number>,
+  tick: number,
+  twr: TwrState,
+): EraSettlement {
+  const liquidations = account.liquidateAll(prices, tick);
   const endAssets = account.cash;
   return {
-    eraId: session.era.id,
-    startCash: session.startCash,
+    eraId,
+    startCash,
     endAssets,
-    profit: endAssets - session.startCash,
-    returnPct: pct(endAssets - session.startCash, session.startCash),
+    returnPct: twrPct(twr, endAssets),
+    profitAmount: endAssets - startCash - depositTotal(twr.deposits),
+    deposits: { ...twr.deposits },
     stocks: account.getPerformance().map((p) => ({
       stockId: p.stockId,
       totalBought: p.totalBought,
@@ -106,4 +122,9 @@ export function settleEra(session: EraSession, account: Account): EraSettlement 
     })),
     liquidations,
   };
+}
+
+/** 시대 종료: 현재가로 청산 */
+export function settleEra(session: EraSession, account: Account, twr: TwrState): EraSettlement {
+  return settleAccount(session.era.id, session.startCash, account, session.prices.getPrices(), session.prices.tick, twr);
 }

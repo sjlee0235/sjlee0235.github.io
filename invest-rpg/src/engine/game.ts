@@ -1,4 +1,6 @@
-// 게임 창구(facade): 화면 코드는 이 Game 하나만 쓰면 된다.
+// 게임 엔진 본체 (Game). 시뮬레이션·테스트·분석·세이브가 쓰는 "내부용" 창구다.
+// ★ 화면 코드는 이 클래스를 직접 쓰지 않고 publicView.ts의 PublicGame만 쓴다.
+//   Game은 뉴스의 영향 테마·방향, 테마 분위기 등 플레이 중 숨겨야 할 정보를 그대로 들고 있기 때문이다.
 //
 // 엔진은 실제 시계를 쓰지 않는다. 화면 쪽 타이머가 5초마다 advanceTick()을 부른다.
 // - 뉴스가 떠도 시간은 멈추지 않는다. (튜토리얼만 pauseOnNews로 예외)
@@ -14,18 +16,22 @@
 
 import type { Era, LinkStrength, LocalizedText, News, Stock, Theme } from '../data/schema.ts';
 import { effectKind } from '../data/schema.ts';
-import { Account, type PortfolioView, type TradeError, type TradeRecord } from './account.ts';
+import {
+  Account, type DepositResult, type DepositSource, type Holding, type PortfolioView, type StockPerformance,
+  type TradeError, type TradeRecord,
+} from './account.ts';
 import { changeColor, DEFAULT_COLOR_SCHEME, type ChangeColor, type ColorScheme } from './colors.ts';
 import { getTickRules, makeConfig, type GameConfig, type TickRules } from './config.ts';
 import type { ActiveEra, EraDraw } from './eraDraw.ts';
 import { settleEra, sortEras, startEraSession, type EraSession, type EraSettlement } from './eraManager.ts';
 import type { NewsTag, ScheduledKind, ScheduledNews } from './newsEngine.ts';
 import type { PricePoint, StockTickChange } from './priceEngine.ts';
-import { buildRecap, type RecapNotice } from './recap.ts';
+import { buildRecap, type AppliedRate, type RecapNotice } from './recap.ts';
+import { applyDeposit, cumulativeReturnPct, startTwr, twrPct, type TwrState } from './returns.ts';
 import {
   balanceHash, ENGINE_VERSION, TELEMETRY_SCHEMA_VERSION,
-  type AppEventMap, type AppEventType, type DecisionContext, type EngineEventMap, type StockRate,
-  type TelemetryEvent, type TelemetrySink,
+  type AppEventMap, type AppEventType, type DecisionContext, type EngineEventMap, type SavedActionData,
+  type StockRate, type TelemetryEvent, type TelemetrySink,
 } from './telemetry.ts';
 import { addFavorite, sortByFavorites, toggleFavorite } from './watchlist.ts';
 
@@ -47,6 +53,10 @@ export interface GameOptions {
   fixedSchedule?: (active: ActiveEra) => ScheduledNews[];
   /** 플레이 기록을 받을 곳 (없으면 기록하지 않음). telemetry.ts 참고 */
   telemetry?: TelemetrySink;
+  /** 플레이 기록 동의 여부 (기본 false = 기록 안 함). 나중에 setConsent()로 바꿀 수 있다 */
+  telemetryConsent?: boolean;
+  /** 이전 시대들의 수익률 % (세이브 불러오기용, 누적 수익률 계산) */
+  pastEraReturns?: readonly number[];
   /** 기록에 남길 모드 (기본 main) */
   telemetryMode?: 'main' | 'tutorial';
   /** 세이브에서 이어 하기인가 (기록용) */
@@ -110,26 +120,6 @@ export interface StockListItem {
   quantity: number;
 }
 
-export interface RelatedTheme {
-  themeId: string;
-  name: LocalizedText;
-  direction: 'positive' | 'negative';
-  strength: LinkStrength;
-  kind: 'direct' | 'indirect';
-}
-
-/** 뉴스 팝업 화면용 데이터 */
-export interface NewsPopup {
-  news: News;
-  kind: ScheduledKind;
-  tag: NewsTag;
-  /** false면 "가상 시나리오" 태그 */
-  isHistorical: boolean;
-  relatedThemes: RelatedTheme[];
-  reactionNote?: LocalizedText;
-  relatedTentativeId?: string;
-}
-
 export interface NewsArchiveEntry {
   tick: number;
   elapsedSeconds: number;
@@ -144,12 +134,46 @@ export interface NewsArchiveEntry {
   recap?: RecapNotice;
 }
 
-/** 이번 시대에 플레이어가 직접 한 매매 (세이브·리플레이용) */
-export interface SavedTrade {
+/** 이번 시대에 플레이어가 한 행동: 매매 또는 입금 (세이브·리플레이용) */
+export type SavedAction = SavedActionData;
+
+/** 저장이 필요한 이유 (화면은 이 값이 있으면 saveGame()을 부른다) */
+export type SaveReason = 'trade' | 'deposit' | 'news' | 'background' | 'interval' | 'era-end';
+
+/** 세이브용 상태 스냅샷 (가격·계좌·즐겨찾기·수익률 진행 상태) */
+export interface GameStateSnapshot {
   tick: number;
-  side: 'buy' | 'sell';
-  stockId: string;
-  quantity: number;
+  phase: GamePhase;
+  /** 종목 id → 현재가 */
+  prices: Record<string, number>;
+  cash: number;
+  holdings: Holding[];
+  performance: StockPerformance[];
+  favorites: string[];
+  twr: TwrState;
+}
+
+/** 시대 종료 후 공개 (사후 학습용, 내부 id 그대로) */
+export interface EraDebrief {
+  eraId: string;
+  displayName: LocalizedText;
+  settlement: EraSettlement | null;
+  /** 이번 판 활성 테마와 종목 (분위기·관련도 포함) */
+  themes: { theme: Theme; stock: Stock }[];
+  /** 이번 판에 나온 스토리: 단서 방향과 실제 결과 */
+  stories: {
+    storyId: string;
+    tentative: News;
+    /** 단서가 가리킨 결과 */
+    leansTo: News;
+    /** 실제로 나온 결과 */
+    outcome: News;
+    followedLean: boolean;
+    isHistorical: boolean;
+    clue: News | null;
+  }[];
+  /** 이번 판 뉴스 전부와 해설 전체 (상위 3개 제한 없음) */
+  news: { scheduled: ScheduledNews; recap: RecapNotice }[];
 }
 
 interface PendingOrder {
@@ -171,16 +195,21 @@ export class Game {
   private _suspended = false;
   private readonly _settlements: EraSettlement[] = [];
   private readonly options: GameOptions;
-  /** 뉴스 id → (종목 id → 실제 적용된 변동률) */
-  private applied = new Map<string, Map<string, number>>();
+  /** 뉴스 id → (종목 id → 실제 적용된 변동률: 즉시 / 5초 뒤) */
+  private applied = new Map<string, Map<string, AppliedRate>>();
   private pendingRecaps: { tick: number; scheduled: ScheduledNews }[] = [];
   private recaps = new Map<string, RecapNotice>();
   private orders: PendingOrder[] = [];
   private readonly _draws: Record<string, EraDraw> = {};
   private telemetry: TelemetrySink | null;
+  private consent = false;
   private telemetrySeq = 0;
   private stats: EraStats = Game.emptyStats(0);
-  private _eraTrades: SavedTrade[] = [];
+  private _eraActions: SavedAction[] = [];
+  private twr: TwrState = startTwr(0);
+  private readonly pastEraReturns: number[];
+  private readonly saveReasons = new Set<SaveReason>();
+  private lastSavedTick = 0;
 
   constructor(options: GameOptions) {
     if (options.eras.length === 0) throw new Error('시대 데이터가 없음');
@@ -192,39 +221,49 @@ export class Game {
     this.colorScheme = options.colorScheme ?? DEFAULT_COLOR_SCHEME;
     this.account = new Account(options.startCash ?? this.config.startCash, this.config.feeRate);
     this.telemetry = options.telemetry ?? null;
-    const startEraIndex = options.startEraIndex ?? 0;
-    if (this.telemetry) {
-      this.emitRaw('game_start', this.eras[startEraIndex]?.id ?? '', startEraIndex, 0, {
-        mode: options.telemetryMode ?? 'main',
-        seed: this.seed,
-        engineVersion: ENGINE_VERSION,
-        balanceHash: balanceHash(this.config),
-        startCash: this.account.cash,
-        startEraIndex,
-        restored: options.restored ?? false,
-        resumeTick: null,
-        priorTrades: [],
-      });
-    }
-    this.session = this.beginEra(startEraIndex);
+    this.pastEraReturns = [...(options.pastEraReturns ?? [])];
+    this.session = this.beginEra(options.startEraIndex ?? 0);
+    if (options.telemetryConsent) this.setConsent(true, options.restored ?? false);
+  }
+
+  /** 플레이 기록이 실제로 나가는 중인가 (기록 통이 있고, 동의했을 때만) */
+  get isRecording(): boolean {
+    return this.telemetry !== null && this.consent;
+  }
+
+  get telemetryConsent(): boolean {
+    return this.consent;
   }
 
   /**
-   * (세이브 불러오기용) 시대 중간까지 되감은 뒤에 기록을 붙인다.
-   * game_start에 이어 한 틱과 그 전 매매를 담아, 기록만으로도 리플레이할 수 있게 한다.
+   * 플레이 기록 동의 켜기/끄기. 기본은 꺼짐.
+   * 판 도중에 켜면 그 순간부터 기록하고, game_start에 그때까지의 행동을 담아 리플레이할 수 있게 한다.
    */
-  attachTelemetry(sink: TelemetrySink, mode: 'main' | 'tutorial' = 'main'): void {
+  setConsent(on: boolean, restored = false): void {
+    const was = this.isRecording;
+    this.consent = on;
+    if (!was && this.isRecording) this.emitStart(restored);
+  }
+
+  /** (세이브 불러오기용) 기록 통을 나중에 붙인다. 동의가 켜져 있으면 바로 기록을 시작한다 */
+  attachTelemetry(sink: TelemetrySink, restored = true): void {
+    const was = this.isRecording;
     this.telemetry = sink;
+    if (!was && this.isRecording) this.emitStart(restored);
+  }
+
+  private emitStart(restored: boolean): void {
     this.emitRaw('game_start', this.session.era.id, this.session.index, this.tick, {
-      mode,
+      mode: this.options.telemetryMode ?? 'main',
       seed: this.seed,
       engineVersion: ENGINE_VERSION,
       balanceHash: balanceHash(this.config),
       startCash: this.session.startCash,
       startEraIndex: this.session.index,
-      restored: true,
-      resumeTick: this.tick,
-      priorTrades: this._eraTrades.map((t) => ({ ...t })),
+      restored,
+      resumeTick: this.tick === 0 && this._eraActions.length === 0 ? null : this.tick,
+      priorActions: this._eraActions.map((a) => ({ ...a })),
+      pastEraReturns: [...this.pastEraReturns, ...this._settlements.map((s) => s.returnPct)],
     });
     this.emitEraStart();
   }
@@ -288,9 +327,43 @@ export class Game {
   get settlements(): readonly EraSettlement[] {
     return this._settlements;
   }
-  /** 이번 시대에 직접 한 매매 목록 (세이브용) */
-  get eraTrades(): readonly SavedTrade[] {
-    return this._eraTrades;
+  /** 이번 시대에 한 행동(매매·입금) 목록 (세이브용) */
+  get eraActions(): readonly SavedAction[] {
+    return this._eraActions;
+  }
+  /** 이번 시대 매매만 */
+  get eraTrades(): readonly Extract<SavedAction, { kind: 'trade' }>[] {
+    return this._eraActions.filter((a): a is Extract<SavedAction, { kind: 'trade' }> => a.kind === 'trade');
+  }
+  /** 지금 총자산 (현금 + 보유 평가액) */
+  get totalAssets(): number {
+    return this.account.totalAssets(this.session.prices.getPrices());
+  }
+  /** 이번 시대 지금까지의 수익률 % (시간가중). 시대가 끝났으면 정산 수익률 */
+  get currentReturnPct(): number {
+    if (this._phase === 'era-ended' || this._phase === 'finished') return this._settlements.at(-1)?.returnPct ?? 0;
+    return twrPct(this.twr, this.totalAssets);
+  }
+  /** 이전 시대 + 끝난 시대들의 수익률 % */
+  get eraReturns(): number[] {
+    return [...this.pastEraReturns, ...this._settlements.map((s) => s.returnPct)];
+  }
+  /** 누적 수익률 % = 시대별 시간가중수익률을 곱해서 */
+  get cumulativeReturnPct(): number {
+    return cumulativeReturnPct(this.eraReturns);
+  }
+  /** 저장이 필요한 이유들 (비어 있으면 저장 불필요). saveGame()이 비운다 */
+  get pendingSaveReasons(): readonly SaveReason[] {
+    return [...this.saveReasons];
+  }
+  /** 저장했음을 알린다 (saveGame()이 부른다) */
+  markSaved(): void {
+    this.saveReasons.clear();
+    this.lastSavedTick = this.tick;
+  }
+  /** 시대 동안의 자산 최고·최저 (시뮬레이션·기록용) */
+  get assetRange(): { peak: number; trough: number } {
+    return { peak: this.stats.peak, trough: this.stats.trough };
   }
   get hasNextEra(): boolean {
     return this.session.index + 1 < this.eras.length;
@@ -309,8 +382,8 @@ export class Game {
     const { tick, changes } = this.session.prices.step(merged.size > 0 ? merged : undefined);
 
     for (const d of due) {
-      this.recordApplied(d.newsId, d.rates, changes);
-      if (this.telemetry) this.emit('news_reacted', { newsId: d.newsId, applied: this.stockRates(d.rates, changes) });
+      this.recordApplied(d.newsId, d.rates, changes, 'delayed');
+      if (this.isRecording) this.emit('news_reacted', { newsId: d.newsId, applied: this.stockRates(d.rates, changes) });
     }
 
     const fills = this.executeOrders(tick);
@@ -324,9 +397,10 @@ export class Game {
         const instant = this.session.news.consumeInstant();
         if (instant) {
           instantChanges = this.session.prices.applyInstant(instant.rates);
-          this.recordApplied(instant.newsId, instant.rates, instantChanges);
+          this.recordApplied(instant.newsId, instant.rates, instantChanges, 'instant');
         }
-        if (this.telemetry) {
+        this.saveReasons.add('news');
+        if (this.isRecording) {
           this.emit('news_published', {
             newsId: news.news.id,
             kind: news.kind,
@@ -356,20 +430,22 @@ export class Game {
       );
       this.recaps.set(notice.newsId, notice);
       recaps.push(notice);
-      if (this.telemetry) this.emit('recap_created', { newsId: notice.newsId, stockIds: notice.items.map((i) => i.stockId) });
+      if (this.isRecording) this.emit('recap_created', { newsId: notice.newsId, stockIds: notice.items.map((i) => i.stockId) });
     }
     this.pendingRecaps = this.pendingRecaps.filter((r) => r.tick !== tick);
 
     this.updateStats(tick);
+    if (tick - this.lastSavedTick >= this.rules.autosaveTicks) this.saveReasons.add('interval');
 
     let settlement: EraSettlement | null = null;
     if (tick >= this.rules.ticksPerEra) {
-      const contexts = this.telemetry
+      const contexts = this.isRecording
         ? new Map(this.account.getHoldings().map((h) => [h.stockId, this.decisionContext(h.stockId)]))
         : null;
-      settlement = settleEra(this.session, this.account);
+      settlement = settleEra(this.session, this.account, this.twr);
       this._settlements.push(settlement);
       this._phase = 'era-ended';
+      this.saveReasons.add('era-end');
       for (const t of settlement.liquidations) {
         const holdTicks = this.recordTradeStats(t, true);
         if (contexts) this.emitTrade(t, contexts.get(t.stockId)!, true, holdTicks);
@@ -387,20 +463,42 @@ export class Game {
           troughAssets: st.trough,
           maxDrawdownPct: st.maxDrawdownPct,
           investedShare: st.ticks === 0 ? 0 : st.investedTicks / st.ticks,
+          profitAmount: settlement.profitAmount,
+          deposits: { ...settlement.deposits },
         });
       }
     }
     return { advanced: true, tick, changes, news, instantChanges, recaps, fills, settlement };
   }
 
+  /** 앱이 백그라운드로 갈 때. 시간·매매가 멈추고, 저장이 필요하다고 알린다 */
   suspend(): void {
-    if (!this._suspended && this.telemetry) this.emit('suspended', {});
+    if (!this._suspended && this.isRecording) this.emit('suspended', {});
     this._suspended = true;
+    this.saveReasons.add('background');
   }
 
   resume(): void {
-    if (this._suspended && this.telemetry) this.emit('resumed', {});
+    if (this._suspended && this.isRecording) this.emit('resumed', {});
     this._suspended = false;
+  }
+
+  /**
+   * 외부 유입 입금 (source: work = 인형 눈 붙이기, purchase = 결제, ad = 광고 보상, other).
+   * - 시대 진행 중: 입금 직전 자산으로 수익률 구간을 나눈다 (시간가중수익률). 일시정지 중에도 가능
+   * - 시대가 끝난 뒤(정산 후): 현금만 늘고, 다음 시대 시작 자금에 들어간다
+   * 결제·광고 SDK 연동은 엔진 밖(앱) 일이다. 엔진은 결과 금액만 받는다.
+   */
+  deposit(amount: number, source: DepositSource): DepositResult {
+    const inEra = this._phase === 'running' || this._phase === 'news';
+    const assetsBefore = inEra ? this.totalAssets : 0;
+    const r = this.account.deposit(amount, source, this.tick);
+    if (!r.ok) return r;
+    if (inEra) this.twr = applyDeposit(this.twr, assetsBefore, amount, source);
+    this._eraActions.push({ kind: 'deposit', tick: this.tick, amount, source });
+    this.saveReasons.add('deposit');
+    if (this.isRecording) this.emit('deposit', { amount, source, cashAfter: this.account.cash, inEra });
+    return r;
   }
 
   /**
@@ -408,7 +506,7 @@ export class Game {
    * clientMs는 실제 시각(앱이 Date.now() 등으로 넣는다. 엔진은 시계를 쓰지 않음)
    */
   track<K extends AppEventType>(type: K, data: AppEventMap[K], clientMs?: number): void {
-    if (!this.telemetry) return;
+    if (!this.isRecording) return;
     this.emitRaw(type, this.session.era.id, this.session.index, this.tick, data, clientMs);
   }
 
@@ -432,27 +530,54 @@ export class Game {
 
   // ───────── 뉴스 팝업·해설·보관함 ─────────
 
-  getNewsPopup(s: ScheduledNews): NewsPopup {
-    const themes = new Map(this.session.era.themes.map((t) => [t.id, t]));
-    const popup: NewsPopup = {
-      news: s.news,
-      kind: s.kind,
-      tag: s.tag,
-      isHistorical: s.isHistorical,
-      relatedThemes: s.news.effects.map((e) => ({
-        themeId: e.themeId,
-        name: themes.get(e.themeId)!.name,
-        direction: e.impact > 0 ? 'positive' : 'negative',
-        strength: e.link.strength,
-        kind: effectKind(e),
-      })),
-    };
-    if (s.news.reactionNote) popup.reactionNote = s.news.reactionNote;
-    if (s.relatedTentativeId) popup.relatedTentativeId = s.relatedTentativeId;
-    return popup;
+  /** 이 뉴스의 해설 알림 (발표 120초 뒤에 생김, 없으면 undefined) */
+  getRecap(newsId: string): RecapNotice | undefined {
+    return this.recaps.get(newsId);
   }
 
-  /** 뉴스 보관함: 지금까지 뜬 뉴스와 (있으면) 해설 알림 */
+  /**
+   * 시대 종료 후 공개 (사후 학습용): 활성 테마의 분위기·관련도, 스토리별 단서 방향과 실제 결과,
+   * 실제 역사 여부, 뉴스별 해설 전체. 시대가 끝나기 전에 부르면 오류.
+   */
+  getEraDebrief(): EraDebrief {
+    if (this._phase !== 'era-ended' && this._phase !== 'finished') {
+      throw new Error('시대가 끝난 뒤에만 볼 수 있음 (진행 중 공개 금지)');
+    }
+    const { era, active, news } = this.session;
+    const shown = news.shown;
+    const themeById = new Map(active.themes.map((t) => [t.id, t]));
+    const stories: EraDebrief['stories'] = [];
+    for (const s of shown.filter((x) => x.kind === 'outcome')) {
+      const story = active.stories.find((x) => x.id === s.storyId)!;
+      const byId = new Map(story.news.map((n) => [n.id, n]));
+      const clue = shown.find((x) => x.kind === 'clue' && x.storyId === story.id);
+      stories.push({
+        storyId: story.id,
+        tentative: story.tentative,
+        leansTo: byId.get(story.leansTo)!,
+        outcome: s.news,
+        followedLean: s.followedLean ?? false,
+        isHistorical: s.isHistorical,
+        clue: clue?.news ?? null,
+      });
+    }
+    return {
+      eraId: era.id,
+      displayName: era.displayName,
+      settlement: this._settlements.find((x) => x.eraId === era.id) ?? null,
+      themes: active.stocks.map((stock) => ({ theme: themeById.get(stock.themeId)!, stock })),
+      stories,
+      news: shown.map((s) => ({
+        scheduled: s,
+        recap: buildRecap(
+          s, this.applied.get(s.news.id) ?? new Map(), active.stocks, themeById,
+          this.recaps.get(s.news.id)?.recapTick ?? this.tick, Number.POSITIVE_INFINITY,
+        ),
+      })),
+    };
+  }
+
+  /** 뉴스 보관함 (내부용): 지금까지 뜬 뉴스와 (있으면) 해설 알림 */
   getNewsArchive(): NewsArchiveEntry[] {
     return this.session.news.shown.map((s) => {
       const entry: NewsArchiveEntry = {
@@ -491,7 +616,7 @@ export class Game {
   toggleFavorite(stockId: string): void {
     if (!this.session.prices.hasStock(stockId)) throw new Error(`없는 종목: ${stockId}`);
     this.session.favorites = toggleFavorite(this.session.favorites, stockId);
-    if (this.telemetry) this.emit('favorite_toggled', { stockId, on: this.session.favorites.includes(stockId) });
+    if (this.isRecording) this.emit('favorite_toggled', { stockId, on: this.session.favorites.includes(stockId) });
   }
 
   /** (세이브 불러오기용) 관심 종목 목록을 저장된 그대로 되돌린다 */
@@ -503,7 +628,7 @@ export class Game {
     const { active, prices, favorites } = this.session;
     const themes = new Map(active.themes.map((t) => [t.id, t]));
     const items = active.stocks.map((stock): StockListItem => {
-      const s = prices.getState(stock.id);
+      const s = prices.peek(stock.id);
       const change = s.price - s.openPrice;
       return {
         stock,
@@ -521,6 +646,20 @@ export class Game {
     return sortByFavorites(items, favorites, (it) => it.stock.id);
   }
 
+  /** (세이브용) 지금 상태 스냅샷 */
+  captureState(): GameStateSnapshot {
+    return {
+      tick: this.tick,
+      phase: this._phase,
+      prices: Object.fromEntries(this.session.prices.getPrices()),
+      cash: this.account.cash,
+      holdings: this.account.getHoldings(),
+      performance: this.account.getPerformance(),
+      favorites: [...this.session.favorites],
+      twr: { ...this.twr, deposits: { ...this.twr.deposits } },
+    };
+  }
+
   getPortfolio(): PortfolioView {
     return this.account.getPortfolio(this.session.prices.getPrices());
   }
@@ -536,17 +675,22 @@ export class Game {
   // ───────── 내부 ─────────
 
   /** 뉴스별로 실제 적용된 변동률 기록 (해설 알림용) */
-  private recordApplied(newsId: string, rates: ReadonlyMap<string, number>, changes: readonly StockTickChange[]): void {
-    const map = this.applied.get(newsId) ?? new Map<string, number>();
+  private recordApplied(
+    newsId: string, rates: ReadonlyMap<string, number>, changes: readonly StockTickChange[], part: 'instant' | 'delayed',
+  ): void {
+    const map = this.applied.get(newsId) ?? new Map<string, AppliedRate>();
     for (const ch of changes) {
       if (ch.cause !== 'news' && ch.cause !== 'instant') continue;
-      if (rates.has(this.themeOf(ch.stockId))) map.set(ch.stockId, (map.get(ch.stockId) ?? 0) + ch.rate);
+      if (!rates.has(this.themeOf(ch.stockId))) continue;
+      const a = map.get(ch.stockId) ?? { instant: 0, delayed: 0 };
+      a[part] += ch.rate;
+      map.set(ch.stockId, a);
     }
     this.applied.set(newsId, map);
   }
 
   private themeOf(stockId: string): string {
-    return this.session.prices.getState(stockId).themeId;
+    return this.session.prices.peek(stockId).themeId;
   }
 
   private beginEra(index: number): EraSession {
@@ -558,7 +702,8 @@ export class Game {
     this.recaps = new Map();
     this.orders = [];
     this.stats = Game.emptyStats(this.account.cash);
-    this._eraTrades = [];
+    this._eraActions = [];
+    this.twr = startTwr(this.account.cash);
     const session = startEraSession(era, index, this.seed, this.config, this.account.cash, {
       ...(this.options.draws?.[era.id] ? { draw: this.options.draws[era.id] } : {}),
       ...(this.options.pauseOnNews ? { pauseOnNews: true } : {}),
@@ -567,7 +712,8 @@ export class Game {
     this._draws[era.id] = session.draw;
     this.session = session;
     this._phase = 'running';
-    if (this.telemetry) this.emitEraStart();
+    this.lastSavedTick = 0;
+    if (this.isRecording) this.emitEraStart();
     return session;
   }
 
@@ -595,7 +741,7 @@ export class Game {
   private order(side: 'buy' | 'sell', stockId: string, quantity: number): GameTradeResult {
     const check = this.checkTradable(stockId);
     if (check) {
-      if (this.telemetry) this.emit('trade_rejected', { side, stockId, quantity, error: check });
+      if (this.isRecording) this.emit('trade_rejected', { side, stockId, quantity, error: check });
       return { ok: false, error: check };
     }
     if (this.config.orderDelayTicks > 0) {
@@ -608,11 +754,12 @@ export class Game {
 
   private execute(side: 'buy' | 'sell', stockId: string, quantity: number): GameTradeResult {
     const price = this.session.prices.getPrice(stockId);
-    const context = this.telemetry ? this.decisionContext(stockId) : null;
+    const context = this.isRecording ? this.decisionContext(stockId) : null;
     const r = side === 'buy' ? this.account.buy(stockId, quantity, price, this.tick) : this.account.sell(stockId, quantity, price, this.tick);
     if (r.ok && side === 'buy') this.session.favorites = addFavorite(this.session.favorites, stockId);
     if (r.ok) {
-      this._eraTrades.push({ tick: this.tick, side, stockId, quantity });
+      this._eraActions.push({ kind: 'trade', tick: this.tick, side, stockId, quantity });
+      this.saveReasons.add('trade');
       const holdTicks = this.recordTradeStats(r.trade, false);
       if (context) this.emitTrade(r.trade, context, false, holdTicks);
     } else if (context) {
@@ -659,7 +806,7 @@ export class Game {
     st.peak = Math.max(st.peak, assets);
     st.trough = Math.min(st.trough, assets);
     st.maxDrawdownPct = Math.max(st.maxDrawdownPct, st.peak === 0 ? 0 : ((st.peak - assets) / st.peak) * 100);
-    if (this.telemetry && tick % this.rules.windowTicks === 0) {
+    if (this.isRecording && tick % this.rules.windowTicks === 0) {
       const holdings = this.account.getHoldings();
       this.emit('asset_snapshot', {
         cash: this.account.cash,

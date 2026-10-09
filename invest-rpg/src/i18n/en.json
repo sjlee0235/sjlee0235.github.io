@@ -55,7 +55,11 @@
     "byStock": "P/L by stock",
     "liquidated": "All holdings were automatically sold at the current price.",
     "nextEra": "Next era",
-    "formula": "Return = (final assets − starting cash) ÷ starting cash"
+    "formula": "Returns are time-weighted. Money added mid-era (deposits) is not counted as profit; the era is split at each deposit and the segment returns are multiplied.",
+    "profitAmount": "Net profit (excluding deposits)",
+    "deposits": "Deposits this era",
+    "cumulative": "Cumulative return",
+    "versionChange": "The game was updated, so this era was settled at the prices from your last save. The new version applies from the next era."
   },
   "news": {
     "type": {
@@ -65,18 +69,6 @@
       "outcome": "Outcome"
     },
     "fictionalTag": "Fictional scenario",
-    "relatedThemes": "Related themes",
-    "positive": "Positive",
-    "negative": "Negative",
-    "kind": {
-      "direct": "Direct effect",
-      "indirect": "Indirect effect"
-    },
-    "strength": {
-      "3": "Direct",
-      "2": "Close",
-      "1": "Indirect"
-    },
     "reaction": "Market reaction",
     "archive": "News archive",
     "relatedTentative": "Related tentative news"
@@ -89,13 +81,14 @@
     "burden": "is burdened",
     "more": "+{count} more",
     "firstNotice": "Recap figures are what actually moved inside the game. They are not real market data or investment advice.",
-    "tentativeNote": "This was a tentative report, so the effect was small. The outcome report may change things a lot."
+    "tentativeNote": "This was a tentative report, so the effect was small. The outcome report may change things a lot.",
+    "split": "On announcement {instant} · 5s later {delayed} · Total {total}"
   },
   "tutorial": {
     "title": "New here?",
     "notice1": "News arrives without warning. Within an era, news items have no time order or connection, and even major historical events may not appear in this round.",
     "notice2": "Only a 'tentative report' and its 'outcome report' about the same event are connected.",
-    "notice3": "News moves prices right after it is announced, so preparing by studying ahead works better than buying after you read it.",
+    "notice3": "Most of a news story's effect hits the price the moment it is announced, and the rest a few seconds later, so studying ahead works better than buying after you read it.",
     "notice4": "The reaction rates on screen are fictional in-game numbers. They are not the real market or investment advice.",
     "stepWaiting": "News is coming soon. Please wait a moment.",
     "stepReading": "News is out! Time stops during the tutorial. Try buying a related stock.",
@@ -106,5 +99,38 @@
   },
   "disclaimer": {
     "fictional": "This is a fictional scenario based on real events and is not investment advice."
+  },
+  "deposit": {
+    "work": "Doll-eye work",
+    "purchase": "Top-up",
+    "ad": "Ad reward",
+    "other": "Other",
+    "done": "{amount} bits added ({source})."
+  },
+  "debrief": {
+    "title": "{era} Review",
+    "themes": "Themes this round",
+    "sentiment": "Era mood",
+    "relevance": "Weight",
+    "stories": "Tentative news and outcomes",
+    "clue": "Where the clue pointed",
+    "actual": "What happened",
+    "followed": "It went the way the clue pointed",
+    "notFollowed": "It went against the clue",
+    "allRecaps": "All news explanations",
+    "positive": "Positive",
+    "negative": "Negative",
+    "strength": {
+      "3": "Direct",
+      "2": "Close",
+      "1": "Indirect"
+    },
+    "relatedThemes": "Affected stocks"
+  },
+  "telemetry": {
+    "consentTitle": "Play data consent",
+    "consentBody": "We'd like to collect play data (trades, screen time, etc.) to improve game balance. We never collect your name, contact info, or device IDs. You can play the same way without agreeing.",
+    "agree": "Agree",
+    "decline": "Don't agree"
   }
 }

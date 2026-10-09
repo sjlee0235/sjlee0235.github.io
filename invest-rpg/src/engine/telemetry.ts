@@ -3,10 +3,11 @@
 // 원칙
 // 1) 엔진은 "무슨 일이 있었는지"만 이벤트로 내보낸다. 저장·전송(서버)은 화면/앱 쪽 일이다.
 //    엔진은 TelemetrySink(받는 곳) 인터페이스에 record()만 호출한다. 붙이지 않으면 아무것도 기록하지 않는다.
+// 1-1) 기본은 꺼짐. 플레이어가 동의해 setConsent(true)가 된 뒤에만 기록을 내보낸다 (sink를 붙여도 동의 전엔 없음).
 // 2) 가격은 기록하지 않는다. 같은 시드 + 같은 엔진 버전 + 같은 밸런스 설정이면 가격·뉴스가 똑같이 재현되므로,
 //    "플레이어의 선택"(매매·화면 행동)과 판의 조건만 남기면 나머지는 다시 계산(리플레이)할 수 있다.
 //    → 데이터가 작고, 나중에 새 지표를 만들어도 옛 기록으로 다시 계산할 수 있다.
-// 3) 개인 정보는 담지 않는다. 플레이어 구분은 앱이 만든 무작위 설치 id로만 한다 (엔진은 모름).
+// 3) 개인을 식별할 수 있는 정보·기기 고유 ID는 담지 않는다. 플레이어 구분이 필요하면 앱이 만든 무작위 설치 id만 쓴다 (엔진은 모름).
 // 4) 시각: 엔진 이벤트는 "틱"만 안다. 실제 시각(ms)은 앱이 sink에서 clientMs로 덧붙인다.
 //
 // 이벤트는 크게 두 종류
@@ -16,22 +17,30 @@
 import type { GameConfig } from './config.ts';
 
 /** 이벤트 형식 버전. 필드 의미가 바뀌면 올린다 */
-export const TELEMETRY_SCHEMA_VERSION = 1;
+export const TELEMETRY_SCHEMA_VERSION = 2;
 /**
  * 엔진 규칙 버전. 같은 시드에서 가격·뉴스가 달라지는 변경(규칙·난수 순서)이 생기면 올린다.
  * 분석할 때 이 값이 다른 기록끼리는 리플레이 결과를 섞지 않는다.
  */
-export const ENGINE_VERSION = '0.3.0';
+export const ENGINE_VERSION = '0.4.0';
+
+/** 어떤 값이든 짧은 지문(해시) 문자열로. 키 순서가 달라도 같은 값이면 같은 지문 */
+export function fingerprint(value: unknown): string {
+  const text = stableStringify(value);
+  // FNV-1a 두 갈래로 64비트 정도의 지문을 만든다 (우연히 겹칠 확률을 낮추려고)
+  let h1 = 0x811c9dc5;
+  let h2 = 0x01000193 ^ text.length;
+  for (let i = 0; i < text.length; i++) {
+    const c = text.charCodeAt(i);
+    h1 = Math.imul(h1 ^ c, 0x01000193);
+    h2 = Math.imul(h2 ^ c, 0x5bd1e995);
+  }
+  return (h1 >>> 0).toString(16).padStart(8, '0') + (h2 >>> 0).toString(16).padStart(8, '0');
+}
 
 /** 설정값 전체의 짧은 지문(해시). 밸런스 패치 전후 기록을 나누는 데 쓴다 */
 export function balanceHash(config: GameConfig): string {
-  const text = stableStringify(config);
-  let h = 0x811c9dc5;
-  for (let i = 0; i < text.length; i++) {
-    h ^= text.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return (h >>> 0).toString(16).padStart(8, '0');
+  return fingerprint(config);
 }
 
 function stableStringify(v: unknown): string {
@@ -44,6 +53,11 @@ function stableStringify(v: unknown): string {
 }
 
 // ───────── 엔진 이벤트 ─────────
+
+/** 시대 안에서 플레이어가 한 행동 (세이브·리플레이용) */
+export type SavedActionData =
+  | { kind: 'trade'; tick: number; side: 'buy' | 'sell'; stockId: string; quantity: number }
+  | { kind: 'deposit'; tick: number; amount: number; source: 'work' | 'purchase' | 'ad' | 'other' };
 
 /** 종목 하나에 실제 적용된 변동률 (0.1% 단위) */
 export interface StockRate {
@@ -89,8 +103,10 @@ export interface EngineEventMap {
     restored: boolean;
     /** 이어 하기: 이어 한 틱 (처음부터면 null) */
     resumeTick: number | null;
-    /** 이어 하기: 그 시대에서 이어 하기 전에 한 매매 (리플레이용) */
-    priorTrades: { tick: number; side: 'buy' | 'sell'; stockId: string; quantity: number }[];
+    /** 이어 하기(또는 판 도중 기록 동의): 그 시대에서 기록 시작 전에 한 매매·입금 (리플레이용) */
+    priorActions: SavedActionData[];
+    /** 이전 시대들의 수익률 (누적 수익률 계산용) */
+    pastEraReturns: number[];
   };
   /** 시대 시작과 그 판의 추첨 결과 */
   era_start: {
@@ -136,6 +152,8 @@ export interface EngineEventMap {
     auto: boolean;
     context: DecisionContext;
   };
+  /** 외부 유입 입금. inEra=false면 시대 사이(정산 뒤) 입금이라 다음 시대 시작 자금에 들어간다 */
+  deposit: { amount: number; source: 'work' | 'purchase' | 'ad' | 'other'; cashAfter: number; inEra: boolean };
   /** 거부된 주문 (잔고 부족 등). 화면이 헷갈리게 만드는 곳을 찾는 데 쓴다 */
   trade_rejected: { side: 'buy' | 'sell'; stockId: string; quantity: number; error: string };
   favorite_toggled: { stockId: string; on: boolean };
@@ -158,6 +176,9 @@ export interface EngineEventMap {
     maxDrawdownPct: number;
     /** 종목을 하나라도 들고 있던 틱의 비율 (0~1) */
     investedShare: number;
+    /** 입금을 뺀 순손익, 출처별 입금 합계 */
+    profitAmount: number;
+    deposits: { work: number; purchase: number; ad: number; other: number };
   };
 }
 

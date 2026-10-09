@@ -30,6 +30,21 @@ export interface TradeRecord {
   tick?: number;
 }
 
+/** 외부 유입(입금) 출처: 인형 눈 붙이기 / 결제 / 광고 보상 / 기타 */
+export type DepositSource = 'work' | 'purchase' | 'ad' | 'other';
+export const DEPOSIT_SOURCES: readonly DepositSource[] = ['work', 'purchase', 'ad', 'other'];
+
+export interface DepositRecord {
+  /** 입금 일련번호 (1부터) */
+  seq: number;
+  amount: number;
+  source: DepositSource;
+  /** 입금된 틱 (기록용) */
+  tick?: number;
+}
+
+export type DepositResult = { ok: true; deposit: DepositRecord } | { ok: false; error: 'invalid-amount' | 'invalid-source' };
+
 export type TradeError =
   | 'invalid-quantity' // 0 이하 또는 정수가 아님
   | 'invalid-price'
@@ -85,7 +100,9 @@ export class Account {
   private readonly holdings = new Map<string, Holding>();
   private readonly performance = new Map<string, StockPerformance>();
   private readonly trades: TradeRecord[] = [];
+  private readonly deposits: DepositRecord[] = [];
   private seq = 0;
+  private depositSeq = 0;
 
   constructor(cash: number, feeRate = 0) {
     this.cash = cash;
@@ -149,6 +166,33 @@ export class Account {
     };
   }
 
+  /**
+   * 외부 유입 입금 (인형 눈 붙이기·결제·광고 보상 등). 현금만 늘어난다.
+   * 수익률 계산에서 입금은 "벌어들인 돈"이 아니므로 시간가중수익률로 따로 처리한다 (game.ts).
+   */
+  deposit(amount: number, source: DepositSource, tick?: number): DepositResult {
+    if (!Number.isInteger(amount) || amount <= 0) return { ok: false, error: 'invalid-amount' };
+    if (!DEPOSIT_SOURCES.includes(source)) return { ok: false, error: 'invalid-source' };
+    this.cash += amount;
+    const record: DepositRecord = { seq: ++this.depositSeq, amount, source };
+    if (tick !== undefined) record.tick = tick;
+    this.deposits.push(record);
+    return { ok: true, deposit: { ...record } };
+  }
+
+  getDeposits(): DepositRecord[] {
+    return this.deposits.map((d) => ({ ...d }));
+  }
+
+  /** (세이브 정산용) 저장된 현금·보유 종목·성과로 계좌를 되돌린다 */
+  restoreState(state: { cash: number; holdings: readonly Holding[]; performance: readonly StockPerformance[] }): void {
+    this.cash = state.cash;
+    this.holdings.clear();
+    for (const h of state.holdings) this.holdings.set(h.stockId, { ...h });
+    this.performance.clear();
+    for (const p of state.performance) this.performance.set(p.stockId, { ...p });
+  }
+
   /** 보유 종목 전부를 주어진 가격으로 매도 (시대 종료 자동 청산) */
   liquidateAll(prices: ReadonlyMap<string, number>, tick?: number): TradeRecord[] {
     const out: TradeRecord[] = [];
@@ -186,7 +230,9 @@ export class Account {
     this.holdings.clear();
     this.performance.clear();
     this.trades.length = 0;
+    this.deposits.length = 0;
     this.seq = 0;
+    this.depositSeq = 0;
   }
 
   /** 새 시대 시작 시 호출: 종목별 성과 기록을 비운다 (현금·거래 기록은 유지) */

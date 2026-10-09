@@ -135,7 +135,10 @@ describe('해설 알림', () => {
         const abs = n.items.map((i) => Math.abs(i.appliedPct));
         expect([...abs].sort((a, b) => b - a)).toEqual(abs);
         const actual = applied.get(n.newsId)!;
-        for (const it of n.items) expect(it.appliedPct).toBeCloseTo(actual.get(it.stockId)! / 10, 9);
+        for (const it of n.items) {
+          expect(it.appliedPct).toBeCloseTo(actual.get(it.stockId)! / 10, 9);
+          expect(it.appliedPct).toBeCloseTo(it.instantPct + it.delayedPct, 9);
+        }
         expect(n.items.length + n.moreCount).toBe(actual.size);
         const shown = game.shownNews.find((s) => s.news.id === n.newsId)!;
         expect(n.tentativeNote).toBe(shown.kind === 'tentative');
@@ -168,19 +171,15 @@ describe('해설 알림', () => {
   });
 });
 
-describe('팝업 데이터와 가상 시나리오', () => {
-  it('결과 뉴스 팝업에 isHistorical, 잠정 뉴스 연결, 관련 테마(강도) 포함', () => {
+describe('가상 시나리오 결과', () => {
+  it('[시드 20개] 결과 뉴스 중 일부는 가상 시나리오(isHistorical=false)로 나오고, 잠정 뉴스와 연결된다', () => {
     let sawFictional = false;
     for (let seed = 1; seed <= 20; seed++) {
       const game = newGame(seed);
       runToEnd(game);
-      for (const s of game.shownNews) {
-        const p = game.getNewsPopup(s);
-        expect(p.relatedThemes.length).toBe(s.news.effects.length);
-        if (s.kind === 'outcome') {
-          expect(p.relatedTentativeId).toBeDefined();
-          if (!p.isHistorical) sawFictional = true;
-        }
+      for (const s of game.shownNews.filter((x) => x.kind === 'outcome')) {
+        expect(s.relatedTentativeId).toBeDefined();
+        if (!s.isHistorical) sawFictional = true;
       }
     }
     expect(sawFictional).toBe(true);

@@ -12,9 +12,14 @@ describe('다국어', () => {
     expect(flatKeys(MESSAGES.en).sort()).toEqual(flatKeys(MESSAGES.ko).sort());
   });
 
-  it('연습 모드·광고 관련 키가 남아 있지 않다', () => {
+  it('연습 모드·옛 광고 보상 모드 키가 남아 있지 않다 (입금 출처 "광고 보상"은 새 기능이라 허용)', () => {
     const keys = flatKeys(MESSAGES.ko).join(' ');
-    expect(keys).not.toMatch(/\bmode\.|\bad\.|newsGuide|hint|deposits/);
+    expect(keys).not.toMatch(/\bmode\.|(^|\s)ad\.|practice|newsGuide|hint/);
+  });
+
+  it('호재/악재 방향을 직접 알려주는 문구는 플레이 중 화면 키(news.*)에 두지 않는다', () => {
+    expect(flatKeys(MESSAGES.ko).filter((k) => k.startsWith('news.'))).not.toContain('news.positive');
+    expect(flatKeys(MESSAGES.ko).filter((k) => k.startsWith('news.'))).not.toContain('news.negative');
   });
 
   it('엔진의 오류 코드마다 문구가 있다', () => {

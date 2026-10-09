@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { makeConfig } from '../src/engine/config.ts';
 import { Game } from '../src/engine/game.ts';
-import { replay, tradesFromEvents } from '../src/engine/replay.ts';
-import { createSaveData, restoreGame, saveGame } from '../src/engine/save.ts';
+import { actionsFromEvents, replay } from '../src/engine/replay.ts';
+import { createSaveData, restoreGame, saveGame, setTelemetryConsent } from '../src/engine/save.ts';
 import {
   balanceHash, ENGINE_VERSION, fromJsonLines, TelemetryBuffer, toJsonLines,
   type EngineEventMap, type TelemetryEvent,
@@ -16,7 +16,7 @@ const ofType = <K extends keyof EngineEventMap>(events: TelemetryEvent[], type: 
 
 /** 뉴스가 뜨면 가장 큰 호재 종목을 사고, 다음 뉴스 때 판다. 가끔 일부러 실패하는 주문도 낸다 */
 function playWithBot(seed: number, buffer: TelemetryBuffer | null) {
-  const game = new Game({ eras: [era], seed, ...(buffer ? { telemetry: buffer } : {}) });
+  const game = new Game({ eras: [era], seed, ...(buffer ? { telemetry: buffer, telemetryConsent: true } : {}) });
   while (game.phase !== 'era-ended') {
     const r = game.advanceTick();
     if (!r.advanced || r.settlement) continue;
@@ -99,7 +99,7 @@ describe('플레이 기록 (텔레메트리)', () => {
       const buf = new TelemetryBuffer();
       const game = playWithBot(seed, buf);
       const r = replay(buf.peek(), [era]);
-      expect(r.failedTrades).toBe(0);
+      expect(r.failedActions).toBe(0);
       expect(r.returns[0]).toBe(game.settlements[0]!.returnPct);
       // 가정 비교: 매매를 하나도 안 했다면 수익 0%
       expect(replay(buf.peek(), [era], {}, []).returns[0]).toBe(0);
@@ -111,12 +111,12 @@ describe('플레이 기록 (텔레메트리)', () => {
     playWithBot(14, buf);
     const events = buf.peek();
     expect(fromJsonLines(toJsonLines(events))).toEqual(events);
-    expect(tradesFromEvents(fromJsonLines(toJsonLines(events))).length).toBeGreaterThan(0);
+    expect(actionsFromEvents(fromJsonLines(toJsonLines(events))).length).toBeGreaterThan(0);
   });
 
   it('화면 이벤트 track(): 지금 시대·틱과 실제 시각(clientMs)을 붙여 기록', () => {
     const buf = new TelemetryBuffer();
-    const game = new Game({ eras: [era], seed: 1, telemetry: buf });
+    const game = new Game({ eras: [era], seed: 1, telemetry: buf, telemetryConsent: true });
     for (let i = 0; i < 5; i++) game.advanceTick();
     game.track('screen_view', { screen: 'chart', dwellMs: 3200, targetId: game.activeStocks[0]!.id }, 1_700_000_000_000);
     const last = buf.peek().at(-1)!;
@@ -127,7 +127,7 @@ describe('플레이 기록 (텔레메트리)', () => {
 
   it('일시정지·재개, 관심 종목 토글도 기록', () => {
     const buf = new TelemetryBuffer();
-    const game = new Game({ eras: [era], seed: 1, telemetry: buf });
+    const game = new Game({ eras: [era], seed: 1, telemetry: buf, telemetryConsent: true });
     game.suspend();
     game.suspend();
     game.resume();
@@ -151,7 +151,7 @@ describe('플레이 기록 (텔레메트리)', () => {
 
   it('튜토리얼: mode=tutorial, 단계 진입이 순서대로 기록된다', () => {
     const buf = new TelemetryBuffer();
-    const tut = new TutorialSession({}, { telemetry: buf });
+    const tut = new TutorialSession({}, { telemetry: buf, telemetryConsent: true });
     while (tut.stage === 'waiting') tut.advanceTick();
     tut.confirmNews();
     while (tut.stage === 'reaction') tut.advanceTick();
@@ -165,7 +165,66 @@ describe('플레이 기록 (텔레메트리)', () => {
   it('세이브에서 이어 하기: restored=true', () => {
     const game = new Game({ eras: [era], seed: 2 });
     const buf = new TelemetryBuffer();
-    restoreGame(saveGame(createSaveData(), game), [era], undefined, { telemetry: buf });
+    restoreGame(setTelemetryConsent(saveGame(createSaveData(), game), true), [era], undefined, { telemetry: buf });
     expect(buf.peek()[0]!.data).toMatchObject({ restored: true, seed: 2 });
+  });
+
+  it('동의 전에는 기록 통을 붙여도 아무것도 나가지 않는다 (기본 꺼짐)', () => {
+    const buf = new TelemetryBuffer();
+    const game = new Game({ eras: [era], seed: 1, telemetry: buf });
+    for (let i = 0; i < 50; i++) game.advanceTick();
+    game.buy(game.activeStocks[0]!.id, 1);
+    game.track('screen_view', { screen: 'market', dwellMs: 10 });
+    expect(game.isRecording).toBe(false);
+    expect(buf.size).toBe(0);
+  });
+
+  it('판 도중 동의하면 그때부터 기록하고, 그 전 행동도 game_start에 담겨 리플레이된다', () => {
+    const buf = new TelemetryBuffer();
+    const game = new Game({ eras: [era], seed: 21, telemetry: buf });
+    for (let i = 0; i < 100; i++) game.advanceTick();
+    game.buy(game.activeStocks[2]!.id, 3);
+    game.deposit(2_000, 'purchase');
+    game.setConsent(true);
+    expect(buf.peek()[0]!.type).toBe('game_start');
+    expect((buf.peek()[0]!.data as EngineEventMap['game_start']).priorActions).toHaveLength(2);
+    while (game.phase === 'running') game.advanceTick();
+    const r = replay(buf.peek(), [era]);
+    expect(r.failedActions).toBe(0);
+    expect(r.returns[0]).toBe(game.settlements[0]!.returnPct);
+    // 동의 철회 → 더 기록하지 않음
+    const n = buf.size;
+    game.setConsent(false);
+    game.track('screen_view', { screen: 'market', dwellMs: 10 });
+    expect(buf.size).toBe(n);
+  });
+
+  it('기록에는 개인·기기 식별 정보 필드가 없다', () => {
+    const buf = new TelemetryBuffer();
+    playWithBot(22, buf);
+    const keys = new Set<string>();
+    const walk = (v: unknown) => {
+      if (Array.isArray(v)) v.forEach(walk);
+      else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) { keys.add(k.toLowerCase()); walk(x); }
+    };
+    walk(buf.peek());
+    for (const banned of ['name', 'email', 'phone', 'deviceid', 'idfa', 'adid', 'imei', 'ip', 'location', 'userid']) {
+      expect(keys.has(banned)).toBe(false);
+    }
+  });
+
+  it('입금 기록도 리플레이된다', () => {
+    const buf = new TelemetryBuffer();
+    const game = new Game({ eras: [era], seed: 23, telemetry: buf, telemetryConsent: true });
+    while (game.phase === 'running') {
+      const r = game.advanceTick();
+      if (r.advanced && r.tick === 200) game.buy(game.activeStocks[1]!.id, 5);
+      if (r.advanced && r.tick === 300) game.deposit(5_000, 'ad');
+    }
+    game.deposit(700, 'work'); // 시대가 끝난 뒤 입금
+    expect(buf.peek().filter((e) => e.type === 'deposit')).toHaveLength(2);
+    const r = replay(buf.peek(), [era]);
+    expect(r.failedActions).toBe(0);
+    expect(r.game.account.cash).toBe(game.account.cash);
   });
 });

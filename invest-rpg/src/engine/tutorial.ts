@@ -9,6 +9,7 @@ import tutorialEra from '../data/tutorial.json' with { type: 'json' };
 import type { GameConfig } from './config.ts';
 import type { EraDraw } from './eraDraw.ts';
 import { Game } from './game.ts';
+import { PublicGame } from './publicView.ts';
 import type { RecapNotice } from './recap.ts';
 import type { TelemetrySink } from './telemetry.ts';
 
@@ -28,13 +29,16 @@ export const TUTORIAL_NEWS_TICK = 6;
 export type TutorialStage = 'waiting' | 'reading' | 'reaction' | 'recap' | 'done';
 
 export class TutorialSession {
+  /** 엔진 내부용 (테스트·데모). 화면은 view만 쓴다 */
   readonly game: Game;
+  /** 화면용 공개 뷰 */
+  readonly view: PublicGame;
   recap: RecapNotice | null = null;
   private finished = false;
 
   private lastStage: TutorialStage | null = null;
 
-  constructor(config: Partial<GameConfig> = {}, options: { telemetry?: TelemetrySink } = {}) {
+  constructor(config: Partial<GameConfig> = {}, options: { telemetry?: TelemetrySink; telemetryConsent?: boolean } = {}) {
     const draw: EraDraw = {
       eraId: TUTORIAL_ERA.id,
       seed: TUTORIAL_SEED,
@@ -52,10 +56,12 @@ export class TutorialSession {
       draws: { [TUTORIAL_ERA.id]: draw },
       pauseOnNews: true,
       ...(options.telemetry ? { telemetry: options.telemetry, telemetryMode: 'tutorial' as const } : {}),
+      telemetryConsent: options.telemetryConsent ?? false,
       fixedSchedule: (active) => [
         { tick: TUTORIAL_NEWS_TICK, news: active.breaking[0]!, kind: 'breaking', tag: 'breaking', isHistorical: false },
       ],
     });
+    this.view = PublicGame.wrap(this.game);
   }
 
   get stage(): TutorialStage {

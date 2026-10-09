@@ -239,6 +239,12 @@ export class PriceEngine {
     return this.require(stockId).history.map((p) => ({ ...p }));
   }
 
+  /** 이력 복사 없이 가벼운 현재 상태 (자주 부르는 곳용) */
+  peek(stockId: string): { themeId: string; price: number; openPrice: number; lastRate: number } {
+    const s = this.require(stockId);
+    return { themeId: s.themeId, price: s.price, openPrice: s.openPrice, lastRate: s.lastRate };
+  }
+
   getState(stockId: string): Readonly<StockPriceState> {
     const s = this.require(stockId);
     return { ...s, history: s.history.map((p) => ({ ...p })) };

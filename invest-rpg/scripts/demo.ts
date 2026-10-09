@@ -5,7 +5,8 @@
 // 등록된 시대 데이터가 없으면(단계 B 전) 가상 시대로 돈다.
 
 import { ALL_ERAS } from '../src/data/eras/index.ts';
-import { Game } from '../src/engine/game.ts';
+import type { Game } from '../src/engine/game.ts';
+import { PublicGame } from '../src/engine/publicView.ts';
 import type { RecapNotice } from '../src/engine/recap.ts';
 import { TutorialSession } from '../src/engine/tutorial.ts';
 import { localize, t } from '../src/i18n/index.ts';
@@ -49,21 +50,33 @@ if (process.argv[2] === 'tutorial') {
   printRecap(tut.game, tut.recap!);
   console.log(`\n${t('ko', 'tutorial.done')}`);
 } else {
+  // 화면과 똑같이 공개용 뷰(PublicGame)만 써서 진행한다
   const seed = Number(process.argv[2] ?? 42);
   const eras = ALL_ERAS.length > 0 ? ALL_ERAS : [makeSpecEra({ id: 'spec' })];
-  const game = new Game({ eras, seed });
+  const game = PublicGame.create({ eras, seed });
   if (ALL_ERAS.length === 0) console.log('※ 등록된 시대 데이터가 없어 가상 시대로 돌립니다 (단계 B 전).');
-  console.log(`\n=== ${localize(game.era.displayName, 'ko')} | 시드 ${seed} | 추첨 ${game.draw.attempt + 1}회째 | 활성 테마 20개 ===`);
+  console.log(`\n=== ${localize(game.eraName, 'ko')} | 시드 ${seed} | 종목 20개 (가나다순 앞 3개: ${game.getStockList().slice(0, 3).map((s) => s.name.ko).join(', ')}) ===`);
+  let shown = 0;
   while (game.phase !== 'era-ended') {
     const r = game.advanceTick();
     if (!r.advanced) continue;
     if (r.news) {
-      const p = game.getNewsPopup(r.news);
-      console.log(`[${clock(r.tick)}] (${TYPE[r.news.kind]}) ${r.news.news.title.ko}${p.isHistorical ? '' : ` [${t('ko', 'news.fictionalTag')}]`} — 관련 테마 ${p.relatedThemes.length}개, 발표 즉시 반영 ${r.instantChanges.length}종목`);
+      shown++;
+      const tag = r.news.fictional ? ` [${t('ko', 'news.fictionalTag')}]` : '';
+      console.log(`[${clock(r.tick)}] (${TYPE[r.news.kind]}) ${r.news.title.ko}${tag}`);
     }
-    for (const rc of r.recaps) printRecap(game, rc);
+    for (const rc of r.recaps) {
+      console.log(`[${clock(rc.recapTick)}] 해설 알림`);
+      for (const it of rc.items) {
+        const reason = it.reason?.ko ?? t('ko', 'recap.auto', { newsTerm: it.auto.newsTerm, theme: it.auto.industry.ko, effect: t('ko', it.auto.positive ? 'recap.benefit' : 'recap.burden') });
+        console.log(`           ${it.stockName.ko} ${t('ko', 'recap.split', { instant: signed(it.instantPct), delayed: signed(it.delayedPct), total: signed(it.appliedPct) })} — ${reason}`);
+      }
+      if (rc.moreCount > 0) console.log(`           ${t('ko', 'recap.more', { count: rc.moreCount })}`);
+      if (rc.tentativeNote) console.log(`           (${t('ko', 'recap.tentativeNote')})`);
+    }
     if (r.settlement) console.log(`\n=== 시대 마감 — 시작 ${n(r.settlement.startCash)} → 종료 ${n(r.settlement.endAssets)} 비트 (${signed(r.settlement.returnPct)}) ===`);
   }
-  const shown = game.shownNews;
-  console.log(`뉴스 ${shown.length}개: 속보 ${shown.filter((s) => s.kind === 'breaking').length}, 잠정 ${shown.filter((s) => s.kind === 'tentative').length}, 결과 ${shown.filter((s) => s.kind === 'outcome').length}`);
+  const d = game.getEraDebrief();
+  console.log(`뉴스 ${shown}개. 시대 종료 후 공개: 스토리 ${d.stories.length}개 중 단서대로 ${d.stories.filter((s) => s.followedLean).length}개`);
+  for (const s of d.stories.slice(0, 3)) console.log(`  · ${s.tentative.title.ko} → ${s.followedLean ? '단서대로' : '단서와 반대로'}${s.isHistorical ? '' : ' (가상 시나리오)'}`);
 }

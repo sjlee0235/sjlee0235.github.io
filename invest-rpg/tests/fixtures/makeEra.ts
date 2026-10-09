@@ -93,17 +93,40 @@ function buildEffects(targets: Theme[], magnitude: number, signs: (1 | -1)[]): N
   });
 }
 
+/** 종목명 수식어: 색·사물·자연물처럼 평가·전망 어감이 없는 2글자 단어 */
+export const NEUTRAL_MODIFIERS: { ko: string; en: string }[] = [
+  ['하늘', 'Sky'], ['바다', 'Sea'], ['노을', 'Dusk'], ['구름', 'Cloud'], ['파랑', 'Blue'], ['초록', 'Green'],
+  ['은빛', 'Silver'], ['검정', 'Black'], ['하양', 'White'], ['노랑', 'Yellow'], ['보라', 'Violet'], ['주황', 'Orange'],
+  ['솔잎', 'Pine'], ['단풍', 'Maple'], ['갈대', 'Reed'], ['들꽃', 'Wildflower'], ['이슬', 'Dew'], ['안개', 'Mist'],
+  ['모래', 'Sand'], ['자갈', 'Pebble'], ['호수', 'Lake'], ['강물', 'River'], ['새벽', 'Dawn'], ['저녁', 'Evening'],
+  ['돛배', 'Sailboat'], ['등대', 'Lighthouse'], ['연필', 'Pencil'], ['우산', 'Umbrella'], ['종이', 'Paper'], ['유리', 'Glass'],
+  ['평화', 'Peace'], ['온유', 'Gentle'], ['고요', 'Calm'], ['물결', 'Wave'], ['바람', 'Wind'], ['별빛', 'Starlight'],
+].map(([ko, en]) => ({ ko: ko!, en: en! }));
+
+const INDUSTRIES: { ko: string; en: string }[] = [
+  ['반도체', 'Chips'], ['조선', 'Shipyards'], ['철강', 'Steel'], ['정유', 'Refining'], ['제약', 'Pharma'], ['건설', 'Builders'],
+  ['통신', 'Telecom'], ['항공', 'Airlines'], ['해운', 'Shipping'], ['은행', 'Bank'], ['증권', 'Securities'], ['보험', 'Insurance'],
+  ['게임', 'Games'], ['식품', 'Foods'], ['화학', 'Chemicals'], ['자동차', 'Motors'], ['부품', 'Parts'], ['전자', 'Electronics'],
+  ['방산', 'Defense'], ['유통', 'Retail'], ['여행', 'Travel'], ['교육', 'Education'], ['포털', 'Portal'], ['소프트', 'Software'],
+  ['바이오', 'Bio'], ['태양광', 'Solar'], ['풍력', 'Wind Power'], ['전지', 'Cells'], ['디스플레이', 'Display'], ['광고', 'Ads'],
+  ['패션', 'Fashion'], ['가구', 'Furniture'], ['제지', 'Paper Mills'], ['비료', 'Fertilizer'], ['물류', 'Logistics'], ['화장품', 'Cosmetics'],
+].map(([ko, en]) => ({ ko: ko!, en: en! }));
+
 /** 기획 조건을 흉내 낸 가상 시대 */
 export function makeSpecEra(options: SpecEraOptions = {}): Era {
   const id = options.id ?? 'spec';
   const rng = createRng(deriveSeed(options.seed ?? 1, 'spec-era', id));
   const bias = options.sentimentBias ?? 0.75;
   const themes = themeList(id, rng);
+  // 종목명: "2글자 중립 수식어 + 업종". 풀 순서와 상관없도록 따로 섞는다 (데이터 생성 난수와 분리)
+  const nameRng = createRng(deriveSeed(options.seed ?? 1, 'spec-names', id));
+  const mods = shuffle(NEUTRAL_MODIFIERS, nameRng);
+  const inds = shuffle(INDUSTRIES, nameRng);
   const stocks: Stock[] = themes.map((t, i) => ({
     id: `${id}-s${i}`,
     themeId: t.id,
-    name: { ko: `가상 종목${i}`, en: `Fake ${i}` },
-    description: { ko: '테스트용 종목', en: 'Test stock' },
+    name: { ko: `${mods[i]!.ko} ${inds[i]!.ko}`, en: `${mods[i]!.en} ${inds[i]!.en}` },
+    description: { ko: '테스트용 가상 회사다.', en: 'A test company.' },
   }));
 
   const breaking = Array.from({ length: options.breakingCount ?? 14 }, (_, i) => {
