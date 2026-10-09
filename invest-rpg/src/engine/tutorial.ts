@@ -10,6 +10,7 @@ import type { GameConfig } from './config.ts';
 import type { EraDraw } from './eraDraw.ts';
 import { Game } from './game.ts';
 import type { RecapNotice } from './recap.ts';
+import type { TelemetrySink } from './telemetry.ts';
 
 export const TUTORIAL_SEED = 20_000_101;
 export const TUTORIAL_ERA = tutorialEra as Era;
@@ -31,7 +32,9 @@ export class TutorialSession {
   recap: RecapNotice | null = null;
   private finished = false;
 
-  constructor(config: Partial<GameConfig> = {}) {
+  private lastStage: TutorialStage | null = null;
+
+  constructor(config: Partial<GameConfig> = {}, options: { telemetry?: TelemetrySink } = {}) {
     const draw: EraDraw = {
       eraId: TUTORIAL_ERA.id,
       seed: TUTORIAL_SEED,
@@ -48,6 +51,7 @@ export class TutorialSession {
       config: { eraSeconds: 300, ...config },
       draws: { [TUTORIAL_ERA.id]: draw },
       pauseOnNews: true,
+      ...(options.telemetry ? { telemetry: options.telemetry, telemetryMode: 'tutorial' as const } : {}),
       fixedSchedule: (active) => [
         { tick: TUTORIAL_NEWS_TICK, news: active.breaking[0]!, kind: 'breaking', tag: 'breaking', isHistorical: false },
       ],
@@ -66,15 +70,27 @@ export class TutorialSession {
   advanceTick() {
     const r = this.game.advanceTick();
     if (r.advanced && r.recaps.length > 0) this.recap = r.recaps[0]!;
+    this.trackStage();
     return r;
   }
 
   confirmNews() {
-    return this.game.confirmNews();
+    const s = this.game.confirmNews();
+    this.trackStage();
+    return s;
   }
 
   /** 튜토리얼 끝. 세이브의 tutorialCompleted는 save.ts의 markTutorialCompleted로 따로 기록 */
   finish(): void {
     this.finished = true;
+    this.game.track('tutorial_step', { step: 'done', action: 'complete' });
+  }
+
+  /** 단계가 바뀌면 기록 (어느 단계에서 이탈하는지 보기 위해) */
+  private trackStage(): void {
+    const stage = this.stage;
+    if (stage === this.lastStage) return;
+    this.lastStage = stage;
+    this.game.track('tutorial_step', { step: stage, action: 'enter' });
   }
 }

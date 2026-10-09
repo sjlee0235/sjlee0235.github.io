@@ -22,6 +22,11 @@ import { settleEra, sortEras, startEraSession, type EraSession, type EraSettleme
 import type { NewsTag, ScheduledKind, ScheduledNews } from './newsEngine.ts';
 import type { PricePoint, StockTickChange } from './priceEngine.ts';
 import { buildRecap, type RecapNotice } from './recap.ts';
+import {
+  balanceHash, ENGINE_VERSION, TELEMETRY_SCHEMA_VERSION,
+  type AppEventMap, type AppEventType, type DecisionContext, type EngineEventMap, type StockRate,
+  type TelemetryEvent, type TelemetrySink,
+} from './telemetry.ts';
 import { addFavorite, sortByFavorites, toggleFavorite } from './watchlist.ts';
 
 export type GamePhase = 'running' | 'news' | 'era-ended' | 'finished';
@@ -40,6 +45,26 @@ export interface GameOptions {
   pauseOnNews?: boolean;
   /** (튜토리얼) 고정 뉴스 일정 */
   fixedSchedule?: (active: ActiveEra) => ScheduledNews[];
+  /** 플레이 기록을 받을 곳 (없으면 기록하지 않음). telemetry.ts 참고 */
+  telemetry?: TelemetrySink;
+  /** 기록에 남길 모드 (기본 main) */
+  telemetryMode?: 'main' | 'tutorial';
+  /** 세이브에서 이어 하기인가 (기록용) */
+  restored?: boolean;
+}
+
+/** 시대 동안 모으는 기록용 통계 */
+interface EraStats {
+  peak: number;
+  trough: number;
+  maxDrawdownPct: number;
+  investedTicks: number;
+  ticks: number;
+  buys: number;
+  sells: number;
+  fees: number;
+  /** 종목별 현재 포지션을 처음 산 틱 */
+  firstBuyTick: Map<string, number>;
 }
 
 export interface OrderFill {
@@ -144,6 +169,9 @@ export class Game {
   private recaps = new Map<string, RecapNotice>();
   private orders: PendingOrder[] = [];
   private readonly _draws: Record<string, EraDraw> = {};
+  private readonly telemetry: TelemetrySink | null;
+  private telemetrySeq = 0;
+  private stats: EraStats = Game.emptyStats(0);
 
   constructor(options: GameOptions) {
     if (options.eras.length === 0) throw new Error('시대 데이터가 없음');
@@ -154,7 +182,20 @@ export class Game {
     this.eras = sortEras(options.eras);
     this.colorScheme = options.colorScheme ?? DEFAULT_COLOR_SCHEME;
     this.account = new Account(options.startCash ?? this.config.startCash, this.config.feeRate);
-    this.session = this.beginEra(options.startEraIndex ?? 0);
+    this.telemetry = options.telemetry ?? null;
+    const startEraIndex = options.startEraIndex ?? 0;
+    if (this.telemetry) {
+      this.emitRaw('game_start', this.eras[startEraIndex]?.id ?? '', startEraIndex, 0, {
+        mode: options.telemetryMode ?? 'main',
+        seed: this.seed,
+        engineVersion: ENGINE_VERSION,
+        balanceHash: balanceHash(this.config),
+        startCash: this.account.cash,
+        startEraIndex,
+        restored: options.restored ?? false,
+      });
+    }
+    this.session = this.beginEra(startEraIndex);
   }
 
   // ───────── 상태 조회 ─────────
@@ -232,7 +273,10 @@ export class Game {
     for (const d of due) for (const [k, v] of d.rates) merged.set(k, (merged.get(k) ?? 0) + v);
     const { tick, changes } = this.session.prices.step(merged.size > 0 ? merged : undefined);
 
-    for (const d of due) this.recordApplied(d.newsId, d.rates, changes);
+    for (const d of due) {
+      this.recordApplied(d.newsId, d.rates, changes);
+      if (this.telemetry) this.emit('news_reacted', { newsId: d.newsId, applied: this.stockRates(d.rates, changes) });
+    }
 
     const fills = this.executeOrders(tick);
 
@@ -246,6 +290,18 @@ export class Game {
         if (instant) {
           instantChanges = this.session.prices.applyInstant(instant.rates);
           this.recordApplied(instant.newsId, instant.rates, instantChanges);
+        }
+        if (this.telemetry) {
+          this.emit('news_published', {
+            newsId: news.news.id,
+            kind: news.kind,
+            storyId: news.storyId ?? null,
+            followedLean: news.followedLean ?? null,
+            isHistorical: news.isHistorical,
+            magnitude: news.news.magnitude,
+            effects: news.news.effects.map((e) => ({ themeId: e.themeId, impact: e.impact, strength: e.link.strength })),
+            instant: this.stockRates(instant?.rates ?? new Map(), instantChanges),
+          });
         }
         const recapTick = tick + this.rules.recapDelayTicks;
         if (recapTick <= this.rules.ticksPerEra) this.pendingRecaps.push({ tick: recapTick, scheduled: news });
@@ -265,24 +321,57 @@ export class Game {
       );
       this.recaps.set(notice.newsId, notice);
       recaps.push(notice);
+      if (this.telemetry) this.emit('recap_created', { newsId: notice.newsId, stockIds: notice.items.map((i) => i.stockId) });
     }
     this.pendingRecaps = this.pendingRecaps.filter((r) => r.tick !== tick);
 
+    if (this.telemetry) this.updateStats(tick);
+
     let settlement: EraSettlement | null = null;
     if (tick >= this.rules.ticksPerEra) {
+      const contexts = this.telemetry
+        ? new Map(this.account.getHoldings().map((h) => [h.stockId, this.decisionContext(h.stockId)]))
+        : null;
       settlement = settleEra(this.session, this.account);
       this._settlements.push(settlement);
       this._phase = 'era-ended';
+      if (contexts) {
+        for (const t of settlement.liquidations) this.emitTrade(t, contexts.get(t.stockId)!, true);
+        const st = this.stats;
+        this.emit('era_end', {
+          endAssets: settlement.endAssets,
+          returnPct: settlement.returnPct,
+          trades: st.buys + st.sells,
+          buys: st.buys,
+          sells: st.sells,
+          feesPaid: st.fees,
+          peakAssets: st.peak,
+          troughAssets: st.trough,
+          maxDrawdownPct: st.maxDrawdownPct,
+          investedShare: st.ticks === 0 ? 0 : st.investedTicks / st.ticks,
+        });
+      }
     }
     return { advanced: true, tick, changes, news, instantChanges, recaps, fills, settlement };
   }
 
   suspend(): void {
+    if (!this._suspended && this.telemetry) this.emit('suspended', {});
     this._suspended = true;
   }
 
   resume(): void {
+    if (this._suspended && this.telemetry) this.emit('resumed', {});
     this._suspended = false;
+  }
+
+  /**
+   * 화면(앱) 이벤트 기록. 예) 뉴스 팝업을 닫을 때 game.track('news_popup', { newsId, dwellMs, closedBy })
+   * clientMs는 실제 시각(앱이 Date.now() 등으로 넣는다. 엔진은 시계를 쓰지 않음)
+   */
+  track<K extends AppEventType>(type: K, data: AppEventMap[K], clientMs?: number): void {
+    if (!this.telemetry) return;
+    this.emitRaw(type, this.session.era.id, this.session.index, this.tick, data, clientMs);
   }
 
   /** (튜토리얼) 뉴스 팝업 '확인'. 1틱(5초) 뒤 반영 */
@@ -364,6 +453,7 @@ export class Game {
   toggleFavorite(stockId: string): void {
     if (!this.session.prices.hasStock(stockId)) throw new Error(`없는 종목: ${stockId}`);
     this.session.favorites = toggleFavorite(this.session.favorites, stockId);
+    if (this.telemetry) this.emit('favorite_toggled', { stockId, on: this.session.favorites.includes(stockId) });
   }
 
   getStockList(): StockListItem[] {
@@ -424,6 +514,7 @@ export class Game {
     this.pendingRecaps = [];
     this.recaps = new Map();
     this.orders = [];
+    this.stats = Game.emptyStats(this.account.cash);
     const session = startEraSession(era, index, this.seed, this.config, this.account.cash, {
       ...(this.options.draws?.[era.id] ? { draw: this.options.draws[era.id] } : {}),
       ...(this.options.pauseOnNews ? { pauseOnNews: true } : {}),
@@ -432,6 +523,18 @@ export class Game {
     this._draws[era.id] = session.draw;
     this.session = session;
     this._phase = 'running';
+    if (this.telemetry) {
+      const core = new Set(era.themes.filter((t) => t.relevance === 'core').map((t) => t.id));
+      this.emit('era_start', {
+        startCash: session.startCash,
+        drawAttempt: session.draw.attempt,
+        drawOk: session.draw.ok,
+        activeThemeIds: [...session.draw.activeThemeIds],
+        coreCount: session.draw.activeThemeIds.filter((id) => core.has(id)).length,
+        usableBreaking: session.draw.usableBreaking,
+        usableStories: session.draw.usableStories,
+      });
+    }
     return session;
   }
 
@@ -444,7 +547,10 @@ export class Game {
 
   private order(side: 'buy' | 'sell', stockId: string, quantity: number): GameTradeResult {
     const check = this.checkTradable(stockId);
-    if (check) return { ok: false, error: check };
+    if (check) {
+      if (this.telemetry) this.emit('trade_rejected', { side, stockId, quantity, error: check });
+      return { ok: false, error: check };
+    }
     if (this.config.orderDelayTicks > 0) {
       const executeTick = this.tick + this.config.orderDelayTicks;
       this.orders.push({ executeTick, side, stockId, quantity });
@@ -455,9 +561,121 @@ export class Game {
 
   private execute(side: 'buy' | 'sell', stockId: string, quantity: number): GameTradeResult {
     const price = this.session.prices.getPrice(stockId);
+    const context = this.telemetry ? this.decisionContext(stockId) : null;
     const r = side === 'buy' ? this.account.buy(stockId, quantity, price, this.tick) : this.account.sell(stockId, quantity, price, this.tick);
     if (r.ok && side === 'buy') this.session.favorites = addFavorite(this.session.favorites, stockId);
+    if (context) {
+      if (r.ok) this.emitTrade(r.trade, context, false);
+      else this.emit('trade_rejected', { side, stockId, quantity, error: r.error });
+    }
     return r;
+  }
+
+  // ───────── 기록(텔레메트리) 내부 ─────────
+
+  private static emptyStats(assets: number): EraStats {
+    return {
+      peak: assets, trough: assets, maxDrawdownPct: 0, investedTicks: 0, ticks: 0,
+      buys: 0, sells: 0, fees: 0, firstBuyTick: new Map(),
+    };
+  }
+
+  private emitRaw(type: string, eraId: string, eraIndex: number, tick: number, data: unknown, clientMs?: number): void {
+    const event = { v: TELEMETRY_SCHEMA_VERSION, seq: ++this.telemetrySeq, type, eraId, eraIndex, tick, data } as TelemetryEvent;
+    if (clientMs !== undefined) event.clientMs = clientMs;
+    this.telemetry!.record(event);
+  }
+
+  private emit<K extends keyof EngineEventMap>(type: K, data: EngineEventMap[K]): void {
+    this.emitRaw(type, this.session.era.id, this.session.index, this.tick, data);
+  }
+
+  private stockRates(rates: ReadonlyMap<string, number>, changes: readonly StockTickChange[]): StockRate[] {
+    const out: StockRate[] = [];
+    for (const ch of changes) {
+      if ((ch.cause !== 'news' && ch.cause !== 'instant') || !rates.has(this.themeOf(ch.stockId))) continue;
+      const r: StockRate = { stockId: ch.stockId, rate: ch.rate };
+      if (ch.requestedRate !== undefined && ch.requestedRate !== ch.rate) r.requested = ch.requestedRate;
+      out.push(r);
+    }
+    return out;
+  }
+
+  private updateStats(tick: number): void {
+    const st = this.stats;
+    const assets = this.account.totalAssets(this.session.prices.getPrices());
+    st.ticks++;
+    if (this.account.getHoldings().length > 0) st.investedTicks++;
+    st.peak = Math.max(st.peak, assets);
+    st.trough = Math.min(st.trough, assets);
+    st.maxDrawdownPct = Math.max(st.maxDrawdownPct, st.peak === 0 ? 0 : ((st.peak - assets) / st.peak) * 100);
+    if (tick % this.rules.windowTicks === 0) {
+      const holdings = this.account.getHoldings();
+      this.emit('asset_snapshot', {
+        cash: this.account.cash,
+        holdingsValue: assets - this.account.cash,
+        positions: holdings.length,
+      });
+    }
+  }
+
+  /** 매매 순간의 상황 (DecisionContext) */
+  private decisionContext(stockId: string): DecisionContext {
+    const shown = this.session.news.shown;
+    const last = shown.at(-1) ?? null;
+    const themeId = this.themeOf(stockId);
+    const link = last?.news.effects.find((e) => e.themeId === themeId);
+    // 결과가 아직 안 나온 잠정 뉴스
+    let open: ScheduledNews | null = null;
+    for (const s of shown) {
+      if (s.kind === 'tentative') open = s;
+      else if (s.kind === 'outcome' && open && s.storyId === open.storyId) open = null;
+    }
+    const storyEffect = open?.news.effects.find((e) => e.themeId === themeId);
+    const state = this.session.prices.getState(stockId);
+    const back = state.history.find((p) => p.tick >= this.tick - this.rules.windowTicks) ?? state.history[0]!;
+    return {
+      lastNewsId: last?.news.id ?? null,
+      ticksSinceNews: last ? this.tick - last.tick : null,
+      newsLink: link ? { impact: link.impact, strength: link.link.strength } : null,
+      openStoryId: open?.storyId ?? null,
+      storyLink: storyEffect?.impact ?? null,
+      eraChangePct: ((state.price - state.openPrice) / state.openPrice) * 100,
+      recentChangePct: ((state.price - back.price) / back.price) * 100,
+      assetsBefore: this.account.totalAssets(this.session.prices.getPrices()),
+    };
+  }
+
+  private emitTrade(t: TradeRecord, context: DecisionContext, auto: boolean): void {
+    const st = this.stats;
+    st.fees += t.fee;
+    if (!auto) {
+      if (t.side === 'buy') st.buys++;
+      else st.sells++;
+    }
+    const quantityAfter = this.account.getQuantity(t.stockId);
+    let holdTicks: number | null = null;
+    if (t.side === 'buy') {
+      if (!st.firstBuyTick.has(t.stockId)) st.firstBuyTick.set(t.stockId, this.tick);
+    } else {
+      const first = st.firstBuyTick.get(t.stockId);
+      holdTicks = first === undefined ? null : this.tick - first;
+      if (quantityAfter === 0) st.firstBuyTick.delete(t.stockId);
+    }
+    this.emit('trade', {
+      side: t.side,
+      stockId: t.stockId,
+      themeId: this.themeOf(t.stockId),
+      quantity: t.quantity,
+      price: t.price,
+      fee: t.fee,
+      cashAfter: this.account.cash,
+      quantityAfter,
+      realizedPnl: t.realizedPnl ?? null,
+      holdTicks,
+      auto,
+      context,
+    });
   }
 
   private executeOrders(tick: number): OrderFill[] {

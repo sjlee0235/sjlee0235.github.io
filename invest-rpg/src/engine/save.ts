@@ -8,6 +8,7 @@ import type { Era } from '../data/schema.ts';
 import type { GameConfig } from './config.ts';
 import type { EraDraw } from './eraDraw.ts';
 import { Game } from './game.ts';
+import type { TelemetrySink } from './telemetry.ts';
 
 export const SAVE_VERSION = 1;
 
@@ -50,7 +51,9 @@ export function saveGame(save: SaveData, game: Game): SaveData {
 }
 
 /** 저장된 진행을 되살린다: 같은 시대를 같은 추첨·같은 시드로 처음부터 */
-export function restoreGame(save: SaveData, eras: readonly Era[], config?: Partial<GameConfig>): Game | null {
+export function restoreGame(
+  save: SaveData, eras: readonly Era[], config?: Partial<GameConfig>, options: { telemetry?: TelemetrySink } = {},
+): Game | null {
   if (!save.game) return null;
   const g = save.game;
   return new Game({
@@ -60,5 +63,6 @@ export function restoreGame(save: SaveData, eras: readonly Era[], config?: Parti
     startCash: g.eraStartCash,
     draws: g.draws,
     ...(config ? { config } : {}),
+    ...(options.telemetry ? { telemetry: options.telemetry, restored: true } : {}),
   });
 }
