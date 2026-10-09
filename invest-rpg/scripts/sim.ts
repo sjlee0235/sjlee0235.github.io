@@ -6,7 +6,7 @@
 import { ALL_ERAS } from '../src/data/eras/index.ts';
 import type { Era } from '../src/data/schema.ts';
 import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
-import { fmt, REFERENCE_STRATEGIES, runMany, STRATEGIES, STRATEGY_LABEL, summarize, targetLabel, TARGET_RANGE } from './simLib.ts';
+import { fmt, labelOf, REFERENCE_STRATEGIES, runMany, STRATEGIES, STRATEGY_LABEL, summarize, targetLabel, TARGET_RANGE } from './simLib.ts';
 
 declare const process: { argv: string[] };
 
@@ -21,7 +21,7 @@ for (const era of eras) {
   console.log(`[${era.id}] 전략           중앙값    하위10%   상위10%   목표 중앙값`);
   for (const s of [...STRATEGIES, ...REFERENCE_STRATEGIES]) {
     const r = summarize(runMany(era, s, SEEDS).map((x) => x.returnPct));
-    console.log(`  ${STRATEGY_LABEL[s].padEnd(12, '　')} ${fmt(r.median)} ${fmt(r.p10)} ${fmt(r.p90)}   ${targetLabel(TARGET_RANGE[s])}`);
+    console.log(`  ${labelOf(s).padEnd(12, '　')} ${fmt(r.median)} ${fmt(r.p10)} ${fmt(r.p90)}   ${targetLabel(TARGET_RANGE[s])}`);
   }
 
   console.log('\n(참고) 기본 OFF 옵션을 켰을 때 — 추종 전략 중앙값');
@@ -53,7 +53,7 @@ for (const era of eras) {
       groups.set(key, [...(groups.get(key) ?? []), x.returnPct]);
     }
     const parts = [...groups.entries()].sort().map(([k, v]) => `${k}: ${fmt(summarize(v).median).trim()} (${v.length}판)`);
-    console.log(`  ${STRATEGY_LABEL[s].padEnd(12, '　')} ${parts.join(' | ')}`);
+    console.log(`  ${labelOf(s).padEnd(12, '　')} ${parts.join(' | ')}`);
   }
   console.log('');
 }
