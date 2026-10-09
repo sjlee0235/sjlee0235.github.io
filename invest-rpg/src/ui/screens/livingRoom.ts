@@ -62,7 +62,8 @@ export class LivingRoomScreen implements Screen {
     const np = ctx.music.getNowPlaying();
     this.hintEl = h('div', { class: 'scene-hint' }, np.unlocked ? '' : ctx.t('music.tapToStart'));
     stage.append(this.lpEl, this.dogEl, this.hintEl);
-    stage.addEventListener('pointerdown', () => this.unlockMusic());
+    // 무대 요소는 화면을 다시 그려도 그대로라, addEventListener를 쓰면 들어올 때마다 쌓인다
+    stage.onpointerdown = () => this.unlockMusic();
     this.startIdle();
   }
 

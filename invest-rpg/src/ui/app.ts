@@ -23,11 +23,12 @@ import {
 } from '../engine/publicView.ts';
 import { setTelemetryConsent, type SaveData } from '../engine/save.ts';
 import type { AppEventMap, AppEventType } from '../engine/telemetry.ts';
+import type { FinalSummary } from '../engine/game.ts';
 import { localize, t as tr } from '../i18n/index.ts';
 import { effectiveColorScheme, loadSettings, saveSettings, type AppSettings, type SettingsStorage } from '../settings/settings.ts';
 import { HtmlAudioBackend } from './audioBackend.ts';
 import type { Screen, UiContext } from './context.ts';
-import { clear, flash, h } from './dom.ts';
+import { clear, flash, h, setText } from './dom.ts';
 import { fmtNum, fmtPct, fmtTime } from './format.ts';
 import { GameLoop, type Clock } from './loop.ts';
 import { finalOverlay, settingsOverlay, settlementOverlay } from './overlays.ts';
@@ -74,6 +75,9 @@ export class App {
   private scale = 2;
   private tabEnteredAt = 0;
   private settlementOpen = false;
+  /** 끝난 판의 최종 요약을 보여주는 중: 아무것도 저장하지 않는다 */
+  private saveLocked = false;
+  private topSig = '';
 
   constructor(opts: AppOptions) {
     this.opts = opts;
@@ -103,16 +107,19 @@ export class App {
     this.applyScale();
     const restored = this.opts.fresh ? null : restorePublicGame(this.save, this.opts.eras, undefined, { locale: this.settings.locale });
     let pendingSettlement: PublicSettlement | null = null;
-    let finished = false;
+    let finishedSummary: FinalSummary | null = null;
     if (restored?.status === 'resumed' || restored?.status === 'restarted_legacy') {
       this.game = restored.game;
     } else if (restored?.status === 'settled_on_version_change') {
-      // 앱 업데이트: 저장 시점 가격으로 정산 → 정산 창 → 다음 시대 (마지막이면 최종 요약)
+      // 앱 업데이트(또는 끝난 판): 저장 시점 가격으로 정산 → 정산 창 → 다음 시대 (게임이 없으면 최종 요약)
+      // restored.game이 있으면 이미 다음 시대가 시작된 상태(phase 'running')다
       pendingSettlement = restored.settlement;
       if (restored.game) this.game = restored.game;
-      else finished = true;
+      else finishedSummary = restored.finalSummary;
     }
     if (!this.game) this.game = this.newGame();
+    // 끝난 판을 다시 열었을 때: 최종 요약을 보여주고, '처음부터 다시'를 누르기 전까지 새 판을 저장하지 않는다
+    if (finishedSummary) this.saveLocked = true;
     this.game.locale = this.settings.locale;
     if (this.save.telemetryConsent) this.game.setConsent(true);
 
@@ -126,9 +133,18 @@ export class App {
     window.addEventListener('resize', () => this.onResize());
     document.addEventListener('visibilitychange', () => this.onVisibility(document.hidden));
 
-    if (pendingSettlement) this.showSettlement(pendingSettlement, finished);
+    if (finishedSummary) {
+      const summary = finishedSummary;
+      if (pendingSettlement) this.showSettlement(pendingSettlement, () => this.showFinal(summary));
+      else this.showFinal(summary);
+      return;
+    }
+    if (pendingSettlement) this.showSettlement(pendingSettlement, () => this.afterSettlement());
     else if (this.game.phase === 'era-ended') this.showSettlementFromGame();
+    else if (this.game.phase === 'finished') this.showFinal();
     else this.loop.start();
+    // 숨긴 탭에서 열렸으면 처음부터 백그라운드 일시정지
+    if (document.hidden) this.onVisibility(true);
     this.persist(true);
   }
 
@@ -259,6 +275,16 @@ export class App {
   renderTop(): void {
     const v = this.tabs.topBar();
     const locale = this.settings.locale;
+    // 틱마다 버튼을 새로 만들면 누르는 도중 버튼이 바뀌어 터치가 사라진다 → 구조가 같으면 글자만 바꾼다
+    const sig = [
+      v.accountBar ? `a${v.accountBar.speed}` : 'n', v.newsBadge, v.workPending !== null, v.speedBadge, locale,
+      effectiveColorScheme(this.settings),
+    ].join('|');
+    if (sig === this.topSig) {
+      this.updateTopTexts(v);
+      return;
+    }
+    this.topSig = sig;
     clear(this.topbar);
     const gear = h('button', { class: 'gear', 'aria-label': this.t('settings.title') });
     gear.addEventListener('click', () => this.openSettings());
@@ -271,7 +297,7 @@ export class App {
           if (this.game.getSpeed() === s) return;
           this.game.setSpeed(s);
           this.loop.reschedule();
-          this.persist();
+          this.persist(true); // 배속 변경은 엔진의 저장 신호가 없어서 바로 저장
           this.renderTop();
         });
         return b;
@@ -283,7 +309,7 @@ export class App {
           'div',
           { class: 'acct-left' },
           h('div', { class: 'acct-label' }, this.t('portfolio.totalAssets')),
-          h('div', { class: 'acct-assets' }, h('span', { class: 'coin-ico' }), fmtNum(a.totalAssets, locale)),
+          h('div', { class: 'acct-assets' }, h('span', { class: 'coin-ico' }), h('span', { class: 'acct-assets-v' }, fmtNum(a.totalAssets, locale))),
           h('div', { class: `acct-pct pct-${pctCls}`, 'data-dir': pctCls }, `${this.t('trading.return')} ${fmtPct(a.returnPct)}`),
         ),
         gear,
@@ -311,7 +337,7 @@ export class App {
     const right = h(
       'div',
       { class: 'top-right' },
-      h('div', { class: 'top-cash' }, h('span', { class: 'coin-ico' }), v.cash !== null ? fmtNum(v.cash, locale) : ''),
+      h('div', { class: 'top-cash' }, h('span', { class: 'coin-ico' }), h('span', { class: 'top-cash-v' }, v.cash !== null ? fmtNum(v.cash, locale) : '')),
       v.workPending !== null
         ? h('div', { class: 'top-pending', title: this.t('work.payoutNote') }, `${this.t('work.pendingShort')} +${fmtNum(v.workPending, locale)}`)
         : null,
@@ -320,10 +346,39 @@ export class App {
     this.topbar.append(left, gear, right);
   }
 
+  /** 구조는 그대로 두고 숫자만 바꾼다 */
+  private updateTopTexts(v: ReturnType<TabController['topBar']>): void {
+    const locale = this.settings.locale;
+    const q = (sel: string) => this.topbar.querySelector<HTMLElement>(sel);
+    if (v.accountBar) {
+      const a = v.accountBar;
+      const assets = q('.acct-assets-v');
+      if (assets) setText(assets, fmtNum(a.totalAssets, locale));
+      const pct = q('.acct-pct');
+      if (pct) {
+        const dir = a.returnPct > 0 ? 'up' : a.returnPct < 0 ? 'down' : 'flat';
+        setText(pct, `${this.t('trading.return')} ${fmtPct(a.returnPct)}`);
+        if (pct.dataset.dir !== dir) {
+          pct.dataset.dir = dir;
+          pct.className = `acct-pct pct-${dir}`;
+        }
+      }
+      const time = q('.acct-time');
+      if (time) setText(time, this.t('era.remaining', { time: fmtTime(a.remainingSeconds) }));
+      this.colorAccountPct();
+      return;
+    }
+    const cash = q('.top-cash-v');
+    if (cash) setText(cash, v.cash !== null ? fmtNum(v.cash, locale) : '');
+    const pending = q('.top-pending');
+    if (pending && v.workPending !== null) setText(pending, `${this.t('work.pendingShort')} +${fmtNum(v.workPending, locale)}`);
+  }
+
   /** 손익률 색도 설정의 상승 색상 모드를 따른다 */
   private colorAccountPct(): void {
     const el = this.topbar.querySelector<HTMLElement>('.acct-pct');
     if (!el) return;
+    el.classList.remove('c-red', 'c-blue', 'c-green', 'c-neutral');
     const scheme = effectiveColorScheme(this.settings);
     const dir = el.dataset.dir;
     const color = dir === 'up' ? (scheme === 'korean' ? 'red' : 'green') : dir === 'down' ? (scheme === 'korean' ? 'blue' : 'red') : 'neutral';
@@ -338,17 +393,17 @@ export class App {
     this.screens[this.tabs.current].update(r);
     this.renderTop();
     if (r.saveNeeded) this.persist();
-    if (r.settlement) this.showSettlement(r.settlement, !this.game.hasNextEra);
+    if (r.settlement) this.showSettlement(r.settlement, () => this.afterSettlement());
   }
 
   // ───────── 정산·다음 시대·최종 ─────────
 
   private showSettlementFromGame(): void {
     const d = this.game.getEraDebrief();
-    if (d.settlement) this.showSettlement(d.settlement, !this.game.hasNextEra);
+    if (d.settlement) this.showSettlement(d.settlement, () => this.afterSettlement());
   }
 
-  private showSettlement(s: PublicSettlement, isLast: boolean): void {
+  private showSettlement(s: PublicSettlement, onConfirm: () => void): void {
     if (this.settlementOpen) return;
     this.settlementOpen = true;
     let debrief = null;
@@ -362,39 +417,52 @@ export class App {
       this.game.track('screen_view', { screen: 'settlement', dwellMs: this.opts.now() - opened }, this.opts.now());
       el.remove();
       this.settlementOpen = false;
-      this.afterSettlement(isLast);
+      onConfirm();
     });
     this.overlays.append(el);
   }
 
-  private afterSettlement(isLast: boolean): void {
-    if (!isLast && this.game.phase === 'era-ended' && this.game.startNextEra()) {
-      this.tabs.onEraStart();
-      this.trading.resetForEra();
-      this.applySkin();
-      this.showTab(this.tabs.current);
-      this.toast(this.t('era.graceNotice'));
-      this.persist(true);
-      this.loop.start();
+  /** 정산 창 '확인' 뒤: 다음 시대 시작, 마지막이면 최종 요약 */
+  private afterSettlement(): void {
+    // 앱 업데이트로 정산된 경우: 엔진이 이미 다음 시대를 시작해 두었다
+    if (this.game.phase === 'running') {
+      this.beginEra();
       return;
     }
-    if (this.game.phase === 'era-ended') this.game.startNextEra();
+    if (this.game.phase === 'era-ended' && this.game.startNextEra()) {
+      this.beginEra();
+      return;
+    }
     this.persist(true);
     this.showFinal();
   }
 
-  private showFinal(): void {
-    let summary;
-    try {
-      summary = this.game.getFinalSummary();
-    } catch {
-      return;
+  private beginEra(): void {
+    this.tabs.onEraStart();
+    this.trading.resetForEra();
+    this.applySkin();
+    this.showTab(this.tabs.current);
+    this.toast(this.t('era.graceNotice'));
+    this.persist(true);
+    this.loop.start();
+  }
+
+  private showFinal(given?: FinalSummary): void {
+    let summary = given;
+    if (!summary) {
+      try {
+        summary = this.game.getFinalSummary();
+      } catch (e) {
+        this.game.track('client_error', { code: 'final_summary', message: String(e) }, this.opts.now());
+        return;
+      }
     }
     const names: Record<string, string> = {};
     for (const e of this.opts.eras) names[e.id] = localize(e.displayName, this.settings.locale);
     this.overlays.append(
       finalOverlay(summary, names, this.settings.locale, () => {
         this.opts.storage.remove?.(SAVE_KEY);
+        this.saveLocked = true; // 새로 고침 전에 끝난 판이 다시 저장되지 않게
         window.location.reload();
       }),
     );
@@ -445,6 +513,8 @@ export class App {
   private rebuildForLocale(locale: Locale): void {
     this.game.locale = locale;
     const current = this.tabs.current;
+    this.screens[current].leave?.();
+    this.topSig = '';
     this.buildScreens();
     this.buildTabbar();
     this.showTab(current);
@@ -454,6 +524,7 @@ export class App {
 
   /** 엔진이 저장을 원하면(또는 force) 세이브를 기기에 쓴다 */
   persist(force = false): void {
+    if (this.saveLocked) return;
     if (!force && this.game.pendingSaveReasons.length === 0) {
       this.saveMusicSettings();
       return;
