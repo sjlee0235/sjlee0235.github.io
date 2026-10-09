@@ -468,7 +468,7 @@
       "source": {
         "event": "미국 기술주 지수 고점 후 폭락 (닷컴 버블 붕괴)",
         "date": "2000-03",
-        "impactRationale": "기술주 지수 2000-03 고점 → 2002-10 저점 약 -78%. 2년 하락을 뉴스 1개로 압축해 닷컴 -8(-24%). 국내 벤처지수 하락률 확인 필요.",
+        "impactRationale": "미국 기술주 지수 2000-03-10 종가 5,048.62 고점 → 2002-10-09 1,114.11 저점(약 -78%). 2년 하락을 뉴스 1개로 압축해 닷컴 -8(-24%). 국내 벤처지수 하락률은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -512,8 +512,8 @@
       "source": {
         "event": "미국 중앙은행 기준금리 긴급 인하 (6.5% → 6.0%)",
         "date": "2001-01-03",
-        "impactRationale": "발표 당일 미국 기술주 지수 약 +14% 급등(확인 필요). 수혜 업종별 +2~+3.",
-        "needsVerification": true
+        "impactRationale": "2001-01-03 미국 중앙은행 6.5% → 6.0% 긴급 인하, 당일 미국 기술주 지수 +14.17%(사상 최대 상승률). 수혜 업종 +2~+4.",
+        "needsVerification": false
       }
     },
     {
@@ -561,8 +561,8 @@
       "source": {
         "event": "9·11 테러",
         "date": "2001-09-11",
-        "impactRationale": "뉴욕증시 휴장 후 재개장일(2001-09-17) 미국 대표 주가지수 -7.1%(-684.81p). 국내 종합주가지수 2001-09-12 약 -12%(확인 필요). 항공주 급락 폭 확인 필요.",
-        "needsVerification": true
+        "impactRationale": "재개장일(2001-09-17) 미국 대표 주가지수 -7.13%(-684.81p), 미국 대형 항공사 주가 -39~43%. 국내 종합주가지수 2001-09-12 -12.02%. 항공 -9(-27%)는 실제 낙폭보다 작게 잡음.",
+        "needsVerification": false
       }
     },
     {
@@ -599,7 +599,7 @@
       "source": {
         "event": "중증급성호흡기증후군(SARS) 유행",
         "date": "2003-03 ~ 2003-04",
-        "impactRationale": "WHO 국제 경보 2003-03-12, 여행 자제 권고 2003-04 초(날짜 확인 필요). 누적 약 8,096명 감염·774명 사망. 실제로 백신은 상용화되지 않아 백신 +4는 기대감 수준.",
+        "impactRationale": "WHO 국제 경보 2003-03-12, 응급 여행 권고 03-15, 홍콩·광둥 비필수 여행 연기 권고 2003-04-02. 누적 8,096명·774명은 7월 무렵 최종 집계로 알려짐(확인 필요). 백신은 상용화되지 않아 +4는 기대감 수준.",
         "needsVerification": true
       }
     },
@@ -693,7 +693,7 @@
       "source": {
         "event": "국산 온라인게임 중국 흥행과 게임 수출 증가",
         "date": "2002 ~ 2004",
-        "impactRationale": "게임 수출액·동시접속자 수치 확인 필요. 특정 게임명은 쓰지 않음.",
+        "impactRationale": "국산 온라인게임 중국 동시접속 2002년 약 35만 명, 이후 60~70만 명 보도. 수출액은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -726,7 +726,7 @@
       "source": {
         "event": "중국 고성장과 조선·철강 호황",
         "date": "2007",
-        "impactRationale": "중국 2007년 GDP 성장률 약 14%(수정치, 확인 필요). 국내 조선주 2007년 급등 폭 확인 필요.",
+        "impactRationale": "중국 2007년 GDP 성장률: 공식 수정치 13.0%(2009-01 발표, 처음 11.4% → 11.9% → 13.0%). 국내 조선주 2007년 상승 폭은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -798,8 +798,8 @@
       "source": {
         "event": "종합주가지수 2,000 첫 돌파",
         "date": "2007-07-25",
-        "impactRationale": "장중 2,000 돌파 일자 확인 필요.",
-        "needsVerification": true
+        "impactRationale": "2007-07-25 종합주가지수 첫 2,000선 진입(2,004.2). 펀드 열풍의 정점은 10~11월. 투자은행 +7.",
+        "needsVerification": false
       }
     },
     {
@@ -831,7 +831,7 @@
       "source": {
         "event": "광복절 경축사 '저탄소 녹색성장' 국가비전 선포",
         "date": "2008-08-15",
-        "impactRationale": "녹색성장 테마주 급등 폭 확인 필요.",
+        "impactRationale": "2008-08-15 광복절 경축사에서 '저탄소 녹색성장' 국가 비전 제시(신재생 비율 2%→2030년 11% 목표). 태양광 테마주 반응은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -870,8 +870,8 @@
       "source": {
         "event": "한국은행 기준금리 2.0%로 인하",
         "date": "2009-02-12",
-        "impactRationale": "인하 폭(2.5% → 2.0%) 확인 필요.",
-        "needsVerification": true
+        "impactRationale": "2009-02-12 한국은행 기준금리 2.5% → 2.0%(당시 사상 최저), 17개월 유지.",
+        "needsVerification": false
       }
     },
     {
@@ -903,7 +903,7 @@
       "source": {
         "event": "국내 연구팀 줄기세포 논문 조작 사건",
         "date": "2005-12 ~ 2006-01",
-        "impactRationale": "대학 조사위 2005-12-23 중간발표·2006-01-10 최종발표. 테마주 하락 폭 확인 필요.",
+        "impactRationale": "대학 조사위 2005-12-23 중간발표(2005년 논문 조작 판단), 12-29 추가 발표, 2006-01-10 최종발표(2004년 논문도 조작). 테마주 하락 폭 확인 필요.",
         "needsVerification": true
       }
     },
@@ -969,7 +969,7 @@
       "source": {
         "event": "북한 장거리 미사일 등 연속 발사",
         "date": "2006-07-05",
-        "impactRationale": "당일 종합주가지수·방산주 반응 확인 필요.",
+        "impactRationale": "2006-07-05 장거리 미사일 포함 6~7발 발사(장거리 1발은 발사 직후 실패). 국내 시장 반응은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -1025,7 +1025,7 @@
       "source": {
         "event": "제1차 남북정상회담 (6·15 남북공동선언)",
         "date": "2000-06-13 ~ 2000-06-15",
-        "impactRationale": "당일 증시 반응과 방산·건설 테마 등락 폭 확인 필요.",
+        "impactRationale": "2000-06-13~15 평양 남북정상회담, 6·15 공동선언. 증시·방산·건설 반응은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -1058,8 +1058,8 @@
       "source": {
         "event": "D램 가격 급락 (IT 버블 붕괴 후 PC 수요 감소)",
         "date": "2001",
-        "impactRationale": "D램 현물가 2001년 하락률 확인 필요.",
-        "needsVerification": true
+        "impactRationale": "업계 분석(2001): D램 가격 12개월간 약 -80%, 128Mb 현물가 2월 약 4.5달러 → 6월 2달러 미만. 반도체 -7.",
+        "needsVerification": false
       }
     },
     {
@@ -1101,8 +1101,8 @@
       "source": {
         "event": "한국, IMF 차입금 전액 조기 상환",
         "date": "2001-08-23",
-        "impactRationale": "상환액·당일 지수 반응 확인 필요.",
-        "needsVerification": true
+        "impactRationale": "2001-08-23 IMF 차입금 195억 달러 최종 상환(원래 만기 2004-05). 당일 지수 반응은 확인 필요.",
+        "needsVerification": false
       }
     },
     {
@@ -1228,8 +1228,8 @@
       "source": {
         "event": "고속철도 개통",
         "date": "2004-04-01",
-        "impactRationale": "개통 후 국내선 항공 수요 감소율 확인 필요.",
-        "needsVerification": true
+        "impactRationale": "2004-04-01 개통. 이후 김포~대구 항공 승객 약 80% 감소(보도), 노선 운항 대폭 축소. 항공 -4.",
+        "needsVerification": false
       }
     },
     {
@@ -1283,8 +1283,8 @@
       "source": {
         "event": "미국 멕시코만 초대형 허리케인",
         "date": "2005-08-29",
-        "impactRationale": "직후 국제유가 장중 70달러 돌파(확인 필요).",
-        "needsVerification": true
+        "impactRationale": "2005-08-29 상륙, 08-30 국제유가 장중 70.85달러(당시 최고), 정유시설 8~9곳 가동 중단 보도.",
+        "needsVerification": false
       }
     },
     {
@@ -1320,7 +1320,7 @@
       "source": {
         "event": "미국 IT기업의 터치스크린 스마트폰 공개",
         "date": "2007-01-09",
-        "impactRationale": "발표 당시 국내 휴대폰·반도체 주가 반응 확인 필요.",
+        "impactRationale": "2007-01-09 미국 IT기업이 터치스크린 스마트폰 공개(판매는 2007-06-29). 국내 휴대폰·반도체 주가 반응은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -1425,7 +1425,7 @@
       "source": {
         "event": "원·달러 환율 1,500원대 (금융위기)",
         "date": "2008-11",
-        "impactRationale": "1,500원 돌파 일자와 종가 확인 필요.",
+        "impactRationale": "2008-11-20 종가 1,497원(장중 1,500원), 11-24 1,515원 보도. 정확한 첫 1,500원대 종가일은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -1468,7 +1468,7 @@
       "source": {
         "event": "중국 4조 위안 경기부양책",
         "date": "2008-11-09",
-        "impactRationale": "발표 직후 철강·건설주 반응 확인 필요.",
+        "impactRationale": "2008-11-09 4조 위안(약 5,860억 달러) 발표, 인프라 비중이 가장 큼. 국내 철강·건설주 반응은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -1511,7 +1511,7 @@
       "source": {
         "event": "WHO 신종플루(H1N1) 대유행 6단계 선언",
         "date": "2009-06-11",
-        "impactRationale": "국내 백신 관련주 2009년 급등 폭 확인 필요.",
+        "impactRationale": "2009-06-11 WHO 대유행 6단계 선언(1968년 이후 첫 독감 대유행). 국내 백신 관련주 상승 폭은 확인 필요.",
         "needsVerification": true
       }
     },
@@ -1548,7 +1548,7 @@
       "source": {
         "event": "미국 대형 자동차 회사 파산보호 신청",
         "date": "2009-06-01",
-        "impactRationale": "국내 완성차의 미국 점유율 상승(반사이익) 여부 확인 필요.",
+        "impactRationale": "2009-06-01 미국 대형 자동차 회사 파산보호 신청(부채 약 1,728억 달러). 국내 완성차 반사이익 여부는 확인 필요.",
         "needsVerification": true
       }
     },
@@ -1576,7 +1576,7 @@
       "source": {
         "event": "세계 식량가격 위기",
         "date": "2008-04",
-        "impactRationale": "곡물가 최고치 시점(품목별 상이) 확인 필요.",
+        "impactRationale": "2008년 봄 쌀·옥수수 선물 사상 최고(04-16 보도), 대두는 연초 고점. 축산 -5는 사료값 경로의 2차 해석.",
         "needsVerification": true
       }
     },
@@ -1613,7 +1613,7 @@
       "source": {
         "event": "중국 WTO 가입",
         "date": "2001-12-11",
-        "impactRationale": "가입 당일 시장 반응은 작았을 수 있음(확인 필요).",
+        "impactRationale": "2001-12-11 중국 WTO 143번째 회원국 가입. 장기 효과를 2차 해석으로 압축, 당일 시장 반응은 작았을 수 있음.",
         "needsVerification": true
       }
     }
@@ -1660,8 +1660,8 @@
         "source": {
           "event": "미국 대통령 유엔 연설 등 이라크 압박",
           "date": "2002-09-12",
-          "impactRationale": "낌새 뉴스라 영향도 ±2 이내. 본문에 '사찰 거부 이력'을 넣어 전쟁 쪽으로 기울 단서를 줌.",
-          "needsVerification": true
+          "impactRationale": "2002-09-12 미국 대통령 유엔 연설(사찰단은 1998년 이후 이라크에 들어가지 못함). 낌새라 영향도 ±2 이내.",
+          "needsVerification": false
         }
       },
       "news": [
@@ -1737,7 +1737,7 @@
           "source": {
             "event": "이라크의 사찰 수용 관련 발언 (가상 갈래용 단서)",
             "date": "2002 ~ 2003",
-            "impactRationale": "가상 결과를 가리키는 단서. 실제 발언 여부·시점 확인 필요.",
+            "impactRationale": "실제로 2002-09-16 이라크가 유엔 사찰단을 다시 받아들이겠다고 했음(사실). 다만 이 단서는 '전쟁 회피' 가상 결과를 가리키는 데 쓰임.",
             "needsVerification": true
           }
         },
@@ -1794,8 +1794,8 @@
           "source": {
             "event": "이라크전 개전",
             "date": "2003-03-20",
-            "impactRationale": "개전 전후 유가 급락·증시 반등은 실제 기록(구체 수치 확인 필요).",
-            "needsVerification": true
+            "impactRationale": "2003-03-20 개전. 개전 주간 국제유가 약 -18%(브렌트 30.13→24.80달러), 3-21 미국 증시 반등(이후 3-24 다시 하락). '소문에 사서 뉴스에 판다' 사례.",
+            "needsVerification": false
           }
         },
         {
@@ -1914,8 +1914,8 @@
         "source": {
           "event": "북한 외무성 핵실험 예고 성명",
           "date": "2006-10-03",
-          "impactRationale": "낌새. 본문에 '7월 미사일 강행' 이력을 넣어 실행 쪽 판단 근거 제공.",
-          "needsVerification": true
+          "impactRationale": "2006-10-03 북한 외무성 핵실험 예고 성명(시기 미명시), 6일 뒤 실행.",
+          "needsVerification": false
         }
       },
       "news": [
@@ -1958,8 +1958,8 @@
           "source": {
             "event": "북한 1차 핵실험",
             "date": "2006-10-09",
-            "impactRationale": "당일 종합주가지수 약 -2.4%(확인 필요).",
-            "needsVerification": true
+            "impactRationale": "2006-10-09 1차 핵실험, 당일 종합주가지수 -2.41%(-32.60p), 5거래일 만에 회복.",
+            "needsVerification": false
           }
         },
         {
@@ -2087,8 +2087,8 @@
           "source": {
             "event": "미국 5위 투자은행 헐값 매각",
             "date": "2008-03-16",
-            "impactRationale": "단서(위기 쪽). 매각 가격 확인 필요.",
-            "needsVerification": true
+            "impactRationale": "2008-03-16 미국 5위 투자은행 주당 약 2달러에 매각 발표(이후 10달러로 상향), 중앙은행 300억 달러 지원.",
+            "needsVerification": false
           }
         },
         {
@@ -2177,8 +2177,8 @@
           "source": {
             "event": "미국 4위 투자은행 파산보호 신청 (글로벌 금융위기)",
             "date": "2008-09-15",
-            "impactRationale": "당일 미국 대표 주가지수 -4.4%(-504.48p). 국내 종합주가지수는 추석 후 2008-09-16 약 -6.1%(확인 필요).",
-            "needsVerification": true
+            "impactRationale": "2008-09-15 파산보호 신청(자산 약 6,900억 달러, 미국 최대 파산). 미국 대표 주가지수 -4.42%(-504.48p), 국내 종합주가지수 2008-09-16 -6.10%(-90.17p).",
+            "needsVerification": false
           }
         },
         {
@@ -2306,8 +2306,8 @@
           "source": {
             "event": "한국은행 기준금리 인상 (3.25% → 3.50%)",
             "date": "2005-10-11",
-            "impactRationale": "인상 전후 금리 수준 확인 필요.",
-            "needsVerification": true
+            "impactRationale": "2005-10-11 한국은행 콜금리 3.25% → 3.50%, 2002-05 이후 3년 5개월 만의 인상.",
+            "needsVerification": false
           }
         },
         {
