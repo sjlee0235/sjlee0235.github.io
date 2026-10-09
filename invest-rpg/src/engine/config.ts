@@ -114,7 +114,8 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
   momentumSeconds: 20,
   momentumKeepChance: 0.6,
   momentumReverseChance: 0.2,
-  momentumRate: [1, toRate(MAX_TICK_MOVE)] as const,
+  // 밸런스 조정 4단계: 관성 크기를 0.1~0.5%로 (연습 즉시 추종 목표 +60~100% 맞춤, README 참고)
+  momentumRate: [1, 5] as const,
   impactUnitRate: 30,
   impactMax: 10,
   impactMultiplier: {

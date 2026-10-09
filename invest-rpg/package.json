@@ -9,6 +9,7 @@
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.engine.json",
     "demo": "node scripts/demo.ts",
+    "sim": "node scripts/sim.ts",
     "check": "npm run typecheck && npm test"
   },
   "devDependencies": {
