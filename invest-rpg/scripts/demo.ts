@@ -1,103 +1,67 @@
-// 터미널 데모: 화면 없이 엔진만으로 2000년대 한 시대를 끝까지 돌려 본다.
-// 실행: npm run demo                 (실전 모드, 시드 42)
-//       npm run demo -- practice     (연습 모드)
-//       npm run demo -- real 7       (실전 모드, 시드 7)
-//
-// 가상의 플레이어 전략: 뉴스가 뜨면 갖고 있던 주식을 다 팔고,
-// 호재가 가장 큰 테마의 종목을 살 수 있는 만큼 산다.
+// 터미널 데모: 화면 없이 엔진만으로 한 시대를 끝까지 돌려 본다.
+// 실행: npm run demo              (시드 42)
+//       npm run demo -- 7         (시드 7)
+//       npm run demo -- tutorial  (튜토리얼)
+// 등록된 시대 데이터가 없으면(단계 B 전) 가상 시대로 돈다.
 
 import { ALL_ERAS } from '../src/data/eras/index.ts';
-import type { GameMode } from '../src/engine/config.ts';
 import { Game } from '../src/engine/game.ts';
-import type { ScheduledNews } from '../src/engine/newsEngine.ts';
-import { localize } from '../src/i18n/index.ts';
+import type { RecapNotice } from '../src/engine/recap.ts';
+import { TutorialSession } from '../src/engine/tutorial.ts';
+import { localize, t } from '../src/i18n/index.ts';
+import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
 
 declare const process: { argv: string[] };
 
-const mode: GameMode = process.argv[2] === 'practice' ? 'practice' : 'real';
-const seed = Number(process.argv[3] ?? 42);
-const game = new Game({ eras: ALL_ERAS, seed, mode });
-const era = game.era;
-const stockName = (id: string) => localize(era.stocks.find((s) => s.id === id)!.name, 'ko');
-const stockOfTheme = (themeId: string) => era.stocks.find((s) => s.themeId === themeId)?.id;
 const n = (v: number) => Math.round(v).toLocaleString('ko-KR');
-const signed = (v: number, digits = 1) => `${v > 0 ? '+' : ''}${v.toFixed(digits)}`;
+const signed = (v: number) => `${v > 0 ? '+' : ''}${v.toFixed(1)}%`;
 const clock = (tick: number) => {
-  const s = tick * game.config.tickSeconds;
+  const s = tick * 5;
   return `${Math.floor(s / 3600)}:${String(Math.floor((s % 3600) / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 };
-const KIND = { standalone: '속보', signal: '낌새', clue: '단서', outcome: '결과' } as const;
+const TYPE = { breaking: '속보', tentative: '잠정', clue: '후속', outcome: '결과' } as const;
 
-function onNews(s: ScheduledNews) {
-  const popup = game.getNewsPopup(s);
-  const fiction = popup.isHistorical ? '' : ' [가상 시나리오]';
-  console.log(`[${clock(s.tick)}] (${KIND[s.kind]}) ${s.news.title.ko}${fiction}`);
-  const themes = popup.relatedThemes.map((t) => `${t.direction === 'positive' ? '▲' : '▼'}${t.name.ko}${t.link === 'direct' ? '' : '(2차)'}`);
-  console.log(`           관련 테마: ${themes.join(' ')}`);
-  if (popup.explanation) console.log(`           해설: ${popup.explanation.ko}`);
-  if (popup.reactionNote) console.log(`           반응: ${popup.reactionNote.ko}`);
+function printRecap(game: Game, r: RecapNotice) {
+  const name = (id: string) => localize(game.activeStocks.find((s) => s.id === id)!.name, 'ko');
+  console.log(`[${clock(r.recapTick)}] 해설 알림 (${TYPE[r.tag]})`);
+  for (const it of r.items) {
+    const reason = it.reason?.ko ?? t('ko', 'recap.auto', { newsTerm: it.auto.newsTerm, theme: it.auto.themeName.ko, effect: t('ko', it.auto.positive ? 'recap.benefit' : 'recap.burden') });
+    console.log(`           ${t('ko', 'recap.line', { stock: name(it.stockId), pct: signed(it.appliedPct), reason })}`);
+  }
+  if (r.moreCount > 0) console.log(`           ${t('ko', 'recap.more', { count: r.moreCount })}`);
+  if (r.tentativeNote) console.log(`           (${t('ko', 'recap.tentativeNote')})`);
 }
 
-function trade(s: ScheduledNews) {
-  for (const h of game.account.getHoldings()) game.sell(h.stockId, h.quantity);
-  const best = [...s.news.effects].sort((a, b) => b.impact - a.impact)[0];
-  const id = best && best.impact > 0 ? stockOfTheme(best.themeId) : undefined;
-  if (!id) {
-    console.log('           → 호재 종목이 없어 현금 보유');
-    return;
-  }
-  const qty = game.maxBuyQuantity(id);
-  if (qty > 0) {
-    game.buy(id, qty);
-    console.log(`           → ${stockName(id)} ${qty}주 매수 (주당 ${n(game.getPrice(id))} 비트)`);
-  }
-}
-
-console.log(`\n=== ${localize(era.displayName, 'ko')} | ${mode === 'practice' ? '연습' : '실전'} 모드 | 시드 ${seed} ===`);
-console.log(
-  `1틱 ${game.config.tickSeconds}초, ${game.rules.ticksPerEra}틱(${(game.rules.ticksPerEra * game.config.tickSeconds) / 60}분), 시작 자금 ${n(game.account.cash)} 비트, 수수료 ${game.config.feeRate * 100}%\n`,
-);
-
-while (game.phase !== 'era-ended') {
-  if (game.phase === 'news') {
-    const s = game.pendingNews!;
-    onNews(s);
-    console.log('           ⏸ 연습 모드: 시간 정지 중 → 확인');
-    game.confirmNews();
-    trade(s);
-  }
-  const r = game.advanceTick();
-  if (!r.advanced) continue;
-
-  if (r.news && mode === 'real') {
-    onNews(r.news);
-    trade(r.news);
-  }
-
-  const newsChanges = r.changes.filter((c) => c.cause === 'news');
-  if (newsChanges.length > 0) {
-    const text = newsChanges
-      .slice(0, 6)
-      .map((c) => `${stockName(c.stockId)} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)}%)`)
-      .join(', ');
-    const more = newsChanges.length > 6 ? ` 외 ${newsChanges.length - 6}종목` : '';
-    console.log(`[${clock(r.tick)}] 반영(10초 후): ${text}${more}\n`);
-  }
-
-  if (r.tick % 360 === 0 && !r.settlement) {
-    const p = game.getPortfolio();
-    console.log(`           ── ${clock(r.tick)} 총자산 ${n(p.totalAssets)} 비트\n`);
-  }
-
-  if (r.settlement) {
-    const st = r.settlement;
-    console.log(`\n=== 시대 마감 (${clock(r.tick)}) — 보유 종목 자동 청산 ===`);
-    console.log(`시작 자산 ${n(st.startCash)} → 종료 자산 ${n(st.endAssets)} 비트  (수익률 ${signed(st.returnPct, 2)}%)`);
-    console.log(`이번 시대 뉴스 ${game.shownNews.length}개 (낌새 ${game.shownNews.filter((x) => x.kind === 'signal').length}개)`);
-    console.log('\n시대 종료 시 종목 가격 (시작가 1,000)');
-    for (const item of game.getStockList().sort((a, b) => b.price - a.price)) {
-      console.log(`  ${localize(item.stock.name, 'ko').padEnd(10, '　')} ${n(item.price).padStart(6)}  (${signed(item.changePct)}%)`);
+if (process.argv[2] === 'tutorial') {
+  const tut = new TutorialSession();
+  for (const k of ['notice1', 'notice2', 'notice3', 'notice4']) console.log(`· ${t('ko', `tutorial.${k}`)}`);
+  while (tut.stage === 'waiting') tut.advanceTick();
+  console.log(`\n[${clock(tut.game.tick)}] (시간 정지) ${tut.game.pendingNews!.news.title.ko}`);
+  console.log(`  ${t('ko', 'tutorial.stepReading')}`);
+  tut.game.buy('tut-battery', 5);
+  console.log('  → 든든 배터리 5주 매수');
+  tut.confirmNews();
+  const r = tut.advanceTick();
+  if (r.advanced) for (const c of r.changes.filter((x) => x.cause === 'news')) console.log(`  반영: ${c.stockId} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)})`);
+  while (tut.stage === 'reaction') tut.advanceTick();
+  printRecap(tut.game, tut.recap!);
+  console.log(`\n${t('ko', 'tutorial.done')}`);
+} else {
+  const seed = Number(process.argv[2] ?? 42);
+  const eras = ALL_ERAS.length > 0 ? ALL_ERAS : [makeSpecEra({ id: 'spec' })];
+  const game = new Game({ eras, seed });
+  if (ALL_ERAS.length === 0) console.log('※ 등록된 시대 데이터가 없어 가상 시대로 돌립니다 (단계 B 전).');
+  console.log(`\n=== ${localize(game.era.displayName, 'ko')} | 시드 ${seed} | 추첨 ${game.draw.attempt + 1}회째 | 활성 테마 20개 ===`);
+  while (game.phase !== 'era-ended') {
+    const r = game.advanceTick();
+    if (!r.advanced) continue;
+    if (r.news) {
+      const p = game.getNewsPopup(r.news);
+      console.log(`[${clock(r.tick)}] (${TYPE[r.news.kind]}) ${r.news.news.title.ko}${p.isHistorical ? '' : ` [${t('ko', 'news.fictionalTag')}]`} — 관련 테마 ${p.relatedThemes.length}개`);
     }
+    for (const rc of r.recaps) printRecap(game, rc);
+    if (r.settlement) console.log(`\n=== 시대 마감 — 시작 ${n(r.settlement.startCash)} → 종료 ${n(r.settlement.endAssets)} 비트 (${signed(r.settlement.returnPct)}) ===`);
   }
+  const shown = game.shownNews;
+  console.log(`뉴스 ${shown.length}개: 속보 ${shown.filter((s) => s.kind === 'breaking').length}, 잠정 ${shown.filter((s) => s.kind === 'tentative').length}, 결과 ${shown.filter((s) => s.kind === 'outcome').length}`);
 }
-console.log(`\n다음 시대로 이월되는 자금: ${n(game.account.cash)} 비트\n`);

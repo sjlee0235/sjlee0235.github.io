@@ -1,56 +1,69 @@
-// 밸런스 시뮬레이터: 여러 전략을 시드 200개로 돌려 시대당 수익률 분포를 본다.
-// 실행: npm run sim              (기본: 시드 200개, 결과표 + 조정 수단별 효과표)
-//       npm run sim -- 50        (시드 50개로 빠르게)
-// 전략 설명은 scripts/simLib.ts 맨 위 참고.
+// 밸런스 시뮬레이터: 전략별로 시드 200개를 돌려 시대당 수익률 분포를 본다. 매 판 테마 추첨이 다르다.
+// 실행: npm run sim          (시드 200개)
+//       npm run sim -- 50    (시드 50개로 빠르게)
+// 등록된 시대 데이터가 없으면(단계 B 전) 기획 조건을 흉내 낸 가상 시대로 돌린다.
 
 import { ALL_ERAS } from '../src/data/eras/index.ts';
-import { makeConfig, type GameConfig } from '../src/engine/config.ts';
-import { fmt, run, stallShare } from './simLib.ts';
+import type { Era } from '../src/data/schema.ts';
+import { makeSpecEra } from '../tests/fixtures/makeEra.ts';
+import { fmt, runMany, STRATEGIES, STRATEGY_LABEL, summarize, type Strategy } from './simLib.ts';
 
 declare const process: { argv: string[] };
 
 const SEEDS = Number(process.argv[2] ?? 200);
+const eras: Era[] = ALL_ERAS.length > 0 ? [...ALL_ERAS] : [makeSpecEra({ id: 'spec' })];
 
-const TARGETS: Record<string, string> = {
-  'random/real': '-10% ~ +5%',
-  'random/practice': '-10% ~ +5%',
-  'hold/real': '-10% ~ +20%',
-  'hold/practice': '-10% ~ +20%',
-  'follow/real': '+30% ~ +60%',
-  'follow/practice': '+60% ~ +100%',
-  'learned/real': 'follow보다 높게, +150% 미만',
+const TARGETS: Record<Strategy, string> = {
+  random: '-10% ~ +5%',
+  hold: '-10% ~ +20%',
+  delayedFollow: '-5% ~ +15%',
+  fastFollow: '+30% ~ +80%',
+  sentiment: '+5% ~ +40%',
+  antiSentiment: '-40% ~ -5%',
+  leanForward: '+40% ~ +120%',
+  leanReverse: '0% 미만',
 };
 
-console.log(`\n밸런스 시뮬레이션 — 시드 ${SEEDS}개, 시대당 수익률 (수수료 ${makeConfig().feeRate * 100}% 포함)\n`);
-console.log('시대    모드      전략       중앙값    하위10%   상위10%   목표 중앙값');
-for (const era of ALL_ERAS) {
-  for (const mode of ['real', 'practice'] as const) {
-    for (const strategy of ['random', 'hold', 'follow', 'learned'] as const) {
-      if (strategy === 'learned' && mode === 'practice') continue;
-      const r = run(era, mode, strategy, SEEDS);
-      const target = TARGETS[`${strategy}/${mode}`] ?? '';
-      console.log(
-        `${era.id.padEnd(7)} ${mode.padEnd(9)} ${strategy.padEnd(8)} ${fmt(r.median)} ${fmt(r.p10)} ${fmt(r.p90)}   ${target}`,
-      );
-    }
-  }
-  console.log(`${era.id} 평소 틱 중 0.0% 비율: ${(stallShare(era, Math.min(SEEDS, 50)) * 100).toFixed(1)}% (목표 5% 이하)\n`);
-}
+if (ALL_ERAS.length === 0) console.log('\n※ 등록된 시대 데이터가 없어 가상 시대(기획 조건 흉내)로 시뮬레이션합니다. 실제 수치는 단계 B 이후.');
+console.log(`\n밸런스 시뮬레이션 — 시드 ${SEEDS}개, 시대당(2시간) 수익률, 수수료 0.2% 포함\n`);
 
-// 조정 수단별 효과: 즉시 추종 전략의 중앙값이 단계마다 어떻게 변하는지
-console.log('조정 수단별 효과 (즉시 추종 중앙값, 2000년대)');
-const era = ALL_ERAS[0]!;
-const noMult = { realDirect: [1, 1], realIndirect: [1, 1], practice: [1, 1] } as const;
-const steps: Array<[string, Partial<GameConfig>]> = [
-  ['0) 배율 없음·수수료 0·관성 0.1~1.5%', { impactMultiplier: noMult, feeRate: 0, momentumRate: [1, 15] }],
-  ['1) + 반영 배율 무작위', { feeRate: 0, momentumRate: [1, 15] }],
-  ['3) + 수수료 0.2%', { momentumRate: [1, 15] }],
-  ['4) + 관성 크기 0.1~0.5% (현재 기본값)', {}],
-];
-console.log('단계                              실전 2시간   연습 30분');
-for (const [label, cfg] of steps) {
-  const real = run(era, 'real', 'follow', SEEDS, cfg).median;
-  const practice = run(era, 'practice', 'follow', SEEDS, cfg).median;
-  console.log(`${label.padEnd(32)} ${fmt(real)}   ${fmt(practice)}`);
+for (const era of eras) {
+  console.log(`[${era.id}] 전략           중앙값    하위10%   상위10%   목표 중앙값`);
+  for (const s of STRATEGIES) {
+    const r = summarize(runMany(era, s, SEEDS).map((x) => x.returnPct));
+    console.log(`  ${STRATEGY_LABEL[s].padEnd(12, '　')} ${fmt(r.median)} ${fmt(r.p10)} ${fmt(r.p90)}   ${TARGETS[s]}`);
+  }
+
+  console.log('\n(참고) 기본 OFF 옵션을 켰을 때 — 추종 전략 중앙값');
+  console.log('  옵션                              지연 추종   초고속 추종');
+  for (const [label, cfg] of [
+    ['기본 (모두 OFF)', {}],
+    ['ORDER_DELAY_TICKS=1', { orderDelayTicks: 1 }],
+    ['INDIRECT_EXTRA_DELAY_TICKS=2', { indirectExtraDelayTicks: 2 }],
+  ] as const) {
+    const d = summarize(runMany(era, 'delayedFollow', SEEDS, cfg).map((x) => x.returnPct)).median;
+    const f = summarize(runMany(era, 'fastFollow', SEEDS, cfg).map((x) => x.returnPct)).median;
+    console.log(`  ${label.padEnd(32)} ${fmt(d)}   ${fmt(f)}`);
+  }
+
+  console.log('\n잠정 뉴스 단서 확률(leansTo)별 — 잠정 전략 중앙값');
+  console.log('  단서대로 나올 확률     정방향     역방향     차이');
+  for (const chance of [0.6, 0.65, 0.7, 0.75]) {
+    const f = summarize(runMany(era, 'leanForward', SEEDS, { leansToChance: chance }).map((x) => x.returnPct)).median;
+    const r = summarize(runMany(era, 'leanReverse', SEEDS, { leansToChance: chance }).map((x) => x.returnPct)).median;
+    console.log(`  ${`${chance * 100}%`.padEnd(20)} ${fmt(f)} ${fmt(r)} ${fmt(f - r)}`);
+  }
+
+  console.log('\n추첨 조합별 차이 — 활성 core 테마 수에 따른 중앙값');
+  for (const s of ['hold', 'sentiment', 'leanForward'] as const) {
+    const res = runMany(era, s, SEEDS);
+    const groups = new Map<string, number[]>();
+    for (const x of res) {
+      const key = x.coreCount <= 12 ? 'core 11~12' : x.coreCount <= 14 ? 'core 13~14' : 'core 15+';
+      groups.set(key, [...(groups.get(key) ?? []), x.returnPct]);
+    }
+    const parts = [...groups.entries()].sort().map(([k, v]) => `${k}: ${fmt(summarize(v).median).trim()} (${v.length}판)`);
+    console.log(`  ${STRATEGY_LABEL[s].padEnd(12, '　')} ${parts.join(' | ')}`);
+  }
+  console.log('');
 }
-console.log('(2단계 영향도 분포 40/40/20은 데이터에 이미 적용됨 — 적용 전후 비교는 README 6장 참고)\n');
