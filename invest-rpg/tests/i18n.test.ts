@@ -20,7 +20,7 @@ describe('다국어', () => {
   });
 
   it('엔진의 오류 코드마다 문구가 있다', () => {
-    for (const code of ['invalid-quantity', 'invalid-price', 'insufficient-cash', 'insufficient-shares', 'unknown-stock', 'not-tradable']) {
+    for (const code of ['invalid-quantity', 'invalid-price', 'insufficient-cash', 'insufficient-shares', 'unknown-stock', 'not-tradable', 'not-available-in-real', 'ad-limit-reached', 'game-finished']) {
       expect(t('ko', `error.${code}`)).not.toBe(`error.${code}`);
       expect(t('en', `error.${code}`)).not.toBe(`error.${code}`);
     }

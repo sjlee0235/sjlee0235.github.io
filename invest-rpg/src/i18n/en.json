@@ -29,7 +29,10 @@
     "insufficient-cash": "Not enough cash.",
     "insufficient-shares": "Not enough shares.",
     "unknown-stock": "Unknown stock.",
-    "not-tradable": "Trading is not available right now."
+    "not-tradable": "Trading is not available right now.",
+    "not-available-in-real": "Not available in Real mode.",
+    "ad-limit-reached": "You've used all ad rewards for this era.",
+    "game-finished": "The game is over."
   },
   "portfolio": {
     "cash": "Cash",
@@ -47,10 +50,39 @@
     "returnPct": "Return",
     "byStock": "P/L by stock",
     "liquidated": "All holdings were automatically sold at the current price.",
-    "nextEra": "Next era"
+    "nextEra": "Next era",
+    "deposits": "Ad rewards",
+    "profit": "Investment P/L"
   },
   "news": {
     "breaking": "Breaking",
     "pausedHint": "Time resumes when you press OK."
+  },
+  "mode": {
+    "practice": "Practice",
+    "real": "Real",
+    "practiceDesc": "Time stops when news breaks, and you can see related themes and explanations.",
+    "realDesc": "Time keeps running when news breaks, and prices react 10 seconds later.",
+    "choose": "Choose a mode"
+  },
+  "newsGuide": {
+    "relatedThemes": "Related themes",
+    "showExplanation": "Show explanation",
+    "hideExplanation": "Hide explanation",
+    "marketWide": "Whole market",
+    "positive": "Positive",
+    "negative": "Negative",
+    "direct": "Direct effect",
+    "indirect": "Indirect effect",
+    "kind": {
+      "standalone": "Breaking",
+      "signal": "Developing",
+      "outcome": "Confirmed"
+    },
+    "appliesIn": "Prices will react in {seconds} seconds."
+  },
+  "ad": {
+    "watch": "Watch an ad for {amount} bits",
+    "rewarded": "You received {amount} bits."
   }
 }
