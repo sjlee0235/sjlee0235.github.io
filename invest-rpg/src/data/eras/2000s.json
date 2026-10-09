@@ -7583,6 +7583,744 @@
    "leansTo": "s10-bj-won",
    "opener": true,
    "memo": "베이징 올림픽 유치. 실제: 베이징 개최 확정"
+  },
+  {
+   "id": "s11-swine-flu",
+   "tentative": {
+    "id": "s11-flu-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "남반구 겨울철 신종 독감 급증… '가을 재유행' 경고",
+     "en": "New Flu Surges in the Southern Winter… Experts Warn of an Autumn Wave"
+    },
+    "body": {
+     "ko": "겨울을 맞은 남반구 나라들에서 신종 독감 환자가 빠르게 늘고 있다. 보건 전문가들은 북반구에서도 가을에 다시 크게 유행할 수 있다며 백신 확보를 서두르라고 경고했다.",
+     "en": "New flu cases are rising fast in Southern Hemisphere countries in their winter. Health experts warn of a big autumn wave in the north and urge governments to secure vaccines."
+    },
+    "effects": [
+     {
+      "themeId": "pharma",
+      "impact": 2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "백신",
+         "themeTerm": "백신"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "가을에 유행하면 백신·치료제 수요가 늘 수 있음",
+       "en": "An autumn wave could lift vaccine demand"
+      }
+     },
+     {
+      "themeId": "travel",
+      "impact": -1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "유행 우려 → 해외여행 위축"
+      },
+      "reason": {
+       "ko": "해외여행을 미루는 사람이 생길 수 있음",
+       "en": "Some may postpone trips"
+      }
+     },
+     {
+      "themeId": "airline",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "여행 수요 위축 → 승객 감소"
+      },
+      "reason": {
+       "ko": "승객이 줄 수 있음",
+       "en": "Fewer passengers possible"
+      }
+     },
+     {
+      "themeId": "mart",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "외출 자제 → 매장 방문 감소"
+      },
+      "reason": {
+       "ko": "매장을 찾는 사람이 줄 수 있음",
+       "en": "Fewer store visits possible"
+      }
+     },
+     {
+      "themeId": "online_game",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "집에 머무는 시간 증가"
+      },
+      "reason": {
+       "ko": "집에서 게임하는 시간이 늘 수 있음",
+       "en": "More time gaming at home"
+      }
+     },
+     {
+      "themeId": "hallyu",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "공연·행사 취소 우려"
+      },
+      "reason": {
+       "ko": "공연이 취소될 수 있음",
+       "en": "Shows could be canceled"
+      }
+     },
+     {
+      "themeId": "food",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "집에서 먹는 가공식품 수요"
+      },
+      "reason": {
+       "ko": "집에서 먹는 가공식품 수요가 늘 수 있음",
+       "en": "More meals at home"
+      }
+     }
+    ],
+    "realDate": "2009-06 ~ 08",
+    "source": {
+     "event": "신종플루 남반구 확산, 가을 재유행 경고 (대유행 6단계 선언 2009-06-11)",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 5개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s11-flu-autumn-wave",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "신종 독감 가을 대유행… 백신 접종 앞당기고 해외여행 취소",
+      "en": "New Flu Sweeps Through Autumn… Vaccination Moved Up, Trips Canceled"
+     },
+     "body": {
+      "ko": "신종 독감이 가을 들어 학생들을 중심으로 크게 번지며 휴교와 행사 취소가 잇따랐다. 정부는 학생 백신 접종을 앞당겼고, 병원마다 치료제를 찾는 사람이 몰렸다. 해외여행 예약은 크게 줄었다.",
+      "en": "The new flu spread widely in autumn, mainly among students, closing schools and canceling events. The government moved up student vaccinations and hospitals were crowded with people seeking treatment. Overseas bookings fell sharply."
+     },
+     "effects": [
+      {
+       "themeId": "pharma",
+       "impact": 8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "치료제",
+          "themeTerm": "치료제"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "백신과 치료제 수요가 크게 늘어남",
+        "en": "Vaccine and treatment demand surged"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": -8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "해외여행",
+          "themeTerm": "해외여행"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "해외여행 예약이 크게 줄어듦",
+        "en": "Overseas bookings fell sharply"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "여행 수요 급감 → 승객 감소"
+       },
+       "reason": {
+        "ko": "비행기 승객이 줄어듦",
+        "en": "Passengers fell"
+       }
+      },
+      {
+       "themeId": "hallyu",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "공연·행사 취소"
+       },
+       "reason": {
+        "ko": "공연과 행사가 잇따라 취소됨",
+        "en": "Shows and events were canceled"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "외출 자제 → 매장 방문 감소"
+       },
+       "reason": {
+        "ko": "매장을 찾는 사람이 줄어듦",
+        "en": "Fewer store visits"
+       }
+      },
+      {
+       "themeId": "online_game",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "집에 머무는 시간 증가"
+       },
+       "reason": {
+        "ko": "집에서 게임하는 시간이 늘어남",
+        "en": "More time gaming at home"
+       }
+      },
+      {
+       "themeId": "food",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "집에서 먹는 가공식품 수요"
+       },
+       "reason": {
+        "ko": "집에서 먹는 가공식품 수요 증가",
+        "en": "More meals at home"
+       }
+      }
+     ],
+     "realDate": "2009-10 ~ 11",
+     "source": {
+      "event": "신종플루 가을 대유행 (서울 10-22 학생 확진 9천여 명, 학생 접종 11-11부터로 앞당김)",
+      "impactRationale": "직접 2개(±8), 밀접 2개(±5), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s11-flu-fades",
+     "type": "outcome",
+     "magnitude": 7,
+     "title": {
+      "ko": "신종 독감 여름 지나며 잠잠… 재유행 없이 지나가",
+      "en": "New Flu Fades After Summer… No Autumn Wave"
+     },
+     "body": {
+      "ko": "우려와 달리 신종 독감이 여름을 지나며 잦아들었다. 백신 수요도 예상보다 적었고, 보건 당국은 경계 단계를 낮췄다. 미뤘던 해외여행과 공연 예약이 다시 늘고 있다.",
+      "en": "Contrary to fears, the new flu faded after summer. Vaccine demand was lower than expected and authorities lowered the alert level. Postponed overseas trips and concert bookings are coming back."
+     },
+     "effects": [
+      {
+       "themeId": "pharma",
+       "impact": -7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "백신",
+          "themeTerm": "백신"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "백신 수요가 예상보다 적음",
+        "en": "Vaccine demand fell short"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": 7,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "해외여행",
+          "themeTerm": "해외여행"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "미뤘던 해외여행이 돌아옴",
+        "en": "Postponed trips came back"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "여행 수요 회복"
+       },
+       "reason": {
+        "ko": "승객이 돌아옴",
+        "en": "Passengers returned"
+       }
+      },
+      {
+       "themeId": "hallyu",
+       "impact": 4,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "공연 예약 회복"
+       },
+       "reason": {
+        "ko": "공연 예약이 다시 늘어남",
+        "en": "Concert bookings recovered"
+       }
+      },
+      {
+       "themeId": "mart",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "외출 정상화"
+       },
+       "reason": {
+        "ko": "매장 방문이 회복됨",
+        "en": "Store visits recovered"
+       }
+      },
+      {
+       "themeId": "online_game",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "외출 증가 → 게임 시간 감소"
+       },
+       "reason": {
+        "ko": "밖에 나가는 시간이 늘어 게임 시간 감소",
+        "en": "People went out instead of gaming"
+       }
+      },
+      {
+       "themeId": "food",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "외식 회복 → 가공식품 수요 정상화"
+       },
+       "reason": {
+        "ko": "가공식품 수요가 평소로 돌아감",
+        "en": "Packaged food demand normalized"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 신종플루 재유행 없음",
+      "impactRationale": "직접 2개(±7), 밀접 2개(±4), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s11-flu-autumn-wave",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s11-flu-fades",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s11-flu-autumn-wave",
+   "memo": "신종플루. 실제: 가을 대유행, 백신 접종 앞당김"
+  },
+  {
+   "id": "s12-currency-swap",
+   "tentative": {
+    "id": "s12-swap-tent",
+    "type": "tentative",
+    "magnitude": 2,
+    "title": {
+     "ko": "미국 중앙은행, 신흥국과 통화스와프 확대 검토",
+     "en": "US Central Bank Weighs Currency Swaps with Emerging Economies"
+    },
+    "body": {
+     "ko": "미국 중앙은행이 달러가 부족한 신흥국과 통화스와프를 맺는 방안을 검토하고 있다는 보도가 나왔다. 외환 당국이 협의 중이라고 밝히면서, 외화 부족 걱정과 원·달러 환율 급등세가 누그러질지 관심이 쏠린다.",
+     "en": "Reports say the US central bank is considering currency swaps with dollar-short emerging economies. Korean officials said talks are under way, raising hopes that foreign currency worries and the won's slide may ease."
+    },
+    "effects": [
+     {
+      "themeId": "bank",
+      "impact": 2,
+      "link": {
+       "strength": 3,
+       "keywords": [
+        {
+         "newsTerm": "외화",
+         "themeTerm": "외화"
+        }
+       ]
+      },
+      "reason": {
+       "ko": "외화 부족 걱정이 줄 수 있음",
+       "en": "Foreign currency worries could ease"
+      }
+     },
+     {
+      "themeId": "securities",
+      "impact": 1,
+      "link": {
+       "strength": 2,
+       "keywords": [],
+       "chain": "금융 불안 완화 기대"
+      },
+      "reason": {
+       "ko": "증시 불안이 누그러질 수 있음",
+       "en": "Market stress could ease"
+      }
+     },
+     {
+      "themeId": "airline",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "환율 안정 → 달러 비용 부담 완화"
+      },
+      "reason": {
+       "ko": "달러로 내는 비용 부담이 줄 수 있음",
+       "en": "Dollar costs could ease"
+      }
+     },
+     {
+      "themeId": "travel",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "환율 안정 → 해외여행 경비 부담 완화"
+      },
+      "reason": {
+       "ko": "해외여행 경비가 줄 수 있음",
+       "en": "Trips abroad could get cheaper"
+      }
+     },
+     {
+      "themeId": "savings_bank",
+      "impact": 1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "금융 시장 안정"
+      },
+      "reason": {
+       "ko": "금융권 불안이 줄 수 있음",
+       "en": "Financial jitters could ease"
+      }
+     },
+     {
+      "themeId": "auto",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "환율 하락 → 수출 가격 경쟁력 약화"
+      },
+      "reason": {
+       "ko": "환율이 내리면 수출 이익이 줄 수 있음",
+       "en": "A stronger won could trim export profits"
+      }
+     },
+     {
+      "themeId": "shipbuilding",
+      "impact": -1,
+      "link": {
+       "strength": 1,
+       "keywords": [],
+       "chain": "달러 수주 대금 환산 이익 감소"
+      },
+      "reason": {
+       "ko": "달러로 받는 배 값의 원화 가치가 줄 수 있음",
+       "en": "Dollar ship payments could be worth less"
+      }
+     }
+    ],
+    "realDate": "2008-10",
+    "source": {
+     "event": "미국 중앙은행 신흥국 통화스와프 검토 보도",
+     "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 5개(±1) — 공식 그대로",
+     "needsVerification": true
+    }
+   },
+   "news": [
+    {
+     "id": "s12-swap-signed",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "300억 달러 통화스와프 체결… 환율 급락, 증시 급반등",
+      "en": "$30 Billion Currency Swap Signed… Won Surges, Stocks Rebound"
+     },
+     "body": {
+      "ko": "미국과 300억 달러 규모의 통화스와프가 체결됐다. 필요하면 달러를 빌려 쓸 수 있게 되자 외화 부족 걱정이 줄며 원·달러 환율이 하루 만에 크게 떨어졌고, 증시는 사상 최대 폭으로 반등했다.",
+      "en": "A $30 billion currency swap with the US was signed. With access to dollars when needed, foreign currency worries eased, the won strengthened sharply in a single day and stocks posted a record rebound."
+     },
+     "effects": [
+      {
+       "themeId": "bank",
+       "impact": 8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "외화",
+          "themeTerm": "외화"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "외화 부족 걱정이 크게 줄어듦",
+        "en": "Foreign currency fears eased sharply"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "증시 급반등 → 거래 증가"
+       },
+       "reason": {
+        "ko": "증시가 사상 최대 폭으로 반등",
+        "en": "Stocks staged a record rebound"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "환율 하락 → 달러 비용 부담 감소"
+       },
+       "reason": {
+        "ko": "달러로 내는 연료비·임차료 부담 감소",
+        "en": "Dollar costs fell"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": 5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "해외여행 경비 부담 감소"
+       },
+       "reason": {
+        "ko": "해외여행 경비가 줄어듦",
+        "en": "Trips abroad got cheaper"
+       }
+      },
+      {
+       "themeId": "savings_bank",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "금융 시장 안정"
+       },
+       "reason": {
+        "ko": "금융권 불안이 줄어듦",
+        "en": "Financial jitters eased"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "환율 하락 → 수출 가격 경쟁력 약화"
+       },
+       "reason": {
+        "ko": "환율이 내려 수출 이익이 줄어듦",
+        "en": "A stronger won trimmed export profits"
+       }
+      },
+      {
+       "themeId": "shipbuilding",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "달러 수주 대금 환산 이익 감소"
+       },
+       "reason": {
+        "ko": "달러로 받는 배 값의 원화 가치 감소",
+        "en": "Dollar ship payments were worth less"
+       }
+      }
+     ],
+     "realDate": "2008-10-30",
+     "source": {
+      "event": "한미 통화스와프 300억 달러 (환율 하루 -177원, 증시 사상 최대 폭 반등)",
+      "impactRationale": "직접 1개(±8), 밀접 3개(±5), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": true
+     }
+    },
+    {
+     "id": "s12-swap-delayed",
+     "type": "outcome",
+     "magnitude": 8,
+     "title": {
+      "ko": "통화스와프 협상 지연… 외화 부족 걱정 커져",
+      "en": "Currency Swap Talks Stall… Foreign Currency Fears Grow"
+     },
+     "body": {
+      "ko": "미국과의 통화스와프 협상이 늦어지면서 외화 부족 걱정이 다시 커졌다. 원·달러 환율이 또 치솟고 외국인 투자금이 빠져나가며 증시가 흔들렸다.",
+      "en": "Currency swap talks with the US stalled, reviving fears of a dollar shortage. The won slid again and foreign money fled, shaking the stock market."
+     },
+     "effects": [
+      {
+       "themeId": "bank",
+       "impact": -8,
+       "link": {
+        "strength": 3,
+        "keywords": [
+         {
+          "newsTerm": "외화",
+          "themeTerm": "외화"
+         }
+        ]
+       },
+       "reason": {
+        "ko": "외화 부족 걱정이 다시 커짐",
+        "en": "Dollar shortage fears returned"
+       }
+      },
+      {
+       "themeId": "securities",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "외국인 자금 이탈 → 증시 불안"
+       },
+       "reason": {
+        "ko": "외국인 자금이 빠져나가 증시가 흔들림",
+        "en": "Foreign outflows shook stocks"
+       }
+      },
+      {
+       "themeId": "airline",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "환율 급등 → 달러 비용 부담 증가"
+       },
+       "reason": {
+        "ko": "달러로 내는 비용 부담 증가",
+        "en": "Dollar costs rose"
+       }
+      },
+      {
+       "themeId": "travel",
+       "impact": -5,
+       "link": {
+        "strength": 2,
+        "keywords": [],
+        "chain": "해외여행 경비 부담 증가"
+       },
+       "reason": {
+        "ko": "해외여행 경비가 늘어남",
+        "en": "Trips abroad got pricier"
+       }
+      },
+      {
+       "themeId": "savings_bank",
+       "impact": -2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "금융 시장 불안"
+       },
+       "reason": {
+        "ko": "금융권 불안이 커짐",
+        "en": "Financial jitters grew"
+       }
+      },
+      {
+       "themeId": "auto",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "환율 상승 → 수출 가격 경쟁력"
+       },
+       "reason": {
+        "ko": "환율이 올라 수출 이익이 늘어남",
+        "en": "A weaker won helped exports"
+       }
+      },
+      {
+       "themeId": "shipbuilding",
+       "impact": 2,
+       "link": {
+        "strength": 1,
+        "keywords": [],
+        "chain": "달러 수주 대금 환산 이익"
+       },
+       "reason": {
+        "ko": "달러로 받는 배 값의 원화 가치 증가",
+        "en": "Dollar ship payments were worth more"
+       }
+      }
+     ],
+     "realDate": "가상",
+     "source": {
+      "event": "가상 시나리오: 통화스와프 협상 지연",
+      "impactRationale": "직접 1개(±8), 밀접 3개(±5), 간접 3개(±2) — 공식 그대로",
+      "needsVerification": false
+     }
+    }
+   ],
+   "outcomes": [
+    {
+     "newsId": "s12-swap-signed",
+     "isHistorical": true
+    },
+    {
+     "newsId": "s12-swap-delayed",
+     "isHistorical": false
+    }
+   ],
+   "leansTo": "s12-swap-signed",
+   "memo": "한미 통화스와프. 실제: 300억 달러 체결, 환율 급락·증시 급반등"
   }
  ]
 }
