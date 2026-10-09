@@ -1,0 +1,429 @@
+{
+  "id": "2000s",
+  "order": 2000,
+  "displayName": { "ko": "2000년대", "en": "The 2000s" },
+  "period": { "startYear": 2000, "endYear": 2009 },
+  "themes": [
+    { "id": "semiconductor", "sentiment": "positive", "name": { "ko": "반도체", "en": "Semiconductors" }, "memo": "국내 메모리 반도체가 세계 선두권으로 올라서며 수출 주력 산업이 됨 (점유율 수치 확인 필요)" },
+    { "id": "mobile", "sentiment": "positive", "name": { "ko": "휴대폰", "en": "Mobile Phones" }, "memo": "2000년대 중반 국산 휴대폰의 세계 점유율 급성장 (수치 확인 필요)" },
+    { "id": "shipbuilding", "sentiment": "positive", "name": { "ko": "조선", "en": "Shipbuilding" }, "memo": "2000년대 중반 조선 슈퍼사이클, 국내 조선 수주량 세계 1위 (연도별 순위 확인 필요)" },
+    { "id": "steel", "sentiment": "positive", "name": { "ko": "철강", "en": "Steel" }, "memo": "중국 고성장에 따른 철강 수요·가격 급등" },
+    { "id": "online-game", "sentiment": "positive", "name": { "ko": "온라인게임", "en": "Online Games" }, "memo": "PC방 보급과 국산 온라인 RPG 흥행, 해외 수출 확대" },
+    { "id": "hallyu", "sentiment": "positive", "name": { "ko": "한류", "en": "Korean Wave" }, "memo": "드라마·음악 중심 한류의 일본·중국·동남아 확산" },
+    { "id": "refining", "sentiment": "positive", "name": { "ko": "정유", "en": "Oil Refining" }, "memo": "2003~2008 국제유가 상승기에 정유·에너지 업종 수혜" },
+    { "id": "dotcom", "sentiment": "negative", "name": { "ko": "닷컴 벤처", "en": "Dot-com Ventures" }, "memo": "2000년 닷컴 버블 붕괴, 코스닥 벤처 폭락" },
+    { "id": "credit-card", "sentiment": "negative", "name": { "ko": "신용카드", "en": "Credit Cards" }, "memo": "2003년 카드대란 (연체율 급등, 대형 카드사 유동성 위기)" },
+    { "id": "airline", "sentiment": "negative", "name": { "ko": "항공", "en": "Airlines" }, "memo": "9·11 테러, 사스, 고유가 등 악재가 연속" },
+    { "id": "travel", "sentiment": "negative", "name": { "ko": "여행", "en": "Travel" }, "memo": "테러·전염병·금융위기 때마다 여행 수요 급감" },
+    { "id": "construction", "sentiment": "negative", "name": { "ko": "건설", "en": "Construction" }, "memo": "후반 미국발 부동산 부실·금융위기 직격. 단, 국내 건설은 2000년대 중반 호황이었으므로 '부정' 분류는 재검토 필요" },
+    { "id": "investment-bank", "sentiment": "negative", "name": { "ko": "투자은행", "en": "Investment Banking" }, "memo": "2008년 글로벌 금융위기의 진원지" },
+    { "id": "livestock", "sentiment": "negative", "name": { "ko": "축산", "en": "Livestock" }, "memo": "광우병·조류독감·신종플루 등 식품 안전 이슈 반복" },
+    { "id": "auto", "sentiment": "neutral", "name": { "ko": "자동차", "en": "Automobiles" }, "memo": "국산 완성차 수출 성장 vs 2008~09 미국 완성차 업체 파산 위기가 혼재" },
+    { "id": "stem-cell", "sentiment": "neutral", "name": { "ko": "줄기세포", "en": "Stem Cells" }, "memo": "2004~05 기대감 급등 후 2005년 말 논문 조작 사건으로 폭락. 상승·하락 모두 극단적" },
+    { "id": "vaccine", "sentiment": "neutral", "name": { "ko": "백신", "en": "Vaccines" }, "memo": "사스·조류독감·신종플루 때마다 단기 수혜" },
+    { "id": "defense", "sentiment": "neutral", "name": { "ko": "방산", "en": "Defense" }, "memo": "테러와의 전쟁, 북한 핵실험 등 지정학 사건 때 단기 급등" },
+    { "id": "solar", "sentiment": "neutral", "name": { "ko": "태양광", "en": "Solar Power" }, "memo": "후반 고유가·녹색성장 정책으로 부상, 초반엔 존재감 작음" },
+    { "id": "gold", "sentiment": "neutral", "name": { "ko": "금", "en": "Gold" }, "memo": "2001년 이후 꾸준히 올랐지만 위기 때 반응하는 안전자산 성격이라 중립 분류 (긍정으로 바꿀지 검토 필요)" }
+  ],
+  "stocks": [
+    {
+      "id": "2000s-semiconductor", "themeId": "semiconductor",
+      "name": { "ko": "정밀 반도체", "en": "Precision Chipworks" },
+      "description": {
+        "ko": "PC와 휴대폰에 들어가는 메모리 반도체를 만든다. 손톱만 한 칩 안에 더 많은 회로를 새기는 미세 공정이 주력 기술이다. 경기에 따라 가격이 크게 출렁이는 업종이다.",
+        "en": "Manufactures memory chips for PCs and mobile phones. Its core strength is fine-process technology that packs more circuits into a fingernail-sized chip. Chip prices swing sharply with the business cycle."
+      }
+    },
+    {
+      "id": "2000s-mobile", "themeId": "mobile",
+      "name": { "ko": "한손 휴대폰", "en": "OneHand Mobile" },
+      "description": {
+        "ko": "접이식 휴대폰과 카메라폰을 만들어 국내외에 판매한다. 디자인과 얇은 두께로 젊은 층에 인기가 높다. 해외 통신사 납품 비중이 점점 커지고 있다.",
+        "en": "Designs and sells flip phones and camera phones at home and abroad. Its slim designs are popular with younger buyers. A growing share of sales comes from overseas carriers."
+      }
+    },
+    {
+      "id": "2000s-shipbuilding", "themeId": "shipbuilding",
+      "name": { "ko": "거함 조선", "en": "Bighull Shipbuilding" },
+      "description": {
+        "ko": "대형 유조선과 컨테이너선을 건조하는 조선소다. 한 척을 수주하면 몇 년 치 일감이 생긴다. 세계 물동량이 늘어날 때 가장 먼저 웃는 업종이다.",
+        "en": "A shipyard building large oil tankers and container ships. A single order can keep the docks busy for years. It is among the first to benefit when global trade grows."
+      }
+    },
+    {
+      "id": "2000s-steel", "themeId": "steel",
+      "name": { "ko": "불꽃 제철", "en": "Blaze Steelworks" },
+      "description": {
+        "ko": "철광석을 녹여 건설용 철근과 자동차·조선용 강판을 만든다. 거대한 용광로를 24시간 돌린다. 이웃 나라의 건설 경기에 실적이 크게 좌우된다.",
+        "en": "Smelts iron ore into rebar for construction and steel plates for cars and ships. Its giant blast furnaces run around the clock. Earnings depend heavily on construction booms abroad."
+      }
+    },
+    {
+      "id": "2000s-online-game", "themeId": "online-game",
+      "name": { "ko": "밤샘 게임즈", "en": "AllNight Games" },
+      "description": {
+        "ko": "수천 명이 동시에 접속하는 온라인 롤플레잉 게임을 서비스한다. 전국 PC방이 주요 유통망이다. 최근에는 아시아 각국으로 게임을 수출하고 있다.",
+        "en": "Runs an online role-playing game where thousands of players connect at once. PC cafés across the country are its main channel. It has recently begun exporting its games across Asia."
+      }
+    },
+    {
+      "id": "2000s-hallyu", "themeId": "hallyu",
+      "name": { "ko": "물결 엔터", "en": "Wave Entertainment" },
+      "description": {
+        "ko": "드라마 제작과 가수 매니지먼트를 함께 하는 엔터테인먼트 회사다. 해외 방송사에 드라마 판권을 판다. 소속 배우의 인기에 따라 실적이 크게 달라진다.",
+        "en": "An entertainment company that produces TV dramas and manages singers. It sells drama broadcast rights to foreign networks. Results rise and fall with the popularity of its stars."
+      }
+    },
+    {
+      "id": "2000s-refining", "themeId": "refining",
+      "name": { "ko": "흑금 정유", "en": "Blackgold Refinery" },
+      "description": {
+        "ko": "수입한 원유를 정제해 휘발유·경유·항공유를 만든다. 국내 주유소 체인도 운영한다. 국제유가가 오르면 재고 가치가 함께 오른다.",
+        "en": "Refines imported crude into gasoline, diesel and jet fuel. It also runs a nationwide chain of gas stations. When oil prices rise, the value of its inventory rises too."
+      }
+    },
+    {
+      "id": "2000s-dotcom", "themeId": "dotcom",
+      "name": { "ko": "번개 닷컴", "en": "Lightning.com" },
+      "description": {
+        "ko": "무료 이메일과 인터넷 커뮤니티를 운영하는 벤처 기업이다. 가입자 수는 빠르게 늘었지만 아직 뚜렷한 수익 모델이 없다. 주가는 미래에 대한 기대만으로 움직이고 있다.",
+        "en": "A venture company offering free email and online communities. Its user base grew fast, but it has yet to find a clear way to make money. Its stock price runs on expectations alone."
+      }
+    },
+    {
+      "id": "2000s-credit-card", "themeId": "credit-card",
+      "name": { "ko": "외상 카드", "en": "TabCard" },
+      "description": {
+        "ko": "신용카드를 발급하고 현금서비스를 제공하는 카드사다. 길거리 모집으로 회원 수를 빠르게 늘렸다. 연체율이 오르면 실적이 급격히 나빠진다.",
+        "en": "A card company issuing credit cards and cash advances. It grew its membership quickly through street sign-up booths. Its earnings fall sharply when delinquency rates rise."
+      }
+    },
+    {
+      "id": "2000s-airline", "themeId": "airline",
+      "name": { "ko": "구름 항공", "en": "Cumulus Air" },
+      "description": {
+        "ko": "국내선과 아시아 단거리 노선을 운항하는 항공사다. 비용의 상당 부분이 항공유 값이다. 여행 수요와 유가에 동시에 흔들린다.",
+        "en": "An airline flying domestic and short-haul Asian routes. Jet fuel makes up a large share of its costs. It is shaken by both travel demand and oil prices."
+      }
+    },
+    {
+      "id": "2000s-travel", "themeId": "travel",
+      "name": { "ko": "낭만 여행사", "en": "Romance Travel" },
+      "description": {
+        "ko": "해외 패키지 여행과 신혼여행 상품을 판매한다. 항공권과 호텔을 묶어 싸게 파는 것이 강점이다. 사회 불안이 생기면 예약 취소가 가장 먼저 늘어난다.",
+        "en": "Sells overseas package tours and honeymoon trips. Its strength is bundling flights and hotels at low prices. Cancellations are the first thing to spike when the world feels unsafe."
+      }
+    },
+    {
+      "id": "2000s-construction", "themeId": "construction",
+      "name": { "ko": "모래 건설", "en": "Sandcastle Construction" },
+      "description": {
+        "ko": "아파트 단지와 상가를 짓는 건설사다. 분양이 잘되면 큰돈을 벌지만, 미분양이 쌓이면 빚이 빠르게 불어난다. 금리와 부동산 경기에 민감하다.",
+        "en": "Builds apartment complexes and shopping arcades. It earns big when units sell, but its debt balloons when they don't. It is sensitive to interest rates and the property market."
+      }
+    },
+    {
+      "id": "2000s-investment-bank", "themeId": "investment-bank",
+      "name": { "ko": "레버 투자은행", "en": "Lever Investment Bank" },
+      "description": {
+        "ko": "기업 인수합병 자문과 파생상품 거래를 하는 투자은행이다. 빌린 돈으로 큰 판을 벌이는 것이 특기다. 시장이 좋을 땐 크게 벌고, 나쁠 땐 크게 잃는다.",
+        "en": "An investment bank advising on mergers and trading derivatives. It specializes in making big bets with borrowed money. It wins big in good markets and loses big in bad ones."
+      }
+    },
+    {
+      "id": "2000s-livestock", "themeId": "livestock",
+      "name": { "ko": "목장 축산", "en": "Meadow Livestock" },
+      "description": {
+        "ko": "닭·돼지를 키우고 가공육을 만들어 대형마트에 납품한다. 사료 값과 가축 전염병이 가장 큰 위험 요소다. 식품 안전 뉴스 하나에 매출이 크게 흔들린다.",
+        "en": "Raises chickens and pigs and supplies processed meat to supermarkets. Feed costs and livestock disease are its biggest risks. A single food-safety headline can rattle its sales."
+      }
+    },
+    {
+      "id": "2000s-auto", "themeId": "auto",
+      "name": { "ko": "질주 자동차", "en": "Dash Motors" },
+      "description": {
+        "ko": "소형차와 중형 세단을 만들어 국내외에 판매한다. 가격 대비 품질로 해외 시장 점유율을 넓히고 있다. 유가와 환율, 소비 심리에 두루 영향을 받는다.",
+        "en": "Makes compact cars and midsize sedans for home and overseas markets. It is gaining share abroad on value for money. Oil prices, exchange rates and consumer mood all affect it."
+      }
+    },
+    {
+      "id": "2000s-stem-cell", "themeId": "stem-cell",
+      "name": { "ko": "기적 바이오", "en": "Miracle Bio" },
+      "description": {
+        "ko": "줄기세포로 난치병 치료제를 개발하겠다는 바이오 벤처다. 아직 판매 중인 제품은 없다. 연구 발표 하나에 주가가 천국과 지옥을 오간다.",
+        "en": "A bio venture aiming to treat incurable diseases with stem cells. It has no products on the market yet. A single research announcement can send its stock soaring or crashing."
+      }
+    },
+    {
+      "id": "2000s-vaccine", "themeId": "vaccine",
+      "name": { "ko": "방패 백신", "en": "Shield Vaccines" },
+      "description": {
+        "ko": "독감 백신과 진단 키트를 생산하는 제약사다. 정부 비축용 납품이 주요 매출원이다. 전염병이 돌 때마다 주문과 관심이 한꺼번에 몰린다.",
+        "en": "A drug maker producing flu vaccines and diagnostic kits. Government stockpile contracts are a key source of revenue. Orders and attention flood in whenever an epidemic spreads."
+      }
+    },
+    {
+      "id": "2000s-defense", "themeId": "defense",
+      "name": { "ko": "최강 방산", "en": "Mighty Defense" },
+      "description": {
+        "ko": "자주포·탄약·군용 통신장비를 만들어 군에 납품한다. 정부 국방 예산이 실적을 좌우한다. 안보 위기가 커질 때 투자자들이 몰려드는 대표 종목이다.",
+        "en": "Supplies self-propelled guns, ammunition and military radios to the armed forces. Defense budgets drive its results. Investors flock to it whenever security tensions rise."
+      }
+    },
+    {
+      "id": "2000s-solar", "themeId": "solar",
+      "name": { "ko": "햇살 솔라", "en": "Sunbeam Solar" },
+      "description": {
+        "ko": "태양광 패널의 핵심 소재와 모듈을 만든다. 아직 발전 단가가 비싸 정부 보조금 의존도가 높다. 유가가 오르거나 친환경 정책이 나오면 주목받는다.",
+        "en": "Makes key materials and modules for solar panels. Power from solar is still costly, so it relies heavily on subsidies. It draws attention when oil prices climb or green policies arrive."
+      }
+    },
+    {
+      "id": "2000s-gold", "themeId": "gold",
+      "name": { "ko": "금고 귀금속", "en": "Vault Precious Metals" },
+      "description": {
+        "ko": "금괴와 귀금속을 유통하고 보관 서비스를 제공한다. 금값이 오르면 보유 재고의 가치도 함께 오른다. 세상이 불안할수록 찾는 사람이 많아진다.",
+        "en": "Trades gold bars and precious metals and offers vault storage. When gold rises, so does the value of its inventory. The more uncertain the world, the more customers it gets."
+      }
+    }
+  ],
+  "newsPool": [
+    {
+      "id": "2000s-n01-dotcom-crash",
+      "title": { "ko": "나스닥 폭락…닷컴 거품 꺼지나", "en": "Nasdaq Plunges as the Dot-com Bubble Bursts" },
+      "body": {
+        "ko": "미국 기술주 중심의 나스닥 지수가 사상 최고치를 찍은 지 한 달 만에 급락했다. 이익 없이 가입자 수만 내세우던 인터넷 기업들의 주가가 하루에 수십 퍼센트씩 빠지고 있다. 국내 벤처 종목들도 동반 하락세다.",
+        "en": "The tech-heavy Nasdaq has tumbled just a month after hitting a record high. Internet companies that boasted user counts but no profits are losing tens of percent in a single day. Korean venture stocks are falling in tandem."
+      },
+      "effects": [
+        { "themeId": "dotcom", "impact": -9 },
+        { "themeId": "semiconductor", "impact": -3 },
+        { "themeId": "mobile", "impact": -2 },
+        { "themeId": "investment-bank", "impact": -2 }
+      ],
+      "source": {
+        "event": "미국 닷컴 버블 붕괴 (국내 코스닥 동반 폭락)",
+        "date": "2000-03",
+        "impactRationale": "나스닥 2000-03-10 종가 5,048.62로 고점 → 2002-10 1,114선까지 약 -78%. 2년에 걸친 하락을 뉴스 1개에 담기 위해 닷컴 -9(-27%)로 압축. 반도체·휴대폰 등 기술주 동반 약세 -2~-3. 국내 코스닥 2000년 연간 하락률(약 -80%)은 확인 필요.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n02-sept-11",
+      "title": { "ko": "미국 뉴욕 테러…세계 금융시장 충격", "en": "Terror Attacks on New York Shock Global Markets" },
+      "body": {
+        "ko": "납치된 여객기들이 뉴욕과 워싱턴의 주요 건물에 충돌하는 사상 초유의 테러가 발생했다. 미국 증시는 거래를 중단했고, 항공·여행 수요가 얼어붙을 것이라는 전망이 나온다. 각국은 군사 대응과 안보 예산 확대를 검토하고 있다.",
+        "en": "Hijacked airliners have crashed into landmark buildings in New York and Washington in an unprecedented terror attack. U.S. stock markets have halted trading, and analysts expect air travel demand to freeze. Governments are weighing military responses and bigger security budgets."
+      },
+      "effects": [
+        { "themeId": "airline", "impact": -9 },
+        { "themeId": "travel", "impact": -7 },
+        { "themeId": "defense", "impact": 6 },
+        { "themeId": "gold", "impact": 4 },
+        { "themeId": "investment-bank", "impact": -3 }
+      ],
+      "source": {
+        "event": "9·11 테러",
+        "date": "2001-09-11",
+        "impactRationale": "뉴욕증시 휴장 후 재개장일(2001-09-17) 다우 -7.1%(-684.81p). 국내 코스피 2001-09-12 약 -12% 폭락(확인 필요). 미국 항공주는 재개장 첫 주 수십 % 급락(정확한 폭 확인 필요) → 항공 -9(-27%). 방산 상승·금값 상승 폭은 확인 필요.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n03-sars",
+      "title": { "ko": "사스 아시아 확산…WHO 여행 자제 권고", "en": "SARS Spreads Across Asia; WHO Advises Against Travel" },
+      "body": {
+        "ko": "원인 불명의 중증 호흡기 질환이 중국 남부와 홍콩을 거쳐 아시아 전역으로 번지고 있다. 세계보건기구(WHO)는 이례적으로 특정 지역 여행 자제를 권고했다. 항공편 예약 취소가 잇따르는 가운데 백신·진단 관련 연구에 관심이 쏠리고 있다.",
+        "en": "A mysterious severe respiratory illness is spreading from southern China and Hong Kong across Asia. In a rare move, the World Health Organization has advised against travel to affected areas. As flight cancellations pile up, attention is turning to vaccine and diagnostic research."
+      },
+      "effects": [
+        { "themeId": "travel", "impact": -7 },
+        { "themeId": "airline", "impact": -6 },
+        { "themeId": "vaccine", "impact": 5 }
+      ],
+      "source": {
+        "event": "중증급성호흡기증후군(SARS) 유행",
+        "date": "2003-03 ~ 2003-04",
+        "impactRationale": "WHO 국제 경보 2003-03-12, 여행 자제 권고 2003-04 초(날짜 확인 필요). WHO 집계 누적 약 8,096명 감염·774명 사망. 아시아 항공 여객 2003년 4~5월 급감(수치 확인 필요) → 여행 -7, 항공 -6. 실제로 사스 백신은 상용화되지 않았으므로 백신 +5는 '기대감' 수준으로 낮게 잡음.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n04-card-crisis",
+      "title": { "ko": "카드 연체율 사상 최고…'신용불량자 300만 시대'", "en": "Card Delinquencies Hit Record as Defaulters Top 3 Million" },
+      "body": {
+        "ko": "길거리 모집으로 무분별하게 발급된 신용카드의 빚이 한꺼번에 터지고 있다. 대형 카드사가 유동성 위기에 빠져 채권단에 지원을 요청했고, 소비 심리도 급격히 얼어붙었다. 정부는 카드사 건전성 규제를 대폭 강화하기로 했다.",
+        "en": "Debt from credit cards handed out freely at street booths is coming due all at once. A major card issuer has run short of cash and asked its creditors for a rescue, and consumer sentiment has frozen. The government plans to sharply tighten rules on card companies."
+      },
+      "effects": [
+        { "themeId": "credit-card", "impact": -8 },
+        { "themeId": "investment-bank", "impact": -3 },
+        { "themeId": "travel", "impact": -2 },
+        { "themeId": "auto", "impact": -2 }
+      ],
+      "source": {
+        "event": "국내 신용카드 대란 (2003-11 대형 카드사 LG카드 유동성 위기·채권단 지원)",
+        "date": "2003",
+        "impactRationale": "신용불량자 2003년 말 약 370만 명대(확인 필요). 카드사 주가 고점 대비 큰 폭 하락(폭 확인 필요) → 카드 -8(-24%). 금융권 부실 우려 -3, 소비 위축으로 여행·자동차 -2.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n05-hallyu-japan",
+      "title": { "ko": "한국 드라마 일본 열풍…촬영지마다 관광객 북적", "en": "Korean Drama Craze in Japan Sends Tourists Flocking" },
+      "body": {
+        "ko": "일본 공영방송에서 방영된 한국 드라마가 폭발적인 인기를 끌면서 촬영지를 찾는 일본인 관광객이 급증하고 있다. 한국 배우의 음반과 화보, 관련 상품 매출도 크게 늘었다. 업계는 한류가 일시적 유행을 넘어 하나의 산업이 되고 있다고 평가한다.",
+        "en": "A Korean drama aired on Japan's public broadcaster has become a sensation, and Japanese tourists are pouring into its filming locations. Sales of albums, photo books and merchandise featuring Korean actors have surged. The industry says the Korean Wave is becoming a business, not a passing fad."
+      },
+      "effects": [
+        { "themeId": "hallyu", "impact": 8 },
+        { "themeId": "travel", "impact": 4 },
+        { "themeId": "airline", "impact": 2 }
+      ],
+      "source": {
+        "event": "드라마 '겨울연가' 일본 NHK 방영으로 한류 붐 (2003 위성 방송, 2004 지상파 방송)",
+        "date": "2004-04",
+        "impactRationale": "2004년 일본인 방한 관광객 증가(수치 확인 필요). 엔터테인먼트 관련 코스닥 종목 급등(폭 확인 필요) → 한류 +8(+24%). 관광 수요 증가로 여행 +4, 항공 +2.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n06-stem-cell-scandal",
+      "title": { "ko": "세계적 줄기세포 논문 조작 의혹…연구 성과 '원점'", "en": "Landmark Stem Cell Papers Suspected of Fabrication" },
+      "body": {
+        "ko": "세계적인 학술지에 실린 국내 연구팀의 인간 배아줄기세포 논문이 조작됐다는 의혹이 제기됐다. 대학 조사위원회는 핵심 데이터가 존재하지 않는다는 결론을 내렸다. 기대감에 급등했던 바이오 종목들이 일제히 폭락하고 있다.",
+        "en": "A Korean team's human embryonic stem cell papers, published in a leading journal, are suspected of being fabricated. A university panel has concluded that the key data do not exist. Biotech stocks that soared on hope are now collapsing across the board."
+      },
+      "effects": [
+        { "themeId": "stem-cell", "impact": -9 },
+        { "themeId": "vaccine", "impact": -2 }
+      ],
+      "source": {
+        "event": "황우석 연구팀 줄기세포 논문 조작 사건 (사이언스 2004·2005 논문)",
+        "date": "2005-12 ~ 2006-01",
+        "impactRationale": "2005-12 조작 의혹 확산, 서울대 조사위 2005-12-23 중간발표·2006-01-10 최종발표로 조작 확인. 줄기세포 테마주 고점 대비 큰 폭 하락(구체 폭 확인 필요) → 줄기세포 -9(-27%). 바이오 전반 심리 위축으로 백신 -2.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n07-nk-nuclear-test",
+      "title": { "ko": "북한 첫 핵실험 강행…한반도 긴장 최고조", "en": "North Korea Conducts First Nuclear Test" },
+      "body": {
+        "ko": "북한이 지하 핵실험을 실시했다고 발표했다. 국내 증시는 장중 급락했고 원화 가치도 크게 떨어졌다. 정부는 긴급 안보회의를 소집하고 국방 태세를 강화했다.",
+        "en": "North Korea has announced that it carried out an underground nuclear test. Korean stocks fell sharply during the session and the won weakened. The government convened an emergency security meeting and raised its defense posture."
+      },
+      "effects": [
+        { "themeId": "defense", "impact": 7 },
+        { "themeId": "gold", "impact": 3 },
+        { "themeId": "travel", "impact": -3 },
+        { "themeId": "investment-bank", "impact": -2 }
+      ],
+      "source": {
+        "event": "북한 1차 핵실험",
+        "date": "2006-10-09",
+        "impactRationale": "당일 코스피 약 -2.4% 하락(확인 필요), 방산 관련주 급등(폭 확인 필요) → 방산 +7(+21%). 지정학 위험으로 금 +3, 외국인 관광 위축 우려로 여행 -3, 증시 하락으로 금융 -2.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n08-china-boom",
+      "title": { "ko": "중국 경제 두 자릿수 성장…철강·선박 '없어서 못 판다'", "en": "China's Double-Digit Growth Leaves Steel and Ships in Short Supply" },
+      "body": {
+        "ko": "중국이 올림픽을 앞둔 대규모 건설과 수출 확대로 두 자릿수 성장을 이어가고 있다. 철강 가격이 치솟고, 원자재를 실어 나를 배가 모자라 국내 조선소에는 수년 치 일감이 쌓였다. 증권가에서는 '중국 관련주'가 시장을 이끈다는 분석이 나온다.",
+        "en": "China keeps posting double-digit growth on pre-Olympic construction and booming exports. Steel prices are soaring, and with too few ships to carry raw materials, Korean shipyards have years of orders stacked up. Analysts say 'China plays' are now leading the market."
+      },
+      "effects": [
+        { "themeId": "shipbuilding", "impact": 8 },
+        { "themeId": "steel", "impact": 7 },
+        { "themeId": "refining", "impact": 3 }
+      ],
+      "source": {
+        "event": "중국 고성장과 조선·철강 슈퍼사이클 (코스피 2000 첫 돌파 2007-07-25)",
+        "date": "2007",
+        "impactRationale": "중국 2007년 GDP 성장률 약 14%(수정치 기준, 확인 필요). 국내 조선주 2007년 큰 폭 상승(폭 확인 필요) → 조선 +8(+24%), 철강 +7(+21%). 원자재 수요 증가로 정유 +3.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n09-oil-147",
+      "title": { "ko": "국제유가 배럴당 147달러 돌파…사상 최고치", "en": "Oil Breaks $147 a Barrel, an All-Time High" },
+      "body": {
+        "ko": "국제유가가 사상 처음으로 배럴당 147달러를 넘어섰다. 항공사들은 유류할증료를 올리고 일부 노선을 줄이기 시작했으며, 대형차를 중심으로 자동차 판매도 급감하고 있다. 반면 정유사와 대체에너지 기업에는 투자자들의 관심이 몰리고 있다.",
+        "en": "Crude oil has topped $147 a barrel for the first time ever. Airlines are raising fuel surcharges and cutting routes, and car sales, especially of large models, are falling fast. Meanwhile, investors are piling into refiners and alternative energy firms."
+      },
+      "effects": [
+        { "themeId": "refining", "impact": 7 },
+        { "themeId": "airline", "impact": -7 },
+        { "themeId": "solar", "impact": 5 },
+        { "themeId": "auto", "impact": -3 },
+        { "themeId": "travel", "impact": -2 }
+      ],
+      "source": {
+        "event": "WTI 장중 사상 최고 배럴당 147.27달러",
+        "date": "2008-07-11",
+        "impactRationale": "WTI 2007년 초 50달러대 → 2008-07 147달러로 약 2.5배. 항공주는 연료비 부담으로 큰 폭 하락(폭 확인 필요) → 항공 -7, 정유 +7. 대체에너지 관심으로 태양광 +5. 대형차 판매 감소로 자동차 -3.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n10-green-growth",
+      "title": { "ko": "정부, '저탄소 녹색성장' 국가 비전 선포", "en": "Government Unveils 'Low-Carbon Green Growth' Vision" },
+      "body": {
+        "ko": "정부가 앞으로의 국가 비전으로 '저탄소 녹색성장'을 제시했다. 태양광·풍력 등 신재생에너지에 대규모로 투자하고 관련 산업을 집중 육성하겠다는 계획이다. 발표 직후 신재생에너지 관련 종목들이 강세를 보였다.",
+        "en": "The government has named 'low-carbon green growth' as the nation's new long-term vision. It plans massive investment in solar, wind and other renewables, along with focused support for the industry. Renewable energy stocks rallied right after the announcement."
+      },
+      "effects": [
+        { "themeId": "solar", "impact": 7 },
+        { "themeId": "refining", "impact": -2 }
+      ],
+      "source": {
+        "event": "광복절 경축사 '저탄소 녹색성장' 국가비전 선포",
+        "date": "2008-08-15",
+        "impactRationale": "녹색성장 테마주 발표 전후 급등(폭 확인 필요) → 태양광 +7(+21%). 화석연료 의존을 줄이는 방향이므로 정유 -2(작은 값, 근거 약함·확인 필요).",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n11-ib-bankruptcy",
+      "title": { "ko": "미국 4위 투자은행 파산…월가 '검은 월요일'", "en": "Fourth-Largest U.S. Investment Bank Collapses on 'Black Monday'" },
+      "body": {
+        "ko": "150년이 넘는 역사를 가진 미국 대형 투자은행이 파산보호를 신청했다. 부실 주택담보대출에서 시작된 위기가 금융 시스템 전체로 번지면서 세계 증시가 일제히 폭락했다. 안전자산인 금으로 돈이 몰리고 있다.",
+        "en": "A major U.S. investment bank with more than 150 years of history has filed for bankruptcy protection. A crisis that began with bad mortgages is spreading through the entire financial system, sending stock markets worldwide into a tailspin. Money is rushing into gold as a safe haven."
+      },
+      "effects": [
+        { "themeId": "investment-bank", "impact": -10 },
+        { "themeId": "construction", "impact": -6 },
+        { "themeId": "credit-card", "impact": -4 },
+        { "themeId": "shipbuilding", "impact": -4 },
+        { "themeId": "auto", "impact": -3 },
+        { "themeId": "gold", "impact": 5 }
+      ],
+      "source": {
+        "event": "리먼 브라더스 파산보호 신청 (서브프라임 글로벌 금융위기)",
+        "date": "2008-09-15",
+        "impactRationale": "당일 다우 -4.4%(-504.48p). 코스피는 추석 연휴 후 2008-09-16 약 -6.1%(확인 필요). 미국 금융주 폭락 → 투자은행 -10(-30%, 최대치). 부동산 부실 직격 건설 -6, 신용 경색으로 카드 -4, 선박 발주 급감으로 조선 -4, 소비 위축 자동차 -3. 안전자산 선호로 금 +5.",
+        "needsVerification": true
+      }
+    },
+    {
+      "id": "2000s-n12-h1n1-pandemic",
+      "title": { "ko": "WHO, 신종 인플루엔자 '대유행' 선언…백신 확보 비상", "en": "WHO Declares Swine Flu a Pandemic as Nations Race for Vaccines" },
+      "body": {
+        "ko": "세계보건기구가 신종 인플루엔자 A(H1N1)에 대해 최고 경보 단계인 '대유행(팬데믹)'을 선언했다. 각국이 백신 확보 경쟁에 나서면서 백신 생산 기업에 주문이 밀려들고 있다. 여행 취소와 돼지고기 소비 기피도 이어지고 있다.",
+        "en": "The World Health Organization has raised its alert for the new H1N1 influenza to the highest level, declaring a pandemic. As countries scramble to secure vaccines, orders are flooding into vaccine makers. Trip cancellations and avoidance of pork are also spreading."
+      },
+      "effects": [
+        { "themeId": "vaccine", "impact": 8 },
+        { "themeId": "travel", "impact": -5 },
+        { "themeId": "airline", "impact": -4 },
+        { "themeId": "livestock", "impact": -4 }
+      ],
+      "source": {
+        "event": "WHO 신종플루(H1N1) 대유행 6단계 선언",
+        "date": "2009-06-11",
+        "impactRationale": "국내 백신 생산 관련 종목 2009년 급등(폭 확인 필요) → 백신 +8(+24%). '돼지 인플루엔자' 명칭 탓에 돼지고기 소비 위축 → 축산 -4. 해외여행 수요 감소로 여행 -5, 항공 -4.",
+        "needsVerification": true
+      }
+    }
+  ]
+}
