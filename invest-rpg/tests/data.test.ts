@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { lintWords } from '../src/data/lint.ts';
+import { lintEra, lintWords } from '../src/data/lint.ts';
+import { Game } from '../src/engine/game.ts';
 import { ALL_ERAS, ERA_SEQUENCE, orderBySequence } from '../src/data/eras/index.ts';
 import { validateEras } from '../src/data/validate.ts';
 import { TUTORIAL_ERA } from '../src/engine/tutorial.ts';
@@ -43,5 +44,32 @@ describe('게임에 들어가는 데이터', () => {
     expect(ERA_SEQUENCE).toEqual(['2000s', '2010s', '2020s']);
     for (const e of ALL_ERAS) expect(ERA_SEQUENCE).toContain(e.id);
     expect(orderBySequence([{ id: '2020s' }, { id: '2000s' }, { id: 'x' }]).map((e) => e.id)).toEqual(['2000s', '2020s']);
+  });
+});
+
+describe('2000년대 데이터 (단계 B 초안)', () => {
+  const era = ALL_ERAS.find((e) => e.id === '2000s')!;
+
+  it('테마 36개(core 24·peripheral 12, 긍정 13·부정 13·중립 10), 속보 10개 이상, 스토리 8개 이상, opener 3개 이상', () => {
+    expect(era.themes).toHaveLength(36);
+    expect(era.stocks).toHaveLength(36);
+    expect(era.breaking.length).toBeGreaterThanOrEqual(10);
+    expect(era.stories.length).toBeGreaterThanOrEqual(8);
+    expect(era.stories.filter((s) => s.opener).length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('작성 가이드 점검: 테마별 호재/악재 비율(검토 중인 규칙)을 빼면 0건', () => {
+    expect(lintEra(era).filter((i) => i.rule !== 'sentimentBias' && i.severity !== 'warning')).toEqual([]);
+  });
+
+  it('[시드 100개] 시대 시작 추첨이 늘 조건을 채우고, 첫 뉴스는 7분의 opener 잠정 뉴스', () => {
+    const openers = new Set(era.stories.filter((s) => s.opener).map((s) => s.tentative.id));
+    for (let seed = 1; seed <= 100; seed++) {
+      const g = new Game({ eras: [era], seed });
+      expect(g.draw.warning, `seed ${seed}`).toBeUndefined();
+      const first = [...g.newsSchedule].sort((a, b) => a.tick - b.tick)[0]!;
+      expect(first.tick * g.config.tickSeconds).toBe(420);
+      expect(openers.has(first.news.id), `seed ${seed}`).toBe(true);
+    }
   });
 });
