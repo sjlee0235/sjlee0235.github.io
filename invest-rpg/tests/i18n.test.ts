@@ -20,10 +20,20 @@ describe('다국어', () => {
   });
 
   it('엔진의 오류 코드마다 문구가 있다', () => {
-    for (const code of ['invalid-quantity', 'invalid-price', 'insufficient-cash', 'insufficient-shares', 'unknown-stock', 'not-tradable', 'not-available-in-real', 'ad-limit-reached', 'game-finished']) {
+    for (const code of ['invalid-quantity', 'invalid-price', 'insufficient-cash', 'insufficient-shares', 'unknown-stock', 'not-tradable', 'not-available-in-real', 'ad-limit-reached', 'ad-not-completed']) {
       expect(t('ko', `error.${code}`)).not.toBe(`error.${code}`);
       expect(t('en', `error.${code}`)).not.toBe(`error.${code}`);
     }
+  });
+
+  it('가상 시나리오 안내 문구와 보관함 태그 이름이 두 언어에 있다', () => {
+    for (const locale of ['ko', 'en'] as const) {
+      expect(t(locale, 'disclaimer.fictional')).not.toBe('disclaimer.fictional');
+      for (const tag of ['direct', 'indirect', 'hint', 'outcome', 'market']) {
+        expect(t(locale, `newsGuide.tag.${tag}`)).not.toBe(`newsGuide.tag.${tag}`);
+      }
+    }
+    expect(t('ko', 'disclaimer.fictional')).toContain('투자 권유가 아닙니다');
   });
 
   it('없는 키는 키 그대로', () => {

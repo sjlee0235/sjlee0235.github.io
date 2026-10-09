@@ -31,8 +31,8 @@
     "unknown-stock": "Unknown stock.",
     "not-tradable": "Trading is not available right now.",
     "not-available-in-real": "Not available in Real mode.",
-    "ad-limit-reached": "You've used all ad rewards for this era.",
-    "game-finished": "The game is over."
+    "ad-limit-reached": "You've used all ad rewards for this round.",
+    "ad-not-completed": "Watch the whole ad to get the reward."
   },
   "portfolio": {
     "cash": "Cash",
@@ -52,7 +52,9 @@
     "liquidated": "All holdings were automatically sold at the current price.",
     "nextEra": "Next era",
     "deposits": "Ad rewards",
-    "profit": "Investment P/L"
+    "profit": "Investment P/L",
+    "startCash": "Starting cash",
+    "formula": "Return = (final assets − starting cash − ad rewards) ÷ (starting cash + ad rewards)"
   },
   "news": {
     "breaking": "Breaking",
@@ -61,8 +63,8 @@
   "mode": {
     "practice": "Practice",
     "real": "Real",
-    "practiceDesc": "Time stops when news breaks, and you can see related themes and explanations.",
-    "realDesc": "Time keeps running when news breaks, and prices react 10 seconds later.",
+    "practiceDesc": "Practice for 30 minutes. Time stops when news breaks so you can read related themes and explanations. Each round starts with 10,000 bits.",
+    "realDesc": "Two hours per era. Time keeps running when news breaks, and prices react 10 seconds later. Your money carries over to the next era.",
     "choose": "Choose a mode"
   },
   "newsGuide": {
@@ -77,12 +79,31 @@
     "kind": {
       "standalone": "Breaking",
       "signal": "Developing",
+      "clue": "Clue",
       "outcome": "Confirmed"
     },
-    "appliesIn": "Prices will react in {seconds} seconds."
+    "appliesIn": "Prices will react in {seconds} seconds.",
+    "tag": {
+      "direct": "Direct",
+      "indirect": "Indirect",
+      "hint": "Hint",
+      "outcome": "Outcome",
+      "market": "Market"
+    },
+    "fictionalTag": "Fictional scenario",
+    "reaction": "Market reaction",
+    "archive": "News archive"
   },
   "ad": {
     "watch": "Watch an ad for {amount} bits",
-    "rewarded": "You received {amount} bits."
+    "rewarded": "You received {amount} bits.",
+    "remaining": "{count} ad rewards left"
+  },
+  "disclaimer": {
+    "fictional": "This is a fictional scenario based on real events and is not investment advice."
+  },
+  "game": {
+    "paused": "Paused",
+    "newRound": "Start a new round"
   }
 }
