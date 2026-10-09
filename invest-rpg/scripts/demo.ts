@@ -74,7 +74,7 @@ if (process.argv[2] === 'tutorial') {
       if (rc.moreCount > 0) console.log(`           ${t('ko', 'recap.more', { count: rc.moreCount })}`);
       if (rc.tentativeNote) console.log(`           (${t('ko', 'recap.tentativeNote')})`);
     }
-    if (r.settlement) console.log(`\n=== 시대 마감 — 시작 ${n(r.settlement.startCash)} → 종료 ${n(r.settlement.endAssets)} 비트 (${signed(r.settlement.returnPct)}) ===`);
+    if (r.settlement) console.log(`\n=== 시대 마감 — 시작 ${n(r.settlement.startCash)} → 종료 ${n(r.settlement.endAssets)} 코인 (${signed(r.settlement.returnPct)}) ===`);
   }
   const d = game.getEraDebrief();
   console.log(`뉴스 ${shown}개. 시대 종료 후 공개: 스토리 ${d.stories.length}개 중 단서대로 ${d.stories.filter((s) => s.followedLean).length}개`);

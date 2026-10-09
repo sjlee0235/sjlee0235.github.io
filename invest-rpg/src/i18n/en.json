@@ -2,7 +2,7 @@
   "common": {
     "confirm": "OK",
     "cancel": "Cancel",
-    "bit": "{amount} bits"
+    "coin": "{amount} coins"
   },
   "phase": {
     "running": "Market open",
@@ -25,10 +25,10 @@
     "sell": "Sell",
     "quantity": "Quantity",
     "maxQuantity": "Max {count} shares",
-    "bought": "Bought {count} shares of {name} at {price} bits.",
-    "sold": "Sold {count} shares of {name} at {price} bits.",
+    "bought": "Bought {count} shares of {name} at {price} coins.",
+    "sold": "Sold {count} shares of {name} at {price} coins.",
     "queued": "Order received. It will fill shortly at the price at that time.",
-    "fee": "Fee {fee} bits"
+    "fee": "Fee {fee} coins"
   },
   "error": {
     "invalid-quantity": "Quantity must be a whole number of 1 or more.",
@@ -105,7 +105,7 @@
     "purchase": "Top-up",
     "ad": "Ad reward",
     "other": "Other",
-    "done": "{amount} bits added ({source})."
+    "done": "{amount} coins added ({source})."
   },
   "debrief": {
     "title": "{era} Review",

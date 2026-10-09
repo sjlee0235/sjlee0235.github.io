@@ -49,4 +49,10 @@ describe('다국어', () => {
   it('데이터 텍스트: 해당 언어가 없으면 영어로 대체', () => {
     expect(localize({ ko: '반도체', en: 'Semiconductors' }, 'ja')).toBe('Semiconductors');
   });
+
+  it('화폐 이름은 코인 (비트 아님)', () => {
+    expect(t('ko', 'common.coin', { amount: '10,000' })).toBe('10,000 코인');
+    expect(t('en', 'common.coin', { amount: '10,000' })).toBe('10,000 coins');
+    for (const m of [MESSAGES.ko, MESSAGES.en]) expect(JSON.stringify(m)).not.toMatch(/비트|\bbits?\b/);
+  });
 });

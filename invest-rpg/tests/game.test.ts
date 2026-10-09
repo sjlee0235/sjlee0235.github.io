@@ -13,7 +13,7 @@ function runToEnd(game: Game) {
 }
 
 describe('시대 시작', () => {
-  it('활성 종목 20개, 모두 1,000 비트, 시작 자금 10,000', () => {
+  it('활성 종목 20개, 모두 1,000 코인, 시작 자금 10,000', () => {
     const game = newGame();
     expect(game.era.id).toBe('e1');
     expect(game.activeStocks).toHaveLength(20);

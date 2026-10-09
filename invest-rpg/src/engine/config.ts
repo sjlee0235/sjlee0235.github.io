@@ -131,11 +131,11 @@ export interface GameConfig {
   /** 시대 시작 추첨 규칙 */
   draw: DrawRules;
 
-  /** 시대 시작 시 모든 종목 가격(비트) */
+  /** 시대 시작 시 모든 종목 가격(코인) */
   startPrice: number;
-  /** 가격 하한(비트) */
+  /** 가격 하한(코인) */
   minPrice: number;
-  /** 게임 시작 자금(비트) */
+  /** 게임 시작 자금(코인) */
   startCash: number;
   /** 매매 수수료율 (매수·매도 각각). 0.002 = 0.2% */
   feeRate: number;

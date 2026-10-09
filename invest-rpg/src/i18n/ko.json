@@ -2,7 +2,7 @@
   "common": {
     "confirm": "확인",
     "cancel": "취소",
-    "bit": "{amount} 비트"
+    "coin": "{amount} 코인"
   },
   "phase": {
     "running": "장 운영 중",
@@ -25,10 +25,10 @@
     "sell": "매도",
     "quantity": "수량",
     "maxQuantity": "최대 {count}주",
-    "bought": "{name} {count}주를 {price} 비트에 샀습니다.",
-    "sold": "{name} {count}주를 {price} 비트에 팔았습니다.",
+    "bought": "{name} {count}주를 {price} 코인에 샀습니다.",
+    "sold": "{name} {count}주를 {price} 코인에 팔았습니다.",
     "queued": "주문이 접수됐어요. 잠시 뒤 그때 가격으로 체결돼요.",
-    "fee": "수수료 {fee} 비트"
+    "fee": "수수료 {fee} 코인"
   },
   "error": {
     "invalid-quantity": "수량은 1 이상의 정수여야 합니다.",
@@ -105,7 +105,7 @@
     "purchase": "충전",
     "ad": "광고 보상",
     "other": "기타",
-    "done": "{amount} 비트가 들어왔어요 ({source})."
+    "done": "{amount} 코인가 들어왔어요 ({source})."
   },
   "debrief": {
     "title": "{era} 돌아보기",

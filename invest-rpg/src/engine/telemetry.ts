@@ -86,7 +86,7 @@ export interface DecisionContext {
   eraChangePct: number;
   /** 최근 1분(12틱) 가격 변화 % */
   recentChangePct: number;
-  /** 매매 직전 총자산 (비트) */
+  /** 매매 직전 총자산 (코인) */
   assetsBefore: number;
 }
 
