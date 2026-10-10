@@ -128,6 +128,10 @@ async function run(): Promise<void> {
     await dbg(page, 'tab', 'workshop');
     await dbg(page, 'workTouches', 7);
     await shot(page, 'workshop_night_lv7');
+    await dbg(page, 'workTouches', 300);
+    await page.waitForTimeout(1200);
+    await dbg(page, 'workTouches', 120);
+    await shot(page, 'workshop_night_pending_3digits');
 
     // TV홈쇼핑 (방송 준비 중, 눌린 회색 탭)
     await dbg(page, 'tab', 'tv_shopping');
@@ -145,6 +149,9 @@ async function run(): Promise<void> {
     await dbg(page, 'tod', 'day');
     await page.waitForTimeout(400);
     await shot(page, 'trading_day_order');
+    await page.locator('.list-tab').nth(1).click();
+    await shot(page, 'trading_day_my_account');
+    await page.locator('.list-tab').first().click();
 
     // 2배속 → 다른 탭 코인 칩에 ▶▶
     await page.locator('.speeds .pbtn').nth(1).click();

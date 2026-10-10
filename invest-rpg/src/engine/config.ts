@@ -22,10 +22,13 @@ export const INERTIA_TICKS = 2;
 export const INERTIA_PROBS = { same: 50, opposite: 25, flat: 25 } as const;
 /** 뉴스와 다음 뉴스 사이 가격 한도(%). 발표 시점 가격 기준 ±30% */
 export const NEWS_BAND_PCT = 30;
-/** 시대 시작 후 뉴스가 나오지 않는 유예 시간(초). 7분 = 84틱. 가격은 평소처럼 움직인다 */
-export const GRACE_PERIOD_SEC = 420;
-/** 첫 뉴스 발표 시각(초). 유예가 끝나는 정확히 7분 */
-export const FIRST_NEWS_AT_SEC = 420;
+/**
+ * 시대 시작 후 뉴스가 나오지 않는 유예 시간(초). 3분 = 36틱. 가격은 평소처럼 움직인다.
+ * 7분(420초) → 3분(180초): 2026-10-10 사용자 결정 ("7분은 너무 길다")
+ */
+export const GRACE_PERIOD_SEC = 180;
+/** 첫 뉴스 발표 시각(초). 유예가 끝나는 정확히 3분 */
+export const FIRST_NEWS_AT_SEC = 180;
 /** 첫 뉴스 종류: 항상 잠정 뉴스(스토리의 시작). opener 스토리 중에서 고른다 */
 export const FIRST_NEWS_TYPE = 'tentative' as const;
 /** 뉴스 간격(초): 4분 ~ 7분 */

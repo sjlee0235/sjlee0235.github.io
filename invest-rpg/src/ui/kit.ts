@@ -33,6 +33,18 @@ export function ico(name: IconName, size: number, height = size): HTMLElement {
   return el;
 }
 
+/** 모래시계 (남은 시간 칩). 7×10 격자, 글자색을 따른다 */
+const HOURGLASS = ['#######', '.#...#.', '.#...#.', '..#.#..', '...#...', '...#...', '..#.#..', '.#.#.#.', '.#####.', '#######'];
+export function hourglassIcon(): HTMLElement {
+  const el = h('span', { class: 'hourglass', 'aria-hidden': 'true' });
+  const rects: string[] = [];
+  HOURGLASS.forEach((row, y) => [...row].forEach((c, x) => {
+    if (c === '#') rects.push(`<rect x="${x}" y="${y}" width="1" height="1"/>`);
+  }));
+  el.innerHTML = `<svg viewBox="0 0 7 10" shape-rendering="crispEdges" fill="currentColor">${rects.join('')}</svg>`;
+  return el;
+}
+
 /** ▶ / ▶▶ (글자색을 따른다) */
 export function playIcon(n: 1 | 2): HTMLElement {
   const el = h('span', { class: 'play' });

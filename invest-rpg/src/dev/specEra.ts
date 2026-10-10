@@ -109,7 +109,7 @@ const INDUSTRIES: { ko: string; en: string }[] = [
   ['통신', 'Telecom'], ['항공', 'Airlines'], ['해운', 'Shipping'], ['은행', 'Bank'], ['증권', 'Securities'], ['보험', 'Insurance'],
   ['게임', 'Games'], ['식품', 'Foods'], ['화학', 'Chemicals'], ['자동차', 'Motors'], ['부품', 'Parts'], ['전자', 'Electronics'],
   ['방산', 'Defense'], ['유통', 'Retail'], ['여행', 'Travel'], ['교육', 'Education'], ['포털', 'Portal'], ['소프트', 'Software'],
-  ['바이오', 'Bio'], ['태양광', 'Solar'], ['풍력', 'Wind Power'], ['전지', 'Cells'], ['디스플레이', 'Display'], ['광고', 'Ads'],
+  ['바이오', 'Bio'], ['태양광', 'Solar'], ['풍력', 'Wind Power'], ['전지', 'Cells'], ['패널', 'Panels'], ['광고', 'Ads'],
   ['패션', 'Fashion'], ['가구', 'Furniture'], ['제지', 'Paper Mills'], ['비료', 'Fertilizer'], ['물류', 'Logistics'], ['화장품', 'Cosmetics'],
 ].map(([ko, en]) => ({ ko: ko!, en: en! }));
 

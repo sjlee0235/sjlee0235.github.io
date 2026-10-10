@@ -962,8 +962,8 @@
    "id": "2000s-semiconductor",
    "themeId": "semiconductor",
    "name": {
-    "ko": "은빛반도체",
-    "en": "Silver Chip"
+    "ko": "실리온반도체",
+    "en": "Silion Semiconductor"
    },
    "description": {
     "ko": "PC와 휴대폰에 들어가는 메모리 반도체를 만든다.",
@@ -974,8 +974,8 @@
    "id": "2000s-shipbuilding",
    "themeId": "shipbuilding",
    "name": {
-    "ko": "물결조선",
-    "en": "Wave Shipbuilding"
+    "ko": "넵투스조선",
+    "en": "Neptus Shipbuilding"
    },
    "description": {
     "ko": "유조선과 컨테이너선을 만드는 조선소를 운영한다.",
@@ -986,8 +986,8 @@
    "id": "2000s-steel",
    "themeId": "steel",
    "name": {
-    "ko": "자갈철강",
-    "en": "Pebble Steel"
+    "ko": "페로스틸",
+    "en": "Ferro Steel"
    },
    "description": {
     "ko": "철광석을 녹여 강판과 철근을 만든다.",
@@ -998,8 +998,8 @@
    "id": "2000s-handset",
    "themeId": "handset",
    "name": {
-    "ko": "구름휴대폰",
-    "en": "Cloud Handset"
+    "ko": "벨로폰",
+    "en": "Velophone"
    },
    "description": {
     "ko": "휴대폰을 설계해 국내외 통신사에 공급한다.",
@@ -1010,8 +1010,8 @@
    "id": "2000s-display",
    "themeId": "display",
    "name": {
-    "ko": "유리패널",
-    "en": "Glass Panel"
+    "ko": "루미엘패널",
+    "en": "Lumiel Panel"
    },
    "description": {
     "ko": "TV와 모니터에 들어가는 액정 패널을 만든다.",
@@ -1022,8 +1022,8 @@
    "id": "2000s-online_game",
    "themeId": "online_game",
    "name": {
-    "ko": "별빛게임",
-    "en": "Starlight Games"
+    "ko": "픽셀라게임즈",
+    "en": "Pixella Games"
    },
    "description": {
     "ko": "PC로 즐기는 온라인 롤플레잉 게임을 서비스한다.",
@@ -1034,8 +1034,8 @@
    "id": "2000s-portal",
    "themeId": "portal",
    "name": {
-    "ko": "등대포털",
-    "en": "Lighthouse Portal"
+    "ko": "오르비스넷",
+    "en": "Orbis Net"
    },
    "description": {
     "ko": "검색과 이메일, 카페 서비스를 운영하는 인터넷 회사다.",
@@ -1046,8 +1046,8 @@
    "id": "2000s-shipping",
    "themeId": "shipping",
    "name": {
-    "ko": "돛배해운",
-    "en": "Sailboat Shipping"
+    "ko": "베르나해운",
+    "en": "Verna Shipping"
    },
    "description": {
     "ko": "화물선으로 철광석과 곡물, 컨테이너를 실어 나른다.",
@@ -1058,8 +1058,8 @@
    "id": "2000s-overseas_plant",
    "themeId": "overseas_plant",
    "name": {
-    "ko": "모래플랜트",
-    "en": "Sand Plant"
+    "ko": "테라플랜트",
+    "en": "Terra Plant"
    },
    "description": {
     "ko": "해외에 정유 공장과 발전소를 지어 주는 건설사다.",
@@ -1070,8 +1070,8 @@
    "id": "2000s-machinery",
    "themeId": "machinery",
    "name": {
-    "ko": "단풍중장비",
-    "en": "Maple Machinery"
+    "ko": "아르고중기",
+    "en": "Argo Machinery"
    },
    "description": {
     "ko": "굴착기와 지게차를 만들어 공사 현장에 판다.",
@@ -1082,8 +1082,8 @@
    "id": "2000s-hallyu",
    "themeId": "hallyu",
    "name": {
-    "ko": "노을엔터",
-    "en": "Dusk Entertainment"
+    "ko": "루체엔터",
+    "en": "Luce Entertainment"
    },
    "description": {
     "ko": "가수와 배우를 관리하고 드라마와 공연을 만든다.",
@@ -1094,8 +1094,8 @@
    "id": "2000s-battery",
    "themeId": "battery",
    "name": {
-    "ko": "이슬전지",
-    "en": "Dew Battery"
+    "ko": "볼트라셀",
+    "en": "Voltra Cell"
    },
    "description": {
     "ko": "휴대폰과 노트북에 들어가는 충전용 전지를 만든다.",
@@ -1106,8 +1106,8 @@
    "id": "2000s-renewable",
    "themeId": "renewable",
    "name": {
-    "ko": "바람신재생",
-    "en": "Wind Renewables"
+    "ko": "솔레아에너지",
+    "en": "Solea Energy"
    },
    "description": {
     "ko": "태양광 모듈과 풍력 발전기 부품을 만든다.",
@@ -1118,8 +1118,8 @@
    "id": "2000s-card",
    "themeId": "card",
    "name": {
-    "ko": "종이카드",
-    "en": "Paper Card"
+    "ko": "코랄카드",
+    "en": "Coral Card"
    },
    "description": {
     "ko": "신용카드를 발급하고 할부와 현금서비스를 제공한다.",
@@ -1130,8 +1130,8 @@
    "id": "2000s-airline",
    "themeId": "airline",
    "name": {
-    "ko": "새벽항공",
-    "en": "Dawn Airlines"
+    "ko": "아리엘항공",
+    "en": "Ariel Air"
    },
    "description": {
     "ko": "국내선과 국제선 여객기를 운항한다.",
@@ -1142,8 +1142,8 @@
    "id": "2000s-dotcom",
    "themeId": "dotcom",
    "name": {
-    "ko": "파랑벤처",
-    "en": "Blue Venture"
+    "ko": "클릭웨이브",
+    "en": "Clickwave"
    },
    "description": {
     "ko": "인터넷 쇼핑몰과 커뮤니티 사이트를 만드는 작은 회사다.",
@@ -1154,8 +1154,8 @@
    "id": "2000s-textile",
    "themeId": "textile",
    "name": {
-    "ko": "솔잎섬유",
-    "en": "Pine Textile"
+    "ko": "벨루어텍스",
+    "en": "Velour Tex"
    },
    "description": {
     "ko": "원단을 짜고 의류를 봉제해 수출한다.",
@@ -1166,8 +1166,8 @@
    "id": "2000s-travel",
    "themeId": "travel",
    "name": {
-    "ko": "갈대여행",
-    "en": "Reed Travel"
+    "ko": "보야지투어",
+    "en": "Voyage Tours"
    },
    "description": {
     "ko": "해외 패키지 여행 상품을 만들어 판다.",
@@ -1178,8 +1178,8 @@
    "id": "2000s-poultry",
    "themeId": "poultry",
    "name": {
-    "ko": "들꽃양계",
-    "en": "Wildflower Poultry"
+    "ko": "코코팜",
+    "en": "Coco Farm"
    },
    "description": {
     "ko": "닭을 길러 닭고기와 달걀을 판다.",
@@ -1190,8 +1190,8 @@
    "id": "2000s-landline",
    "themeId": "landline",
    "name": {
-    "ko": "연필전화",
-    "en": "Pencil Telephone"
+    "ko": "보이스텔",
+    "en": "Voicetel"
    },
    "description": {
     "ko": "집과 사무실에 유선전화 서비스를 제공한다.",
@@ -1202,8 +1202,8 @@
    "id": "2000s-records",
    "themeId": "records",
    "name": {
-    "ko": "보라음반",
-    "en": "Violet Records"
+    "ko": "소노레코드",
+    "en": "Sono Records"
    },
    "description": {
     "ko": "가요 음반을 만들어 CD와 테이프로 판다.",
@@ -1214,8 +1214,8 @@
    "id": "2000s-pc",
    "themeId": "pc",
    "name": {
-    "ko": "하양컴퓨터",
-    "en": "White Computer"
+    "ko": "오닉스컴퓨터",
+    "en": "Onyx Computer"
    },
    "description": {
     "ko": "가정과 학교에 쓰는 데스크톱 PC를 조립해 판다.",
@@ -1226,8 +1226,8 @@
    "id": "2000s-film",
    "themeId": "film",
    "name": {
-    "ko": "호수필름",
-    "en": "Lake Film"
+    "ko": "크로마필름",
+    "en": "Chroma Film"
    },
    "description": {
     "ko": "사진 필름을 만들고 동네 사진관에 인화 장비를 공급한다.",
@@ -1238,8 +1238,8 @@
    "id": "2000s-print",
    "themeId": "print",
    "name": {
-    "ko": "강물신문",
-    "en": "River Newspaper"
+    "ko": "레터라신문",
+    "en": "Lettera Daily"
    },
    "description": {
     "ko": "일간 신문과 주간 잡지를 펴낸다.",
@@ -1250,8 +1250,8 @@
    "id": "2000s-savings_bank",
    "themeId": "savings_bank",
    "name": {
-    "ko": "저녁저축은행",
-    "en": "Evening Savings Bank"
+    "ko": "에스텔저축",
+    "en": "Estel Savings"
    },
    "description": {
     "ko": "높은 금리의 예금을 받아 개인과 건설사에 돈을 빌려준다.",
@@ -1262,8 +1262,8 @@
    "id": "2000s-flour",
    "themeId": "flour",
    "name": {
-    "ko": "노랑제분",
-    "en": "Yellow Flour"
+    "ko": "밀레아제분",
+    "en": "Millea Flour"
    },
    "description": {
     "ko": "수입한 밀과 원당으로 밀가루와 설탕을 만든다.",
@@ -1274,8 +1274,8 @@
    "id": "2000s-auto",
    "themeId": "auto",
    "name": {
-    "ko": "검정자동차",
-    "en": "Black Motors"
+    "ko": "카이로모터스",
+    "en": "Kairo Motors"
    },
    "description": {
     "ko": "승용차와 소형 트럭을 만들어 국내외에 판다.",
@@ -1286,8 +1286,8 @@
    "id": "2000s-bank",
    "themeId": "bank",
    "name": {
-    "ko": "초록은행",
-    "en": "Green Bank"
+    "ko": "센트라은행",
+    "en": "Centra Bank"
    },
    "description": {
     "ko": "예금을 받아 가계와 기업에 대출해 주는 시중 은행이다.",
@@ -1298,8 +1298,8 @@
    "id": "2000s-securities",
    "themeId": "securities",
    "name": {
-    "ko": "주황증권",
-    "en": "Orange Securities"
+    "ko": "베가증권",
+    "en": "Vega Securities"
    },
    "description": {
     "ko": "주식 매매를 중개하고 펀드를 판매한다.",
@@ -1310,8 +1310,8 @@
    "id": "2000s-housing",
    "themeId": "housing",
    "name": {
-    "ko": "우산건설",
-    "en": "Umbrella Builders"
+    "ko": "라움건설",
+    "en": "Raum Homes"
    },
    "description": {
     "ko": "아파트를 지어 분양하는 주택 건설사다.",
@@ -1322,8 +1322,8 @@
    "id": "2000s-refining",
    "themeId": "refining",
    "name": {
-    "ko": "안개정유",
-    "en": "Mist Refining"
+    "ko": "그라나정유",
+    "en": "Grana Refining"
    },
    "description": {
     "ko": "수입한 원유로 휘발유와 경유를 만든다.",
@@ -1334,8 +1334,8 @@
    "id": "2000s-mobile",
    "themeId": "mobile",
    "name": {
-    "ko": "고요통신",
-    "en": "Calm Telecom"
+    "ko": "모비온통신",
+    "en": "Mobion Telecom"
    },
    "description": {
     "ko": "휴대폰 통화와 데이터 서비스를 제공하는 통신사다.",
@@ -1346,8 +1346,8 @@
    "id": "2000s-mart",
    "themeId": "mart",
    "name": {
-    "ko": "하늘유통",
-    "en": "Sky Retail"
+    "ko": "그로브마트",
+    "en": "Grove Mart"
    },
    "description": {
     "ko": "생활용품과 식료품을 파는 대형 할인점을 운영한다.",
@@ -1358,8 +1358,8 @@
    "id": "2000s-pharma",
    "themeId": "pharma",
    "name": {
-    "ko": "구슬제약",
-    "en": "Marble Pharma"
+    "ko": "큐라제약",
+    "en": "Cura Pharma"
    },
    "description": {
     "ko": "감기약과 백신, 병원용 치료제를 만든다.",
@@ -1370,8 +1370,8 @@
    "id": "2000s-food",
    "themeId": "food",
    "name": {
-    "ko": "참새식품",
-    "en": "Sparrow Foods"
+    "ko": "델리아식품",
+    "en": "Delia Foods"
    },
    "description": {
     "ko": "라면과 과자, 분유 같은 가공식품을 만든다.",
@@ -1382,8 +1382,8 @@
    "id": "2000s-defense",
    "themeId": "defense",
    "name": {
-    "ko": "돌담방산",
-    "en": "Stonewall Defense"
+    "ko": "센티넬방산",
+    "en": "Sentinel Defense"
    },
    "description": {
     "ko": "군용 장갑차와 포를 만들어 군에 납품한다.",

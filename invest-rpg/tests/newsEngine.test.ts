@@ -13,11 +13,11 @@ const activeFor = (seed: number) => applyDraw(era, drawEra(era, seed, config), c
 const scheduleFor = (seed: number, cfg = config) => buildNewsSchedule(activeFor(seed), createRng(seed), cfg);
 
 describe('뉴스 슬롯', () => {
-  it('[시드 200개] 첫 뉴스는 정확히 7분(84틱), 간격 4~7분, 평균 약 21개', () => {
+  it('[시드 200개] 첫 뉴스는 정확히 3분(36틱), 간격 4~7분, 평균 약 21개', () => {
     let total = 0;
     for (const seed of SEEDS) {
       const slots = makeNewsSlots(rules, createRng(seed));
-      expect(slots[0]).toBe(84);
+      expect(slots[0]).toBe(36);
       for (let i = 1; i < slots.length; i++) {
         const gap = slots[i]! - slots[i - 1]!;
         if (gap < 48 || gap > 84) throw new Error(`seed ${seed}: ${gap}`);
@@ -30,22 +30,22 @@ describe('뉴스 슬롯', () => {
   });
 });
 
-describe('시대 시작 7분 유예와 첫 잠정 뉴스', () => {
-  it('상수: 유예 420초, 첫 뉴스 420초, 첫 뉴스 종류 잠정', () => {
-    expect(config.gracePeriodSeconds).toBe(420);
-    expect(config.firstNewsAtSeconds).toBe(420);
+describe('시대 시작 3분 유예와 첫 잠정 뉴스', () => {
+  it('상수: 유예 180초, 첫 뉴스 180초, 첫 뉴스 종류 잠정', () => {
+    expect(config.gracePeriodSeconds).toBe(180);
+    expect(config.firstNewsAtSeconds).toBe(180);
     expect(config.firstNewsType).toBe('tentative');
-    expect(rules.gracePeriodTicks).toBe(84);
+    expect(rules.gracePeriodTicks).toBe(36);
   });
 
-  it('[시드 200개] 420초 전 뉴스 0개, 첫 뉴스는 정확히 420초·잠정·opener, 그 결과 뉴스는 15분 안', () => {
+  it('[시드 200개] 180초 전 뉴스 0개, 첫 뉴스는 정확히 180초·잠정·opener, 그 결과 뉴스는 15분 안', () => {
     const openerIds = new Set(era.stories.filter((s) => s.opener).map((s) => s.id));
     const usedOpeners = new Set<string>();
     for (const seed of SEEDS) {
       const s = scheduleFor(seed);
-      expect(s.filter((n) => n.tick < 84)).toEqual([]);
+      expect(s.filter((n) => n.tick < 36)).toEqual([]);
       const first = s[0]!;
-      expect(first.tick).toBe(84);
+      expect(first.tick).toBe(36);
       expect(first.kind).toBe('tentative');
       expect(openerIds.has(first.storyId!)).toBe(true);
       usedOpeners.add(first.storyId!);

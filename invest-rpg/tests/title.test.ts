@@ -34,3 +34,11 @@ describe('튜토리얼', () => {
     for (const p of TUTORIAL_PAGES) for (const k of [p.title, ...p.lines]) expect(t('en', k)).not.toBe(k);
   });
 });
+
+describe('튜토리얼: 시대 진행', () => {
+  it('게임 방법 장에 "시간이 지나면 다음 시대로" 안내', () => {
+    const how = TUTORIAL_PAGES[1]!.lines.map((k) => t('ko', k)).join(' ');
+    expect(how).toContain('다음 시대로 넘어가요');
+    expect(how).toContain('처음 3분');
+  });
+});

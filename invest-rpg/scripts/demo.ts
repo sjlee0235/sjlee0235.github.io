@@ -42,7 +42,7 @@ if (process.argv[2] === 'tutorial') {
   if (w.advanced) for (const c of w.instantChanges) console.log(`  발표 즉시: ${c.stockId} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)})`);
   console.log(`  ${t('ko', 'tutorial.stepReading')}`);
   tut.game.buy('tut-battery', 5);
-  console.log('  → 하늘배터리 5주 매수');
+  console.log('  → 아크셀전지 5주 매수');
   tut.confirmNews();
   const r = tut.advanceTick();
   if (r.advanced) for (const c of r.changes.filter((x) => x.cause === 'news')) console.log(`  5초 뒤 나머지: ${c.stockId} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)})`);

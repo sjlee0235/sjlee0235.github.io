@@ -10,11 +10,11 @@ import type { PublicAdvanceResult } from '../../engine/publicView.ts';
 import { localize } from '../../i18n/index.ts';
 import type { Screen, UiContext } from '../context.ts';
 import { clear, h, setText } from '../dom.ts';
-import { fmtNum, fmtPct, fmtTime } from '../format.ts';
+import { fmtNum, fmtPct } from '../format.ts';
 import { ico, inner, playIcon, pbtn, pnl } from '../kit.ts';
 import {
   dirClass, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, setMax, setQuantity, sparkPoints,
-  stepQuantity, stockRows, type NewsItemView, type OrderState, type StockRowView,
+  stepQuantity, stockRows, accountSummary, holdingRows, type NewsItemView, type OrderState, type StockRowView,
 } from '../viewModels.ts';
 
 const SVG = 'http://www.w3.org/2000/svg';
@@ -36,6 +36,14 @@ export class TradingScreen implements Screen {
   private readonly assetsV: HTMLElement;
   private readonly timeV: HTMLElement;
   private readonly retV: HTMLElement;
+  private readonly cashV: HTMLElement;
+  // 목록 보기: 전체 종목 / 내 계좌(보유 종목)
+  private mode: 'all' | 'mine' = 'all';
+  private readonly modeBtns: Record<'all' | 'mine', HTMLButtonElement>;
+  private readonly allHead: HTMLElement;
+  private readonly mineHead: HTMLElement;
+  private readonly mineBody: HTMLElement;
+  private mineSig = '';
   private readonly speedBtns: Record<1 | 2, HTMLButtonElement>;
   // 종목 목록
   private readonly listPnl: HTMLElement;
@@ -64,6 +72,7 @@ export class TradingScreen implements Screen {
     this.assetsV = h('span', { class: 'v' });
     this.timeV = h('span', { class: 'acct-time' });
     this.retV = h('b', {});
+    this.cashV = h('b', {});
     const speedBtn = (s: 1 | 2) => {
       const b = pbtn('', playIcon(s), { 'aria-label': t(s === 1 ? 'speed.x1' : 'speed.x2') });
       b.addEventListener('click', () => {
@@ -89,26 +98,46 @@ export class TradingScreen implements Screen {
         'div',
         { class: 'acct-bot' },
         h('div', { class: 'acct-ret' }, h('span', { class: 'lbl' }, t('trading.return')), this.retV),
+        h('div', { class: 'acct-ret acct-cash' }, h('span', { class: 'lbl' }, t('portfolio.cash')), this.cashV),
         h('div', { class: 'speeds' }, this.speedBtns[1], this.speedBtns[2]),
       ),
     );
 
     // 종목 목록
     this.listBody = h('div', { class: 'stock-scroll' });
+    this.mineBody = h('div', { class: 'stock-scroll mine' });
+    const modeBtn = (m: 'all' | 'mine') => {
+      const b = h('button', { class: 'list-tab', type: 'button' }, t(m === 'all' ? 'trading.listTitle' : 'trading.myAccount'));
+      b.addEventListener('click', () => this.setMode(m));
+      return b;
+    };
+    this.modeBtns = { all: modeBtn('all'), mine: modeBtn('mine') };
+    this.allHead = h(
+      'div',
+      { class: 'row head' },
+      h('span', {}),
+      h('span', {}, t('trading.colName')),
+      h('span', { style: 'text-align:center' }, t('trading.colTrend')),
+      h('span', { style: 'text-align:right' }, t('portfolio.currentPrice')),
+      h('span', { style: 'text-align:right' }, t('trading.colChange')),
+    );
+    this.mineHead = h(
+      'div',
+      { class: 'row hold head' },
+      h('span', {}, t('trading.colName')),
+      h('span', { style: 'text-align:center' }, t('trading.colQty')),
+      h('span', { style: 'text-align:right' }, t('trading.colValue')),
+      h('span', { style: 'text-align:right' }, t('trading.colPnl')),
+    );
     this.listPnl = pnl(
       'list-pnl tall',
-      h('div', { class: 'hd' }, t('trading.listTitle')),
-      h(
-        'div',
-        { class: 'row head' },
-        h('span', {}),
-        h('span', {}, t('trading.colName')),
-        h('span', { style: 'text-align:center' }, t('trading.colTrend')),
-        h('span', { style: 'text-align:right' }, t('portfolio.currentPrice')),
-        h('span', { style: 'text-align:right' }, t('trading.colChange')),
-      ),
+      h('div', { class: 'hd list-tabs' }, this.modeBtns.all, this.modeBtns.mine),
+      this.allHead,
+      this.mineHead,
       this.listBody,
+      this.mineBody,
     );
+    this.applyMode();
 
     this.orderPnl = pnl('order-pnl');
     this.orderPnl.hidden = true;
@@ -142,24 +171,95 @@ export class TradingScreen implements Screen {
   update(_r?: PublicAdvanceResult): void {
     this.updateAccount();
     this.updateList();
+    this.updateMine();
     this.updateOrder();
     this.updateNews();
   }
 
   // ───────── 계좌 바 ─────────
 
+  /** 남은 시간 (App이 0.25초마다 1초 단위로 넘김) */
+  setRemaining(text: string): void {
+    setText(this.timeV, text);
+  }
+
   private updateAccount(): void {
     const { ctx } = this;
     const p = ctx.game.getPortfolio();
     setText(this.assetsV, fmtNum(p.totalAssets, ctx.locale()));
-    setText(this.timeV, fmtTime(ctx.game.remainingSeconds));
+
     setText(this.retV, fmtPct(p.currentReturnPct));
+    setText(this.cashV, fmtNum(p.cash, ctx.locale()));
     this.retV.className = dirClass(p.currentReturnPct);
     const speed = ctx.game.getSpeed();
     for (const s of [1, 2] as const) {
       const on = speed === s;
       this.speedBtns[s].className = `pbtn ${on ? 'accent' : ''}`;
       this.speedBtns[s].setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+  }
+
+  // ───────── 목록 보기 전환: 종목 / 내 계좌 ─────────
+
+  /** (화면·디버그) 목록 보기 바꾸기 */
+  setMode(m: 'all' | 'mine'): void {
+    if (m === this.mode) return;
+    this.mode = m;
+    this.applyMode();
+    this.mineSig = '';
+    this.update();
+  }
+
+  get listMode(): 'all' | 'mine' {
+    return this.mode;
+  }
+
+  private applyMode(): void {
+    const mine = this.mode === 'mine';
+    this.allHead.hidden = mine;
+    this.listBody.hidden = mine;
+    this.mineHead.hidden = !mine;
+    this.mineBody.hidden = !mine;
+    for (const m of ['all', 'mine'] as const) {
+      this.modeBtns[m].classList.toggle('on', this.mode === m);
+      this.modeBtns[m].setAttribute('aria-pressed', this.mode === m ? 'true' : 'false');
+    }
+  }
+
+  /** 내 계좌: 현금·주식 평가 요약 + 보유 종목 (종목명, 수량, 평가금액, 산 뒤 손익률). 누르면 주문 패널 */
+  private updateMine(): void {
+    const { ctx } = this;
+    const p = ctx.game.getPortfolio();
+    const s = accountSummary(p, ctx.locale());
+    setText(this.modeBtns.mine, `${ctx.t('trading.myAccount')} (${s.count})`);
+    if (this.mode !== 'mine') return;
+    const rows = holdingRows(p, ctx.locale());
+    const sig = rows.map((r) => r.id).join('|') + ctx.locale();
+    if (sig !== this.mineSig) {
+      this.mineSig = sig;
+      clear(this.mineBody);
+      this.mineBody.append(
+        h('div', { class: 'row hold sum' }, h('span', { class: 'lbl' }, ctx.t('portfolio.cash')), h('span', { class: 'n sum-cash' }), h('span', { class: 'lbl', style: 'text-align:right' }, ctx.t('trading.stockValue')), h('span', { class: 'n sum-stock' })),
+      );
+      if (rows.length === 0) this.mineBody.append(h('div', { class: 'mine-empty' }, ctx.t('trading.noHoldings')));
+      for (const r of rows) {
+        const row = h('div', { class: 'row hold', 'data-id': r.id, role: 'button' },
+          h('span', { class: 'nm' }, r.name), h('span', { class: 'q' }), h('span', { class: 'n v' }), h('span', { class: 'n p' }));
+        row.addEventListener('click', () => this.openOrder(r.id));
+        this.mineBody.append(row);
+      }
+    }
+    setText(this.mineBody.querySelector('.sum-cash')!, s.cash);
+    setText(this.mineBody.querySelector('.sum-stock')!, s.stockValue);
+    for (const r of rows) {
+      const row = this.mineBody.querySelector<HTMLElement>(`.row[data-id="${r.id}"]`);
+      if (!row) continue;
+      setText(row.querySelector('.q')!, r.qty);
+      setText(row.querySelector('.v')!, r.value);
+      const pe = row.querySelector<HTMLElement>('.p')!;
+      setText(pe, r.pnlPct);
+      pe.className = `n p ${r.dir}`;
+      row.classList.toggle('sel', this.order?.stockId === r.id);
     }
   }
 
@@ -218,6 +318,7 @@ export class TradingScreen implements Screen {
     if (this.order?.stockId === stockId) {
       this.closeOrder(true);
       this.updateList();
+      this.updateMine();
       return;
     }
     this.closeOrder(true);
@@ -227,6 +328,7 @@ export class TradingScreen implements Screen {
     this.buildOrder();
     this.updateOrder();
     this.updateList();
+    this.updateMine();
     // 고른 종목이 목록 칸 안에 보이게
     this.rows.get(stockId)?.row.scrollIntoView({ block: 'nearest' });
   }
@@ -260,6 +362,7 @@ export class TradingScreen implements Screen {
     close.addEventListener('click', () => {
       this.closeOrder(true);
       this.updateList();
+      this.updateMine();
     });
 
     const chartSvg = svgEl('svg', { viewBox: `0 0 ${CHART_W} ${CHART_H}`, preserveAspectRatio: 'none' });

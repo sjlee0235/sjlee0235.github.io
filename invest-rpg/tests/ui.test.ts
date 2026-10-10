@@ -8,10 +8,11 @@ import { createPresentationRng } from '../src/engine/rng.ts';
 import { DEFAULT_CONFIG } from '../src/engine/config.ts';
 import { TabController } from '../src/engine/homeActivities.ts';
 import { PublicGame, type PublicAdvanceResult } from '../src/engine/publicView.ts';
-import { fmtNum, fmtPct, fmtTime } from '../src/ui/format.ts';
+import { displayRemaining, fmtNum, fmtPct, fmtTime } from '../src/ui/format.ts';
+import { dollHitRect } from '../src/ui/screens/workshop.ts';
 import { GameLoop, type Clock } from '../src/ui/loop.ts';
 import {
-  dirClass, finalView, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
+  accountSummary, dirClass, finalView, holdingRows, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
   settlementView, sparkPoints, stepQuantity, stockRows, upgradeView, workshopView,
 } from '../src/ui/viewModels.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
@@ -29,12 +30,15 @@ function untilNews(g: PublicGame): Extract<PublicAdvanceResult, { advanced: true
 }
 
 class FakeClock implements Clock {
-  now = 0;
+  t = 0;
+  now(): number {
+    return this.t;
+  }
   private seq = 0;
   private timers: { id: number; at: number; fn: () => void }[] = [];
   setTimeout(fn: () => void, ms: number): number {
     const id = ++this.seq;
-    this.timers.push({ id, at: this.now + ms, fn });
+    this.timers.push({ id, at: this.t + ms, fn });
     return id;
   }
   clearTimeout(id: number): void {
@@ -44,16 +48,16 @@ class FakeClock implements Clock {
     return this.timers.length;
   }
   advance(ms: number): void {
-    const end = this.now + ms;
+    const end = this.t + ms;
     for (;;) {
       this.timers.sort((a, b) => a.at - b.at);
       const next = this.timers[0];
       if (!next || next.at > end) break;
       this.timers.shift();
-      this.now = next.at;
+      this.t = next.at;
       next.fn();
     }
-    this.now = end;
+    this.t = end;
   }
 }
 
@@ -139,12 +143,12 @@ describe('주문 패널 (수량 맞추고 매수/매도 버튼이 바로 체결)
   it('체결 안내와 오류 문구', () => {
     const g = newGame();
     const s = g.getStockList()[0]!;
-    const ok = orderMessage(g.buy(s.id, 2), '하늘배터리', 'ko');
+    const ok = orderMessage(g.buy(s.id, 2), '아크셀전지', 'ko');
     expect(ok.ok).toBe(true);
-    expect(ok.text).toContain('하늘배터리 2주 매수');
-    const sold = orderMessage(g.sell(s.id, 1), '하늘배터리', 'ko');
+    expect(ok.text).toContain('아크셀전지 2주 매수');
+    const sold = orderMessage(g.sell(s.id, 1), '아크셀전지', 'ko');
     expect(sold.text).toContain('1주 매도');
-    const bad = orderMessage(g.sell(s.id, 99), '하늘배터리', 'ko');
+    const bad = orderMessage(g.sell(s.id, 99), '아크셀전지', 'ko');
     expect(bad).toEqual({ ok: false, text: '보유 수량이 부족합니다.' });
   });
 
@@ -388,5 +392,54 @@ describe('정산 창·최종 요약', () => {
     expect(v.total).toBe('11,500');
     expect(v.unpaid).toContain('30코인');
     expect(v.interior).toContain('3단계');
+  });
+});
+
+describe('남은 시간: 5초 틱 사이에도 1초씩', () => {
+  it('displayRemaining: 틱 사이 지난 초만큼 빼되, 다음 틱 전에는 한 틱 아래로 내려가지 않는다', () => {
+    expect([0, 0.19, 0.2, 0.5, 0.99].map((p) => displayRemaining(6000, p, 5))).toEqual([6000, 6000, 5999, 5998, 5996]);
+    expect(displayRemaining(2, 0.9, 5)).toBe(0);
+  });
+
+  it('게임 루프의 틱 진행 정도: 1배 5초, 2배 2.5초 기준, 멈추면 0', () => {
+    const g = newGame();
+    const clock = new FakeClock();
+    const loop = new GameLoop(g, clock, () => undefined);
+    expect(loop.tickProgress).toBe(0);
+    loop.start();
+    clock.advance(2000);
+    expect(loop.tickProgress).toBeCloseTo(0.4, 6);
+    g.setSpeed(2);
+    loop.reschedule();
+    clock.advance(1250);
+    expect(loop.tickProgress).toBeCloseTo(0.5, 6);
+    loop.setHidden(true);
+    expect(loop.tickProgress).toBe(0);
+  });
+});
+
+describe('작업실 인형 터치 범위', () => {
+  it('인형 가운데를 중심으로 84×92도트 (예전의 가로·세로 2배), 장면 안', () => {
+    for (let lv = 0; lv <= 7; lv++) {
+      const r = dollHitRect(lv);
+      expect([r.w, r.h]).toEqual([84, 92]);
+      expect(r.x).toBeGreaterThanOrEqual(0);
+      expect(r.x + r.w).toBeLessThanOrEqual(130);
+    }
+    expect(dollHitRect(0)).toEqual({ x: 23, y: 127, w: 84, h: 92 });
+  });
+});
+
+describe('주식창 내 계좌', () => {
+  it('보유 종목 줄: 수량·평가금액·산 뒤 손익률, 요약: 현금·주식 평가', () => {
+    const g = newGame();
+    const s = g.getStockList()[0]!;
+    g.buy(s.id, 3);
+    for (let i = 0; i < 40; i++) g.advanceTick();
+    const p = g.getPortfolio();
+    const rows = holdingRows(p, 'ko');
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ id: s.id, qty: '3주', value: fmtNum(p.holdings[0]!.marketValue), pnlPct: fmtPct(p.holdings[0]!.unrealizedPnlPct) });
+    expect(accountSummary(p, 'ko')).toEqual({ cash: fmtNum(p.cash), stockValue: fmtNum(p.holdings[0]!.marketValue), count: 1 });
   });
 });

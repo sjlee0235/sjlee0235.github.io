@@ -139,7 +139,7 @@ export function confirmNewOverlay(locale: Locale, onAnswer: (ok: boolean) => voi
 
 export const TUTORIAL_PAGES = [
   { title: 'tutorial.storyTitle', lines: ['tutorial.story1', 'tutorial.story2', 'tutorial.story3', 'tutorial.story4'] },
-  { title: 'tutorial.howTitle', lines: ['tutorial.how1', 'tutorial.how2', 'tutorial.how3'] },
+  { title: 'tutorial.howTitle', lines: ['tutorial.how1', 'tutorial.how2', 'tutorial.how3', 'tutorial.how4'] },
   { title: 'tutorial.roomTitle', lines: ['tutorial.room1', 'tutorial.room2', 'tutorial.room3'] },
 ] as const;
 

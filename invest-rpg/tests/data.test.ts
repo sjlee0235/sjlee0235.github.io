@@ -62,13 +62,13 @@ describe('2000년대 데이터 (단계 B 초안)', () => {
     expect(lintEra(era).filter((i) => i.rule !== 'sentimentBias' && i.severity !== 'warning')).toEqual([]);
   });
 
-  it('[시드 100개] 시대 시작 추첨이 늘 조건을 채우고, 첫 뉴스는 7분의 opener 잠정 뉴스', () => {
+  it('[시드 100개] 시대 시작 추첨이 늘 조건을 채우고, 첫 뉴스는 3분의 opener 잠정 뉴스', () => {
     const openers = new Set(era.stories.filter((s) => s.opener).map((s) => s.tentative.id));
     for (let seed = 1; seed <= 100; seed++) {
       const g = new Game({ eras: [era], seed });
       expect(g.draw.warning, `seed ${seed}`).toBeUndefined();
       const first = [...g.newsSchedule].sort((a, b) => a.tick - b.tick)[0]!;
-      expect(first.tick * g.config.tickSeconds).toBe(420);
+      expect(first.tick * g.config.tickSeconds).toBe(180);
       expect(openers.has(first.news.id), `seed ${seed}`).toBe(true);
     }
   });

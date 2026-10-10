@@ -15,6 +15,7 @@
 import { MusicPlayer, type MusicTrack } from '../audio/music.ts';
 import musicData from '../data/audio/music.json' with { type: 'json' };
 import type { Era, Locale } from '../data/schema.ts';
+import { TICK_SECONDS } from '../engine/config.ts';
 import type { FinalSummary } from '../engine/game.ts';
 import { TABS, TabController, type TabId } from '../engine/homeActivities.ts';
 import {
@@ -29,8 +30,8 @@ import { artEraFor, SCENE_FRAMES, sceneFile, timeOfDayAt, type SceneKind, type T
 import { HtmlAudioBackend } from './audioBackend.ts';
 import type { Screen, UiContext } from './context.ts';
 import { clear, flash, h, setText } from './dom.ts';
-import { fmtNum } from './format.ts';
-import { ico, inner, pbtn, playIcon, pnl } from './kit.ts';
+import { displayRemaining, fmtNum, fmtTime } from './format.ts';
+import { hourglassIcon, ico, inner, pbtn, playIcon, pnl } from './kit.ts';
 import type { IconName } from './icons.ts';
 import { GameLoop, type Clock } from './loop.ts';
 import {
@@ -88,6 +89,8 @@ export class App {
   private readonly overlays: HTMLElement;
   private readonly toasts: HTMLElement;
   private readonly newsChip: HTMLButtonElement;
+  private readonly timeChip: HTMLElement;
+  private readonly timeV: HTMLElement;
   private readonly coinChip: HTMLElement;
   private readonly coinV: HTMLElement;
   private readonly x2Mark: HTMLElement;
@@ -133,7 +136,11 @@ export class App {
     const gear = pbtn('panel gear-btn', ico('gear', 30), { 'aria-label': this.t('settings.title') });
     gear.addEventListener('click', () => this.openSettings());
     this.virtualMark = h('div', { class: 'virtual-mark' }, 'VIRTUAL DATA');
-    this.hud = h('div', { class: 'hud' }, this.newsChip, this.coinChip, this.pendChip, gear, this.virtualMark);
+    // 남은 시간 (주식창 밖 탭): 왼쪽 위, NEWS!는 그 오른쪽
+    this.timeV = h('span', { class: 'v' });
+    this.timeChip = pnl('chip time-chip', hourglassIcon(), this.timeV);
+    this.timeChip.setAttribute('aria-label', this.t('trading.remaining'));
+    this.hud = h('div', { class: 'hud' }, this.timeChip, this.newsChip, this.coinChip, this.pendChip, gear, this.virtualMark);
 
     this.tabbar = h('nav', { class: 'tabbar' });
     this.overlays = h('div', { class: 'overlays' });
@@ -156,6 +163,8 @@ export class App {
     window.addEventListener('resize', () => this.fitStage());
     document.addEventListener('visibilitychange', () => this.onVisibility(document.hidden));
     window.setInterval(() => this.applyTod(true), 30_000);
+    // 남은 시간은 5초 틱 사이에도 1초씩 줄어들게 (0.25초마다 다시 그림)
+    window.setInterval(() => this.renderClock(), 250);
     if (this.opts.skipIntro) {
       this.begin(this.opts.fresh ?? false, false);
       return;
@@ -446,10 +455,26 @@ export class App {
 
   // ───────── 상단 ─────────
 
+  /** 화면에 보일 남은 시간(초) */
+  get shownRemainingSeconds(): number {
+    if (!this.game) return 0;
+    const running = this.game.phase === 'running' && !this.game.isPaused;
+    return displayRemaining(this.game.remainingSeconds, running ? this.loop.tickProgress : 0, TICK_SECONDS);
+  }
+
+  /** 남은 시간 표시만 다시 (주식창 계좌 바 + 다른 탭의 왼쪽 위 칩) */
+  private renderClock(): void {
+    if (!this.game || !this.tabs) return;
+    const text = fmtTime(this.shownRemainingSeconds);
+    setText(this.timeV, text);
+    if (this.tabs.current === 'trading') this.trading.setRemaining(text);
+  }
+
   renderTop(): void {
     const v = this.tabs.topBar();
     const locale = this.settings.locale;
     const onTrading = v.accountBar !== null;
+    this.timeChip.hidden = onTrading;
     this.newsChip.hidden = !v.newsBadge;
     this.newsChip.classList.toggle('blink', v.newsBadge);
     this.coinChip.hidden = onTrading || v.cash === null;
@@ -459,6 +484,9 @@ export class App {
     this.x2Mark.hidden = !x2;
     this.pendChip.hidden = v.workPending === null;
     if (v.workPending !== null) setText(this.pendV, `+${fmtNum(v.workPending, locale)}`);
+    // 지급 예정이 세 자리를 넘거나 2배속이면 칩을 2배속 코인 칩과 같은 폭(130)으로
+    this.pendChip.classList.toggle('wide', x2 || (v.workPending ?? 0) >= 100);
+    this.renderClock();
   }
 
   private flyTo(text: string, x: number, y: number, target: 'pending' | 'coins'): void {

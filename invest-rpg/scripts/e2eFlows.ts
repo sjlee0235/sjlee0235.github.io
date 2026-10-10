@@ -183,11 +183,23 @@ try {
     check(((await page.locator('.toast').last().textContent()) ?? '') === '현금이 부족합니다. 주식을 매도해 현금을 확보하세요.', '"현금이 부족합니다. 주식을 매도해 현금을 확보하세요."');
     await dbg(page, 'tab', 'trading');
     await page.waitForTimeout(100);
+    // 내 계좌: 현금·보유 종목·손익률, 눌러서 주문 패널
+    await page.locator('.list-tab').nth(1).click();
+    check(((await page.locator('.list-tab').nth(1).textContent()) ?? '') === '내 계좌 (1)', '내 계좌 탭에 보유 종목 수');
+    check(((await page.locator('.acct-cash b').textContent()) ?? '') === cash.toLocaleString('ko-KR'), `계좌 바에 현금 (${await page.locator('.acct-cash b').textContent()})`);
+    check((await page.locator('.stock-scroll.mine .row.hold[data-id]').count()) === 1, '내 계좌에 산 종목 한 줄');
+    check(((await page.locator('.stock-scroll.mine .row.hold[data-id] .q').textContent()) ?? '') === `${qty}주`, '보유 수량');
+    check(/^[+-]?\d+\.\d%$/.test((await page.locator('.stock-scroll.mine .row.hold[data-id] .p').textContent()) ?? ''), '산 뒤 손익률');
+    await page.locator('.stock-scroll.mine .row.hold[data-id]').click(); // 같은 종목이 열려 있으면 닫힘
+    await page.locator('.stock-scroll.mine .row.hold[data-id]').click();
+    check(await page.locator('.order-pnl').isVisible() && ((await page.locator('.order-head .nm').textContent()) ?? '') === name, '내 계좌에서 종목을 누르면 주문 패널');
     await page.locator('.qty-row .max').click(); // 더 살 수 없으면 '최대' = 보유 수량
     check(Number(await page.locator('.qty-box input').inputValue()) === qty, '살 수 없을 때 최대 = 보유 수량 전부');
     await page.locator('.trade-row .sell').click();
     await page.waitForTimeout(150);
     check((await game<number>(page, 'g.getPortfolio().holdings.length')) === 0, '[매도]로 전량 매도 뒤 보유 종목 없음');
+    check(await page.locator('.mine-empty').isVisible(), '다 팔면 내 계좌에 "아직 보유한 종목이 없어요"');
+    await page.locator('.list-tab').first().click();
     await dbg(page, 'tab', 'living_room');
     await dbg(page, 'nextNews');
     await page.waitForTimeout(100);
@@ -252,8 +264,37 @@ try {
     check(((await page.locator('.pend-chip').textContent()) ?? '').includes('+0'), '지급 뒤 지급 예정 +0');
     check(((await page.locator('.workshop .toast-pnl').first().textContent()) ?? '').includes('완성 0개'), '지급 뒤 완성 0개');
     check(((await page.locator('.work-guide').textContent()) ?? '') === '인형 100개를 완성하면 보상이 지급돼요.', '안내 문구');
+    const hit = await page.locator('.doll-hit').boundingBox();
+    check(hit !== null && Math.round(hit.width) === 252 && Math.round(hit.height) === 276, `인형 터치 범위 84×92도트 = 252×276px (${hit?.width}×${hit?.height})`);
+    await page.waitForTimeout(1200);
+    await dbg(page, 'workTouches', 102); // 34개 → +102
+    await page.waitForTimeout(300);
+    const pend = await page.locator('.pend-chip').boundingBox();
+    const inner = await page.locator('.pend-chip .in').evaluate((el) => el.scrollWidth <= el.clientWidth);
+    check(pend !== null && Math.round(pend.width) === 130 && inner, `지급 예정 세 자리: 칩 폭 130(2배속 코인 칩과 같음), 글자가 넘치지 않음 (${pend?.width})`);
     const box = await page.locator('.work-guide').boundingBox();
     check(box !== null && box.y < 120 && box.x + box.width < 180, `안내 문구는 왼쪽 위 (${JSON.stringify(box)})`);
+    check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
+    await ctx.close();
+  }
+
+  // ── 7-2) 남은 시간: 다른 탭에서도 왼쪽 위, 1초씩 줄어듦. 첫 뉴스는 3분 ──
+  {
+    const ctx = await newCtx();
+    const page = await ctx.newPage();
+    const errors = watchErrors(page);
+    await open(page, '?debug=1&seed=13&fresh=1&nointro=1');
+    await dbg(page, 'tab', 'living_room');
+    check(await page.locator('.time-chip').isVisible(), '거실에서도 왼쪽 위에 남은 시간');
+    const t0 = (await page.locator('.time-chip .v').textContent()) ?? '';
+    await page.waitForTimeout(1300);
+    const t1 = (await page.locator('.time-chip .v').textContent()) ?? '';
+    const sec = (s: string) => s.split(':').reduce((a, x) => a * 60 + Number(x), 0);
+    check(sec(t0) - sec(t1) >= 1 && sec(t0) - sec(t1) <= 2, `남은 시간이 1초씩 줄어든다 (${t0} → ${t1})`);
+    await dbg(page, 'tab', 'trading');
+    check(!(await page.locator('.time-chip').isVisible()) && ((await page.locator('.acct-time').textContent()) ?? '') !== '', '주식창에서는 계좌 바에 남은 시간');
+    await dbg(page, 'nextNews');
+    check((await game<number>(page, '7200 - g.remainingSeconds')) === 180, '첫 뉴스는 3분(180초)');
     check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
   }

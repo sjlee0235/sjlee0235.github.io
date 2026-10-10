@@ -16,6 +16,16 @@ export function dollOrigin(level: number): { x: number; y: number } {
   return { x: 52, y: 133 };
 }
 
+/** 인형 터치 범위 (도트): 인형 가운데 (원점 + (13, 18)) 기준 84×92, 장면 밖으로 나가지 않게 */
+export function dollHitRect(level: number): { x: number; y: number; w: number; h: number } {
+  const o = dollOrigin(level);
+  const w = 84;
+  const hgt = 92;
+  const x = Math.max(0, Math.min(130 - w, o.x + 13 - w / 2));
+  const y = o.y + 18 - hgt / 2;
+  return { x, y, w, h: hgt };
+}
+
 export class WorkshopScreen implements Screen {
   readonly el: HTMLElement;
   private readonly ctx: UiContext;
@@ -56,10 +66,10 @@ export class WorkshopScreen implements Screen {
       v.eyesPrefix, h('b', {}, v.eyes), v.eyesSuffix, h('span', { class: 'sep' }, '|'), v.donePrefix, h('b', {}, v.done), v.doneSuffix,
     );
     this.progress.style.top = `${level === 0 ? 606 : 548}px`;
-    const o = dollOrigin(level);
-    // 인형 그림(26×37)보다 넉넉하게
+    // 터치 범위: 인형 그림(26×37) 가운데를 중심으로 84×92도트 (예전 42×46의 가로·세로 2배, 사용자 요청)
+    const r = dollHitRect(level);
     Object.assign(this.hit.style, {
-      left: `${(o.x - 8) * SCALE}px`, top: `${(o.y - 4) * SCALE}px`, width: `${42 * SCALE}px`, height: `${46 * SCALE}px`,
+      left: `${r.x * SCALE}px`, top: `${r.y * SCALE}px`, width: `${r.w * SCALE}px`, height: `${r.h * SCALE}px`,
     });
   }
 

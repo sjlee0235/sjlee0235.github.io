@@ -6,7 +6,7 @@ import { changeColor, type ChangeColor, type ColorScheme } from '../engine/color
 import type { FinalSummary, WorkStatus } from '../engine/game.ts';
 import type { PricePoint } from '../engine/priceEngine.ts';
 import type {
-  PublicFeedEntry, PublicSettlement, PublicStockReport, PublicStockReportItem, PublicStockView,
+  PublicFeedEntry, PublicPortfolio, PublicSettlement, PublicStockReport, PublicStockReportItem, PublicStockView,
 } from '../engine/publicView.ts';
 import { localize, t } from '../i18n/index.ts';
 import { fmtNum, fmtPct } from './format.ts';
@@ -41,6 +41,47 @@ export function stockRows(list: readonly PublicStockView[], scheme: ColorScheme,
 export function dirClass(changePct: number): '' | 'up' | 'dn' {
   const v = Number(changePct.toFixed(1));
   return v > 0 ? 'up' : v < 0 ? 'dn' : '';
+}
+
+// ───────── 내 계좌 (보유 종목) ─────────
+
+export interface HoldingRowView {
+  id: string;
+  name: string;
+  /** "12주" */
+  qty: string;
+  /** 평가금액 (현재가 × 수량) */
+  value: string;
+  /** 산 뒤 손익률 (평균 매입가 대비, 수수료 포함) */
+  pnlPct: string;
+  dir: '' | 'up' | 'dn';
+}
+
+export interface AccountSummaryView {
+  cash: string;
+  stockValue: string;
+  /** 보유 종목 수 */
+  count: number;
+}
+
+/** 보유 종목 줄 (처음 산 순서) */
+export function holdingRows(p: PublicPortfolio, locale: Locale): HoldingRowView[] {
+  return p.holdings.map((h) => ({
+    id: h.id,
+    name: localize(h.name, locale),
+    qty: t(locale, 'trading.shares', { count: fmtNum(h.quantity, locale) }),
+    value: fmtNum(h.marketValue, locale),
+    pnlPct: fmtPct(h.unrealizedPnlPct),
+    dir: dirClass(h.unrealizedPnlPct),
+  }));
+}
+
+export function accountSummary(p: PublicPortfolio, locale: Locale): AccountSummaryView {
+  return {
+    cash: fmtNum(p.cash, locale),
+    stockValue: fmtNum(p.holdings.reduce((a, h) => a + h.marketValue, 0), locale),
+    count: p.holdings.length,
+  };
 }
 
 // ───────── 추이선·차트 (SVG 좌표) ─────────

@@ -13,6 +13,8 @@ import type { PublicAdvanceResult } from '../engine/publicView.ts';
 export interface Clock {
   setTimeout(fn: () => void, ms: number): number;
   clearTimeout(id: number): void;
+  /** 지금 시각 ms (틱 사이 진행 정도를 재는 데만 씀. 없으면 진행 정도는 늘 0) */
+  now?(): number;
 }
 
 /** 루프가 쓰는 게임 기능 (PublicGame이 모두 가짐) */
@@ -27,10 +29,13 @@ export interface LoopGame {
 export const browserClock: Clock = {
   setTimeout: (fn, ms) => window.setTimeout(fn, ms),
   clearTimeout: (id) => window.clearTimeout(id),
+  now: () => performance.now(),
 };
 
 export class GameLoop {
   private timer: number | null = null;
+  /** 지금 기다리는 틱을 잰 시각 (clock.now 기준) */
+  private scheduledAt = 0;
   private running = false;
   private hidden = false;
   /** (디버그) 시간 빨리감기 배율. 1 = 보통 */
@@ -88,6 +93,16 @@ export class GameLoop {
     }
   }
 
+  /**
+   * 다음 틱까지 지난 정도 (0 이상 1 미만). 타이머가 멈춰 있으면(일시정지·백그라운드·정산) 0.
+   * 화면이 남은 시간을 5초 틱 사이에도 1초씩 줄여 보여 주는 데 쓴다 (게임 시간 자체는 틱 단위 그대로)
+   */
+  get tickProgress(): number {
+    if (this.timer === null || !this.clock.now) return 0;
+    const p = (this.clock.now() - this.scheduledAt) / this.intervalMs;
+    return Math.max(0, Math.min(0.999, p));
+  }
+
   /** 틱 하나를 바로 진행 (디버그·테스트) */
   step(): PublicAdvanceResult {
     const r = this.game.advanceTick();
@@ -98,6 +113,7 @@ export class GameLoop {
   private schedule(): void {
     this.cancel();
     if (this.hidden) return;
+    this.scheduledAt = this.clock.now?.() ?? 0;
     this.timer = this.clock.setTimeout(() => this.fire(), this.intervalMs);
   }
 

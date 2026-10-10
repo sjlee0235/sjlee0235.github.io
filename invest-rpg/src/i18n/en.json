@@ -111,16 +111,17 @@
     "story3": "This time Yeokjeon will study instead of guessing. The 10,000 coins earned gluing eyes on dolls every night are the last chance.",
     "story4": "The goal: turn life around. Read the news, invest, and turn this shabby room into a great one.",
     "howTitle": "How to Play",
-    "how1": "One era lasts 2 hours of game time. There is no news for the first 7 minutes, so look around the stocks and get ready.",
+    "how1": "One era lasts 2 hours of game time. The time left is shown at the top left (in the account bar on the trading screen). There is no news for the first 3 minutes, so look around and get ready.",
     "how2": "When news breaks, related prices move right away. Tap a stock, set the quantity and press [Buy] or [Sell] to trade instantly.",
-    "how3": "When the era ends, all your shares are sold automatically.",
+    "how3": "When time runs out, the era ends. All your shares are sold automatically, and after the settlement you move on to the next era.",
     "roomTitle": "Your Room and Work",
     "room1": "Attach eyes to dolls in the workshop to earn coins. You get paid every time you finish 100 dolls.",
     "room2": "Spend 2,000 cash coins in the living room to upgrade the interior one level. You need cash, not stocks.",
     "room3": "Fictional scenarios inspired by real events. In-game numbers are not investment advice.",
     "skip": "Skip",
     "next": "Next",
-    "start": "Start"
+    "start": "Start",
+    "how4": "Your coins, interior and work progress carry over to the next era. (This test version goes up to the 2000s.)"
   },
   "disclaimer": {
     "fictional": "This is a fictional scenario based on real events and is not investment advice."
@@ -167,7 +168,7 @@
     "comingSoon": "Broadcast coming soon"
   },
   "era": {
-    "graceNotice": "No news for the first 7 minutes. Look around the stocks and get ready.",
+    "graceNotice": "No news for the first 3 minutes. Look around the stocks and get ready.",
     "remaining": "Time left {time}"
   },
   "speed": {
@@ -234,7 +235,14 @@
     "remaining": "Time left",
     "scrollHint": "Scroll down for older news ▾",
     "favorite": "Favorite",
-    "need": "Coins needed (fee {fee})"
+    "need": "Coins needed (fee {fee})",
+    "myAccount": "My Account",
+    "colQty": "Held",
+    "colValue": "Value",
+    "colPnl": "P/L",
+    "shares": "{count} sh",
+    "stockValue": "Stocks",
+    "noHoldings": "No stocks yet. Pick one in [Stocks] to buy."
   },
   "settings": {
     "title": "Settings",

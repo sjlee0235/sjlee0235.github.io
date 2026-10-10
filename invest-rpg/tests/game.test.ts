@@ -23,8 +23,8 @@ describe('시대 시작', () => {
   });
 });
 
-describe('시대마다 7분 유예', () => {
-  it('[시드 10개] 시대가 바뀌어도 매번: 420초 전에는 뉴스 없고 가격은 움직이며, 첫 뉴스는 420초의 잠정 뉴스', () => {
+describe('시대마다 3분 유예', () => {
+  it('[시드 10개] 시대가 바뀌어도 매번: 180초 전에는 뉴스 없고 가격은 움직이며, 첫 뉴스는 180초의 잠정 뉴스', () => {
     for (let seed = 1; seed <= 10; seed++) {
       const game = newGame(seed);
       for (let e = 0; e < 2; e++) {
@@ -33,14 +33,14 @@ describe('시대마다 7분 유예', () => {
         while (game.phase === 'running') {
           const r = game.advanceTick();
           if (!r.advanced) continue;
-          if (r.tick < 84) {
+          if (r.tick < 36) {
             expect(r.news).toBeNull();
             if (r.changes.some((c) => c.price !== c.prevPrice)) moved = true;
           }
           if (r.news && !first) first = r;
         }
         expect(moved).toBe(true);
-        expect(first && first.advanced && first.tick).toBe(84);
+        expect(first && first.advanced && first.tick).toBe(36);
         expect(first && first.advanced && first.news!.kind).toBe('tentative');
         if (game.hasNextEra) game.startNextEra();
       }

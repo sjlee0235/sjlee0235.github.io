@@ -100,7 +100,7 @@ describe('콘텐츠 점검 (lint:content)', () => {
     expect(lintWords(makeSpecEra({ id: 'w' })).filter((i) => i.severity !== 'warning')).toEqual([]);
   });
 
-  it('종목명: 한국어 "2글자 수식어 + 업종" 붙여쓰기(띄어쓰기·\'주\' 없음), 영어 \'Stock\' 없음, 평가·전망 어감 단어 금지, 방향 암시 단어는 경고', () => {
+  it('종목명: 한국어 "브랜드 + 업종" 3~6자 붙여쓰기(띄어쓰기·\'주\' 없음), 영어 \'Stock\' 없음, 평가·전망 어감 단어 금지, 방향 암시 단어는 경고', () => {
     const era = makeSpecEra({ id: 'w' });
     const check = (ko: string, en = 'Sea Shipyard', desc = '선박을 만든다.') => lintWords({
       ...era, stocks: [{ ...era.stocks[0]!, name: { ko, en }, description: { ko: desc, en: 'x' } }], breaking: [], stories: [],
@@ -110,6 +110,11 @@ describe('콘텐츠 점검 (lint:content)', () => {
     expect(errors('온유제약')).toEqual([]);
     expect(errors('바다조선')).toEqual([]);
     expect(errors('단풍중장비')).toEqual([]);
+    expect(errors('밀레아제분')).toEqual([]);
+    expect(errors('오닉스컴퓨터')).toEqual([]);
+    expect(errors('카이로모터스주')).toContain('stockName'); // 7자 + '주'
+    expect(errors('솔레아에너지기술')).toContain('stockName'); // 6자 넘음
+    expect(errors('PC')).toContain('stockName'); // 3자 미만
     expect(errors('평화방산')).toEqual([]);
     expect(warnings('평화방산')).toContain('stockNameHint'); // "평화"는 막지 않고 경고만
     expect(errors('평화 방산')).toContain('stockName'); // 띄어쓰기 없음
