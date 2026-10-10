@@ -19,6 +19,7 @@
     "audio:placeholder": "node scripts/audioPlaceholder.ts",
     "dev": "vite --host",
     "build": "vite build",
+    "build:play": "VITE_PLAYTEST=1 vite build --outDir play --emptyOutDir",
     "preview": "vite preview --host",
     "shots": "node scripts/shots.ts",
     "e2e": "node scripts/e2eFlows.ts"
