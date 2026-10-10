@@ -3,10 +3,10 @@
 모바일(iOS/Android)용 2D 픽셀 투자 시뮬레이션 게임. 하단 탭 4개(거실 / 주식창 / 작업실 / TV홈쇼핑)의 1인칭 화면으로 진행한다 (걷는 맵·캐릭터 없음).
 감으로 투자하다 전 재산을 잃은 20대 후반 청년이 공부하고, 인형 눈 붙이기로 모은 1만 코인으로 다시 시작하는 이야기.
 
-**현재 단계: 단계 U — 화면** (결제·광고·서버 없음, 그림은 임시 그림)
+**현재 단계: 단계 U — 화면** (결제·광고·서버 없음, 그림은 코드로 그린 픽셀 아트)
 - 단계 A(엔진·스키마·테스트·시뮬레이션·점검 스크립트) 완료 → 2차 결정(공개용 뷰, 시간가중수익률, 세이브 보강) 반영
 - 3차 기획 변경 반영: 화폐 코인, 시대 시작 7분 유예와 opener 첫 뉴스, 종목명 "수식어 업종주", 일시정지 사유·뉴스 피드·주가 리포트 행·1배/2배속, 작업(인형 눈 붙이기)과 시대 종료 지급, 거실(LP 음악·강아지), 시대별 디자인 데이터, 탭 레지스트리
-- **단계 U(이번)**: 브라우저에서 도는 화면 — 4탭(거실·주식창·작업실·TV홈쇼핑), HTS 주식창, 정산 창, 설정, 디버그 패널, 임시 그림, 스크린샷 스크립트
+- **단계 U(이번)**: 브라우저에서 도는 화면 — 4탭(거실·주식창·작업실·TV홈쇼핑), HTS 주식창, 정산 창, 설정, 디버그 패널, 픽셀 아트(코드로 그림), 스크린샷 스크립트
 - **단계 B 초안(이번)**: 2000년대 데이터 `src/data/eras/2000s.json` — 테마·종목 36개, 속보 23개, 스토리 12개(opener 6개). 기획자 검토 전 초안 (`docs/stageB_candidates.md` 4장, 팩트체크 `docs/2000s_fact_check.md`)
 - 2010년대·2020년대는 아직 없다. 화면은 이 두 시대를 **가상 시대**로 채운다 (화면 왼쪽 아래 `VIRTUAL DATA` 표시). `sim:repeat`·`sim:carry`는 계속 가상 시대로 규칙을 점검한다.
 - 화면 단계 인계: `docs/ui_handoff.md`, 화면 구성: `docs/screens.md`, 경제: `docs/economy.md`
@@ -24,7 +24,7 @@
 | `npm run shots` | 화면 스크린샷 18장 (360×640, 390×844) → `shots/` 폴더 |
 | `npm run e2e` | 브라우저 흐름 점검 20개: 앱 업데이트 정산 뒤 다음 시대, 끝난 판 다시 열기, 숨긴 탭 일시정지, 매매(최대·즐겨찾기·전량 매도), NEWS! → 주식창 |
 | `npm run build` | 운영용 파일 만들기 → `dist/` (디버그 패널은 빠진다). `npm run preview`로 확인 |
-| `npm run art:placeholder` | 임시 그림(색 블록 + 이름) 만들기. 이미 있는 파일은 건드리지 않음 (`-- --force`면 전부 새로) |
+| `npm run art` | 게임 그림(코드로 그린 픽셀 아트) 만들기. 이미 있는 파일은 건드리지 않음 (`-- --force`면 전부 새로) |
 | `npm test` | 자동 테스트 전체 |
 | `npm run check` | 타입 검사 + 테스트 |
 | `npm run sim` | 밸런스 시뮬레이션 (전략 10개 + 참고 2개 × 시드 200개). `npm run sim -- 50`으로 빠르게 |
@@ -112,10 +112,10 @@ invest-rpg/
       style.css, sprite.ts, assets.ts, audioBackend.ts, storage.ts, format.ts, scale.ts, dom.ts
     dev/specEra.ts     # 가상 시대 생성기 (테스트·시뮬레이션·시대 데이터 없을 때 화면)
   index.html           # 화면 HTML (npm run dev)
-  assets/art/          # 그림 (지금은 임시 그림. 같은 파일명으로 덮어쓰면 교체 — docs/art_spec.md)
+  assets/art/          # 그림 (코드로 그린 픽셀 아트. 같은 파일명으로 덮어쓰면 교체 — docs/art_spec.md)
   assets/audio/        # music/ (곡 파일, 지금은 무음 임시 파일), licenses/ (라이선스 증빙)
   tests/               # 자동 테스트 (가상 시대 생성기는 src/dev/specEra.ts)
-  scripts/             # demo, sim, simRepeat, simCarry, simLib, lintContent, lintAudio, audioPlaceholder, artPlaceholder, shots, telemetryReport
+  scripts/             # demo, sim, simRepeat, simCarry, simLib, lintContent, lintAudio, audioPlaceholder, artGenerate(그림: art/), shots, telemetryReport
   docs/
     PLAN.md            # 기획 정리
     screens.md         # 화면 구성 (4탭)
@@ -334,6 +334,7 @@ const music = new MusicPlayer(tracks, backend, createPresentationRng(seed, 'musi
 53. 🆕 효과음은 아직 없다(볼륨 설정만). 첫 실행 플레이 기록 동의 화면도 아직 없다(설정의 켜기/끄기만, 기록을 보낼 곳도 없음).
 54. 🆕 정산 창의 '확인' → 다음 시대 시작(주식창 탭, "처음 7분은 뉴스가 없어요" 안내). 마지막 시대면 최종 요약 → '처음부터 다시'는 세이브를 지우고 새 게임.
 55. 🆕 디버그 패널에는 기획의 5가지(시드 고정, 시대 선택, 10배, 다음 뉴스, 코인 지급) 외에 `+5분`, `시대 끝`을 더 넣었다(스크린샷용). 운영 빌드(`npm run build`)에서는 코드째 빠진다.
+56. 🆕 **디자인 개편 (기획자 요청: 보편적인 2D 픽셀 게임 느낌, 너무 어둡지 않게)**: 처음 기획의 "어둡고 차분한 저채도"를 "따뜻하고 중간 채도"로 바꿨다. 그림은 코드로 그린 픽셀 아트(윤곽선·빛 음영·디더링), UI는 남색 픽셀 패널 + 금색 코인 + 양피지 창. 주식창은 HTS 회색 창 느낌을 유지하되 밝게. 캐릭터는 여전히 화면에 나오지 않는다(3차 기획).
 
 ---
 

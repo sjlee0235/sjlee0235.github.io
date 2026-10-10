@@ -17,12 +17,12 @@
     "check": "npm run typecheck && npm test",
     "lint:audio": "node scripts/lintAudio.ts",
     "audio:placeholder": "node scripts/audioPlaceholder.ts",
-    "art:placeholder": "node scripts/artPlaceholder.ts",
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview --host",
     "shots": "node scripts/shots.ts",
-    "e2e": "node scripts/e2eFlows.ts"
+    "e2e": "node scripts/e2eFlows.ts",
+    "art": "node scripts/artGenerate.ts"
   },
   "devDependencies": {
     "playwright": "^1.56.1",

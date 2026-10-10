@@ -1,15 +1,15 @@
 {
-  "note": "그림 매니페스트: 에셋 키 → 파일. 크기는 기준 해상도(180×320) 픽셀. frames > 1이면 가로로 이어 붙인 스프라이트 시트(시트 너비 = width × frames). 진짜 그림은 같은 파일명으로 덮어쓰면 된다. 사양: docs/art_spec.md, 임시 그림 생성: npm run art:placeholder",
+  "note": "그림 매니페스트: 에셋 키 → 파일. 크기는 기준 해상도(180×320) 픽셀. 배경은 196×400 (가운데 180×320이 기본 영역, 좌우 8·위아래 40은 넓은 화면용 여백). frames > 1이면 가로로 이어 붙인 스프라이트 시트(시트 너비 = width × frames). 진짜 그림은 같은 파일명으로 덮어쓰면 된다. 사양: docs/art_spec.md, 그림 만들기: npm run art",
   "baseWidth": 180,
   "baseHeight": 320,
   "assets": {
-    "bg.living_2000s":   { "file": "art/bg/living_2000s.png",   "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#3b3430", "label": "LIVING 2000S" },
-    "bg.living_2010s":   { "file": "art/bg/living_2010s.png",   "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#33363a", "label": "LIVING 2010S" },
-    "bg.living_2020s":   { "file": "art/bg/living_2020s.png",   "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#2a2d31", "label": "LIVING 2020S" },
-    "bg.workshop_2000s": { "file": "art/bg/workshop_2000s.png", "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#3a3328", "label": "WORKSHOP 2000S" },
-    "bg.workshop_2010s": { "file": "art/bg/workshop_2010s.png", "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#34352f", "label": "WORKSHOP 2010S" },
-    "bg.workshop_2020s": { "file": "art/bg/workshop_2020s.png", "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#2b2e2c", "label": "WORKSHOP 2020S" },
-    "bg.tv_room":        { "file": "art/bg/tv_room.png",        "width": 180, "height": 400, "frames": 1, "kind": "background", "color": "#26282d", "label": "TV ROOM" },
+    "bg.living_2000s":   { "file": "art/bg/living_2000s.png",   "width": 196, "height": 400, "frames": 1, "kind": "background", "color": "#e4cfa6", "label": "LIVING 2000S" },
+    "bg.living_2010s":   { "file": "art/bg/living_2010s.png",   "width": 196, "height": 400, "frames": 1, "kind": "background", "color": "#d8e0e8", "label": "LIVING 2010S" },
+    "bg.living_2020s":   { "file": "art/bg/living_2020s.png",   "width": 196, "height": 400, "frames": 1, "kind": "background", "color": "#86a082", "label": "LIVING 2020S" },
+    "bg.workshop_2000s": { "file": "art/bg/workshop_2000s.png", "width": 196, "height": 400, "frames": 1, "kind": "background", "color": "#dcb886", "label": "WORKSHOP 2000S" },
+    "bg.workshop_2010s": { "file": "art/bg/workshop_2010s.png", "width": 196, "height": 400, "frames": 1, "kind": "background", "color": "#ece6dc", "label": "WORKSHOP 2010S" },
+    "bg.workshop_2020s": { "file": "art/bg/workshop_2020s.png", "width": 196, "height": 400, "frames": 1, "kind": "background", "color": "#86a082", "label": "WORKSHOP 2020S" },
+    "bg.tv_room":        { "file": "art/bg/tv_room.png",        "width": 196, "height": 400, "frames": 1, "kind": "background", "color": "#e2dccb", "label": "TV ROOM" },
 
     "lp.player":   { "file": "art/sprites/lp_player.png",  "width": 56, "height": 44, "frames": 4, "kind": "lp",    "color": "#5a4a3c", "label": "LP" },
     "dog.puppy":   { "file": "art/sprites/dog_puppy.png",  "width": 56, "height": 48, "frames": 6, "kind": "dog",   "color": "#8a7356", "label": "PUPPY",  "frameNames": ["idle0", "idle1", "pet", "tail0", "tail1", "ear"] },

@@ -26,7 +26,8 @@ export class TvShoppingScreen implements Screen {
     const key = `tv.${ctx.theme().tvVariant}`;
     const tv = art(key);
     const x = Math.floor((180 - tv.width) / 2);
-    const y = 96;
+    // TV 바닥이 받침대 윗면(무대 y 212 = 배경 y 252)에 닿게
+    const y = 212 - tv.height;
     const [sx, sy, sw, sh] = tv.screen ?? [10, 10, tv.width - 20, tv.height - 20];
     const noise = sprite('tv.noise', s, ctx.assetBase, { x: x + sx!, y: y + sy!, fitWidth: sw, fitHeight: sh, class: 'tv-noise' });
     loopSheet(noise, 4, 12);

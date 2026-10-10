@@ -1,5 +1,5 @@
 {
-  "note": "시대별 화면 디자인 구조 (그림은 나중에). htsSkin.colors는 화면 단계에서 CSS 변수로 쓴다. 전체 톤은 어둡고 저채도.",
+  "note": "시대별 화면 디자인 구조. htsSkin.colors는 화면 단계에서 CSS 변수로 쓴다. 전체 톤: 따뜻하고 중간 채도, 너무 어둡지 않게 (2020년대만 차분한 슬레이트).",
   "eras": {
     "2000s": {
       "dogStage": "puppy",
@@ -9,8 +9,14 @@
       "htsSkin": {
         "id": "hts_classic_gray",
         "colors": {
-          "frame": "#8a8c8e", "panel": "#9fa1a3", "bevelLight": "#c4c6c8", "bevelDark": "#4e5052",
-          "text": "#1c1d1e", "titleBar": "#2f3f5a", "titleText": "#d8dadc", "rowAlt": "#939597"
+          "frame": "#8f98ad",
+          "panel": "#d8d4cc",
+          "bevelLight": "#ffffff",
+          "bevelDark": "#8a8478",
+          "text": "#1d1a22",
+          "titleBar": "#2f55a8",
+          "titleText": "#ffffff",
+          "rowAlt": "#cbc6bc"
         }
       }
     },
@@ -22,8 +28,14 @@
       "htsSkin": {
         "id": "hts_flat_gray",
         "colors": {
-          "frame": "#6f7376", "panel": "#7c8083", "bevelLight": "#9a9ea1", "bevelDark": "#45494c",
-          "text": "#141516", "titleBar": "#3a4650", "titleText": "#d0d3d6", "rowAlt": "#74787b"
+          "frame": "#9fb3c8",
+          "panel": "#f2f5f8",
+          "bevelLight": "#ffffff",
+          "bevelDark": "#a3b0c0",
+          "text": "#1b2330",
+          "titleBar": "#2e86c8",
+          "titleText": "#ffffff",
+          "rowAlt": "#e3e9f0"
         }
       }
     },
@@ -35,8 +47,14 @@
       "htsSkin": {
         "id": "hts_dark_gray",
         "colors": {
-          "frame": "#2c2f33", "panel": "#373b40", "bevelLight": "#4d5258", "bevelDark": "#1b1d20",
-          "text": "#c9ccd0", "titleBar": "#20262d", "titleText": "#aeb4ba", "rowAlt": "#32363b"
+          "frame": "#56607a",
+          "panel": "#3c4559",
+          "bevelLight": "#68748e",
+          "bevelDark": "#262c3a",
+          "text": "#eef2f8",
+          "titleBar": "#6b5bd0",
+          "titleText": "#ffffff",
+          "rowAlt": "#353d50"
         }
       }
     }
