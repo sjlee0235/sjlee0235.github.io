@@ -113,6 +113,8 @@ export interface PublicSettlement {
   /** 입금을 뺀 순손익 */
   profitAmount: number;
   deposits: Record<DepositSource, number>;
+  /** 이번 시대 출금 합계 (인테리어 구입) */
+  withdrawals: number;
   /** 지금까지 끝난 시대들의 누적 수익률 % */
   cumulativeReturnPct: number;
   stocks: { id: string; name: LocalizedText; totalBought: number; pnl: number; pnlPct: number }[];
@@ -644,6 +646,7 @@ function publicSettlement(
     returnPct: s.returnPct,
     profitAmount: s.profitAmount,
     deposits: { ...s.deposits },
+    withdrawals: s.withdrawals ?? 0,
     cumulativeReturnPct: cumulative,
     stocks: s.stocks.flatMap((x) => {
       const v = stock(x.stockId);

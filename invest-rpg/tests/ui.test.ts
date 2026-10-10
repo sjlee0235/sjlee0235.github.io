@@ -4,15 +4,15 @@
 import { describe, expect, it } from 'vitest';
 import { MockAudioBackend, MusicPlayer, type MusicTrack } from '../src/audio/music.ts';
 import musicData from '../src/data/audio/music.json' with { type: 'json' };
-import { createPresentationRng, newDogState, petDog } from '../src/engine/dogPetting.ts';
+import { createPresentationRng } from '../src/engine/rng.ts';
 import { DEFAULT_CONFIG } from '../src/engine/config.ts';
 import { TabController } from '../src/engine/homeActivities.ts';
 import { PublicGame, type PublicAdvanceResult } from '../src/engine/publicView.ts';
 import { fmtNum, fmtPct, fmtTime } from '../src/ui/format.ts';
 import { GameLoop, type Clock } from '../src/ui/loop.ts';
-import { pixelScale } from '../src/ui/scale.ts';
 import {
-  feedRows, newOrderState, orderMessage, reportRow, setMax, setQuantity, setSide, settlementView, stepQuantity, stockRows, toggleExpanded,
+  dirClass, finalView, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
+  settlementView, sparkPoints, stepQuantity, stockRows, upgradeView, workshopView,
 } from '../src/ui/viewModels.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
 
@@ -67,11 +67,8 @@ describe('형식', () => {
     expect(fmtTime(65)).toBe('1:05');
   });
 
-  it('정수 배율: 360×640, 390×844는 2배', () => {
-    expect(pixelScale(360, 640)).toBe(2);
-    expect(pixelScale(390, 844)).toBe(2);
-    expect(pixelScale(540, 960)).toBe(3);
-    expect(pixelScale(200, 300)).toBe(1);
+  it('상승·하락 클래스: 소수 첫째 자리에서 0이면 색 없음', () => {
+    expect([dirClass(1.2), dirClass(-0.4), dirClass(0.04), dirClass(-0.04)]).toEqual(['up', 'dn', '', '']);
   });
 });
 
@@ -110,31 +107,44 @@ describe('탭·NEWS!·코인 표시', () => {
   });
 });
 
-describe('주문 패널', () => {
-  it("'최대'는 매수면 수수료 포함 최대, 매도면 보유 전부. 수량은 1 이상 정수", () => {
+describe('주문 패널 (수량 맞추고 매수/매도 버튼이 바로 체결)', () => {
+  it('수량은 숫자만 0~999, −/+는 1씩, 최대는 현금으로 살 수 있는 최대 (못 사면 보유 수량)', () => {
     const g = newGame();
     const s = g.getStockList()[0]!;
     let o = newOrderState(s.id);
-    o = setMax(o, g.maxQty('buy', s.id));
+    expect(o.quantity).toBe(1);
+    o = setMax(o, g.maxQty('buy', s.id), 0);
     expect(o.quantity).toBe(g.maxBuyQuantity(s.id));
     expect(g.previewOrder('buy', s.id, o.quantity).error).toBeNull();
-    g.buy(s.id, 5);
-    o = setSide(o, 'sell');
-    o = setMax(o, g.maxQty('sell', s.id));
-    expect(o.quantity).toBe(5);
-    expect(setQuantity(o, 0).quantity).toBe(1);
+    expect(setMax(o, 0, 5).quantity).toBe(5);
+    expect(setMax(o, 5000, 0).quantity).toBe(999);
+    expect(setQuantity(o, -3).quantity).toBe(0);
     expect(setQuantity(o, 2.7).quantity).toBe(2);
-    expect(stepQuantity(setQuantity(o, 1), -1).quantity).toBe(1);
-    expect(stepQuantity(o, 1).quantity).toBe(6);
+    expect(setQuantity(o, 1234).quantity).toBe(999);
+    expect(stepQuantity(setQuantity(o, 0), -1).quantity).toBe(0);
+    expect(stepQuantity(setQuantity(o, 5), 1).quantity).toBe(6);
+    expect([parseQuantity('12a'), parseQuantity(''), parseQuantity('-7'), parseQuantity('0012')]).toEqual([12, 0, 7, 12]);
+  });
+
+  it('필요 코인 = 수량 × 현재가 + 수수료, 현금이 모자라면 오류 문구', () => {
+    const g = newGame();
+    const s = g.getStockList()[0]!;
+    const p = g.previewOrder('buy', s.id, 3);
+    const v = needView(p, 'ko');
+    expect(v).toEqual({ label: `필요 코인 (수수료 ${p.fee})`, value: fmtNum(p.total), error: false });
+    expect(p.total).toBe(3 * s.price + p.fee);
+    expect(needView(g.previewOrder('buy', s.id, 999), 'ko')).toMatchObject({ value: '현금이 부족합니다.', error: true });
   });
 
   it('체결 안내와 오류 문구', () => {
     const g = newGame();
     const s = g.getStockList()[0]!;
-    const ok = orderMessage(g.buy(s.id, 2), '하늘 배터리주', 'ko');
+    const ok = orderMessage(g.buy(s.id, 2), '하늘배터리', 'ko');
     expect(ok.ok).toBe(true);
-    expect(ok.text).toContain('2주 체결');
-    const bad = orderMessage(g.sell(s.id, 99), '하늘 배터리주', 'ko');
+    expect(ok.text).toContain('하늘배터리 2주 매수');
+    const sold = orderMessage(g.sell(s.id, 1), '하늘배터리', 'ko');
+    expect(sold.text).toContain('1주 매도');
+    const bad = orderMessage(g.sell(s.id, 99), '하늘배터리', 'ko');
     expect(bad).toEqual({ ok: false, text: '보유 수량이 부족합니다.' });
   });
 
@@ -150,33 +160,45 @@ describe('주문 패널', () => {
   });
 });
 
-describe('뉴스 피드·주가 리포트 행', () => {
-  it('최신 뉴스는 펼침, 이전 뉴스는 접힘. 120초 뒤 그 뉴스 아래 리포트 행', () => {
-    const g = newGame();
-    untilNews(g);
-    let rows = feedRows(g.getFeed(), new Set(), 'ko');
-    expect(rows).toHaveLength(1);
-    expect(rows[0]!.expanded).toBe(true);
-    expect(rows[0]!.body).not.toBeNull();
-    expect(rows[0]!.report).toBeNull();
-    for (let i = 0; i < 24; i++) g.advanceTick(); // 120초
-    rows = feedRows(g.getFeed(), new Set(), 'ko');
-    expect(rows[0]!.report).not.toBeNull();
-    expect(rows[0]!.report!.lines.length).toBeGreaterThan(0);
-    expect(rows[0]!.report!.lines.length).toBeLessThanOrEqual(3);
-
-    untilNews(g);
-    rows = feedRows(g.getFeed(), new Set(), 'ko');
-    expect(rows[0]!.expanded).toBe(true);
-    expect(rows[1]!.expanded).toBe(false);
-    expect(rows[1]!.body).toBeNull();
-    expect(rows[1]!.report).toBeNull(); // 접혀 있으면 리포트도 안 보임
-    const opened = feedRows(g.getFeed(), toggleExpanded(new Set(), rows[1]!.id), 'ko');
-    expect(opened[1]!.report).not.toBeNull();
-    expect(toggleExpanded(toggleExpanded(new Set(), 'x'), 'x').has('x')).toBe(false);
+describe('20분 추이선·차트 좌표', () => {
+  it('추이선은 최근 20분에서 고르게 10점, 점이 모자라면 있는 만큼', () => {
+    const pts = Array.from({ length: 240 }, (_, i) => ({ tick: i, price: 1000 + i }));
+    const sp = sparkPoints(pts);
+    expect(sp).toHaveLength(10);
+    expect(sp[0]).toBe(1000);
+    expect(sp[9]).toBe(1239);
+    expect(sparkPoints(pts.slice(0, 4))).toEqual([1000, 1001, 1002, 1003]);
   });
 
-  it('리포트는 안 읽음 강조만 하고 NEWS!에는 쓰지 않는다. 주식창에 들어가면 모두 읽음', () => {
+  it('꺾은선: 위아래 여백 안에 들어가고, 가격이 같으면 가운데. 칸 수를 주면 오른쪽에 붙인다', () => {
+    const l = linePoints([10, 20, 15], 100, 20, 2);
+    expect(l.map((p) => p.x)).toEqual([0, 50, 100]);
+    expect(l.map((p) => p.y)).toEqual([18, 2, 10]);
+    expect(linePoints([5, 5], 10, 20).map((p) => p.y)).toEqual([10, 10]);
+    expect(linePoints([1, 2], 100, 20, 2, 5).map((p) => p.x)).toEqual([75, 100]);
+  });
+});
+
+describe('뉴스 창 (한 건씩, 스크롤하면 이전 뉴스)', () => {
+  it('최신이 맨 위(강조), 모든 뉴스가 같은 구조. 120초 뒤 그 뉴스 아래 주가 리포트', () => {
+    const g = newGame();
+    untilNews(g);
+    let items = newsItems(g.getFeed(), 'ko');
+    expect(items).toHaveLength(1);
+    expect(items[0]!).toMatchObject({ latest: true, report: null });
+    expect(items[0]!.body.length).toBeGreaterThan(0);
+    for (let i = 0; i < 24; i++) g.advanceTick(); // 120초
+    items = newsItems(g.getFeed(), 'ko');
+    expect(items[0]!.report!.lines.length).toBeGreaterThan(0);
+    expect(items[0]!.report!.lines.length).toBeLessThanOrEqual(3);
+    untilNews(g);
+    items = newsItems(g.getFeed(), 'ko');
+    expect(items.map((i) => i.latest)).toEqual([true, false]);
+    expect(items[1]!.report).not.toBeNull(); // 이전 뉴스도 리포트까지 그대로
+    expect(items[0]!.time).toMatch(/^\d:\d\d:\d\d$/);
+  });
+
+  it('리포트는 NEWS!에 쓰지 않는다. 주식창에 들어가면 모두 읽음', () => {
     const g = newGame();
     const tabs = new TabController(g);
     untilNews(g);
@@ -186,20 +208,31 @@ describe('뉴스 피드·주가 리포트 행', () => {
     expect(g.getUnreadReportCount()).toBe(1);
     expect(g.getUnreadCount()).toBe(0);
     expect(tabs.topBar().newsBadge).toBe(false);
-    expect(feedRows(g.getFeed(), new Set(), 'ko')[0]!.report!.unread).toBe(true);
     tabs.select('trading');
     expect(g.getUnreadReportCount()).toBe(0);
   });
 
-  it('리포트 행에 호재/악재 같은 방향 단어가 아니라 실제 반영 %만 (잠정 뉴스는 안내 문구)', () => {
+  it('리포트 줄: "종목 합계%" + 이유 + "발표 즉시 ○% · 5초 뒤 ○%" (방향 단어 없음, 잠정 뉴스는 안내 문구)', () => {
     const g = newGame();
     const first = untilNews(g);
     expect(first.news!.kind).toBe('tentative');
     for (let i = 0; i < 24; i++) g.advanceTick();
     const rep = g.getFeed()[0]!.report!;
-    const row = reportRow(rep, 'ko');
-    expect(row.notes.join(' ')).toContain('잠정 발표');
-    for (const l of row.lines) expect(l.split).toMatch(/발표 즉시 .* · 5초 뒤 .* · 합계 /);
+    const v = reportView(rep, 'ko');
+    expect(v.notes.join(' ')).toContain('잠정 발표');
+    for (const l of v.lines) {
+      expect(l.split).toMatch(/^발표 즉시 .+ · 5초 뒤 .+$/);
+      expect(l.head).toMatch(/ [+-]?\d+\.\d%$/);
+      expect(l.reason).not.toMatch(/호재|악재/);
+    }
+  });
+});
+
+describe('거실: 인테리어 업그레이드 버튼', () => {
+  it('"인테리어 업그레이드 - 2,000", 코인이 모자라면 흐리게(누를 수는 있음), Lv7이면 "인테리어 완성"', () => {
+    expect(upgradeView(0, 7, 2000, 10_000, 'ko')).toMatchObject({ label: '인테리어 업그레이드 - 2,000', state: 'ok', filled: 0 });
+    expect(upgradeView(3, 7, 2000, 1999, 'ko')).toMatchObject({ state: 'poor', filled: 3 });
+    expect(upgradeView(7, 7, null, 50_000, 'ko')).toMatchObject({ label: '인테리어 완성', state: 'done', filled: 7 });
   });
 });
 
@@ -267,7 +300,7 @@ describe('게임 루프 (가짜 타이머)', () => {
   });
 });
 
-describe('거실: LP 순환·강아지', () => {
+describe('거실: LP 순환', () => {
   it('LP 터치: 재즈 → 클래식 → 힙합 → 락 → 재즈 (첫 터치 전에는 소리 없음)', () => {
     const backend = new MockAudioBackend();
     const p = new MusicPlayer(musicData.tracks as MusicTrack[], backend, createPresentationRng(1, 'music'));
@@ -278,29 +311,10 @@ describe('거실: LP 순환·강아지', () => {
     expect(backend.playing.size).toBe(1);
     expect([p.cycleGenre(), p.cycleGenre(), p.cycleGenre()]).toEqual(['hiphop', 'rock', 'jazz']);
   });
-
-  it('강아지: 3번째 터치마다 반응, 시장 결과는 그대로', () => {
-    const a = newGame(9);
-    const b = newGame(9);
-    let dog = newDogState();
-    const rng = createPresentationRng(9, 'dog');
-    const reactions: (string | null)[] = [];
-    for (let i = 0; i < 9; i++) {
-      const r = petDog(dog, 'puppy', rng);
-      dog = r.state;
-      reactions.push(r.reaction);
-    }
-    expect(reactions.map((r) => r !== null)).toEqual([false, false, true, false, false, true, false, false, true]);
-    for (let i = 0; i < 200; i++) {
-      a.advanceTick();
-      b.advanceTick();
-    }
-    expect(a.getStockList().map((s) => s.price)).toEqual(b.getStockList().map((s) => s.price));
-  });
 });
 
-describe('작업실·정산 창', () => {
-  it('인형 3터치마다 정산 예정 +3, 보유 현금은 그대로. 상단 카운터에 반영', () => {
+describe('작업실: 인형 100개 묶음 지급', () => {
+  it('인형 3터치마다 지급 예정 +3, 보유 현금은 그대로. 상단 지급 예정 칩과 "눈 N개 | 완성 M개"', () => {
     const g = newGame();
     const tabs = new TabController(g);
     tabs.select('workshop');
@@ -313,12 +327,28 @@ describe('작업실·정산 창', () => {
     expect(third.completed).toBe(true);
     expect(tabs.topBar().workPending).toBe(3);
     expect(tabs.topBar().cash).toBe(cash);
+    const v = workshopView(g.getWorkStatus(), 'ko');
+    expect(`${v.eyesPrefix}${v.eyes}${v.eyesSuffix} | ${v.donePrefix}${v.done}${v.doneSuffix}`).toBe('눈 0개 | 완성 1개');
   });
 
-  it('정산 창: 투자 결과 + 작업 수입 = 합계 (시대 종료 합산 모드)', () => {
-    const g = PublicGame.create({ eras: [era], seed: 4, config: { work: { ...DEFAULT_CONFIG.work, payoutMode: 'era_end' } } });
-    const t0 = 1_000_000;
-    for (let i = 0; i < 9; i++) g.workTouch(t0 + i * 200);
+  it('100개를 채우면 바로 지급되고 지급 예정 +0, 완성 0개로', () => {
+    const g = newGame();
+    const tabs = new TabController(g);
+    tabs.select('workshop');
+    const cash = g.cash;
+    for (let i = 0; i < 300; i++) g.workTouch(2_000_000 + i * 200);
+    expect(g.cash).toBe(cash + 300);
+    expect(tabs.topBar().workPending).toBe(0);
+    expect(workshopView(g.getWorkStatus(), 'ko').done).toBe('0');
+    expect(g.lastWorkPayout).toEqual({ coins: 300, seq: 1 });
+  });
+});
+
+describe('정산 창·최종 요약', () => {
+  it('정산 창: 투자 결과 = 다음 시대 시작 자금, 작업 수입(지급됨)·인테리어 지출 표시, 지급 예정 안내', () => {
+    const g = newGame();
+    for (let i = 0; i < 9; i++) g.workTouch(1_000_000 + i * 200); // 3개, 9코인 지급 예정
+    g.upgradeInterior();
     const s = g.getStockList()[0]!;
     g.buy(s.id, 3);
     let settlement = null;
@@ -326,9 +356,37 @@ describe('작업실·정산 창', () => {
       const r = g.advanceTick();
       if (r.advanced && r.settlement) settlement = r.settlement;
     }
-    const v = settlementView(settlement!, 'ko');
+    const v = settlementView(settlement!, g.getWorkStatus(), 'ko');
+    expect(v.sumOk).toBe(true);
+    expect(v.workIncome).toBe('0');
+    expect(v.interior).toBe('2,000');
+    expect(v.total).toBe(fmtNum(settlement!.investmentResult.coins));
+    expect(v.pendingNote).toBe('지급 예정 작업 수입 9코인은 인형 97개를 더 완성하면 지급돼요. 다음 시대로 이어져요.');
+  });
+
+  it('정산 창 (시대 종료 합산 모드): 투자 결과 + 작업 수입 = 합계', () => {
+    const g = PublicGame.create({ eras: [era], seed: 4, config: { work: { ...DEFAULT_CONFIG.work, payoutMode: 'era_end' } } });
+    for (let i = 0; i < 9; i++) g.workTouch(1_000_000 + i * 200);
+    let settlement = null;
+    while (g.phase === 'running') {
+      const r = g.advanceTick();
+      if (r.advanced && r.settlement) settlement = r.settlement;
+    }
+    const v = settlementView(settlement!, null, 'ko');
     expect(v.sumOk).toBe(true);
     expect(v.workIncome).toBe('9');
-    expect(settlement!.investmentResult.coins + 9).toBe(settlement!.finalTotal);
+    expect(v.pendingNote).toBeNull();
+  });
+
+  it('최종 요약: 시대별 줄, 최종 코인, 남은 지급 예정과 인테리어 단계', () => {
+    const v = finalView(
+      { eras: [{ eraId: '2000s', returnPct: 12.34, workIncome: 300, finalTotal: 11_500 }], totalWorkIncome: 300, finalCoins: 11_500, cumulativeReturnPct: 12.34, unpaidWork: 30, interiorLevel: 3 },
+      { '2000s': '2000년대' },
+      'ko',
+    );
+    expect(v.lines).toEqual(['2000년대: 투자 수익률 +12.3%, 작업 수입 300 코인']);
+    expect(v.total).toBe('11,500');
+    expect(v.unpaid).toContain('30코인');
+    expect(v.interior).toContain('3단계');
   });
 });

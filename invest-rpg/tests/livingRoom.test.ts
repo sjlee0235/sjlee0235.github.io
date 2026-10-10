@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { checkMusicLibrary, type AudioCheckOptions } from '../src/audio/licenseCheck.ts';
 import { CROSSFADE_MS, LP_CYCLE, MockAudioBackend, MusicPlayer, type MusicGenre, type MusicTrack, type TrackLicense } from '../src/audio/music.ts';
-import { createPresentationRng, DOG_STAGES, newDogState, petDog, type DogReaction } from '../src/engine/dogPetting.ts';
-import { ERA_THEMES, eraThemeFor } from '../src/engine/eraTheme.ts';
+import { PublicGame } from '../src/engine/publicView.ts';
+import { newDog, stepDog, touchDog } from '../src/ui/dogBrain.ts';
 import { Game } from '../src/engine/game.ts';
-import { createRng } from '../src/engine/rng.ts';
+import { createPresentationRng, createRng } from '../src/engine/rng.ts';
 import { loadSettings, MemorySettingsStorage, parseSettings, saveSettings, defaultColorScheme } from '../src/settings/settings.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
 
@@ -159,63 +159,18 @@ describe('음악 라이선스 점검 (lint:audio)', () => {
   });
 });
 
-describe('강아지 반응', () => {
-  it('3번째 터치마다 반응, 그 외에는 쓰다듬기 효과만', () => {
-    const rng = createPresentationRng(1, 'dog');
-    let s = newDogState();
-    const out: (DogReaction | null)[] = [];
-    for (let i = 0; i < 9; i++) {
-      const r = petDog(s, 'puppy', rng);
-      expect(r.effect).toBe('pet');
-      out.push(r.reaction);
-      s = r.state;
-    }
-    expect(out.map((x) => x !== null)).toEqual([false, false, true, false, false, true, false, false, true]);
-  });
-
-  it('[300번 반응] 직전 반응과 같은 반응이 연속으로 나오지 않고, 4가지가 모두 나온다', () => {
-    const rng = createPresentationRng(7, 'dog');
-    let s = newDogState();
-    const seen = new Set<DogReaction>();
-    let prev: DogReaction | null = null;
-    for (let i = 0; i < 900; i++) {
-      const r = petDog(s, 'adult', rng);
-      s = r.state;
-      if (!r.reaction) continue;
-      expect(r.reaction).not.toBe(prev);
-      prev = r.reaction;
-      seen.add(r.reaction);
-    }
-    expect(seen.size).toBe(4);
-  });
-
-  it('시대별 성격: 강아지(활발) 1.3배, 성견 1배, 노견 0.6배 속도', () => {
-    expect(DOG_STAGES.puppy.speedMultiplier).toBeGreaterThan(DOG_STAGES.adult.speedMultiplier);
-    expect(DOG_STAGES.senior.speedMultiplier).toBeLessThan(DOG_STAGES.adult.speedMultiplier);
-    expect(petDog(newDogState(), 'senior', createRng(1)).speedMultiplier).toBe(0.6);
-  });
-
+describe('강아지와 시장 결과', () => {
   it('강아지를 아무리 만져도 시장 결과(가격)는 같다 (연출 난수 분리)', () => {
     const era = makeSpecEra({ id: 'dog' });
-    const a = new Game({ eras: [era], seed: 9 });
-    const b = new Game({ eras: [era], seed: 9 });
-    const rng = createPresentationRng(9, 'dog');
-    let s = newDogState();
-    while (a.phase === 'running') {
+    const a = PublicGame.create({ eras: [era], seed: 3 });
+    const b = PublicGame.create({ eras: [era], seed: 3 });
+    const e = { stage: 'pup' as const, hasSofa: true, rng: createPresentationRng(3, 'dog') };
+    let d = newDog(e);
+    for (let i = 0; i < 300; i++) {
+      d = touchDog(stepDog(d, 0.4, e), i * 400, e).state;
       a.advanceTick();
       b.advanceTick();
-      for (let i = 0; i < 5; i++) s = petDog(s, 'puppy', rng).state;
     }
-    expect(b.getStockList().map((x) => x.price)).toEqual(a.getStockList().map((x) => x.price));
-  });
-});
-
-describe('시대별 디자인 데이터', () => {
-  it('2000년대 강아지·CRT, 2010년대 성견·평면, 2020년대 노견·대형 평면, 시대별 주식창 색 세트', () => {
-    expect(eraThemeFor('2000s')).toMatchObject({ dogStage: 'puppy', tvVariant: 'tv_crt', htsSkin: { id: 'hts_classic_gray' } });
-    expect(eraThemeFor('2010s')).toMatchObject({ dogStage: 'adult', tvVariant: 'tv_flat', htsSkin: { id: 'hts_flat_gray' } });
-    expect(eraThemeFor('2020s')).toMatchObject({ dogStage: 'senior', tvVariant: 'tv_large_flat', htsSkin: { id: 'hts_dark_gray' } });
-    for (const t of Object.values(ERA_THEMES)) expect(Object.keys(t.htsSkin.colors)).toHaveLength(8);
-    expect(eraThemeFor('없는 시대').dogStage).toBe('puppy');
+    expect(a.getStockList().map((s) => s.price)).toEqual(b.getStockList().map((s) => s.price));
   });
 });

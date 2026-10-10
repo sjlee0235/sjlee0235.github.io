@@ -90,6 +90,8 @@ export interface EraSettlement {
   profitAmount: number;
   /** 이번 시대 출처별 입금 합계 */
   deposits: DepositTotals;
+  /** 이번 시대 출금 합계 (인테리어 구입) */
+  withdrawals: number;
   stocks: StockSettlement[];
   liquidations: TradeRecord[];
   /** 앱 업데이트로 버전이 바뀌어 세이브 스냅샷 가격으로 정산했는가 */
@@ -127,6 +129,7 @@ export function settleAccount(
     brokeTimeSec: 0,
     profitAmount: endAssets - startCash - depositTotal(twr.deposits) + (twr.withdrawals ?? 0),
     deposits: { ...twr.deposits },
+    withdrawals: twr.withdrawals ?? 0,
     stocks: account.getPerformance().map((p) => ({
       stockId: p.stockId,
       totalBought: p.totalBought,

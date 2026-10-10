@@ -1,89 +1,74 @@
-// 탭 위에 뜨는 창: 시대 종료 정산, 최종 요약, 설정.
+// 탭 위에 뜨는 창: 시대 종료 정산, 최종 요약, 설정, 플레이 기록 동의.
+// 시안이 없는 창이라 시안의 도트 패널·버튼·글꼴·색 토큰으로 만든다 (DESIGN_HANDOFF 11.5).
 // 정산 창은 시대가 끝났을 때만 (시간이 이미 멈춘 상태). 플레이 중에 시간을 멈추는 창은 없다.
 
 import type { Locale } from '../data/schema.ts';
-import type { FinalSummary } from '../engine/game.ts';
+import type { FinalSummary, WorkStatus } from '../engine/game.ts';
 import type { PublicEraDebrief, PublicSettlement } from '../engine/publicView.ts';
 import { localize, t as tr } from '../i18n/index.ts';
 import type { AppSettings } from '../settings/settings.ts';
 import { h } from './dom.ts';
-import { fmtNum, fmtPct } from './format.ts';
-import { settlementView } from './viewModels.ts';
+import { pbtn, pnl } from './kit.ts';
+import { finalView, settlementView } from './viewModels.ts';
 
-function modal(cls: string, ...children: (Node | null)[]): HTMLElement {
-  return h('div', { class: `overlay ${cls}`, role: 'dialog', 'aria-modal': 'true' }, h('div', { class: 'hts-win modal' }, ...children));
+type Child = Node | string | null | undefined | false;
+
+/** 가운데 창: 머리줄 + 내용(스크롤) + 아래 버튼들 */
+export function dialog(cls: string, title: string, body: Child[], buttons: HTMLButtonElement[]): HTMLElement {
+  return h(
+    'div',
+    { class: `overlay ${cls}`, role: 'dialog', 'aria-modal': 'true', 'aria-label': title },
+    pnl('dialog', h('div', { class: 'hd' }, title), h('div', { class: 'body' }, ...body), buttons.length ? h('div', { class: 'foot' }, ...buttons) : null),
+  );
 }
+
+const kv = (k: string, v: Child, cls = '') => h('div', { class: `kv ${cls}` }, h('span', { class: 'k' }, k), h('span', { class: 'v' }, v));
 
 // ───────── 시대 종료 정산 ─────────
 
 export function settlementOverlay(
   s: PublicSettlement,
   debrief: PublicEraDebrief | null,
+  work: Pick<WorkStatus, 'pending' | 'batchDolls' | 'batchSize'> | null,
   locale: Locale,
   onConfirm: () => void,
 ): HTMLElement {
   const t = (k: string, p?: Record<string, string | number>) => tr(locale, k, p);
-  const v = settlementView(s, locale);
-  const line = (label: string, value: string, cls = '') =>
-    h('div', { class: `st-line ${cls}` }, h('span', { class: 'st-label' }, label), h('span', { class: 'st-value' }, value));
-  const confirm = h('button', { class: 'btn primary st-confirm' }, t('common.confirm'));
-  confirm.addEventListener('click', onConfirm);
-  return modal(
+  const v = settlementView(s, work, locale);
+  const ok = pbtn('accent', t('common.confirm'));
+  ok.addEventListener('click', onConfirm);
+  return dialog(
     'settlement',
-    h('div', { class: 'hts-title' }, v.title),
-    v.versionChange ? h('p', { class: 'st-note' }, v.versionChange) : null,
-    h(
-      'div',
-      { class: 'st-sum' },
-      line(t('settlement.investment'), `${t('common.coin', { amount: v.investment.coins })} (${v.investment.pct})`, 'st-inv'),
-      line(`+ ${t('settlement.workIncome')}`, t('common.coin', { amount: v.workIncome }), 'st-work'),
-      line(`= ${t('settlement.total')}`, t('common.coin', { amount: v.total }), 'st-total'),
-    ),
-    h('p', { class: 'st-note' }, t('settlement.liquidated')),
-    debrief ? debriefSection(debrief, locale) : null,
-    h('div', { class: 'st-actions' }, confirm),
+    v.title,
+    [
+      v.versionChange ? h('p', { class: 'note' }, v.versionChange) : null,
+      kv(t('settlement.investment'), h('span', {}, `${t('common.coin', { amount: v.investment.coins })} `, h('span', { class: v.investment.dir }, `(${v.investment.pct})`))),
+      kv(t('settlement.workPaid'), t('common.coin', { amount: v.workIncome })),
+      v.interior ? kv(t('settlement.interiorSpent'), t('common.coin', { amount: v.interior })) : null,
+      kv(t('settlement.nextStart'), t('common.coin', { amount: v.total }), 'big'),
+      h('p', { class: 'note' }, t('settlement.liquidated')),
+      v.pendingNote ? h('p', { class: 'note' }, v.pendingNote) : null,
+      debrief ? debriefSection(debrief, locale) : null,
+    ],
+    [ok],
   );
 }
 
-/** 접힌 "돌아보기": 시대가 끝난 뒤에만 공개되는 정보 */
+/** 접힌 "돌아보기": 시대가 끝난 뒤에만 공개되는 정보 (단서와 실제 결과) */
 function debriefSection(d: PublicEraDebrief, locale: Locale): HTMLElement {
   const t = (k: string, p?: Record<string, string | number>) => tr(locale, k, p);
   const L = (x: { ko: string; en: string }) => localize(x, locale);
   return h(
     'details',
-    { class: 'debrief' },
+    { class: 'box' },
     h('summary', {}, t('debrief.title', { era: L(d.eraName) })),
-    h('h4', {}, t('debrief.stories')),
     ...d.stories.map((s) =>
       h(
         'div',
-        { class: 'db-story' },
+        { class: 'note', style: 'margin-top:6px' },
         h('div', {}, `${t('news.type.tentative')}: ${L(s.tentative.title)}`),
         h('div', {}, `${t('debrief.clue')}: ${L(s.leansTo.title)}`),
         h('div', {}, `${t('debrief.actual')}: ${L(s.outcome.title)} — ${t(s.followedLean ? 'debrief.followed' : 'debrief.notFollowed')}`),
-      ),
-    ),
-    h('h4', {}, t('debrief.themes')),
-    h(
-      'table',
-      { class: 'db-themes' },
-      ...d.themes.map((th) =>
-        h('tr', {}, h('td', {}, L(th.stockName)), h('td', {}, L(th.themeName)), h('td', {}, t(`sentiment.${th.sentiment}`)), h('td', {}, t(`relevance.${th.relevance}`))),
-      ),
-    ),
-    h('h4', {}, t('debrief.allReports')),
-    ...d.news.map((n) =>
-      h(
-        'div',
-        { class: 'db-news' },
-        h('div', { class: 'db-news-title' }, `[${t(`news.type.${n.news.kind}`)}] ${L(n.news.title)}`),
-        h(
-          'div',
-          { class: 'db-news-effects' },
-          n.effects
-            .map((e) => `${L(e.stockName)} ${e.impact > 0 ? '+' : ''}${e.impact} (${t(`debrief.strength.${e.strength}`)})`)
-            .join(' · '),
-        ),
       ),
     ),
   );
@@ -93,18 +78,46 @@ function debriefSection(d: PublicEraDebrief, locale: Locale): HTMLElement {
 
 export function finalOverlay(f: FinalSummary, eraNames: Record<string, string>, locale: Locale, onRestart: () => void): HTMLElement {
   const t = (k: string, p?: Record<string, string | number>) => tr(locale, k, p);
-  const restart = h('button', { class: 'btn primary' }, t('final.restart'));
+  const v = finalView(f, eraNames, locale);
+  const restart = pbtn('accent', t('final.restart'));
   restart.addEventListener('click', onRestart);
-  return modal(
+  return dialog(
     'final',
-    h('div', { class: 'hts-title' }, t('final.title')),
-    ...f.eras.map((e) =>
-      h('div', { class: 'st-line' }, t('final.eraLine', { era: eraNames[e.eraId] ?? e.eraId, pct: fmtPct(e.returnPct), work: fmtNum(e.workIncome, locale) })),
-    ),
-    h('div', { class: 'st-line' }, t('final.totalWork', { coins: fmtNum(f.totalWorkIncome, locale) })),
-    h('div', { class: 'st-line' }, t('final.cumulative', { pct: fmtPct(f.cumulativeReturnPct) })),
-    h('div', { class: 'st-line st-total' }, t('final.total', { coins: fmtNum(f.finalCoins, locale) })),
-    h('div', { class: 'st-actions' }, restart),
+    v.title,
+    [
+      ...v.lines.map((l) => h('div', { class: 'note' }, l)),
+      kv(t('final.totalWorkLabel'), t('common.coin', { amount: v.totalWork })),
+      kv(t('final.cumulativeLabel'), v.cumulative),
+      kv(t('final.totalLabel'), t('common.coin', { amount: v.total }), 'big'),
+      h('div', { class: 'note' }, v.interior),
+      v.unpaid ? h('div', { class: 'note' }, v.unpaid) : null,
+    ],
+    [restart],
+  );
+}
+
+// ───────── 플레이 기록 동의 (첫 실행 때 한 번) ─────────
+
+export function consentOverlay(locale: Locale, onAnswer: (agree: boolean) => void): HTMLElement {
+  const t = (k: string) => tr(locale, k);
+  const yes = pbtn('accent', t('telemetry.agree'));
+  const no = pbtn('', t('telemetry.decline'));
+  yes.addEventListener('click', () => onAnswer(true));
+  no.addEventListener('click', () => onAnswer(false));
+  return dialog('consent', t('telemetry.consentTitle'), [h('p', { class: 'note', style: 'color:var(--text)' }, t('telemetry.consentBody')), h('p', { class: 'note' }, t('telemetry.later'))], [no, yes]);
+}
+
+// ───────── 처음 안내 (튜토리얼 대신 짧은 안내 창) ─────────
+
+export function introOverlay(locale: Locale, onDone: () => void): HTMLElement {
+  const t = (k: string) => tr(locale, k);
+  const ok = pbtn('accent', t('intro.start'));
+  ok.addEventListener('click', onDone);
+  return dialog(
+    'intro',
+    t('intro.title'),
+    [1, 2, 3, 4, 5].map((i) => h('p', { class: 'note', style: 'color:var(--text)' }, t(`intro.p${i}`))),
+    [ok],
   );
 }
 
@@ -116,6 +129,7 @@ export interface SettingsHandlers {
   credits: { title: string; artist: string; text: string }[];
   telemetryConsent: boolean;
   setConsent(on: boolean): void;
+  replayIntro(): void;
 }
 
 export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTMLElement {
@@ -153,27 +167,34 @@ export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTM
   consent.checked = handlers.telemetryConsent;
   consent.addEventListener('change', () => handlers.setConsent(consent.checked));
 
-  const close = h('button', { class: 'btn primary' }, t('common.close'));
+  const intro = pbtn('', t('intro.replay'));
+  intro.style.height = '34px';
+  intro.addEventListener('click', handlers.replayIntro);
+
+  const close = pbtn('accent', t('common.close'));
   close.addEventListener('click', handlers.close);
 
-  return modal(
+  return dialog(
     'settings',
-    h('div', { class: 'hts-title' }, t('settings.title')),
-    row(t('settings.language'), lang),
-    row(t('settings.colorMode'), color),
-    row(t('music.master'), slider(s.masterVolume, (v) => ({ ...s, masterVolume: v }), 'masterVolume')),
-    row(t('music.volume'), slider(s.music.volume, (v) => ({ ...s, music: { ...s.music, volume: v } }), 'musicVolume')),
-    row(t('music.sfx'), slider(s.sfxVolume, (v) => ({ ...s, sfxVolume: v }), 'sfxVolume')),
-    row(t('music.mute'), mute),
-    row(t('settings.telemetry'), consent),
-    h(
-      'details',
-      { class: 'credits' },
-      h('summary', {}, t('music.credits')),
-      ...(handlers.credits.length > 0
-        ? handlers.credits.map((c) => h('div', {}, `${c.title} — ${c.artist}: ${c.text}`))
-        : [h('div', {}, t('settings.noCredits'))]),
-    ),
-    h('div', { class: 'st-actions' }, close),
+    t('settings.title'),
+    [
+      row(t('settings.language'), lang),
+      row(t('settings.colorMode'), color),
+      row(t('music.master'), slider(s.masterVolume, (v) => ({ ...s, masterVolume: v }), 'masterVolume')),
+      row(t('music.volume'), slider(s.music.volume, (v) => ({ ...s, music: { ...s.music, volume: v } }), 'musicVolume')),
+      row(t('music.sfx'), slider(s.sfxVolume, (v) => ({ ...s, sfxVolume: v }), 'sfxVolume')),
+      row(t('music.mute'), mute),
+      row(t('settings.telemetry'), consent),
+      intro,
+      h(
+        'details',
+        { class: 'box note' },
+        h('summary', {}, t('music.credits')),
+        ...(handlers.credits.length > 0
+          ? handlers.credits.map((c) => h('div', {}, `${c.title} — ${c.artist}: ${c.text}`))
+          : [h('div', {}, t('settings.noCredits'))]),
+      ),
+    ],
+    [close],
   );
 }

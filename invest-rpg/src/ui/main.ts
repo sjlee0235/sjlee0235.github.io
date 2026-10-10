@@ -1,8 +1,8 @@
 // 화면 시작점 (npm run dev → http://localhost:5173/)
 //
-// 시대 데이터: 진행 순서(eraSequence.json)의 시대마다 등록된 데이터(ALL_ERAS)를 쓰고,
-// 아직 없는 시대(지금은 2010s·2020s)는 개발용 가상 시대로 채운다 (화면에 "VIRTUAL DATA" 표시).
-// 주소 옵션 (개발 서버에서만): ?debug=1 디버그 패널, &seed=7 시드 고정, &era=1 시대 선택, &fresh=1 저장 무시
+// 시대 데이터: 진행 순서(eraSequence.json) 중 콘텐츠가 있는 시대만 쓴다 (지금은 2000년대 하나).
+// 주소 옵션 (개발 서버·시험판 빌드에서만): ?debug=1 디버그 패널, &seed=7 시드 고정, &era=1 시대 선택, &fresh=1 저장 무시,
+//   &virtual=1 아직 콘텐츠가 없는 시대(2010s·2020s)를 개발용 가상 데이터로 채워 3시대로 (화면에 "VIRTUAL DATA")
 
 import { ALL_ERAS, ERA_SEQUENCE, orderBySequence } from '../data/eras/index.ts';
 import type { Era } from '../data/schema.ts';
@@ -28,9 +28,10 @@ function randomSeed(): number {
 }
 
 const params = new URLSearchParams(window.location.search);
-const debug = import.meta.env.DEV && params.has('debug');
+const debug = (import.meta.env.DEV || import.meta.env.VITE_PLAYTEST === '1') && params.has('debug');
 const real = orderBySequence(ALL_ERAS);
-const eras = ERA_SEQUENCE.map((id, i) => real.find((e) => e.id === id) ?? virtualEra(id, i));
+const withVirtual = debug && params.has('virtual');
+const eras = withVirtual ? ERA_SEQUENCE.map((id, i) => real.find((e) => e.id === id) ?? virtualEra(id, i)) : real;
 const virtualIds = new Set(eras.filter((e) => !real.includes(e)).map((e) => e.id));
 const seedParam = debug ? Number(params.get('seed')) : NaN;
 const eraParam = debug ? Number(params.get('era')) : NaN;
@@ -46,6 +47,7 @@ const app = new App({
   isVirtual: (eraId: string) => virtualIds.has(eraId),
   ...(Number.isFinite(eraParam) && eraParam > 0 ? { startEraIndex: eraParam } : {}),
   fresh: debug && params.has('fresh'),
+  skipIntro: debug && params.has('nointro'),
 });
 app.start();
 

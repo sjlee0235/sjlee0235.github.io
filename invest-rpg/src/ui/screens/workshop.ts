@@ -1,113 +1,86 @@
-// 작업실 (1인칭): 책상 위 인형에 눈 붙이기.
-// - 터치마다 눈 하나 → 눈 둘 → 완성 (옆으로 빠지고 눈 없는 인형이 들어옴). 화면 어디를 눌러도 인식
-// - 완성하면 "+3"이 상단의 정산 예정 작업 수입 카운터로 날아가고 숫자가 는다
-// - 2터치까지는 보상 없음, 초당 터치 상한 넘으면 무시 (엔진 규칙)
+// 작업실: 인형을 누르면 눈 하나 → 눈 둘 → 완성(+3코인은 지급 예정으로). 인형 100개를 채우면 바로 지급되고
+// 지급 예정 +0, 완성 0개로 돌아간다 (엔진 'batch' 지급).
+// - 배경 그림은 눈 0·1·2개 세 칸 시트 (App 장면 층의 칸 = 지금 인형의 눈 수)
+// - 진행 토스트 "눈 N개 | 완성 M개" (위 548, Lv0만 606), 안내 토스트 (위 716)
 
 import type { Screen, UiContext } from '../context.ts';
-import { flash, h, setText } from '../dom.ts';
-import { setFrame, sprite } from '../sprite.ts';
-import { Scene } from './scene.ts';
+import { h } from '../dom.ts';
+import { pnl } from '../kit.ts';
+import { SCALE } from '../art.ts';
+import { workshopView } from '../viewModels.ts';
 
-const DOLL_POS = { x: 70, y: 140 };
-/** 인형 눈 위치 (인형 그림 안, 기준 픽셀) */
-const EYE_POS = [
-  { x: 13, y: 11 },
-  { x: 23, y: 11 },
-];
+/** 작업 중인 인형의 자리 (도트, 그림 원점): Lv0 박스 위 / Lv1~2 접이식 상 / Lv3부터 책상 */
+export function dollOrigin(level: number): { x: number; y: number } {
+  if (level === 0) return { x: 52, y: 155 };
+  if (level <= 2) return { x: 48, y: 135 };
+  return { x: 52, y: 133 };
+}
 
 export class WorkshopScreen implements Screen {
-  private readonly scene = new Scene('workshop');
+  readonly el: HTMLElement;
   private readonly ctx: UiContext;
-  private dollEl: HTMLElement | null = null;
-  private infoEl: HTMLElement | null = null;
+  private readonly progress: HTMLElement;
+  private readonly progressIn: HTMLElement;
+  private readonly hit: HTMLButtonElement;
+  private lastPayoutSeq = 0;
 
   constructor(ctx: UiContext) {
     this.ctx = ctx;
-  }
-
-  get el(): HTMLElement {
-    return this.scene.el;
+    this.progressIn = h('span', {});
+    this.progress = pnl('toast-pnl', this.progressIn);
+    this.progress.style.height = '36px';
+    const guide = pnl('toast-pnl', ctx.t('work.payoutNote'));
+    guide.style.top = '716px';
+    guide.style.height = '36px';
+    this.hit = h('button', { class: 'hit doll-hit', 'aria-label': ctx.t('work.dollLabel') });
+    this.hit.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      this.touch();
+    });
+    this.el = h('div', { class: 'view workshop' }, this.hit, this.progress, guide);
   }
 
   enter(): void {
-    const { ctx } = this;
-    const s = ctx.scale();
-    const stage = this.scene.layout(`bg.${ctx.theme().workshopVariant}`, s, ctx.assetBase);
-    const st = ctx.game.getWorkStatus();
-    this.dollEl = sprite('doll.body', s, ctx.assetBase, { ...DOLL_POS, frame: st.eyes, class: 'doll' });
-    this.infoEl = h('div', { class: 'scene-hint work-info' });
-    stage.append(
-      this.dollEl,
-      this.infoEl,
-      h('div', { class: 'scene-note' }, ctx.t('work.payoutNote')),
-    );
-    // 화면(탭 바·상단 바 제외) 어디를 눌러도 인식
-    this.scene.el.onpointerdown = (e) => {
-      e.preventDefault();
-      this.touch();
-    };
+    this.lastPayoutSeq = this.ctx.game.lastWorkPayout?.seq ?? 0;
     this.update();
+  }
+
+  frame(): number {
+    return this.ctx.game.getWorkStatus().eyes;
   }
 
   update(): void {
-    if (!this.infoEl) return;
-    const st = this.ctx.game.getWorkStatus();
-    // 진행 중인 인형 상태는 탭을 옮겨도·저장해도 유지 (엔진이 기억) → 그림을 엔진 값에 맞춘다
-    if (this.dollEl && !this.dollEl.classList.contains('doll-in')) setFrame(this.dollEl, st.eyes);
-    setText(this.infoEl, `${this.ctx.t('work.eyes', { count: st.eyes })} · ${this.ctx.t('work.done', { count: st.dollsCompleted })}`);
+    const { ctx } = this;
+    const level = ctx.game.interiorLevel;
+    const v = workshopView(ctx.game.getWorkStatus(), ctx.locale());
+    this.progressIn.replaceChildren(
+      v.eyesPrefix, h('b', {}, v.eyes), v.eyesSuffix, h('span', { class: 'sep' }, '|'), v.donePrefix, h('b', {}, v.done), v.doneSuffix,
+    );
+    this.progress.style.top = `${level === 0 ? 606 : 548}px`;
+    const o = dollOrigin(level);
+    // 인형 그림(26×37)보다 넉넉하게
+    Object.assign(this.hit.style, {
+      left: `${(o.x - 8) * SCALE}px`, top: `${(o.y - 4) * SCALE}px`, width: `${42 * SCALE}px`, height: `${46 * SCALE}px`,
+    });
   }
 
   private touch(): void {
-    const r = this.ctx.game.workTouch(this.ctx.now());
-    if (!r.accepted || !this.dollEl) return;
-    const s = this.ctx.scale();
+    const { ctx } = this;
+    const r = ctx.game.workTouch(ctx.now());
+    if (!r.accepted) return;
+    ctx.scene.setFrame(r.eyes);
     if (r.completed) {
-      this.complete();
-    } else {
-      setFrame(this.dollEl, r.eyes);
-      const eye = EYE_POS[r.eyes - 1];
-      if (eye) {
-        const fx = sprite('doll.eye', s, this.ctx.assetBase, { x: DOLL_POS.x + eye.x - 1, y: DOLL_POS.y + eye.y - 1, class: 'fx fx-eye' });
-        this.scene.stage.append(fx);
-        window.setTimeout(() => fx.remove(), 300);
+      const o = dollOrigin(ctx.game.interiorLevel);
+      ctx.flyTo(`+${ctx.game.getWorkStatus().coinsPerDoll}`, (o.x + 13) * SCALE, (o.y + 4) * SCALE, 'pending');
+      const p = ctx.game.lastWorkPayout;
+      if (p && p.seq !== this.lastPayoutSeq) {
+        this.lastPayoutSeq = p.seq;
+        ctx.toast(ctx.t('work.paid', { coins: p.coins }));
+        ctx.onCoinsChanged();
+        ctx.persist();
       }
     }
     this.update();
-    this.ctx.persist();
-  }
-
-  private complete(): void {
-    const doll = this.dollEl!;
-    const s = this.ctx.scale();
-    const coins = this.ctx.game.getWorkStatus().coinsPerDoll;
-    // 완성 그림 → 오른쪽으로 빠짐 → 새 인형이 왼쪽에서 들어옴
-    const done = doll.cloneNode() as HTMLElement;
-    setFrame(done, 3);
-    done.classList.add('doll-out');
-    this.scene.stage.append(done);
-    window.setTimeout(() => done.remove(), 450);
-    setFrame(doll, 0);
-    flash(doll, 'doll-in', 450);
-
-    // "+3"이 정산 예정 카운터로 날아간다
-    const plus = h('div', { class: 'plus-fly' }, this.ctx.t('work.plus', { coins }));
-    const stageRect = this.scene.stage.getBoundingClientRect();
-    const target = document.querySelector('.top-pending');
-    const startX = stageRect.left + (DOLL_POS.x + 20) * s;
-    const startY = stageRect.top + DOLL_POS.y * s;
-    plus.style.left = `${startX}px`;
-    plus.style.top = `${startY}px`;
-    document.body.append(plus);
-    const t = target?.getBoundingClientRect();
-    requestAnimationFrame(() => {
-      if (t) plus.style.transform = `translate(${t.left + t.width / 2 - startX}px, ${t.top - startY}px) scale(0.7)`;
-      plus.style.opacity = '0.2';
-    });
-    window.setTimeout(() => {
-      plus.remove();
-      this.ctx.refreshTop();
-      const counter = document.querySelector<HTMLElement>('.top-pending');
-      if (counter) flash(counter, 'bump', 300);
-    }, 520);
+    ctx.refreshTop();
   }
 }

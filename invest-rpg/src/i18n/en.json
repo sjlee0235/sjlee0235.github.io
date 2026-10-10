@@ -64,7 +64,11 @@
     "workIncome": "Work income",
     "total": "Total",
     "formulaTotal": "Investment + work income = total",
-    "brokeTime": "Time without money to invest"
+    "brokeTime": "Time without money to invest",
+    "workPaid": "Work income paid this era",
+    "interiorSpent": "Spent on interior",
+    "nextStart": "Next era starting coins",
+    "pendingWork": "{coins} coins of pending work income will be paid after {dolls} more dolls. It carries over to the next era."
   },
   "news": {
     "type": {
@@ -87,7 +91,7 @@
     "more": "+{count} more",
     "firstNotice": "Market Report figures are what actually moved inside the game. They are not real market data or investment advice.",
     "tentativeNote": "This was a tentative report, so the effect was small. The outcome report may change things a lot.",
-    "split": "On announcement {instant} · 5s later {delayed} · Total {total}"
+    "split": "At release {instant} · 5s later {delayed}"
   },
   "tutorial": {
     "title": "New here?",
@@ -136,7 +140,8 @@
     "consentTitle": "Play data consent",
     "consentBody": "We'd like to collect play data (trades, screen time, etc.) to improve game balance. We never collect your name, contact info, or device IDs. You can play the same way without agreeing.",
     "agree": "Agree",
-    "decline": "Don't agree"
+    "decline": "Don't agree",
+    "later": "You can change this anytime in Settings."
   },
   "tabs": {
     "living_room": "Living Room",
@@ -156,12 +161,14 @@
   },
   "newsBadge": "NEWS!",
   "work": {
-    "pending": "Work income to be paid",
-    "payoutNote": "Work income is paid all at once when the era ends.",
+    "pending": "Pending work income",
+    "payoutNote": "Finish 100 dolls to get paid",
     "plus": "+{coins}",
     "eyes": "Eyes: {count}",
     "done": "Done: {count}",
-    "pendingShort": "Pending"
+    "pendingShort": "Pending",
+    "paid": "100 dolls done! {coins} coins of work income paid.",
+    "dollLabel": "Doll (tap to attach eyes)"
   },
   "music": {
     "genre": {
@@ -180,7 +187,11 @@
   "order": {
     "max": "Max",
     "quantity": "Qty",
-    "filled": "Filled {count} shares of {name} ({amount} coins)"
+    "less": "Fewer",
+    "more": "More",
+    "zero": "Set the quantity to 1 or more.",
+    "filledBuy": "Bought {count} {name} ({amount} coins)",
+    "filledSell": "Sold {count} {name} ({amount} coins)"
   },
   "final": {
     "title": "Final Results",
@@ -188,23 +199,26 @@
     "total": "Final coins {coins}",
     "totalWork": "Total work income {coins} coins",
     "cumulative": "Cumulative investment return {pct}",
-    "restart": "Start over"
+    "restart": "Start over",
+    "totalWorkLabel": "Total work income",
+    "cumulativeLabel": "Cumulative investment return",
+    "totalLabel": "Final coins",
+    "unpaid": "{coins} coins of work income not yet paid (pending)",
+    "interior": "You decorated the interior up to level {level}."
   },
   "trading": {
     "listTitle": "Stocks",
     "feedTitle": "News",
     "colName": "Name",
     "colChange": "Change",
-    "chart": "Chart",
     "return": "Return",
-    "holding": "Holding {qty} · avg {avg} · {pnl}",
+    "holding": "Holding {qty} · P/L {pnl}",
     "noHolding": "No holding",
-    "totalBuy": "Cost {total} coins (fee {fee})",
-    "totalSell": "Receive {total} coins (fee {fee})",
-    "exec": {
-      "buy": "Buy",
-      "sell": "Sell"
-    }
+    "colTrend": "20-min trend",
+    "remaining": "Time left",
+    "scrollHint": "Scroll down for older news ▾",
+    "favorite": "Favorite",
+    "need": "Coins needed (fee {fee})"
   },
   "settings": {
     "title": "Settings",
@@ -215,5 +229,22 @@
     "colorWestern": "Green up · Red down",
     "telemetry": "Send play data (consent)",
     "noCredits": "No tracks need attribution yet."
+  },
+  "living": {
+    "upgrade": "Upgrade Interior - {cost}",
+    "upgradeAria": "Upgrade interior, {cost} coins (now level {level}/{max})",
+    "upgradeDone": "Interior Complete",
+    "notEnough": "Not enough coins",
+    "dog": "Dog"
+  },
+  "intro": {
+    "title": "Welcome!",
+    "p1": "Travel back to the 2000s and invest 10,000 coins in stocks. One era lasts 2 hours of game time.",
+    "p2": "There is no news for the first 7 minutes. Look around the stocks and get ready. When news breaks, related prices move right away.",
+    "p3": "Tap a stock, set the quantity and press [Buy] or [Sell] to trade instantly. When the era ends, all your shares are sold automatically.",
+    "p4": "Earn coins by attaching eyes to dolls in the workshop (paid every 100 dolls), and decorate your living room.",
+    "p5": "Fictional scenarios inspired by real events. In-game numbers are not investment advice.",
+    "start": "Start",
+    "replay": "Show the intro again"
   }
 }

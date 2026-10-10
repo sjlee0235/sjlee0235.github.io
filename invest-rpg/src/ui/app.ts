@@ -1,43 +1,53 @@
-// 앱 본체: 공통 프레임(상단 바·탭 바·창·안내), 탭 전환, 게임 루프, 저장.
+// 앱 본체: 무대(390×844), 장면 그림, 상단(NEWS!·코인·지급 예정·설정), 하단 탭 바, 창, 안내, 게임 루프, 저장.
 //
-// 구성
+// 구성 (DESIGN_HANDOFF.md)
 //   #app
-//    ├ .view (지금 탭 화면)          ← screens/*
-//    ├ .topbar (상단: NEWS! · 설정 · 코인 / 주식창은 계좌 바)
-//    ├ .tabbar (하단 탭 4개)
-//    ├ .overlays (정산·최종 요약·설정)
-//    └ .toasts
+//    └ .stage (390×844, 화면에 맞춰 통째로 확대·축소. data-tod = night|day)
+//       ├ .scene      장면 그림 (탭·시대·밤낮·인테리어 단계). 주식창에서는 거실 그림을 어둡게
+//       ├ .view-host  지금 탭 화면 (screens/*)
+//       ├ .hud        NEWS!(왼쪽 위) · 코인 칩 · 지급 예정 칩(작업실) · 설정(맨 오른쪽 위)
+//       ├ .tabbar     하단 탭 4개
+//       ├ .overlays   정산·최종 요약·설정·처음 안내·기록 동의
+//       └ .toasts
 //
-// 설정 버튼 위치: 상단 바 **가운데** (모든 탭에서 같은 자리).
-//   왼쪽 위는 NEWS!, 오른쪽 위는 보유 코인 자리라 가운데만 늘 비어 있다. 같은 자리에 있어야 찾기 쉽고,
-//   엄지가 주로 닿는 아래쪽(탭 바·주문 버튼)과 멀어서 잘못 누를 일이 적다.
+// 밤/낮: 기기 현지 시각 18:00~06:00 밤, 30초마다 확인해서 바뀌면 2초 동안 그림이 바뀐다 (색 토큰은 바로).
 
 import { MusicPlayer, type MusicTrack } from '../audio/music.ts';
 import musicData from '../data/audio/music.json' with { type: 'json' };
 import type { Era, Locale } from '../data/schema.ts';
-import { createPresentationRng } from '../engine/dogPetting.ts';
-import { eraThemeFor, type EraTheme } from '../engine/eraTheme.ts';
+import type { FinalSummary } from '../engine/game.ts';
 import { TABS, TabController, type TabId } from '../engine/homeActivities.ts';
 import {
   PublicGame, restorePublicGame, savePublicGame, type PublicAdvanceResult, type PublicSettlement,
 } from '../engine/publicView.ts';
+import { createPresentationRng } from '../engine/rng.ts';
 import { setTelemetryConsent, type SaveData } from '../engine/save.ts';
 import type { AppEventMap, AppEventType } from '../engine/telemetry.ts';
-import type { FinalSummary } from '../engine/game.ts';
 import { localize, t as tr } from '../i18n/index.ts';
 import { effectiveColorScheme, loadSettings, saveSettings, type AppSettings, type SettingsStorage } from '../settings/settings.ts';
+import { artEraFor, SCENE_FRAMES, sceneFile, timeOfDayAt, type SceneKind, type TimeOfDay } from './art.ts';
 import { HtmlAudioBackend } from './audioBackend.ts';
 import type { Screen, UiContext } from './context.ts';
 import { clear, flash, h, setText } from './dom.ts';
-import { fmtNum, fmtPct, fmtTime } from './format.ts';
+import { fmtNum } from './format.ts';
+import { ico, inner, pbtn, playIcon, pnl } from './kit.ts';
+import type { IconName } from './icons.ts';
 import { GameLoop, type Clock } from './loop.ts';
-import { finalOverlay, settingsOverlay, settlementOverlay } from './overlays.ts';
-import { pixelScale } from './scale.ts';
+import { consentOverlay, finalOverlay, introOverlay, settingsOverlay, settlementOverlay } from './overlays.ts';
+import { SceneLayer } from './scene.ts';
 import { LivingRoomScreen } from './screens/livingRoom.ts';
 import { TradingScreen } from './screens/trading.ts';
 import { TvShoppingScreen } from './screens/tvShopping.ts';
 import { WorkshopScreen } from './screens/workshop.ts';
 import { loadSave, SAVE_KEY, writeSave } from './storage.ts';
+
+export const STAGE_W = 390;
+export const STAGE_H = 844;
+/** 처음 안내·기록 동의를 본 적이 있는가 (게임 세이브와 따로) */
+export const FIRST_RUN_KEY = 'invest-rpg.introSeen';
+
+const TAB_ICON: Record<TabId, IconName> = { living_room: 'sofa', trading: 'monitor', workshop: 'doll', tv_shopping: 'tv' };
+const TAB_SCENE: Record<TabId, SceneKind> = { living_room: 'living', trading: 'living', workshop: 'workshop', tv_shopping: 'tv' };
 
 export interface AppOptions {
   root: HTMLElement;
@@ -47,6 +57,8 @@ export interface AppOptions {
   storage: SettingsStorage & { remove?(key: string): void };
   clock: Clock;
   now: () => number;
+  /** 밤/낮 판정용 현지 시각 (디버그·점검에서 바꿀 수 있게) */
+  localTime?: () => Date;
   assetBase: string;
   /** 이 시대가 가상 데이터(아직 콘텐츠 없음)면 true → 화면에 표시 */
   isVirtual: (eraId: string) => boolean;
@@ -54,6 +66,8 @@ export interface AppOptions {
   startEraIndex?: number;
   /** (디버그) 저장된 게임을 무시하고 새로 */
   fresh?: boolean;
+  /** (디버그·점검) 처음 안내·동의 창을 건너뜀 */
+  skipIntro?: boolean;
 }
 
 export class App {
@@ -62,26 +76,34 @@ export class App {
   loop!: GameLoop;
   readonly music: MusicPlayer;
   settings: AppSettings;
+  readonly scene: SceneLayer;
   private save: SaveData;
   private readonly opts: AppOptions;
-  private readonly root: HTMLElement;
+  private readonly stage: HTMLElement;
   private readonly viewHost: HTMLElement;
-  private readonly topbar: HTMLElement;
+  private readonly hud: HTMLElement;
   private readonly tabbar: HTMLElement;
   private readonly overlays: HTMLElement;
   private readonly toasts: HTMLElement;
+  private readonly newsChip: HTMLButtonElement;
+  private readonly coinChip: HTMLElement;
+  private readonly coinV: HTMLElement;
+  private readonly x2Mark: HTMLElement;
+  private readonly pendChip: HTMLElement;
+  private readonly pendV: HTMLElement;
+  private readonly virtualMark: HTMLElement;
   private screens!: Record<TabId, Screen>;
   private trading!: TradingScreen;
-  private scale = 2;
+  private living!: LivingRoomScreen;
   private tabEnteredAt = 0;
   private settlementOpen = false;
   /** 끝난 판의 최종 요약을 보여주는 중: 아무것도 저장하지 않는다 */
-  private saveLocked = false;
-  private topSig = '';
+  saveLocked = false;
+  private tod: TimeOfDay = 'night';
+  private forcedTod: TimeOfDay | null = null;
 
   constructor(opts: AppOptions) {
     this.opts = opts;
-    this.root = opts.root;
     this.settings = loadSettings(opts.storage);
     this.save = loadSave(opts.storage);
     const tracks = musicData.tracks as MusicTrack[];
@@ -92,19 +114,42 @@ export class App {
       this.settings.music,
       this.settings.masterVolume,
     );
+    this.scene = new SceneLayer(opts.assetBase);
     this.viewHost = h('div', { class: 'view-host' });
-    this.topbar = h('header', { class: 'topbar' });
+
+    // 상단
+    this.newsChip = h('button', { class: 'news-chip', 'aria-label': this.t('newsBadge') }, h('span', { class: 'frame' }, h('span', { class: 'face' }, this.t('newsBadge'))));
+    this.newsChip.addEventListener('click', () => {
+      this.game.track('news_badge_click', { fromTab: this.tabs.current, unreadCount: this.game.getUnreadCount() }, this.opts.now());
+      this.selectTab('trading');
+    });
+    this.coinV = h('span', { class: 'v' });
+    this.x2Mark = h('span', { class: 'x2-mark' }, playIcon(2));
+    this.coinChip = pnl('chip coin-chip', this.x2Mark, ico('coin', 20), this.coinV);
+    this.pendV = h('span', { class: 'v' });
+    this.pendChip = pnl('chip pend-chip', h('span', {}, this.t('work.pendingShort')), this.pendV, ico('coin_s', 16));
+    const gear = pbtn('panel gear-btn', ico('gear', 30), { 'aria-label': this.t('settings.title') });
+    gear.addEventListener('click', () => this.openSettings());
+    this.virtualMark = h('div', { class: 'virtual-mark' }, 'VIRTUAL DATA');
+    this.hud = h('div', { class: 'hud' }, this.newsChip, this.coinChip, this.pendChip, gear, this.virtualMark);
+
     this.tabbar = h('nav', { class: 'tabbar' });
     this.overlays = h('div', { class: 'overlays' });
     this.toasts = h('div', { class: 'toasts', 'aria-live': 'polite' });
-    clear(this.root);
-    this.root.append(this.viewHost, this.topbar, this.tabbar, this.overlays, this.toasts);
+    this.stage = h('div', { class: 'stage' }, this.scene.el, this.viewHost, this.hud, this.tabbar, this.overlays, this.toasts);
+    // 화면의 첫 터치가 소리 잠금 해제를 겸한다 (브라우저는 사용자가 누르기 전에는 소리를 못 낸다)
+    this.stage.addEventListener('pointerdown', () => {
+      if (!this.music.getNowPlaying().unlocked) this.music.unlock();
+    });
+    clear(opts.root);
+    opts.root.append(this.stage);
   }
 
   // ───────── 시작 ─────────
 
   start(): void {
-    this.applyScale();
+    this.fitStage();
+    this.applyTod(false);
     const restored = this.opts.fresh ? null : restorePublicGame(this.save, this.opts.eras, undefined, { locale: this.settings.locale });
     let pendingSettlement: PublicSettlement | null = null;
     let finishedSummary: FinalSummary | null = null;
@@ -128,10 +173,11 @@ export class App {
     this.buildScreens();
     this.buildTabbar();
     this.showTab(this.tabs.current);
-    this.applySkin();
+    this.applyEraMarks();
 
-    window.addEventListener('resize', () => this.onResize());
+    window.addEventListener('resize', () => this.fitStage());
     document.addEventListener('visibilitychange', () => this.onVisibility(document.hidden));
+    window.setInterval(() => this.applyTod(true), 30_000);
 
     if (finishedSummary) {
       const summary = finishedSummary;
@@ -139,23 +185,81 @@ export class App {
       else this.showFinal(summary);
       return;
     }
-    if (pendingSettlement) this.showSettlement(pendingSettlement, () => this.afterSettlement());
-    else if (this.game.phase === 'era-ended') this.showSettlementFromGame();
-    else if (this.game.phase === 'finished') this.showFinal();
-    else this.loop.start();
-    // 숨긴 탭에서 열렸으면 처음부터 백그라운드 일시정지
-    if (document.hidden) this.onVisibility(true);
-    this.persist(true);
+    const go = () => {
+      if (pendingSettlement) this.showSettlement(pendingSettlement, () => this.afterSettlement());
+      else if (this.game.phase === 'era-ended') this.showSettlementFromGame();
+      else if (this.game.phase === 'finished') this.showFinal();
+      else this.loop.start();
+      // 숨긴 탭에서 열렸으면 처음부터 백그라운드 일시정지
+      if (document.hidden) this.onVisibility(true);
+      this.persist(true);
+    };
+    if (!this.opts.skipIntro && this.opts.storage.get(FIRST_RUN_KEY) !== '1') this.firstRun(go);
+    else go();
+  }
+
+  /** 처음 실행: 짧은 안내 → 플레이 기록 동의 (기본 꺼짐) → 시작 */
+  private firstRun(done: () => void): void {
+    this.showIntro(() => {
+      const el = consentOverlay(this.settings.locale, (agree) => {
+        el.remove();
+        this.save = setTelemetryConsent(this.save, agree);
+        this.game.setConsent(agree);
+        this.opts.storage.set(FIRST_RUN_KEY, '1');
+        done();
+      });
+      this.overlays.append(el);
+    });
+  }
+
+  private showIntro(done: () => void): void {
+    const el = introOverlay(this.settings.locale, () => {
+      el.remove();
+      done();
+    });
+    this.overlays.append(el);
   }
 
   private newGame(): PublicGame {
-    const g = PublicGame.create({
+    return PublicGame.create({
       eras: this.opts.eras,
       seed: this.opts.seed,
       locale: this.settings.locale,
       ...(this.opts.startEraIndex ? { startEraIndex: this.opts.startEraIndex } : {}),
     });
-    return g;
+  }
+
+  // ───────── 무대 크기·밤낮 ─────────
+
+  /** 390×844 무대를 화면에 맞춰 확대·축소하고 가운데에 둔다 */
+  private fitStage(): void {
+    const w = window.innerWidth;
+    const hgt = window.innerHeight;
+    const k = Math.min(w / STAGE_W, hgt / STAGE_H);
+    this.stage.style.transform = `translate(${Math.round((w - STAGE_W * k) / 2)}px, ${Math.round((hgt - STAGE_H * k) / 2)}px) scale(${k})`;
+  }
+
+  private applyTod(fade: boolean): void {
+    const next = this.forcedTod ?? timeOfDayAt(this.opts.localTime?.() ?? new Date());
+    if (next === this.tod && this.stage.dataset.tod) return;
+    this.tod = next;
+    this.stage.dataset.tod = next;
+    this.opts.root.style.setProperty('--app-bg', next === 'night' ? '#0c0818' : '#2a1a30');
+    if (this.game) this.refreshScene(fade ? 2000 : 0);
+  }
+
+  /** (디버그·점검) 밤/낮 고정. null이면 현지 시각대로 */
+  forceTod(tod: TimeOfDay | null): void {
+    this.forcedTod = tod;
+    this.applyTod(false);
+  }
+
+  private refreshScene(fadeMs: number): void {
+    const tab = this.tabs.current;
+    const kind = TAB_SCENE[tab];
+    const file = sceneFile(kind, artEraFor(this.game.eraId), this.tod, this.game.interiorLevel);
+    this.scene.show(file, SCENE_FRAMES[kind], this.screens[tab].frame?.() ?? 0, fadeMs);
+    this.scene.setDim(tab === 'trading');
   }
 
   // ───────── 공통 ─────────
@@ -164,28 +268,41 @@ export class App {
     return {
       game: this.game,
       music: this.music,
+      scene: this.scene,
       locale: () => this.settings.locale,
       scheme: () => effectiveColorScheme(this.settings),
       t: (k, p) => tr(this.settings.locale, k, p),
-      theme: () => this.theme,
-      scale: () => this.scale,
+      artEra: () => artEraFor(this.game.eraId),
+      tod: () => this.tod,
       assetBase: this.opts.assetBase,
       now: this.opts.now,
       toast: (text, kind) => this.toast(text, kind),
       persist: () => this.persist(),
-      onSpeedChanged: () => this.loop.reschedule(),
+      onSpeedChanged: () => {
+        this.loop.reschedule();
+        this.persist(true); // 배속 변경은 엔진의 저장 신호가 없어서 바로 저장
+        this.renderTop();
+      },
+      onInteriorChanged: () => {
+        this.refreshScene(400);
+        this.scene.flash();
+        flash(this.coinChip, 'bump', 350);
+        this.renderTop();
+        this.persist(true);
+      },
+      onCoinsChanged: () => {
+        flash(this.coinChip, 'bump', 350);
+        this.renderTop();
+      },
       goTab: (tab) => this.selectTab(tab),
       refreshTop: () => this.renderTop(),
+      flyTo: (text, x, y, target) => this.flyTo(text, x, y, target),
       track: <K extends AppEventType>(type: K, data: AppEventMap[K]) => this.game.track(type, data, this.opts.now()),
     };
   }
 
   get seed(): number {
     return this.opts.seed;
-  }
-
-  get theme(): EraTheme {
-    return eraThemeFor(this.game.eraId);
   }
 
   private t(k: string, p?: Record<string, string | number>): string {
@@ -195,37 +312,25 @@ export class App {
   private buildScreens(): void {
     const ctx = this.context;
     this.trading = new TradingScreen(ctx);
+    this.living = new LivingRoomScreen(ctx, this.opts.seed);
     this.screens = {
-      living_room: new LivingRoomScreen(ctx, this.opts.seed),
+      living_room: this.living,
       trading: this.trading,
       workshop: new WorkshopScreen(ctx),
       tv_shopping: new TvShoppingScreen(ctx),
     };
   }
 
-  /** 시대별 주식창 색 세트 → CSS 변수 */
-  private applySkin(): void {
-    const c = this.theme.htsSkin.colors as Record<string, string>;
-    for (const [k, v] of Object.entries(c)) this.root.style.setProperty(`--hts-${k}`, v);
-    this.root.dataset.skin = this.theme.htsSkin.id;
-    this.root.dataset.virtual = this.opts.isVirtual(this.game.eraId) ? '1' : '0';
-  }
-
-  private applyScale(): void {
-    this.scale = pixelScale(window.innerWidth, window.innerHeight);
-    this.root.style.setProperty('--s', String(this.scale));
-  }
-
-  private onResize(): void {
-    const before = this.scale;
-    this.applyScale();
-    if (before !== this.scale) this.screens[this.tabs.current].enter();
+  private applyEraMarks(): void {
+    this.virtualMark.hidden = !this.opts.isVirtual(this.game.eraId);
+    this.stage.dataset.scheme = effectiveColorScheme(this.settings);
   }
 
   private onVisibility(hidden: boolean): void {
     this.loop.setHidden(hidden);
     this.music.setBackground(hidden);
     this.game.track('app_session', { phase: hidden ? 'background' : 'foreground' }, this.opts.now());
+    if (!hidden) this.applyTod(true);
     this.persist();
   }
 
@@ -236,12 +341,12 @@ export class App {
     for (const tab of [...TABS].sort((a, b) => a.order - b.order)) {
       const b = h(
         'button',
-        { class: `tab ${tab.enabled ? '' : 'disabled'}`, 'data-tab': tab.id, 'aria-label': this.t(tab.labelKey) },
-        h('span', { class: 'tab-icon', style: `background-image:url("${this.opts.assetBase}art/ui/tab_${tab.id}.png")` }),
-        h('span', { class: 'tab-label' }, this.t(tab.labelKey)),
+        { class: `tab ${tab.enabled ? '' : 'off'}`, 'data-tab': tab.id, 'aria-label': this.t(tab.labelKey) },
+        ico(TAB_ICON[tab.id], 28),
+        h('span', {}, this.t(tab.labelKey)),
       );
-      // 비활성 탭은 흐리게만 (눌러서 들어가면 "방송 준비 중" 화면)
-      if (!tab.enabled) b.title = this.t('tabs.comingSoon');
+      // 비활성 탭은 흐리게 (눌러서 들어가면 "방송 준비 중" 화면 + 눌린 회색 버튼 모양)
+      if (!tab.enabled) b.setAttribute('aria-disabled', 'true');
       b.addEventListener('click', () => this.selectTab(tab.id));
       this.tabbar.append(b);
     }
@@ -264,125 +369,51 @@ export class App {
     const screen = this.screens[tab];
     this.viewHost.append(screen.el);
     screen.enter();
-    this.root.dataset.tab = tab;
+    this.stage.dataset.tab = tab;
     this.tabEnteredAt = this.opts.now();
-    for (const b of this.tabbar.querySelectorAll<HTMLElement>('.tab')) b.classList.toggle('active', b.dataset.tab === tab);
+    for (const b of this.tabbar.querySelectorAll<HTMLElement>('.tab')) {
+      const on = b.dataset.tab === tab;
+      b.classList.toggle('active', on);
+      if (on) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    }
+    this.refreshScene(0);
     this.renderTop();
   }
 
-  // ───────── 상단 바 ─────────
+  // ───────── 상단 ─────────
 
   renderTop(): void {
     const v = this.tabs.topBar();
     const locale = this.settings.locale;
-    // 틱마다 버튼을 새로 만들면 누르는 도중 버튼이 바뀌어 터치가 사라진다 → 구조가 같으면 글자만 바꾼다
-    const sig = [
-      v.accountBar ? `a${v.accountBar.speed}` : 'n', v.newsBadge, v.workPending !== null, v.speedBadge, locale,
-      effectiveColorScheme(this.settings),
-    ].join('|');
-    if (sig === this.topSig) {
-      this.updateTopTexts(v);
-      return;
-    }
-    this.topSig = sig;
-    clear(this.topbar);
-    const gear = h('button', { class: 'gear', 'aria-label': this.t('settings.title') });
-    gear.addEventListener('click', () => this.openSettings());
-
-    if (v.accountBar) {
-      const a = v.accountBar;
-      const speedBtn = (s: 1 | 2) => {
-        const b = h('button', { class: `btn small speed ${a.speed === s ? 'active' : ''}`, 'aria-pressed': a.speed === s ? 'true' : 'false' }, this.t(s === 1 ? 'speed.x1' : 'speed.x2'));
-        b.addEventListener('click', () => {
-          if (this.game.getSpeed() === s) return;
-          this.game.setSpeed(s);
-          this.loop.reschedule();
-          this.persist(true); // 배속 변경은 엔진의 저장 신호가 없어서 바로 저장
-          this.renderTop();
-        });
-        return b;
-      };
-      const pctCls = a.returnPct > 0 ? 'up' : a.returnPct < 0 ? 'down' : 'flat';
-      this.topbar.className = 'topbar account';
-      this.topbar.append(
-        h(
-          'div',
-          { class: 'acct-left' },
-          h('div', { class: 'acct-label' }, this.t('portfolio.totalAssets')),
-          h('div', { class: 'acct-assets' }, h('span', { class: 'coin-ico' }), h('span', { class: 'acct-assets-v' }, fmtNum(a.totalAssets, locale))),
-          h('div', { class: `acct-pct pct-${pctCls}`, 'data-dir': pctCls }, `${this.t('trading.return')} ${fmtPct(a.returnPct)}`),
-        ),
-        gear,
-        h(
-          'div',
-          { class: 'acct-right' },
-          h('div', { class: 'acct-time' }, this.t('era.remaining', { time: fmtTime(a.remainingSeconds) })),
-          h('div', { class: 'speed-group' }, speedBtn(1), speedBtn(2)),
-        ),
-      );
-      this.colorAccountPct();
-      return;
-    }
-
-    this.topbar.className = 'topbar';
-    const left = h('div', { class: 'top-left' });
-    if (v.newsBadge) {
-      const badge = h('button', { class: 'news-badge', 'aria-label': this.t('newsBadge') }, this.t('newsBadge'));
-      badge.addEventListener('click', () => {
-        this.game.track('news_badge_click', { fromTab: this.tabs.current, unreadCount: this.game.getUnreadCount() }, this.opts.now());
-        this.selectTab('trading');
-      });
-      left.append(badge);
-    }
-    const right = h(
-      'div',
-      { class: 'top-right' },
-      h('div', { class: 'top-cash' }, h('span', { class: 'coin-ico' }), h('span', { class: 'top-cash-v' }, v.cash !== null ? fmtNum(v.cash, locale) : '')),
-      v.workPending !== null
-        ? h('div', { class: 'top-pending', title: this.t('work.payoutNote') }, `${this.t('work.pendingShort')} +${fmtNum(v.workPending, locale)}`)
-        : null,
-      v.speedBadge ? h('div', { class: 'speed-badge' }, this.t('speed.badge')) : null,
-    );
-    this.topbar.append(left, gear, right);
+    const onTrading = v.accountBar !== null;
+    this.newsChip.hidden = !v.newsBadge;
+    this.newsChip.classList.toggle('blink', v.newsBadge);
+    this.coinChip.hidden = onTrading || v.cash === null;
+    if (v.cash !== null) setText(this.coinV, fmtNum(v.cash, locale));
+    const x2 = this.game.getSpeed() === 2;
+    this.coinChip.classList.toggle('x2', x2);
+    this.x2Mark.hidden = !x2;
+    this.pendChip.hidden = v.workPending === null;
+    if (v.workPending !== null) setText(this.pendV, `+${fmtNum(v.workPending, locale)}`);
   }
 
-  /** 구조는 그대로 두고 숫자만 바꾼다 */
-  private updateTopTexts(v: ReturnType<TabController['topBar']>): void {
-    const locale = this.settings.locale;
-    const q = (sel: string) => this.topbar.querySelector<HTMLElement>(sel);
-    if (v.accountBar) {
-      const a = v.accountBar;
-      const assets = q('.acct-assets-v');
-      if (assets) setText(assets, fmtNum(a.totalAssets, locale));
-      const pct = q('.acct-pct');
-      if (pct) {
-        const dir = a.returnPct > 0 ? 'up' : a.returnPct < 0 ? 'down' : 'flat';
-        setText(pct, `${this.t('trading.return')} ${fmtPct(a.returnPct)}`);
-        if (pct.dataset.dir !== dir) {
-          pct.dataset.dir = dir;
-          pct.className = `acct-pct pct-${dir}`;
-        }
-      }
-      const time = q('.acct-time');
-      if (time) setText(time, this.t('era.remaining', { time: fmtTime(a.remainingSeconds) }));
-      this.colorAccountPct();
-      return;
-    }
-    const cash = q('.top-cash-v');
-    if (cash) setText(cash, v.cash !== null ? fmtNum(v.cash, locale) : '');
-    const pending = q('.top-pending');
-    if (pending && v.workPending !== null) setText(pending, `${this.t('work.pendingShort')} +${fmtNum(v.workPending, locale)}`);
-  }
-
-  /** 손익률 색도 설정의 상승 색상 모드를 따른다 */
-  private colorAccountPct(): void {
-    const el = this.topbar.querySelector<HTMLElement>('.acct-pct');
-    if (!el) return;
-    el.classList.remove('c-red', 'c-blue', 'c-green', 'c-neutral');
-    const scheme = effectiveColorScheme(this.settings);
-    const dir = el.dataset.dir;
-    const color = dir === 'up' ? (scheme === 'korean' ? 'red' : 'green') : dir === 'down' ? (scheme === 'korean' ? 'blue' : 'red') : 'neutral';
-    el.classList.add(`c-${color}`);
+  private flyTo(text: string, x: number, y: number, target: 'pending' | 'coins'): void {
+    const el = h('div', { class: 'fly' }, text);
+    el.style.left = `${x - 14}px`;
+    el.style.top = `${y - 12}px`;
+    this.stage.append(el);
+    // 칩 가운데: 오른쪽 60 + 폭 112의 절반, 위 9(코인) / 48(지급 예정) + 높이 34의 절반
+    const tx = STAGE_W - 60 - 56 - 14;
+    const ty = (target === 'pending' ? 48 : 9) + 17 - 12;
+    void el.offsetWidth;
+    el.style.transform = `translate(${tx - (x - 14)}px, ${ty - (y - 12)}px) scale(.8)`;
+    el.style.opacity = '0.2';
+    window.setTimeout(() => {
+      el.remove();
+      this.renderTop();
+      flash(target === 'pending' ? this.pendChip : this.coinChip, 'bump', 350);
+    }, 600);
   }
 
   // ───────── 틱 ─────────
@@ -413,7 +444,7 @@ export class App {
       debrief = null;
     }
     const opened = this.opts.now();
-    const el = settlementOverlay(s, debrief, this.settings.locale, () => {
+    const el = settlementOverlay(s, debrief, this.game.getWorkStatus(), this.settings.locale, () => {
       this.game.track('screen_view', { screen: 'settlement', dwellMs: this.opts.now() - opened }, this.opts.now());
       el.remove();
       this.settlementOpen = false;
@@ -440,7 +471,7 @@ export class App {
   private beginEra(): void {
     this.tabs.onEraStart();
     this.trading.resetForEra();
-    this.applySkin();
+    this.applyEraMarks();
     this.showTab(this.tabs.current);
     this.toast(this.t('era.graceNotice'));
     this.persist(true);
@@ -490,6 +521,10 @@ export class App {
             this.game.setConsent(on);
             this.persist(true);
           },
+          replayIntro: () => {
+            this.overlays.querySelector('.overlay.settings')?.remove();
+            this.showIntro(() => undefined);
+          },
           close: () => {
             this.game.track('screen_view', { screen: 'settings', dwellMs: this.opts.now() - opened }, this.opts.now());
             this.overlays.querySelector('.overlay.settings')?.remove();
@@ -506,6 +541,7 @@ export class App {
     this.music.setMasterVolume(next.masterVolume);
     this.music.setVolume(next.music.volume);
     if (this.music.getSettings().muted !== next.music.muted) this.music.toggleMute();
+    this.stage.dataset.scheme = effectiveColorScheme(next);
     this.screens[this.tabs.current].update();
     this.renderTop();
   }
@@ -514,9 +550,10 @@ export class App {
     this.game.locale = locale;
     const current = this.tabs.current;
     this.screens[current].leave?.();
-    this.topSig = '';
     this.buildScreens();
     this.buildTabbar();
+    setText(inner(this.pendChip).firstElementChild!, this.t('work.pendingShort'));
+    setText(this.newsChip.querySelector('.face')!, this.t('newsBadge'));
     this.showTab(current);
   }
 
@@ -543,15 +580,15 @@ export class App {
   }
 
   toast(text: string, kind: 'info' | 'error' = 'info'): void {
-    const el = h('div', { class: `toast ${kind}` }, text);
+    const el = pnl(`toast ${kind}`, text);
     this.toasts.append(el);
     while (this.toasts.children.length > 3) this.toasts.firstElementChild?.remove();
-    window.setTimeout(() => el.remove(), 2200);
+    window.setTimeout(() => el.remove(), 2400);
   }
 
-  // ───────── 디버그용 (debug.ts에서만) ─────────
+  // ───────── 디버그용 (debug.ts·점검 스크립트에서만) ─────────
 
-  /** 틱 n개를 바로 진행 (정산·뉴스가 나오면 멈춤) */
+  /** 틱 n개를 바로 진행 (정산이 나오면 멈춤) */
   debugAdvance(maxTicks: number, until: (r: PublicAdvanceResult) => boolean = () => false): number {
     let n = 0;
     while (n < maxTicks && this.game.phase === 'running') {
@@ -567,11 +604,14 @@ export class App {
     return this.trading;
   }
 
+  get livingScreen(): LivingRoomScreen {
+    return this.living;
+  }
+
   /** (디버그) 표시를 강제로 갱신 */
   debugRefresh(): void {
     this.screens[this.tabs.current].update();
+    this.refreshScene(0);
     this.renderTop();
-    const pending = this.topbar.querySelector<HTMLElement>('.top-pending');
-    if (pending) flash(pending, 'bump', 300);
   }
 }

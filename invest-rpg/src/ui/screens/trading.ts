@@ -1,118 +1,190 @@
-// 주식창 (HTS 스타일): 위에서 아래로 종목 목록 → 주문 패널(종목을 누르면) → 뉴스 피드.
-// 계좌 바(총 자산·손익률·남은 시간·1배/2배)는 App의 상단 바가 그린다.
+// 주식창 (DESIGN_HANDOFF 11.2): 위에서 아래로 계좌 바 → 종목 목록 → 주문 패널(종목을 누르면) → 뉴스 창.
+// 배경은 거실 그림을 어둡게 (App 장면 층).
 //
-// 지키는 것 (docs/ui_handoff.md)
+// 지키는 것
 // - 공개용 뷰(PublicGame)만 쓴다. 호재/악재 방향, 테마 분위기·비중은 어디에도 표시하지 않는다
-// - 뉴스는 팝업이 아니다. 피드에 쌓이고, 발표 120초 뒤 그 뉴스 바로 아래 '주가 리포트' 행이 붙는다
-// - 주문은 현재가로 확인 창 없이 바로 체결하고 짧은 안내만
+// - 뉴스는 팝업이 아니다. 뉴스 창에 쌓이고(최신이 위, 스크롤하면 이전 뉴스), 발표 120초 뒤 그 뉴스 아래 '주가 리포트'
+// - 주문: 수량을 맞추고 [매수]/[매도]를 누르면 현재가로 바로 체결, 짧은 안내만
 
 import type { PublicAdvanceResult } from '../../engine/publicView.ts';
-import type { Screen, UiContext } from '../context.ts';
-import { clear, flash, h, setText } from '../dom.ts';
-import { fmtNum, fmtPct } from '../format.ts';
-import {
-  feedRows, newOrderState, orderMessage, setMax, setQuantity, setSide, stepQuantity, stockRows, toggleExpanded,
-  type FeedRowView, type OrderSide, type OrderState, type StockRowView,
-} from '../viewModels.ts';
-import { changeColor } from '../../engine/colors.ts';
 import { localize } from '../../i18n/index.ts';
+import type { Screen, UiContext } from '../context.ts';
+import { clear, h, setText } from '../dom.ts';
+import { fmtNum, fmtPct, fmtTime } from '../format.ts';
+import { ico, inner, playIcon, pbtn, pnl } from '../kit.ts';
+import {
+  dirClass, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, setMax, setQuantity, sparkPoints,
+  stepQuantity, stockRows, type NewsItemView, type OrderState, type StockRowView,
+} from '../viewModels.ts';
 
-/** 미니 차트: 최근 20분 (5초 틱 × 240) */
-const CHART_TICKS = 240;
+const SVG = 'http://www.w3.org/2000/svg';
+const CHART_W = 362;
+const CHART_H = 62;
+const CHART_SLOTS = 240; // 20분 = 5초 × 240
 const REPORT_NOTICE_KEY = 'invest-rpg.reportNoticeSeen';
+
+function svgEl<K extends keyof SVGElementTagNameMap>(tag: K, attrs: Record<string, string | number>): SVGElementTagNameMap[K] {
+  const el = document.createElementNS(SVG, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, String(v));
+  return el;
+}
 
 export class TradingScreen implements Screen {
   readonly el: HTMLElement;
   private readonly ctx: UiContext;
+  // 계좌 바
+  private readonly assetsV: HTMLElement;
+  private readonly timeV: HTMLElement;
+  private readonly retV: HTMLElement;
+  private readonly speedBtns: Record<1 | 2, HTMLButtonElement>;
+  // 종목 목록
+  private readonly listPnl: HTMLElement;
   private readonly listBody: HTMLElement;
-  private readonly orderBox: HTMLElement;
-  private readonly feedBox: HTMLElement;
-  private rows = new Map<string, { row: HTMLElement; price: HTMLElement; chg: HTMLElement }>();
+  private rows = new Map<string, { row: HTMLElement; price: HTMLElement; chg: HTMLElement; spark: SVGPolylineElement; star: HTMLElement }>();
   private listSig = '';
+  // 주문
+  private readonly orderPnl: HTMLElement;
   private order: OrderState | null = null;
   private orderOpenedAt = 0;
   private orderDone = false;
-  private chartOpen = true;
-  private expanded = new Set<string>();
-  private feedSig = '';
-  private seenNews = new Set<string>();
-  private seenReports = new Set<string>();
-  private firstNoticeNewsId: string | null = null;
   private orderEls: {
-    price: HTMLElement; chg: HTMLElement; holding: HTMLElement; qty: HTMLInputElement; total: HTMLElement;
-    exec: HTMLButtonElement; canvas: HTMLCanvasElement; chartWrap: HTMLElement; sideBtns: Record<OrderSide, HTMLButtonElement>;
+    name: HTMLElement; price: HTMLElement; pct: HTMLElement; line: SVGPolylineElement; area: SVGPolygonElement; cur: HTMLElement;
+    desc: HTMLElement; qty: HTMLInputElement; needL: HTMLElement; needV: HTMLElement; need: HTMLElement;
   } | null = null;
+  // 뉴스
+  private readonly newsWin: HTMLElement;
+  private newsSig = '';
+  private topNewsId: string | null = null;
 
   constructor(ctx: UiContext) {
     this.ctx = ctx;
     const t = ctx.t;
-    this.listBody = h('div', { class: 'stock-body' });
-    this.orderBox = h('div', { class: 'order-box' });
-    this.feedBox = h('div', { class: 'feed-body' });
-    this.el = h(
-      'div',
-      { class: 'view trading hts' },
+
+    // 계좌 바
+    this.assetsV = h('span', { class: 'v' });
+    this.timeV = h('span', { class: 'acct-time' });
+    this.retV = h('b', {});
+    const speedBtn = (s: 1 | 2) => {
+      const b = pbtn('', playIcon(s), { 'aria-label': t(s === 1 ? 'speed.x1' : 'speed.x2') });
+      b.addEventListener('click', () => {
+        if (ctx.game.getSpeed() === s) return;
+        ctx.game.setSpeed(s);
+        ctx.onSpeedChanged();
+        ctx.persist();
+        this.updateAccount();
+      });
+      return b;
+    };
+    this.speedBtns = { 1: speedBtn(1), 2: speedBtn(2) };
+    const acct = pnl(
+      'acct',
       h(
-        'section',
-        { class: 'hts-win stock-list' },
-        h('div', { class: 'hts-title' }, t('trading.listTitle')),
-        h(
-          'div',
-          { class: 'stock-head' },
-          h('span', { class: 'c-star' }, '★'),
-          h('span', { class: 'c-name' }, t('trading.colName')),
-          h('span', { class: 'c-price' }, t('portfolio.currentPrice')),
-          h('span', { class: 'c-chg' }, t('trading.colChange')),
-        ),
-        this.listBody,
+        'div',
+        { class: 'acct-top' },
+        h('div', { class: 'acct-col' }, h('span', { class: 'lbl' }, t('portfolio.totalAssets')), h('div', { class: 'acct-assets' }, ico('coin', 24), this.assetsV)),
+        h('div', { class: 'acct-col r' }, h('span', { class: 'lbl' }, t('trading.remaining')), this.timeV),
       ),
-      this.orderBox,
-      h('section', { class: 'hts-win feed' }, h('div', { class: 'hts-title' }, t('trading.feedTitle')), this.feedBox),
+      h('div', { class: 'acct-sep' }),
+      h(
+        'div',
+        { class: 'acct-bot' },
+        h('div', { class: 'acct-ret' }, h('span', { class: 'lbl' }, t('trading.return')), this.retV),
+        h('div', { class: 'speeds' }, this.speedBtns[1], this.speedBtns[2]),
+      ),
     );
+
+    // 종목 목록
+    this.listBody = h('div', { class: 'stock-scroll' });
+    this.listPnl = pnl(
+      'list-pnl tall',
+      h('div', { class: 'hd' }, t('trading.listTitle')),
+      h(
+        'div',
+        { class: 'row head' },
+        h('span', {}),
+        h('span', {}, t('trading.colName')),
+        h('span', { style: 'text-align:center' }, t('trading.colTrend')),
+        h('span', { style: 'text-align:right' }, t('portfolio.currentPrice')),
+        h('span', { style: 'text-align:right' }, t('trading.colChange')),
+      ),
+      this.listBody,
+    );
+
+    this.orderPnl = pnl('order-pnl');
+    this.orderPnl.hidden = true;
+
+    // 뉴스
+    this.newsWin = h('div', { class: 'news-win' });
+    const news = pnl(
+      'news-pnl',
+      h('div', { class: 'hd', style: 'height:24px' }, h('span', {}, t('trading.feedTitle')), h('span', { class: 'note' }, t('trading.scrollHint'))),
+      this.newsWin,
+    );
+
+    this.el = h('div', { class: 'view trading' }, acct, this.listPnl, this.orderPnl, news);
   }
 
   enter(): void {
     this.listSig = '';
-    this.feedSig = '';
+    this.newsSig = '';
     this.update();
   }
 
-  /** 시대가 바뀌면 종목 id가 바뀐다 → 목록·주문·피드 상태를 비운다 */
+  /** 시대가 바뀌면 종목 id가 바뀐다 → 목록·주문·뉴스 상태를 비운다 */
   resetForEra(): void {
     this.closeOrder(false);
     this.rows.clear();
     this.listSig = '';
-    this.feedSig = '';
-    this.expanded.clear();
+    this.newsSig = '';
+    this.topNewsId = null;
   }
 
-  update(r?: PublicAdvanceResult): void {
-    this.updateList(r);
+  update(_r?: PublicAdvanceResult): void {
+    this.updateAccount();
+    this.updateList();
     this.updateOrder();
-    this.updateFeed();
+    this.updateNews();
+  }
+
+  // ───────── 계좌 바 ─────────
+
+  private updateAccount(): void {
+    const { ctx } = this;
+    const p = ctx.game.getPortfolio();
+    setText(this.assetsV, fmtNum(p.totalAssets, ctx.locale()));
+    setText(this.timeV, fmtTime(ctx.game.remainingSeconds));
+    setText(this.retV, fmtPct(p.currentReturnPct));
+    this.retV.className = dirClass(p.currentReturnPct);
+    const speed = ctx.game.getSpeed();
+    for (const s of [1, 2] as const) {
+      const on = speed === s;
+      this.speedBtns[s].className = `pbtn ${on ? 'accent' : ''}`;
+      this.speedBtns[s].setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
   }
 
   // ───────── 종목 목록 ─────────
 
-  private updateList(r?: PublicAdvanceResult): void {
+  private updateList(): void {
     const { ctx } = this;
     const views = stockRows(ctx.game.getStockList(ctx.locale()), ctx.scheme(), ctx.locale());
-    const sig = views.map((v) => `${v.id}:${v.favorite ? 1 : 0}:${v.name}`).join('|') + ctx.scheme();
+    const sig = views.map((v) => `${v.id}:${v.favorite ? 1 : 0}:${v.name}`).join('|');
     if (sig !== this.listSig) {
       this.listSig = sig;
       this.buildList(views);
     }
-    const ticked = r?.advanced === true;
     for (const v of views) {
       const row = this.rows.get(v.id);
       if (!row) continue;
+      const dir = dirClass(Number.parseFloat(v.changePct));
       setText(row.price, v.price);
       setText(row.chg, v.changePct);
-      row.chg.className = `c-chg c-${v.color}`;
-      row.price.className = `c-price c-${v.color}`;
-      row.row.classList.toggle('selected', this.order?.stockId === v.id);
-      // 5초마다 가격이 바뀌면 칸이 잠깐 번쩍
-      if (ticked && v.tick) flash(row.price, v.tick === 'up' ? 'flash-up' : 'flash-down', 500);
+      row.price.className = `n ${dir}`;
+      row.chg.className = `n ${dir}`;
+      row.row.classList.toggle('sel', this.order?.stockId === v.id);
+      const pts = linePoints(sparkPoints(ctx.game.getChart(v.id).slice(-CHART_SLOTS)), 56, 14, 1).map((q) => `${q.x + 1},${q.y + 1}`).join(' ');
+      row.spark.setAttribute('points', pts);
+      row.spark.setAttribute('class', dir || 'flat');
     }
   }
 
@@ -120,28 +192,32 @@ export class TradingScreen implements Screen {
     clear(this.listBody);
     this.rows.clear();
     for (const v of views) {
-      const star = h('button', { class: `c-star star ${v.favorite ? 'on' : ''}`, 'aria-label': 'favorite', 'aria-pressed': v.favorite ? 'true' : 'false' });
+      const star = h('button', { class: 'star', 'aria-label': this.ctx.t('trading.favorite'), 'aria-pressed': v.favorite ? 'true' : 'false' }, ico(v.favorite ? 'star_on' : 'star_off', 22));
       star.addEventListener('click', (e) => {
         e.stopPropagation();
         this.ctx.game.toggleFavorite(v.id);
         this.ctx.persist();
         this.updateList();
       });
-      const price = h('span', { class: 'c-price' }, v.price);
-      const chg = h('span', { class: `c-chg c-${v.color}` }, v.changePct);
-      const row = h('div', { class: 'stock-row', 'data-id': v.id, role: 'button' }, star, h('span', { class: 'c-name' }, v.name), price, chg);
+      const spark = svgEl('polyline', { fill: 'none', 'stroke-width': 2, 'stroke-linejoin': 'round', stroke: 'currentColor' });
+      const sparkSvg = svgEl('svg', { class: 'spark', viewBox: '0 0 58 16' });
+      sparkSvg.append(spark);
+      const price = h('span', { class: 'n' }, v.price);
+      const chg = h('span', { class: 'n' }, v.changePct);
+      const row = h('div', { class: 'row', 'data-id': v.id, role: 'button' }, star, h('span', { class: 'nm' }, v.name), sparkSvg as unknown as HTMLElement, price, chg);
       row.addEventListener('click', () => this.openOrder(v.id));
       this.listBody.append(row);
-      this.rows.set(v.id, { row, price, chg });
+      this.rows.set(v.id, { row, price, chg, spark, star });
     }
   }
 
   // ───────── 주문 패널 ─────────
 
-  /** (화면·디버그) 종목 주문 패널 열기 */
+  /** (화면·디버그) 종목 주문 패널 열기. 같은 종목을 다시 누르면 닫는다 */
   openOrder(stockId: string): void {
     if (this.order?.stockId === stockId) {
       this.closeOrder(true);
+      this.updateList();
       return;
     }
     this.closeOrder(true);
@@ -151,16 +227,19 @@ export class TradingScreen implements Screen {
     this.buildOrder();
     this.updateOrder();
     this.updateList();
+    // 고른 종목이 목록 칸 안에 보이게
+    this.rows.get(stockId)?.row.scrollIntoView({ block: 'nearest' });
   }
 
   closeOrder(trackAbandon: boolean): void {
     if (this.order && trackAbandon && !this.orderDone) {
-      this.ctx.track('order_abandoned', { stockId: this.order.stockId, side: this.order.side, dwellMs: Math.max(0, this.ctx.now() - this.orderOpenedAt) });
+      this.ctx.track('order_abandoned', { stockId: this.order.stockId, side: 'buy', dwellMs: Math.max(0, this.ctx.now() - this.orderOpenedAt) });
     }
     this.order = null;
     this.orderEls = null;
-    clear(this.orderBox);
-    this.orderBox.classList.remove('open');
+    clear(inner(this.orderPnl));
+    this.orderPnl.hidden = true;
+    this.listPnl.className = 'pnl list-pnl tall';
   }
 
   private buildOrder(): void {
@@ -169,29 +248,40 @@ export class TradingScreen implements Screen {
     const o = this.order!;
     const stock = ctx.game.getStockList().find((s) => s.id === o.stockId);
     if (!stock) return;
-    clear(this.orderBox);
-    this.orderBox.classList.add('open');
+    const box = inner(this.orderPnl);
+    clear(box);
+    this.orderPnl.hidden = false;
+    this.listPnl.className = 'pnl list-pnl short';
 
-    const price = h('span', { class: 'op-price' });
-    const chg = h('span', { class: 'op-chg' });
-    const holding = h('div', { class: 'op-holding' });
-    const qty = h('input', { class: 'op-qty', type: 'number', inputmode: 'numeric', min: 1, step: 1, value: o.quantity, 'aria-label': t('order.quantity') });
-    const total = h('div', { class: 'op-total' });
-    const exec = h('button', { class: 'btn op-exec' });
-    const canvas = h('canvas', { class: 'op-chart', height: 48 });
-    const chartWrap = h('div', { class: 'op-chart-wrap' }, canvas);
-    const sideBtn = (side: OrderSide) => {
-      const b = h('button', { class: `btn tab-btn side-${side}` }, t(`trade.${side}`));
-      b.addEventListener('click', () => {
-        this.order = setSide(this.order!, side);
-        this.updateOrder();
-      });
-      return b;
-    };
-    const sideBtns = { buy: sideBtn('buy'), sell: sideBtn('sell') };
-    const minus = h('button', { class: 'btn small' }, '−');
-    const plus = h('button', { class: 'btn small' }, '+');
-    const max = h('button', { class: 'btn small op-max' }, t('order.max'));
+    const name = h('span', { class: 'nm' }, localize(stock.name, ctx.locale()));
+    const price = h('span', { class: 'pr' });
+    const pct = h('span', { class: 'pc' });
+    const close = pbtn('', ico('x', 14), { 'aria-label': t('common.close') });
+    close.addEventListener('click', () => {
+      this.closeOrder(true);
+      this.updateList();
+    });
+
+    const chartSvg = svgEl('svg', { viewBox: `0 0 ${CHART_W} ${CHART_H}`, preserveAspectRatio: 'none' });
+    for (const y of [0.25, 0.5, 0.75]) {
+      chartSvg.append(svgEl('line', { x1: 0, x2: CHART_W, y1: CHART_H * y, y2: CHART_H * y, stroke: 'var(--line)', 'stroke-width': 1, 'stroke-dasharray': '4 4' }));
+    }
+    const area = svgEl('polygon', { fill: 'currentColor', 'fill-opacity': 0.22, stroke: 'none' });
+    const line = svgEl('polyline', { fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linejoin': 'round' });
+    chartSvg.append(area, line);
+    const cur = h('span', { class: 'cur' });
+    const chart = h('div', { class: 'chart' }, chartSvg as unknown as HTMLElement, cur);
+
+    const desc = h('div', { class: 'desc' });
+    const qty = h('input', { inputmode: 'numeric', 'aria-label': t('order.quantity'), value: String(o.quantity), maxlength: 3 });
+    qty.addEventListener('input', () => {
+      this.order = setQuantity(this.order!, parseQuantity(qty.value));
+      this.updateOrder(false);
+    });
+    qty.addEventListener('blur', () => this.updateOrder());
+    const minus = pbtn('', '−', { 'aria-label': t('order.less') });
+    const plus = pbtn('', '+', { 'aria-label': t('order.more') });
+    const max = pbtn('max', t('order.max'));
     minus.addEventListener('click', () => {
       this.order = stepQuantity(this.order!, -1);
       this.updateOrder();
@@ -201,40 +291,33 @@ export class TradingScreen implements Screen {
       this.updateOrder();
     });
     max.addEventListener('click', () => {
-      const m = ctx.game.maxQty(this.order!.side, this.order!.stockId);
-      this.order = setMax(this.order!, m);
-      ctx.track('max_button', { stockId: this.order.stockId, side: this.order.side, quantity: m });
+      const id = this.order!.stockId;
+      const m = ctx.game.maxQty('buy', id);
+      const held = ctx.game.getPortfolio().holdings.find((x) => x.id === id)?.quantity ?? 0;
+      this.order = setMax(this.order!, m, held);
+      ctx.track('max_button', { stockId: id, side: m > 0 ? 'buy' : 'sell', quantity: this.order.quantity });
       this.updateOrder();
     });
-    qty.addEventListener('input', () => {
-      this.order = setQuantity(this.order!, Number(qty.value));
-      this.updateOrder(false);
-    });
-    exec.addEventListener('click', () => this.execute());
-    const close = h('button', { class: 'btn small op-close', 'aria-label': t('common.close') }, '×');
-    close.addEventListener('click', () => {
-      this.closeOrder(true);
-      this.updateList();
-    });
-    const chartToggle = h('button', { class: 'btn small op-chart-toggle' }, t('trading.chart'));
-    chartToggle.addEventListener('click', () => {
-      this.chartOpen = !this.chartOpen;
-      this.updateOrder();
-    });
+    const needL = h('div', { class: 'lbl2' });
+    const needV = h('div', { class: 'v' });
+    const need = h('div', { class: 'need' }, needL, needV);
+    const buy = pbtn('buy', t('trade.buy'));
+    const sell = pbtn('sell', t('trade.sell'));
+    buy.addEventListener('click', () => this.execute('buy'));
+    sell.addEventListener('click', () => this.execute('sell'));
 
-    this.orderBox.append(
+    box.append(
       h(
-        'section',
-        { class: 'hts-win order' },
-        h('div', { class: 'hts-title op-head' }, h('span', { class: 'op-name' }, localize(stock.name, ctx.locale())), price, chg, chartToggle, close),
-        chartWrap,
-        h('div', { class: 'op-desc' }, localize(stock.description, ctx.locale())),
-        holding,
-        h('div', { class: 'op-row' }, sideBtns.buy, sideBtns.sell, minus, qty, plus, max),
-        h('div', { class: 'op-row' }, total, exec),
+        'div',
+        { class: 'order' },
+        h('div', { class: 'order-head' }, name, price, pct, h('span', { class: 'sp' }), close),
+        chart,
+        desc,
+        h('div', { class: 'qty-row' }, minus, h('div', { class: 'pnl qty-box' }, h('div', { class: 'in' }, qty)), plus, max, need),
+        h('div', { class: 'trade-row' }, buy, sell),
       ),
     );
-    this.orderEls = { price, chg, holding, qty, total, exec, canvas, chartWrap, sideBtns };
+    this.orderEls = { name, price, pct, line, area, cur, desc, qty, needL, needV, need };
   }
 
   private updateOrder(syncInput = true): void {
@@ -243,42 +326,49 @@ export class TradingScreen implements Screen {
     if (!o || !els) return;
     const { ctx } = this;
     const t = ctx.t;
+    const locale = ctx.locale();
     const stock = ctx.game.getStockList().find((s) => s.id === o.stockId);
     if (!stock) return;
-    const color = changeColor(Number(stock.changePct.toFixed(1)), ctx.scheme());
-    setText(els.price, fmtNum(stock.price, ctx.locale()));
-    setText(els.chg, fmtPct(stock.changePct));
-    els.price.className = `op-price c-${color}`;
-    els.chg.className = `op-chg c-${color}`;
-    const h1 = ctx.game.getPortfolio().holdings.find((x) => x.id === o.stockId);
-    setText(
-      els.holding,
-      h1
-        ? t('trading.holding', { qty: h1.quantity, avg: fmtNum(h1.avgPrice, ctx.locale()), pnl: fmtPct(h1.unrealizedPnlPct) })
-        : t('trading.noHolding'),
-    );
+    const dir = dirClass(stock.changePct);
+    setText(els.price, fmtNum(stock.price, locale));
+    setText(els.pct, fmtPct(stock.changePct));
+    els.price.className = `pr ${dir}`;
+    els.pct.className = `pc ${dir}`;
+    // 차트: 최근 20분, 선 2도트 + 같은 색 22% 면 + 지금 위치 사각형
+    const pts = linePoints(ctx.game.getChart(o.stockId).slice(-CHART_SLOTS).map((p) => p.price), CHART_W, CHART_H, 6, CHART_SLOTS);
+    const chartBox = els.line.ownerSVGElement?.parentElement;
+    if (chartBox) chartBox.className = `chart ${dir}`;
+    els.line.setAttribute('points', pts.map((p) => `${p.x},${p.y}`).join(' '));
+    const first = pts[0];
+    const last = pts.at(-1);
+    els.area.setAttribute('points', first && last ? `${first.x},${CHART_H} ${pts.map((p) => `${p.x},${p.y}`).join(' ')} ${last.x},${CHART_H}` : '');
+    if (last) {
+      els.cur.style.left = `${Math.min(CHART_W - 6, Math.max(0, last.x - 3))}px`;
+      els.cur.style.top = `${Math.min(CHART_H - 6, Math.max(0, last.y - 3))}px`;
+    }
+    const held = ctx.game.getPortfolio().holdings.find((x) => x.id === o.stockId);
+    const holding = held
+      ? t('trading.holding', { qty: held.quantity, pnl: fmtPct(held.unrealizedPnlPct) })
+      : t('trading.noHolding');
+    setText(els.desc, `${localize(stock.description, locale)} · ${holding}`);
     if (syncInput && els.qty.value !== String(o.quantity)) els.qty.value = String(o.quantity);
-    for (const side of ['buy', 'sell'] as const) els.sideBtns[side].classList.toggle('active', o.side === side);
-    const p = ctx.game.previewOrder(o.side, o.stockId, o.quantity);
-    setText(
-      els.total,
-      p.error && p.error !== 'invalid-quantity'
-        ? t(`error.${p.error}`)
-        : t(o.side === 'buy' ? 'trading.totalBuy' : 'trading.totalSell', { total: fmtNum(p.total, ctx.locale()), fee: fmtNum(p.fee, ctx.locale()) }),
-    );
-    els.total.classList.toggle('err', p.error !== null);
-    els.exec.textContent = t(`trading.exec.${o.side}`);
-    els.exec.className = `btn op-exec side-${o.side}`;
-    els.chartWrap.hidden = !this.chartOpen;
-    if (this.chartOpen) this.drawChart(els.canvas, o.stockId, color);
+    const nv = needView(ctx.game.previewOrder('buy', o.stockId, Math.max(1, o.quantity)), locale);
+    const shown = o.quantity === 0 ? { ...nv, value: '0', error: false } : nv;
+    setText(els.needL, shown.label);
+    setText(els.needV, shown.value);
+    els.need.classList.toggle('err', shown.error);
   }
 
-  private execute(): void {
+  private execute(side: 'buy' | 'sell'): void {
     const o = this.order;
     if (!o) return;
     const { ctx } = this;
+    if (o.quantity <= 0) {
+      ctx.toast(ctx.t('order.zero'), 'error');
+      return;
+    }
     const stock = ctx.game.getStockList().find((s) => s.id === o.stockId);
-    const r = o.side === 'buy' ? ctx.game.buy(o.stockId, o.quantity) : ctx.game.sell(o.stockId, o.quantity);
+    const r = side === 'buy' ? ctx.game.buy(o.stockId, o.quantity) : ctx.game.sell(o.stockId, o.quantity);
     const msg = orderMessage(r, stock ? localize(stock.name, ctx.locale()) : '', ctx.locale());
     ctx.toast(msg.text, msg.ok ? 'info' : 'error');
     if (r.ok) {
@@ -289,92 +379,62 @@ export class TradingScreen implements Screen {
     this.update();
   }
 
-  private drawChart(canvas: HTMLCanvasElement, stockId: string, color: string): void {
-    const w = Math.max(100, Math.floor(canvas.parentElement?.clientWidth ?? 300));
-    if (canvas.width !== w) canvas.width = w;
-    const hgt = canvas.height;
-    const g = canvas.getContext('2d');
-    if (!g) return;
-    const pts = this.ctx.game.getChart(stockId).slice(-CHART_TICKS);
-    g.clearRect(0, 0, w, hgt);
-    g.fillStyle = 'rgba(0,0,0,0.25)';
-    g.fillRect(0, 0, w, hgt);
-    if (pts.length < 2) return;
-    const prices = pts.map((p) => p.price);
-    const lo = Math.min(...prices);
-    const hi = Math.max(...prices);
-    const span = Math.max(1, hi - lo);
-    const css = getComputedStyle(canvas).getPropertyValue(`--c-${color}`).trim() || '#ccc';
-    g.fillStyle = css;
-    // 픽셀 느낌: 2px 점으로 계단처럼
-    const n = CHART_TICKS;
-    let prevY: number | null = null;
-    pts.forEach((p, i) => {
-      const x = Math.floor(((n - pts.length + i) / (n - 1)) * (w - 2));
-      const y = Math.floor((1 - (p.price - lo) / span) * (hgt - 4)) + 1;
-      if (prevY !== null) g.fillRect(x, Math.min(prevY, y), 2, Math.abs(y - prevY) + 2);
-      else g.fillRect(x, y, 2, 2);
-      prevY = y;
-    });
-  }
+  // ───────── 뉴스 창 ─────────
 
-  // ───────── 뉴스 피드 ─────────
-
-  private updateFeed(): void {
+  private updateNews(): void {
     const { ctx } = this;
-    const entries = ctx.game.getFeed();
-    const rows = feedRows(entries, this.expanded, ctx.locale());
-    const sig = rows.map((r) => `${r.id}:${r.expanded ? 1 : 0}:${r.hasReport ? 1 : 0}`).join('|') + ctx.locale();
-    if (sig === this.feedSig) return;
-    this.feedSig = sig;
-    clear(this.feedBox);
-    if (rows.length === 0) {
-      this.feedBox.append(h('div', { class: 'feed-empty' }, ctx.t('era.graceNotice')));
+    const items = newsItems(ctx.game.getFeed(), ctx.locale());
+    const sig = items.map((r) => `${r.id}:${r.report ? 1 : 0}`).join('|') + ctx.locale();
+    if (sig === this.newsSig) return;
+    this.newsSig = sig;
+    const keep = this.newsWin.scrollTop;
+    const newTop = items[0]?.id ?? null;
+    clear(this.newsWin);
+    if (items.length === 0) {
+      this.newsWin.append(h('div', { class: 'news-empty' }, ctx.t('era.graceNotice')));
       return;
     }
-    for (const r of rows) this.feedBox.append(this.feedRow(r));
+    for (const it of items) this.newsWin.append(this.newsItem(it));
+    // 새 뉴스가 오면 맨 위(최신)로, 아니면 보던 자리 그대로
+    this.newsWin.scrollTop = newTop !== this.topNewsId ? 0 : keep;
+    this.topNewsId = newTop;
+    // 처음 본 리포트 한 번만: "게임 안 가상 수치, 투자 권유 아님"
+    if (items.some((i) => i.report) && !readFlag(REPORT_NOTICE_KEY)) {
+      writeFlag(REPORT_NOTICE_KEY);
+      ctx.toast(ctx.t('report.firstNotice'));
+    }
   }
 
-  private feedRow(r: FeedRowView): HTMLElement {
+  private newsItem(it: NewsItemView): HTMLElement {
     const { ctx } = this;
-    const freshNews = !this.seenNews.has(r.id);
-    this.seenNews.add(r.id);
-    const head = h(
-      'div',
-      { class: 'news-head' },
-      h('span', { class: 'news-kind' }, r.kind),
-      h('span', { class: 'news-title' }, r.title),
-      r.fictional ? h('span', { class: 'news-tag' }, ctx.t('news.fictionalTag')) : null,
-      h('span', { class: 'news-time' }, r.time),
-    );
-    const el = h('article', { class: `news ${r.expanded ? 'open' : 'closed'} ${freshNews ? 'fresh' : ''}` }, head);
-    if (r.body) el.append(h('p', { class: 'news-body' }, r.body));
-    if (r.report) {
-      const freshReport = !this.seenReports.has(r.id);
-      this.seenReports.add(r.id);
-      const rep = h(
+    const el = h(
+      'article',
+      { class: 'ni', 'data-id': it.id },
+      h(
         'div',
-        { class: `report ${freshReport ? 'fresh' : ''}` },
-        h('div', { class: 'report-title' }, r.report.title),
-        ...r.report.lines.map((l) => h('div', { class: 'report-line' }, h('div', {}, l.text), h('div', { class: 'report-split' }, l.split))),
-        r.report.more ? h('div', { class: 'report-more' }, r.report.more) : null,
-        ...r.report.notes.map((n) => h('div', { class: 'report-note' }, n)),
+        { class: 'ni-top' },
+        h('span', { class: `kind ${it.latest ? 'new' : ''}` }, it.kind),
+        it.fictional ? h('span', { class: 'tag' }, ctx.t('news.fictionalTag')) : null,
+        h('span', { class: 'sp' }),
+        h('span', { class: 'time' }, it.time),
+      ),
+      h('div', { class: 'hl' }, it.title),
+      h('div', { class: 'bd' }, it.body),
+    );
+    if (it.report) {
+      el.append(
+        h(
+          'div',
+          { class: 'rep' },
+          h('div', { class: 'rep-t' }, it.report.title),
+          ...it.report.lines.map((l) =>
+            h('div', { class: 'rep-i' }, h('div', { class: 'rep-l' }, h('b', { class: l.dir }, l.head), h('span', {}, l.reason)), h('div', { class: 'rep-s' }, l.split)),
+          ),
+          it.report.more ? h('div', { class: 'rep-note' }, it.report.more) : null,
+          ...it.report.notes.map((n) => h('div', { class: 'rep-note' }, n)),
+        ),
       );
-      // 처음 본 리포트 한 번만: "게임 안 가상 수치, 투자 권유 아님"
-      if (this.firstNoticeNewsId === null && !readFlag(REPORT_NOTICE_KEY)) {
-        this.firstNoticeNewsId = r.id;
-        writeFlag(REPORT_NOTICE_KEY);
-      }
-      if (this.firstNoticeNewsId === r.id) rep.append(h('div', { class: 'report-note first' }, ctx.t('report.firstNotice')));
-      el.append(rep);
     }
-    // 접힌 뉴스를 누르면 리포트까지 펼친다 (최신 뉴스는 늘 펼쳐져 있음)
-    head.setAttribute('role', 'button');
-    head.addEventListener('click', () => {
-      this.expanded = toggleExpanded(this.expanded, r.id);
-      if (this.expanded.has(r.id)) ctx.track('feed_expand', { newsId: r.id, hasReport: r.hasReport });
-      this.updateFeed();
-    });
     return el;
   }
 }

@@ -1,5 +1,6 @@
-// 개발 전용 디버그 패널 (?debug=1). 운영 빌드에서는 main.ts의 import.meta.env.DEV 검사로 코드째 빠진다.
-// 2시간을 기다리지 않고 확인하기 위한 것: 시드 고정, 시대 선택, 시간 10배, 다음 뉴스까지 건너뛰기, 코인 지급.
+// 디버그 패널 (?debug=1). 개발 서버와 시험판 빌드(npm run build:play)에서만 들어가고, 정식 빌드에서는 코드째 빠진다.
+// 2시간을 기다리지 않고 확인하기 위한 것: 시드 고정, 시대 선택, 시간 10배, 다음 뉴스까지 건너뛰기, 코인 지급,
+// 밤/낮 바꾸기, 인형 터치 몰아 하기.
 // 스크린샷 스크립트(npm run shots)도 window.__debug로 이 기능을 쓴다.
 
 import type { App } from './app.ts';
@@ -18,6 +19,10 @@ export interface DebugApi {
   openStock(index: number): void;
   tab(id: 'living_room' | 'trading' | 'workshop' | 'tv_shopping'): void;
   workTouches(n: number): void;
+  /** 밤/낮 고정 (null = 현지 시각) */
+  tod(t: 'night' | 'day' | null): void;
+  /** 인테리어를 n단계 올림 (모자라는 코인은 지급) */
+  interior(n: number): void;
 }
 
 export function mountDebug(app: App, info: { seed: number; eraNames: string[] }): DebugApi {
@@ -39,8 +44,19 @@ export function mountDebug(app: App, info: { seed: number; eraNames: string[] })
     tab: (id) => app.selectTab(id),
     workTouches: (n) => {
       // 초당 터치 상한을 넘지 않게 가상 시각을 200ms씩 띄운다
-      const base = Date.now();
+      const base = Date.now() + 1000;
       for (let i = 0; i < n; i++) app.game.workTouch(base + i * 200);
+      app.persist(true);
+      app.debugRefresh();
+    },
+    tod: (t) => app.forceTod(t),
+    interior: (n) => {
+      for (let i = 0; i < n; i++) {
+        const cost = app.game.interiorNextCost;
+        if (cost === null) break;
+        if (app.game.cash < cost) app.game.deposit(cost - app.game.cash, 'other');
+        app.game.upgradeInterior();
+      }
       app.persist(true);
       app.debugRefresh();
     },
@@ -60,28 +76,33 @@ export function mountDebug(app: App, info: { seed: number; eraNames: string[] })
   eraSel.value = params.get('era') ?? '0';
   let fast = false;
   const btn = (label: string, fn: () => void) => {
-    const b = h('button', { class: 'btn small' }, label);
+    const b = h('button', {}, label);
     b.addEventListener('click', fn);
     return b;
   };
-  const panel = h(
+  let tod: 'night' | 'day' | null = null;
+  const body = h(
     'div',
-    { class: 'debug-panel min' },
-    h('button', { class: 'dbg-title', onclick: () => panel.classList.toggle('min') }, 'DEBUG'),
-    h('div', { class: 'dbg-row' }, 'seed ', seedInput, ' era ', eraSel, btn('새 게임', () => go({ seed: seedInput.value, era: eraSel.value, fresh: '1' }))),
-    h(
-      'div',
-      { class: 'dbg-row' },
-      btn('×10', () => {
-        fast = !fast;
-        api.setTimeScale(fast ? 10 : 1);
-      }),
-      btn('다음 뉴스', () => api.nextNews()),
-      btn('+5분', () => api.advanceSeconds(300)),
-      btn('시대 끝', () => api.endEra()),
-      btn('+1000코인', () => api.coins(1000)),
-    ),
+    { class: 'debug-body', hidden: true },
+    h('div', {}, 'seed ', seedInput),
+    h('div', {}, 'era ', eraSel),
+    btn('새 게임 (저장 지우고)', () => go({ seed: seedInput.value, era: eraSel.value, fresh: '1' })),
+    btn('시간 ×10 켜기/끄기', () => {
+      fast = !fast;
+      api.setTimeScale(fast ? 10 : 1);
+    }),
+    btn('다음 뉴스까지', () => api.nextNews()),
+    btn('+5분', () => api.advanceSeconds(300)),
+    btn('시대 끝내기', () => api.endEra()),
+    btn('+1000코인', () => api.coins(1000)),
+    btn('인형 터치 ×30', () => api.workTouches(30)),
+    btn('인테리어 +1단계', () => api.interior(1)),
+    btn('밤/낮 바꾸기', () => {
+      tod = tod === 'night' ? 'day' : 'night';
+      api.tod(tod);
+    }),
   );
+  const panel = h('div', { class: 'debug' }, h('button', { onclick: () => (body.hidden = !body.hidden) }, 'DEBUG'), body);
   document.body.append(panel);
   return api;
 }
