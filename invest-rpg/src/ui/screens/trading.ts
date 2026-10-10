@@ -97,8 +97,12 @@ export class TradingScreen implements Screen {
       h(
         'div',
         { class: 'acct-bot' },
-        h('div', { class: 'acct-ret' }, h('span', { class: 'lbl' }, t('trading.return')), this.retV),
-        h('div', { class: 'acct-ret acct-cash' }, h('span', { class: 'lbl' }, t('portfolio.cash')), this.cashV),
+        h(
+          'div',
+          { class: 'acct-figs' },
+          h('div', { class: 'acct-ret' }, h('span', { class: 'lbl' }, t('trading.return')), this.retV),
+          h('div', { class: 'acct-ret acct-cash' }, h('span', { class: 'lbl' }, t('portfolio.cash')), ico('coin', 14), this.cashV),
+        ),
         h('div', { class: 'speeds' }, this.speedBtns[1], this.speedBtns[2]),
       ),
     );

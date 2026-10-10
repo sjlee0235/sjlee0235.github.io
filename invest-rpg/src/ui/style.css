@@ -321,6 +321,10 @@ button { cursor: pointer; }
 .work-guide .in { padding: 6px 10px; font-size: 12px; font-weight: 500; line-height: 1.45; word-break: keep-all; }
 
 /* 주식창: 계좌 바의 현금, 목록 보기 전환 [종목 | 내 계좌] */
+/* 손익률 바로 옆에 현금 (사이에 세로 구분선) */
+.acct-figs { display: flex; align-items: center; gap: 12px; }
+.acct-cash { align-items: center; gap: 4px; padding-left: 12px; border-left: 2px solid var(--line); }
+.acct-cash .lbl { margin-right: 2px; }
 .acct-cash b { color: var(--text); }
 .list-tabs { justify-content: flex-start; gap: 4px; padding: 0 6px; }
 .list-tab { height: 100%; border: 0; background: none; padding: 0 8px; font-size: 12px; font-weight: 600; letter-spacing: .06em; color: var(--mute); position: relative; }
