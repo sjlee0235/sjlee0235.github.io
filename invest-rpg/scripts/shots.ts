@@ -71,11 +71,24 @@ async function run(): Promise<void> {
   };
 
   try {
-    // 처음 안내 창
+    // 첫 화면(역전의 방) → 새로하기 → 튜토리얼 첫 장(김역전의 이야기)
     {
       const { ctx, page } = await open(390, 844, '');
-      await shot(page, 'intro');
+      await dbg(page, 'tod', 'night');
+      await shot(page, 'title_night');
+      await page.locator('.title-buttons .pbtn').nth(1).click();
+      await shot(page, 'tutorial_story');
       await ctx.close();
+      const { ctx: c2, page: p2 } = await open(390, 844, '');
+      await dbg(p2, 'tod', 'day');
+      await p2.evaluate(() => localStorage.setItem('invest-rpg.save', JSON.stringify({ version: 2, tutorialCompleted: false, telemetryConsent: false, game: {} })));
+      await p2.reload();
+      await p2.waitForFunction(() => '__debug' in window);
+      await p2.addStyleTag({ content: '.debug{display:none!important}' });
+      await dbg(p2, 'tod', 'day');
+      await p2.locator('.title-buttons .pbtn').nth(1).click();
+      await shot(p2, 'title_day_confirm_new');
+      await c2.close();
     }
     const { ctx, page } = await open(390, 844, '&nointro=1');
 
@@ -91,10 +104,22 @@ async function run(): Promise<void> {
     await page.waitForTimeout(600);
     await shot(page, 'living_day_lv3');
 
+    // 현금이 모자랄 때 인테리어 안내
+    await dbg(page, 'tab', 'trading');
+    await dbg(page, 'openStock', 0);
+    await page.locator('.qty-row .max').click();
+    await page.locator('.trade-row .buy').click();
+    await dbg(page, 'tab', 'living_room');
+    await page.waitForTimeout(2500);
+    await dbg(page, 'tod', 'day');
+    await page.locator('.upgrade .pbtn').click();
+    await shot(page, 'living_cash_short');
+    await dbg(page, 'tod', 'night');
+
+
     // 거실 밤 Lv7 + 강아지 5번 연속 터치 → 배 까기 + 하트
     await dbg(page, 'tod', 'night');
     await dbg(page, 'interior', 4);
-    await dbg(page, 'coins', 9000);
     await page.waitForTimeout(600);
     await petDog(page, 5);
     await shot(page, 'living_night_lv7_belly');
@@ -143,7 +168,14 @@ async function run(): Promise<void> {
       await dbg(p2, 'tod', 'day');
       await dbg(p2, 'tab', 'workshop');
       await dbg(p2, 'workTouches', 7);
+      await dbg(p2, 'nextNews');
       await shot(p2, 'workshop_day_lv0');
+      await dbg(p2, 'interior', 2);
+      await p2.waitForTimeout(500);
+      await shot(p2, 'workshop_day_lv2');
+      await dbg(p2, 'tod', 'night');
+      await dbg(p2, 'interior', 2);
+      await shot(p2, 'workshop_night_lv4');
       await c2.close();
       const { ctx: c3, page: p3 } = await open(360, 640, '&nointro=1');
       await dbg(p3, 'tod', 'night');

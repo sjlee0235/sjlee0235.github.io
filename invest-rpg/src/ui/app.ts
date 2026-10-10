@@ -33,7 +33,9 @@ import { fmtNum } from './format.ts';
 import { ico, inner, pbtn, playIcon, pnl } from './kit.ts';
 import type { IconName } from './icons.ts';
 import { GameLoop, type Clock } from './loop.ts';
-import { consentOverlay, finalOverlay, introOverlay, settingsOverlay, settlementOverlay } from './overlays.ts';
+import {
+  confirmNewOverlay, consentOverlay, finalOverlay, settingsOverlay, settlementOverlay, titleScreen, tutorialOverlay,
+} from './overlays.ts';
 import { SceneLayer } from './scene.ts';
 import { LivingRoomScreen } from './screens/livingRoom.ts';
 import { TradingScreen } from './screens/trading.ts';
@@ -43,7 +45,7 @@ import { loadSave, SAVE_KEY, writeSave } from './storage.ts';
 
 export const STAGE_W = 390;
 export const STAGE_H = 844;
-/** 처음 안내·기록 동의를 본 적이 있는가 (게임 세이브와 따로) */
+/** 플레이 기록 동의를 물은 적이 있는가 (게임 세이브와 따로) */
 export const FIRST_RUN_KEY = 'invest-rpg.introSeen';
 
 const TAB_ICON: Record<TabId, IconName> = { living_room: 'sofa', trading: 'monitor', workshop: 'doll', tv_shopping: 'tv' };
@@ -66,7 +68,7 @@ export interface AppOptions {
   startEraIndex?: number;
   /** (디버그) 저장된 게임을 무시하고 새로 */
   fresh?: boolean;
-  /** (디버그·점검) 처음 안내·동의 창을 건너뜀 */
+  /** (디버그·점검) 첫 화면·튜토리얼·동의 창을 건너뛰고 바로 게임 */
   skipIntro?: boolean;
 }
 
@@ -147,10 +149,64 @@ export class App {
 
   // ───────── 시작 ─────────
 
+  /** 앱 켜기: 무대·밤낮을 맞추고 첫 화면(제목 + 이어하기/새로하기). 디버그 nointro면 바로 게임 */
   start(): void {
     this.fitStage();
     this.applyTod(false);
-    const restored = this.opts.fresh ? null : restorePublicGame(this.save, this.opts.eras, undefined, { locale: this.settings.locale });
+    window.addEventListener('resize', () => this.fitStage());
+    document.addEventListener('visibilitychange', () => this.onVisibility(document.hidden));
+    window.setInterval(() => this.applyTod(true), 30_000);
+    if (this.opts.skipIntro) {
+      this.begin(this.opts.fresh ?? false, false);
+      return;
+    }
+    this.showTitle();
+  }
+
+  /** 저장된 진행이 있는가 (이어하기 가능) */
+  get hasSave(): boolean {
+    return this.save.game !== null;
+  }
+
+  private showTitle(): void {
+    this.stage.classList.add('at-title');
+    const el = titleScreen(this.settings.locale, this.hasSave, {
+      continue: () => {
+        el.remove();
+        this.stage.classList.remove('at-title');
+        this.begin(false, false);
+      },
+      newGame: () => {
+        const go = () => {
+          el.remove();
+          this.stage.classList.remove('at-title');
+          this.begin(true, true);
+        };
+        if (!this.hasSave) {
+          go();
+          return;
+        }
+        const ask = confirmNewOverlay(this.settings.locale, (ok) => {
+          ask.remove();
+          if (ok) go();
+        });
+        this.overlays.append(ask);
+      },
+    });
+    this.overlays.append(el);
+    this.refreshScene(0);
+  }
+
+  /**
+   * 게임 시작. fresh = 저장된 진행을 지우고 새로(새로하기), tutorial = 이야기·게임 방법을 먼저 보여 줌.
+   * 처음 실행이면(기록 동의를 물은 적이 없으면) 시작 전에 플레이 기록 동의 창.
+   */
+  private begin(fresh: boolean, tutorial: boolean): void {
+    if (fresh) {
+      this.save = { ...this.save, game: null };
+      writeSave(this.opts.storage, this.save);
+    }
+    const restored = fresh ? null : restorePublicGame(this.save, this.opts.eras, undefined, { locale: this.settings.locale });
     let pendingSettlement: PublicSettlement | null = null;
     let finishedSummary: FinalSummary | null = null;
     if (restored?.status === 'resumed' || restored?.status === 'restarted_legacy') {
@@ -175,10 +231,6 @@ export class App {
     this.showTab(this.tabs.current);
     this.applyEraMarks();
 
-    window.addEventListener('resize', () => this.fitStage());
-    document.addEventListener('visibilitychange', () => this.onVisibility(document.hidden));
-    window.setInterval(() => this.applyTod(true), 30_000);
-
     if (finishedSummary) {
       const summary = finishedSummary;
       if (pendingSettlement) this.showSettlement(pendingSettlement, () => this.showFinal(summary));
@@ -194,26 +246,26 @@ export class App {
       if (document.hidden) this.onVisibility(true);
       this.persist(true);
     };
-    if (!this.opts.skipIntro && this.opts.storage.get(FIRST_RUN_KEY) !== '1') this.firstRun(go);
-    else go();
+    const askConsent = !this.opts.skipIntro && this.opts.storage.get(FIRST_RUN_KEY) !== '1';
+    const afterTutorial = () => (askConsent ? this.askConsent(go) : go());
+    if (tutorial) this.showTutorial(afterTutorial);
+    else afterTutorial();
   }
 
-  /** 처음 실행: 짧은 안내 → 플레이 기록 동의 (기본 꺼짐) → 시작 */
-  private firstRun(done: () => void): void {
-    this.showIntro(() => {
-      const el = consentOverlay(this.settings.locale, (agree) => {
-        el.remove();
-        this.save = setTelemetryConsent(this.save, agree);
-        this.game.setConsent(agree);
-        this.opts.storage.set(FIRST_RUN_KEY, '1');
-        done();
-      });
-      this.overlays.append(el);
+  /** 처음 실행: 플레이 기록 동의 (기본 꺼짐) */
+  private askConsent(done: () => void): void {
+    const el = consentOverlay(this.settings.locale, (agree) => {
+      el.remove();
+      this.save = setTelemetryConsent(this.save, agree);
+      this.game.setConsent(agree);
+      this.opts.storage.set(FIRST_RUN_KEY, '1');
+      done();
     });
+    this.overlays.append(el);
   }
 
-  private showIntro(done: () => void): void {
-    const el = introOverlay(this.settings.locale, () => {
+  private showTutorial(done: () => void): void {
+    const el = tutorialOverlay(this.settings.locale, () => {
       el.remove();
       done();
     });
@@ -245,7 +297,7 @@ export class App {
     this.tod = next;
     this.stage.dataset.tod = next;
     this.opts.root.style.setProperty('--app-bg', next === 'night' ? '#0c0818' : '#2a1a30');
-    if (this.game) this.refreshScene(fade ? 2000 : 0);
+    this.refreshScene(fade ? 2000 : 0);
   }
 
   /** (디버그·점검) 밤/낮 고정. null이면 현지 시각대로 */
@@ -255,6 +307,12 @@ export class App {
   }
 
   private refreshScene(fadeMs: number): void {
+    // 첫 화면: 처음 상태(Lv0)의 거실
+    if (!this.game) {
+      this.scene.show(sceneFile('living', '2000s', this.tod, 0), 1, 0, fadeMs);
+      this.scene.setDim(false);
+      return;
+    }
     const tab = this.tabs.current;
     const kind = TAB_SCENE[tab];
     const file = sceneFile(kind, artEraFor(this.game.eraId), this.tod, this.game.interiorLevel);
@@ -327,6 +385,11 @@ export class App {
   }
 
   private onVisibility(hidden: boolean): void {
+    if (!this.game) {
+      this.music.setBackground(hidden);
+      if (!hidden) this.applyTod(true);
+      return;
+    }
     this.loop.setHidden(hidden);
     this.music.setBackground(hidden);
     this.game.track('app_session', { phase: hidden ? 'background' : 'foreground' }, this.opts.now());
@@ -521,9 +584,9 @@ export class App {
             this.game.setConsent(on);
             this.persist(true);
           },
-          replayIntro: () => {
+          replayTutorial: () => {
             this.overlays.querySelector('.overlay.settings')?.remove();
-            this.showIntro(() => undefined);
+            this.showTutorial(() => undefined);
           },
           close: () => {
             this.game.track('screen_view', { screen: 'settings', dwellMs: this.opts.now() - opened }, this.opts.now());
@@ -561,7 +624,7 @@ export class App {
 
   /** 엔진이 저장을 원하면(또는 force) 세이브를 기기에 쓴다 */
   persist(force = false): void {
-    if (this.saveLocked) return;
+    if (this.saveLocked || !this.game) return;
     if (!force && this.game.pendingSaveReasons.length === 0) {
       this.saveMusicSettings();
       return;
@@ -583,7 +646,8 @@ export class App {
     const el = pnl(`toast ${kind}`, text);
     this.toasts.append(el);
     while (this.toasts.children.length > 3) this.toasts.firstElementChild?.remove();
-    window.setTimeout(() => el.remove(), 2400);
+    // 긴 안내는 읽을 시간을 더 준다 (2.4초 ~ 4초)
+    window.setTimeout(() => el.remove(), Math.min(4000, Math.max(2400, text.length * 110)));
   }
 
   // ───────── 디버그용 (debug.ts·점검 스크립트에서만) ─────────

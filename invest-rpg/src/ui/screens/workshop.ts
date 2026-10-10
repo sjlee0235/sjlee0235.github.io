@@ -1,7 +1,7 @@
 // 작업실: 인형을 누르면 눈 하나 → 눈 둘 → 완성(+3코인은 지급 예정으로). 인형 100개를 채우면 바로 지급되고
 // 지급 예정 +0, 완성 0개로 돌아간다 (엔진 'batch' 지급).
 // - 배경 그림은 눈 0·1·2개 세 칸 시트 (App 장면 층의 칸 = 지금 인형의 눈 수)
-// - 진행 토스트 "눈 N개 | 완성 M개" (위 548, Lv0만 606), 안내 토스트 (위 716)
+// - 진행 토스트 "눈 N개 | 완성 M개" (위 548, Lv0만 606), 안내 문구는 왼쪽 위 (사용자 요청으로 시안의 위 716에서 옮김)
 
 import type { Screen, UiContext } from '../context.ts';
 import { h } from '../dom.ts';
@@ -29,9 +29,8 @@ export class WorkshopScreen implements Screen {
     this.progressIn = h('span', {});
     this.progress = pnl('toast-pnl', this.progressIn);
     this.progress.style.height = '36px';
-    const guide = pnl('toast-pnl', ctx.t('work.payoutNote'));
-    guide.style.top = '716px';
-    guide.style.height = '36px';
+    // 안내 문구는 위쪽 왼쪽 (NEWS! 아래). 인테리어 0~7단계 모두 전구·공구판·시계와 겹치지 않는 빈 벽
+    const guide = pnl('work-guide', ctx.t('work.payoutNote'));
     this.hit = h('button', { class: 'hit doll-hit', 'aria-label': ctx.t('work.dollLabel') });
     this.hit.addEventListener('pointerdown', (e) => {
       e.preventDefault();

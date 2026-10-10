@@ -9,6 +9,7 @@ import { localize, t as tr } from '../i18n/index.ts';
 import type { AppSettings } from '../settings/settings.ts';
 import { h } from './dom.ts';
 import { pbtn, pnl } from './kit.ts';
+import { titleSvg } from './title.ts';
 import { finalView, settlementView } from './viewModels.ts';
 
 type Child = Node | string | null | undefined | false;
@@ -107,17 +108,71 @@ export function consentOverlay(locale: Locale, onAnswer: (agree: boolean) => voi
   return dialog('consent', t('telemetry.consentTitle'), [h('p', { class: 'note', style: 'color:var(--text)' }, t('telemetry.consentBody')), h('p', { class: 'note' }, t('telemetry.later'))], [no, yes]);
 }
 
-// ───────── 처음 안내 (튜토리얼 대신 짧은 안내 창) ─────────
+// ───────── 첫 화면: 제목 "역전의 방" + 이어하기 / 새로하기 ─────────
 
-export function introOverlay(locale: Locale, onDone: () => void): HTMLElement {
+export function titleScreen(locale: Locale, hasSave: boolean, handlers: { continue(): void; newGame(): void }): HTMLElement {
   const t = (k: string) => tr(locale, k);
-  const ok = pbtn('accent', t('intro.start'));
-  ok.addEventListener('click', onDone);
-  return dialog(
-    'intro',
-    t('intro.title'),
-    [1, 2, 3, 4, 5].map((i) => h('p', { class: 'note', style: 'color:var(--text)' }, t(`intro.p${i}`))),
-    [ok],
+  const logo = h('h1', { class: 'title-logo' });
+  logo.innerHTML = titleSvg(t('title.name'), 5);
+  const cont = pbtn(hasSave ? 'accent' : 'off', t('title.continue'));
+  cont.disabled = !hasSave;
+  if (!hasSave) cont.setAttribute('aria-disabled', 'true');
+  cont.addEventListener('click', () => {
+    if (hasSave) handlers.continue();
+  });
+  const fresh = pbtn('', t('title.newGame'));
+  fresh.addEventListener('click', handlers.newGame);
+  return h('div', { class: 'title-screen' }, logo, h('div', { class: 'title-buttons' }, cont, fresh));
+}
+
+/** 저장된 진행이 있는데 '새로하기'를 누르면 */
+export function confirmNewOverlay(locale: Locale, onAnswer: (ok: boolean) => void): HTMLElement {
+  const t = (k: string) => tr(locale, k);
+  const no = pbtn('', t('common.cancel'));
+  const yes = pbtn('accent', t('title.confirmYes'));
+  no.addEventListener('click', () => onAnswer(false));
+  yes.addEventListener('click', () => onAnswer(true));
+  return dialog('confirm-new', t('title.confirmTitle'), [h('p', { class: 'note', style: 'color:var(--text)' }, t('title.confirmBody'))], [no, yes]);
+}
+
+// ───────── 튜토리얼: 이야기(김역전) → 게임 방법 → 방 꾸미기와 작업 ─────────
+
+export const TUTORIAL_PAGES = [
+  { title: 'tutorial.storyTitle', lines: ['tutorial.story1', 'tutorial.story2', 'tutorial.story3', 'tutorial.story4'] },
+  { title: 'tutorial.howTitle', lines: ['tutorial.how1', 'tutorial.how2', 'tutorial.how3'] },
+  { title: 'tutorial.roomTitle', lines: ['tutorial.room1', 'tutorial.room2', 'tutorial.room3'] },
+] as const;
+
+export function tutorialOverlay(locale: Locale, onDone: () => void): HTMLElement {
+  const t = (k: string) => tr(locale, k);
+  let page = 0;
+  const hd = h('div', { class: 'hd' });
+  const body = h('div', { class: 'body' });
+  const dots = h('div', { class: 'page-dots' });
+  const skip = pbtn('', t('tutorial.skip'));
+  const next = pbtn('accent', '');
+  const render = () => {
+    const p = TUTORIAL_PAGES[page]!;
+    hd.textContent = t(p.title);
+    body.replaceChildren(...p.lines.map((k) => h('p', { class: page === 0 ? 'story' : 'note', style: page === 0 ? '' : 'color:var(--text)' }, t(k))));
+    dots.replaceChildren(...TUTORIAL_PAGES.map((_, i) => h('span', { class: `pip ${i <= page ? 'on' : ''}` })));
+    const last = page === TUTORIAL_PAGES.length - 1;
+    next.querySelector('.face')!.textContent = t(last ? 'tutorial.start' : 'tutorial.next');
+    skip.hidden = last;
+  };
+  skip.addEventListener('click', onDone);
+  next.addEventListener('click', () => {
+    if (page === TUTORIAL_PAGES.length - 1) onDone();
+    else {
+      page++;
+      render();
+    }
+  });
+  render();
+  return h(
+    'div',
+    { class: 'overlay tutorial', role: 'dialog', 'aria-modal': 'true' },
+    pnl('dialog', hd, body, h('div', { class: 'foot' }, skip, next), dots),
   );
 }
 
@@ -129,7 +184,7 @@ export interface SettingsHandlers {
   credits: { title: string; artist: string; text: string }[];
   telemetryConsent: boolean;
   setConsent(on: boolean): void;
-  replayIntro(): void;
+  replayTutorial(): void;
 }
 
 export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTMLElement {
@@ -167,9 +222,9 @@ export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTM
   consent.checked = handlers.telemetryConsent;
   consent.addEventListener('change', () => handlers.setConsent(consent.checked));
 
-  const intro = pbtn('', t('intro.replay'));
+  const intro = pbtn('', t('tutorial.replay'));
   intro.style.height = '34px';
-  intro.addEventListener('click', handlers.replayIntro);
+  intro.addEventListener('click', handlers.replayTutorial);
 
   const close = pbtn('accent', t('common.close'));
   close.addEventListener('click', handlers.close);

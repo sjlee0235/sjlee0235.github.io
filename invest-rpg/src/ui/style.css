@@ -289,3 +289,24 @@ button { cursor: pointer; }
 .dialog input[type='range'] { accent-color: var(--accent); width: 130px; }
 .dialog input[type='checkbox'] { accent-color: var(--accent); width: 20px; height: 20px; }
 .dialog summary { cursor: pointer; }
+
+/* ───────── 첫 화면 (제목 "역전의 방" + 이어하기 / 새로하기) ───────── */
+.stage.at-title .hud, .stage.at-title .tabbar, .stage.at-title .view-host { display: none; }
+.stage.at-title .scene-img { filter: brightness(.62) saturate(.9); }
+.title-screen { position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; }
+.title-logo { margin: 120px 0 0; line-height: 0; filter: drop-shadow(0 0 10px rgba(255, 194, 74, .35)); animation: title-in .6s steps(6) both; }
+.title-logo svg { image-rendering: pixelated; }
+@keyframes title-in { from { transform: translateY(-16px); opacity: 0; } }
+.title-buttons { position: absolute; top: 560px; display: flex; flex-direction: column; gap: 14px; }
+.title-buttons .pbtn { width: 230px; height: 54px; font-size: 18px; font-weight: 700; letter-spacing: .04em; }
+.title-buttons .pbtn.off { cursor: default; }
+.title-buttons .pbtn.off .face { background: var(--btn); color: var(--mute); }
+
+/* ───────── 튜토리얼 (이야기 → 게임 방법 → 방 꾸미기와 작업) ───────── */
+.tutorial .body { min-height: 300px; }
+.tutorial .story { margin: 0; font-size: 14px; line-height: 1.7; color: var(--text); }
+.page-dots { display: flex; justify-content: center; gap: 4px; padding: 0 0 12px; }
+
+/* 작업실 안내: 왼쪽 위 (NEWS! 아래, 칩 옆). 모든 인테리어 단계에서 전구·공구판·시계를 가리지 않는 자리 */
+.work-guide { position: absolute; left: 12px; top: 50px; width: 150px; z-index: 15; }
+.work-guide .in { padding: 6px 10px; font-size: 12px; font-weight: 500; line-height: 1.45; word-break: keep-all; }

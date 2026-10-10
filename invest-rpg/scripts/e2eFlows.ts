@@ -1,10 +1,10 @@
 // 화면 흐름 점검 (브라우저): npm run e2e
-// 1) 처음 실행: 안내 → 기록 동의(기본 꺼짐) → 게임 시작, 다시 열면 안내 없음
+// 1) 첫 화면(역전의 방): 새로하기 → 튜토리얼(김역전 이야기) → 기록 동의(기본 꺼짐) → 게임, 이어하기, 저장이 있을 때 새로하기 확인 창
 // 2) 앱 업데이트로 시대 중간에 정산된 뒤 '확인' → 다음 시대가 실제로 흘러간다 (가상 3시대)
 // 3) 마지막 시대까지 끝낸 판을 다시 열면 최종 요약이 보이고, 새 판이 저장되지 않는다
 // 4) 숨긴 탭에서 열면 처음부터 일시정지
 // 5) 매매: 종목 누르기 → 최대 → [매수] 바로 체결 → 즐겨찾기 맨 위 → [매도]로 전량 매도, NEWS! → 주식창
-// 6) 인테리어: 2,000코인 내고 한 단계, 배경 그림이 바뀌고 다시 열어도 그대로, 코인이 모자라면 안내
+// 6) 인테리어: 현금 2,000코인 내고 한 단계, 배경 그림이 바뀌고 다시 열어도 그대로, 현금이 모자라면 매도 안내
 // 7) 작업실: 인형 100개째에 바로 지급 → 지급 예정 +0, 완성 0개
 // 8) 강아지 5번 연속 터치 → 배 까기 + 하트, 밤/낮 바꾸기
 // 시간을 기다리지 않도록 디버그 기능(window.__debug)을 쓴다.
@@ -44,23 +44,51 @@ const watchErrors = (page: Page) => {
 };
 
 try {
-  // ── 1) 처음 실행 ──
+  // ── 1) 첫 화면 → 새로하기 → 튜토리얼(이야기) → 동의 → 게임 / 이어하기 / 저장이 있을 때 새로하기 ──
   {
     const ctx = await newCtx();
     const page = await ctx.newPage();
     const errors = watchErrors(page);
-    await open(page, '?debug=1&seed=3&fresh=1');
-    check(await page.locator('.overlay.intro').isVisible(), '처음 열면 안내 창');
-    const before = await game<number>(page, 'g.remainingSeconds');
-    await page.locator('.overlay.intro .foot .pbtn').click();
-    check(await page.locator('.overlay.consent').isVisible(), '안내 다음에 플레이 기록 동의 창');
+    await page.goto(`${url}?debug=1&seed=3`);
+    await page.waitForFunction(() => '__debug' in window);
+    await page.addStyleTag({ content: '.debug{display:none!important}' });
+    check(await page.locator('.title-screen').isVisible(), '첫 화면');
+    check((await page.locator('.title-logo svg').getAttribute('aria-label')) === '역전의 방', '제목 "역전의 방" 도트 글자');
+    check(await page.locator('.title-buttons .pbtn').first().isDisabled(), '저장이 없으면 이어하기를 누를 수 없다');
+    await page.locator('.title-buttons .pbtn').nth(1).click(); // 새로하기
+    check(!(await page.locator('.overlay.confirm-new').isVisible()), '저장이 없으면 확인 창 없이 바로');
+    check(((await page.locator('.overlay.tutorial .hd').textContent()) ?? '') === '김역전의 이야기', '튜토리얼 첫 장은 김역전의 이야기');
+    check(((await page.locator('.overlay.tutorial .body').textContent()) ?? '').includes('인생역전'), '이야기: 인생역전');
+    await page.locator('.overlay.tutorial .foot .pbtn').nth(1).click();
+    await page.locator('.overlay.tutorial .foot .pbtn').nth(1).click();
+    await page.locator('.overlay.tutorial .foot .pbtn').nth(1).click(); // 시작하기
+    check(await page.locator('.overlay.consent').isVisible(), '튜토리얼 다음에 플레이 기록 동의 창 (처음 한 번)');
     await page.locator('.overlay.consent .foot .pbtn').first().click(); // 동의하지 않음
     check(!(await game<boolean>(page, 'g.telemetryConsent')), '동의하지 않으면 기록 꺼짐 (기본)');
     await dbg(page, 'setTimeScale', 10);
-    await page.waitForTimeout(1200);
-    check((await game<number>(page, 'g.remainingSeconds')) < before, '안내를 닫으면 시간이 흐른다');
-    await open(page, '?debug=1&seed=3');
-    check(!(await page.locator('.overlay.intro').isVisible()), '다시 열면 안내 없음');
+    await page.waitForTimeout(1500);
+    const left = await game<number>(page, 'g.remainingSeconds');
+    check(left < 7200, '시작하면 시간이 흐른다');
+    await page.evaluate(() => (window as unknown as { __debug: { app: { persist(f: boolean): void } } }).__debug.app.persist(true));
+
+    await page.goto(`${url}?debug=1&seed=3`);
+    await page.waitForFunction(() => '__debug' in window);
+    check(await page.locator('.title-buttons .pbtn').first().isEnabled(), '저장이 있으면 이어하기');
+    await page.locator('.title-buttons .pbtn').first().click();
+    check(!(await page.locator('.overlay.tutorial').isVisible()) && !(await page.locator('.overlay.consent').isVisible()), '이어하기는 튜토리얼·동의 없이');
+    check((await game<number>(page, 'g.remainingSeconds')) <= left, '이어하기: 저장된 시점부터');
+
+    await page.goto(`${url}?debug=1&seed=4`);
+    await page.waitForFunction(() => '__debug' in window);
+    await page.locator('.title-buttons .pbtn').nth(1).click();
+    check(await page.locator('.overlay.confirm-new').isVisible(), '저장이 있는데 새로하기 → 안내 창');
+    await page.locator('.overlay.confirm-new .foot .pbtn').first().click(); // 취소
+    check(await page.locator('.title-screen').isVisible() && (await page.evaluate(() => localStorage.getItem('invest-rpg.save'))) !== null, '취소하면 첫 화면 그대로, 저장 그대로');
+    await page.locator('.title-buttons .pbtn').nth(1).click();
+    await page.locator('.overlay.confirm-new .foot .pbtn').nth(1).click(); // 새로 시작
+    await page.locator('.overlay.tutorial .foot .pbtn').first().click(); // 건너뛰기
+    check(!(await page.locator('.overlay.consent').isVisible()), '동의는 처음 한 번만 묻는다');
+    check((await game<number>(page, 'g.remainingSeconds')) === 7200 && (await game<number>(page, 'g.cash')) === 10_000, '새로하기: 처음부터 (2:00:00, 10,000코인)');
     check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
   }
@@ -147,6 +175,14 @@ try {
     check(firstRow === name, '산 종목은 즐겨찾기로 맨 위에');
     const cash = await game<number>(page, 'g.cash');
     check(cash < 1100, `최대 매수 뒤 남은 현금이 1주 값 안팎보다 적다 (${cash})`);
+    // 총자산은 많아도 현금이 2,000 미만이면 인테리어를 살 수 없다
+    await dbg(page, 'tab', 'living_room');
+    await page.locator('.upgrade .pbtn').click();
+    await page.waitForTimeout(150);
+    check((await game<number>(page, 'g.interiorLevel')) === 0 && (await game<number>(page, 'g.cash')) === cash, '주식만 있고 현금이 2,000 미만이면 인테리어 안 됨');
+    check(((await page.locator('.toast').last().textContent()) ?? '') === '현금이 부족합니다. 주식을 매도해 현금을 확보하세요.', '"현금이 부족합니다. 주식을 매도해 현금을 확보하세요."');
+    await dbg(page, 'tab', 'trading');
+    await page.waitForTimeout(100);
     await page.locator('.qty-row .max').click(); // 더 살 수 없으면 '최대' = 보유 수량
     check(Number(await page.locator('.qty-box input').inputValue()) === qty, '살 수 없을 때 최대 = 보유 수량 전부');
     await page.locator('.trade-row .sell').click();
@@ -185,7 +221,7 @@ try {
     check((await game<number>(page, 'g.interiorLevel')) === 5 && (await game<number>(page, 'g.cash')) === 0, `현금만큼만 올라간다 (Lv${await game<number>(page, 'g.interiorLevel')})`);
     await page.locator('.upgrade .pbtn').click();
     await page.waitForTimeout(150);
-    check(((await page.locator('.toast').last().textContent()) ?? '').includes('코인이 부족해요'), '코인이 모자라면 "코인이 부족해요"');
+    check(((await page.locator('.toast').last().textContent()) ?? '') === '현금이 부족합니다. 주식을 매도해 현금을 확보하세요.', '현금이 모자라면 매도 안내');
     check(await page.locator('.upgrade .pbtn.poor').isVisible(), '코인이 모자라면 버튼이 흐려진다');
     await open(page, '?debug=1&seed=10&nointro=1');
     check((await game<number>(page, 'g.interiorLevel')) === 5, '다시 열어도 인테리어 단계 그대로');
@@ -215,7 +251,9 @@ try {
     await page.waitForTimeout(700);
     check(((await page.locator('.pend-chip').textContent()) ?? '').includes('+0'), '지급 뒤 지급 예정 +0');
     check(((await page.locator('.workshop .toast-pnl').first().textContent()) ?? '').includes('완성 0개'), '지급 뒤 완성 0개');
-    check(((await page.locator('.workshop .toast-pnl').nth(1).textContent()) ?? '') === '인형 100개를 완성하면 보상이 지급돼요', '안내 문구');
+    check(((await page.locator('.work-guide').textContent()) ?? '') === '인형 100개를 완성하면 보상이 지급돼요.', '안내 문구');
+    const box = await page.locator('.work-guide').boundingBox();
+    check(box !== null && box.y < 120 && box.x + box.width < 180, `안내 문구는 왼쪽 위 (${JSON.stringify(box)})`);
     check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
   }
