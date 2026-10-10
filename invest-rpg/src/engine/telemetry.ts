@@ -22,7 +22,7 @@ export const TELEMETRY_SCHEMA_VERSION = 3;
  * 엔진 규칙 버전. 같은 시드에서 가격·뉴스가 달라지는 변경(규칙·난수 순서)이 생기면 올린다.
  * 분석할 때 이 값이 다른 기록끼리는 리플레이 결과를 섞지 않는다.
  */
-export const ENGINE_VERSION = '0.5.0';
+export const ENGINE_VERSION = '0.6.0';
 
 /** 어떤 값이든 짧은 지문(해시) 문자열로. 키 순서가 달라도 같은 값이면 같은 지문 */
 export function fingerprint(value: unknown): string {
@@ -59,7 +59,9 @@ export type SavedActionData =
   | { kind: 'trade'; tick: number; side: 'buy' | 'sell'; stockId: string; quantity: number }
   | { kind: 'deposit'; tick: number; amount: number; source: 'work' | 'purchase' | 'ad' | 'other' }
   /** 작업: 이 틱에 완성한 인형 수 (지급 방식에 따라 정산 예정 또는 즉시 입금) */
-  | { kind: 'work'; tick: number; dolls: number };
+  | { kind: 'work'; tick: number; dolls: number }
+  /** 인테리어 업그레이드: 올린 뒤 단계 (보유 현금에서 출금) */
+  | { kind: 'interior'; tick: number; level: number };
 
 /** 종목 하나에 실제 적용된 변동률 (0.1% 단위) */
 export interface StockRate {
@@ -109,6 +111,9 @@ export interface EngineEventMap {
     priorActions: SavedActionData[];
     /** 이전 시대들의 수익률 (누적 수익률 계산용) */
     pastEraReturns: number[];
+    /** 기록을 시작한 시대의 시작 인테리어 단계와 작업 묶음 (리플레이용) */
+    interiorLevel?: number;
+    workCarry?: { pending: number; batchDolls: number };
   };
   /** 시대 시작과 그 판의 추첨 결과 */
   era_start: {
@@ -155,7 +160,11 @@ export interface EngineEventMap {
     context: DecisionContext;
   };
   /** 작업으로 인형 완성 (틱마다 묶어서): 완성 수, 적립 코인, 지급 방식 */
-  work_credit: { dolls: number; coins: number; payoutMode: 'era_end' | 'immediate' };
+  work_credit: { dolls: number; coins: number; payoutMode: 'batch' | 'era_end' | 'immediate' };
+  /** 'batch' 지급: 인형 묶음을 다 채워 모아 둔 작업 수입을 입금 */
+  work_payout: { coins: number; dolls: number; cashAfter: number };
+  /** 인테리어 업그레이드 (새 단계, 낸 코인, 낸 뒤 현금) */
+  interior_upgrade: { level: number; cost: number; cashAfter: number };
   /** 외부 유입 입금. inEra=false면 시대 사이(정산 뒤) 입금이라 다음 시대 시작 자금에 들어간다 */
   deposit: { amount: number; source: 'work' | 'purchase' | 'ad' | 'other'; cashAfter: number; inEra: boolean };
   /** 거부된 주문 (잔고 부족 등). 화면이 헷갈리게 만드는 곳을 찾는 데 쓴다 */
@@ -221,8 +230,12 @@ export interface AppEventMap {
   order_abandoned: { stockId: string; side: 'buy' | 'sell'; dwellMs: number };
   /** 거실 LP 터치 (바뀐 장르) */
   lp_touch: { genre: string };
-  /** 거실 강아지 터치 (3번째마다 반응 이름, 아니면 null) */
-  dog_touch: { reaction: string | null };
+  /** 거실 강아지 터치: 연속 터치 횟수와 반응 (happy = 서서 웃기, belly = 5번 연속 → 배 까고 눕기) */
+  dog_touch: { count: number; reaction: 'happy' | 'belly' | null };
+  /** 강아지가 배를 까고 누움 (5번 연속 터치에 도달) */
+  dog_belly: Record<string, never>;
+  /** 인테리어 업그레이드 버튼을 눌렀지만 코인이 부족 */
+  interior_insufficient: { level: number; cash: number };
   /** 설정 변경 (언어, 색상, 볼륨 등) */
   setting_changed: { key: string; value: string };
   /** 튜토리얼 단계 진입·건너뛰기·다시 보기 */

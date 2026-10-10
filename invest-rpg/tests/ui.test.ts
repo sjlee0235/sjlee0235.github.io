@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { MockAudioBackend, MusicPlayer, type MusicTrack } from '../src/audio/music.ts';
 import musicData from '../src/data/audio/music.json' with { type: 'json' };
 import { createPresentationRng, newDogState, petDog } from '../src/engine/dogPetting.ts';
+import { DEFAULT_CONFIG } from '../src/engine/config.ts';
 import { TabController } from '../src/engine/homeActivities.ts';
 import { PublicGame, type PublicAdvanceResult } from '../src/engine/publicView.ts';
 import { fmtNum, fmtPct, fmtTime } from '../src/ui/format.ts';
@@ -314,8 +315,8 @@ describe('작업실·정산 창', () => {
     expect(tabs.topBar().cash).toBe(cash);
   });
 
-  it('정산 창: 투자 결과 + 작업 수입 = 합계', () => {
-    const g = newGame();
+  it('정산 창: 투자 결과 + 작업 수입 = 합계 (시대 종료 합산 모드)', () => {
+    const g = PublicGame.create({ eras: [era], seed: 4, config: { work: { ...DEFAULT_CONFIG.work, payoutMode: 'era_end' } } });
     const t0 = 1_000_000;
     for (let i = 0; i < 9; i++) g.workTouch(t0 + i * 200);
     const s = g.getStockList()[0]!;

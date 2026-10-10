@@ -5,7 +5,8 @@
 // - 튜토리얼 완료 여부, 플레이 기록 동의 여부
 // - 게임 진행: 시드, 시대 순번·id, 그 시대 시작 자금, 시대별 추첨 결과, 지난 시대 수익률
 // - 버전: 엔진 버전, 콘텐츠 버전(시대 데이터 지문), 밸런스 지문(설정값 지문)
-// - 이번 시대에 한 행동(매매·입금) + 저장 순간의 상태 스냅샷(틱, 종목 현재가, 계좌·보유 종목, 즐겨찾기, 수익률 진행)
+// - 이번 시대에 한 행동(매매·입금·인테리어) + 저장 순간의 상태 스냅샷(틱, 종목 현재가, 계좌·보유 종목, 즐겨찾기, 수익률 진행)
+// - 시대 시작 때의 인테리어 단계·작업 묶음 (리플레이 출발점). 인테리어 단계와 작업 묶음은 시대를 넘어 이어진다
 //
 // 불러오기 정책
 // 1) 버전이 모두 같으면: 같은 시드로 처음부터 행동을 다시 넣으며 저장한 틱까지 빨리 돌린다(리플레이).
@@ -62,6 +63,10 @@ export interface GameSnapshot {
   stateHash: string;
   /** 배속 (1배/2배). 게임 결과와 무관한 설정이라 지문에는 넣지 않는다 */
   speed?: 1 | 2;
+  /** 이번 시대 시작 때의 인테리어 단계 (없으면 0) */
+  eraStartInterior?: number;
+  /** 이번 시대 시작 때의 작업 묶음 (없으면 0) */
+  eraStartWork?: { pending: number; batchDolls: number };
 }
 
 export interface SaveData {
@@ -132,6 +137,8 @@ export function snapshotGame(game: Game): GameSnapshot {
     state: game.captureState(),
     stateHash: stateHash(game),
     speed: game.getSpeed(),
+    eraStartInterior: game.eraStartCarry.interiorLevel,
+    eraStartWork: game.eraStartCarry.work,
   };
 }
 
@@ -191,6 +198,7 @@ export function restoreGame(
     const game = new Game({
       eras, seed: g.seed, startEraIndex: g.eraIndex, startCash: g.eraStartCash, draws: g.draws,
       pastEraReturns: g.pastEraReturns, ...(g.pastEraSummaries ? { pastEraSummaries: g.pastEraSummaries } : {}),
+      interiorLevel: g.eraStartInterior ?? 0, workCarry: g.eraStartWork ?? { pending: 0, batchDolls: 0 },
       telemetryConsent: consent, ...(config ? { config } : {}),
     });
     if (fastForward(game, g.state.tick, g.actions)) {
@@ -229,17 +237,24 @@ function settleFromSnapshot(
     summaries = [...past, g.currentEraSummary ?? { eraId: g.eraId, returnPct: g.currentEraReturnPct, workIncome: 0, finalTotal: cash }];
   } else {
     // 스냅샷 가격으로 청산 → 투자 수익률 → 정산 예정 작업 수입 합산 (finalizeEra와 같은 순서)
+    // batch 지급이면 지급 예정 코인은 합산하지 않고 다음 시대로 이어진다
     const account = new Account(0, cfg.feeRate);
     account.restoreState(g.state);
-    const pending = g.state.work?.pending ?? 0;
+    const pending = cfg.work.payoutMode === 'era_end' ? (g.state.work?.pending ?? 0) : 0;
     settlement = {
       ...finalizeEra(g.eraId, g.eraStartCash, account, new Map(Object.entries(g.state.prices)), g.state.tick, g.state.twr, pending),
       settledOnVersionChange: true,
     };
     cash = settlement.finalTotal;
-    summaries = [...past, { eraId: g.eraId, returnPct: settlement.returnPct, workIncome: settlement.workIncome, finalTotal: cash }];
+    summaries = [...past, {
+      eraId: g.eraId, returnPct: settlement.returnPct, workIncome: settlement.workIncome + settlement.deposits.work, finalTotal: cash,
+    }];
   }
   const returns = summaries.map((x) => x.returnPct);
+  const interiorLevel = g.state.interiorLevel ?? g.eraStartInterior ?? 0;
+  const workCarry = cfg.work.payoutMode === 'era_end'
+    ? { pending: 0, batchDolls: 0 }
+    : { pending: g.state.work?.pending ?? 0, batchDolls: g.state.work?.batchDolls ?? 0 };
 
   // 다음 시대: 같은 id의 시대 다음 순서. id가 사라졌으면 순서값(order)으로 찾는다
   const sorted = sortEras(eras);
@@ -248,7 +263,7 @@ function settleFromSnapshot(
   const game = nextIndex >= 0 && nextIndex < sorted.length
     ? new Game({
         eras, seed: g.seed, startEraIndex: nextIndex, startCash: cash, pastEraReturns: returns, pastEraSummaries: summaries,
-        telemetryConsent: consent, ...(config ? { config } : {}),
+        interiorLevel, workCarry, telemetryConsent: consent, ...(config ? { config } : {}),
       })
     : null;
   const finalSummary: FinalSummary | null = game
@@ -258,6 +273,8 @@ function settleFromSnapshot(
         totalWorkIncome: summaries.reduce((a, e) => a + e.workIncome, 0),
         finalCoins: cash,
         cumulativeReturnPct: cumulativeReturnPct(returns),
+        unpaidWork: workCarry.pending,
+        interiorLevel,
       };
   return { status: 'settled_on_version_change', game, settlement, reason, finalSummary };
 }

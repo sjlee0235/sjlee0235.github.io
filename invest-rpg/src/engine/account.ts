@@ -180,6 +180,17 @@ export class Account {
     return { ok: true, deposit: { ...record } };
   }
 
+  /**
+   * 출금 (인테리어 구입). 보유 현금에서만 낸다 (평가금액·보유 종목은 그대로).
+   * 수익률 계산에서는 손실이 아니므로 시간가중수익률로 따로 처리한다 (game.ts).
+   */
+  withdraw(amount: number): { ok: true } | { ok: false; error: 'invalid-amount' | 'insufficient-cash' } {
+    if (!Number.isInteger(amount) || amount <= 0) return { ok: false, error: 'invalid-amount' };
+    if (amount > this.cash) return { ok: false, error: 'insufficient-cash' };
+    this.cash -= amount;
+    return { ok: true };
+  }
+
   getDeposits(): DepositRecord[] {
     return this.deposits.map((d) => ({ ...d }));
   }

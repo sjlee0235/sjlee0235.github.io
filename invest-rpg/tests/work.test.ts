@@ -9,6 +9,8 @@ import { applyTouch, newWorkState, TouchLimiter } from '../src/engine/work.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
 
 const era = makeSpecEra({ id: 'wk' });
+/** 시대 종료 합산 모드 (기본은 batch) */
+const ERA_END = { work: { ...DEFAULT_CONFIG.work, payoutMode: 'era_end' as const } };
 const threeEras = () => [
   makeSpecEra({ id: 'a', order: 1, seed: 1 }),
   makeSpecEra({ id: 'b', order: 2, seed: 2 }),
@@ -23,9 +25,9 @@ function touch(g: Game | PublicGame, n: number, startMs = 0) {
 }
 
 describe('작업 터치 규칙', () => {
-  it('기본값: 3터치에 인형 완성, 3코인, 초당 6터치, 시대 종료 지급, 상한 없음, 작업 종류 doll_eyes', () => {
-    expect(DEFAULT_CONFIG.work).toMatchObject({
-      type: 'doll_eyes', touchesPerDoll: 3, coinsPerDoll: 3, maxTouchesPerSec: 6, payoutMode: 'era_end', incomeCapPerEra: null,
+  it('기본값: 3터치에 인형 완성, 3코인, 초당 6터치, 100개 묶음 지급, 상한 없음, 작업 종류 doll_eyes', () => {
+    expect(DEFAULT_CONFIG.work).toEqual({
+      type: 'doll_eyes', touchesPerDoll: 3, coinsPerDoll: 3, maxTouchesPerSec: 6, payoutMode: 'batch', batchDolls: 100, incomeCapPerEra: null,
     });
   });
 
@@ -79,9 +81,9 @@ describe('작업 터치 규칙', () => {
   });
 });
 
-describe('시대 종료 지급 (기본 era_end)', () => {
+describe('시대 종료 지급 모드 (era_end)', () => {
   it('작업 중에는 현금이 변하지 않는다 (주문 가능 금액 그대로)', () => {
-    const g = new Game({ eras: [era], seed: 4 });
+    const g = new Game({ eras: [era], seed: 4, config: ERA_END });
     for (let i = 0; i < 100; i++) g.advanceTick();
     const cash = g.account.cash;
     const max = g.maxBuyQuantity(g.activeStocks[0]!.id);
@@ -93,8 +95,8 @@ describe('시대 종료 지급 (기본 era_end)', () => {
 
   it('시대 종료: 청산 → 투자 수익률(작업 제외) → 작업 수입 합산 → 다음 시대 시작 자금으로 이월', () => {
     const eras = threeEras();
-    const withWork = new Game({ eras, seed: 5 });
-    const noWork = new Game({ eras, seed: 5 });
+    const withWork = new Game({ eras, seed: 5, config: ERA_END });
+    const noWork = new Game({ eras, seed: 5, config: ERA_END });
     const act = (g: Game, work: boolean) => {
       while (g.phase === 'running') {
         const r = g.advanceTick();
@@ -117,7 +119,7 @@ describe('시대 종료 지급 (기본 era_end)', () => {
   });
 
   it('마지막 시대가 끝나면 최종 요약 (시대별 투자 수익률, 작업 수입, 최종 총 코인)', () => {
-    const g = new Game({ eras: threeEras(), seed: 6 });
+    const g = new Game({ eras: threeEras(), seed: 6, config: ERA_END });
     expect(() => g.getFinalSummary()).toThrow();
     for (let e = 0; e < 3; e++) {
       while (g.phase === 'running') {
@@ -139,7 +141,7 @@ describe('시대 종료 지급 (기본 era_end)', () => {
   });
 
   it('시대당 작업 수입 상한(기본 꺼짐)을 켜면 그 이상 쌓이지 않는다', () => {
-    const g = new Game({ eras: [era], seed: 7, config: { work: { ...DEFAULT_CONFIG.work, incomeCapPerEra: 10 } } });
+    const g = new Game({ eras: [era], seed: 7, config: { work: { ...ERA_END.work, incomeCapPerEra: 10 } } });
     touch(g, 30);
     expect(g.getWorkStatus()).toMatchObject({ pending: 10, earned: 10, dollsCompleted: 10 });
   });
@@ -203,25 +205,25 @@ describe('세이브와 기록', () => {
     }
   });
 
-  it('버전이 달라 자동 정산될 때도 정산 예정 작업 수입을 합산한다', () => {
-    const g = new Game({ eras: threeEras(), seed: 14 });
+  it('(era_end) 버전이 달라 자동 정산될 때도 정산 예정 작업 수입을 합산한다', () => {
+    const g = new Game({ eras: threeEras(), seed: 14, config: ERA_END });
     for (let i = 0; i < 500; i++) g.advanceTick();
     touch(g, 30);
     const cash = g.account.cash;
     const save = saveGame(createSaveData(), g);
-    const r = restoreGame({ ...save, game: { ...save.game!, engineVersion: 'old' } }, threeEras())!;
+    const r = restoreGame({ ...save, game: { ...save.game!, engineVersion: 'old' } }, threeEras(), ERA_END)!;
     if (r.status !== 'settled_on_version_change') throw new Error(r.status);
     expect(r.settlement!.workIncome).toBe(30);
     expect(r.settlement!.finalTotal).toBe(cash + 30);
     expect(r.game!.eraStartCash).toBe(cash + 30);
   });
 
-  it('마지막 시대에서 버전이 달라 정산되면 최종 요약을 돌려준다', () => {
-    const g = new Game({ eras: [era], seed: 15 });
+  it('(era_end) 마지막 시대에서 버전이 달라 정산되면 최종 요약을 돌려준다', () => {
+    const g = new Game({ eras: [era], seed: 15, config: ERA_END });
     for (let i = 0; i < 500; i++) g.advanceTick();
     touch(g, 15);
     const save = saveGame(createSaveData(), g);
-    const r = restoreGame({ ...save, game: { ...save.game!, engineVersion: 'old' } }, [era])!;
+    const r = restoreGame({ ...save, game: { ...save.game!, engineVersion: 'old' } }, [era], ERA_END)!;
     if (r.status !== 'settled_on_version_change') throw new Error(r.status);
     expect(r.game).toBeNull();
     expect(r.finalSummary!.totalWorkIncome).toBe(15);
@@ -252,5 +254,111 @@ describe('세이브와 기록', () => {
     g.setConsent(true);
     while (g.phase === 'running') g.advanceTick();
     expect(replay(buf.peek(), [era]).game.settlements[0]!.finalTotal).toBe(g.settlements[0]!.finalTotal);
+  });
+});
+
+describe('묶음 지급 (기본 batch): 인형 100개를 채우면 바로 지급', () => {
+  /** 다른 터치와 겹치지 않는 시각에서 n번 */
+  const touchAt = (g: Game | PublicGame, n: number, tick: number) => touch(g, n, tick * 1_000_000);
+
+  it('99개까지는 지급 예정에만 쌓이고 현금은 그대로, 100개째에 300코인 입금 → 지급 예정 0·완성 0', () => {
+    const g = new Game({ eras: [era], seed: 20 });
+    const cash = g.account.cash;
+    touchAt(g, 297, 1);
+    expect(g.getWorkStatus()).toMatchObject({ pending: 297, batchDolls: 99, batchSize: 100, eyes: 0 });
+    expect(g.account.cash).toBe(cash);
+    expect(g.lastWorkPayout).toBeNull();
+    touchAt(g, 2, 2);
+    expect(g.getWorkStatus()).toMatchObject({ pending: 297, batchDolls: 99, eyes: 2 });
+    touchAt(g, 1, 3);
+    expect(g.getWorkStatus()).toMatchObject({ pending: 0, batchDolls: 0, eyes: 0, dollsCompleted: 100, earned: 300 });
+    expect(g.account.cash).toBe(cash + 300);
+    expect(g.lastWorkPayout).toEqual({ coins: 300, seq: 1 });
+    expect(g.pendingSaveReasons).toContain('deposit');
+    touchAt(g, 300, 4);
+    expect(g.account.cash).toBe(cash + 600);
+    expect(g.lastWorkPayout).toEqual({ coins: 300, seq: 2 });
+  });
+
+  it('지급은 입금으로 처리: 시간가중수익률은 그대로 (매매 없으면 0%)', () => {
+    const g = new Game({ eras: [era], seed: 21 });
+    for (let i = 0; i < 50; i++) g.advanceTick();
+    touchAt(g, 300, 50);
+    expect(g.currentReturnPct).toBeCloseTo(0, 9);
+    while (g.phase === 'running') g.advanceTick();
+    const s = g.settlements[0]!;
+    expect(s.deposits.work).toBe(300);
+    expect(s.workIncome).toBe(0);
+    expect(s.returnPct).toBeCloseTo(0, 9);
+    expect(s.profitAmount).toBe(0);
+    expect(g.eraSummaries[0]!.workIncome).toBe(300);
+  });
+
+  it('다 못 채운 묶음은 시대가 바뀌어도 이어지고, 다음 시대에서 100개를 채우면 지급', () => {
+    const g = new Game({ eras: threeEras(), seed: 22 });
+    touchAt(g, 150, 1); // 50개
+    while (g.phase === 'running') g.advanceTick();
+    const s = g.settlements[0]!;
+    expect(s.workIncome).toBe(0);
+    expect(s.deposits.work).toBe(0);
+    expect(s.finalTotal).toBe(s.investmentResult.coins);
+    g.startNextEra();
+    expect(g.getWorkStatus()).toMatchObject({ pending: 150, batchDolls: 50, dollsCompleted: 0 });
+    const cash = g.account.cash;
+    touchAt(g, 150, 2);
+    expect(g.account.cash).toBe(cash + 300);
+    expect(g.getWorkStatus()).toMatchObject({ pending: 0, batchDolls: 0, dollsCompleted: 50 });
+  });
+
+  it('마지막 시대가 끝나면 남은 지급 예정은 최종 요약에 unpaidWork로만', () => {
+    const g = new Game({ eras: [era], seed: 23 });
+    touchAt(g, 330, 1); // 110개: 100개 지급 + 10개(30코인) 남음
+    while (g.phase === 'running') g.advanceTick();
+    const f = g.getFinalSummary();
+    expect(f.totalWorkIncome).toBe(300);
+    expect(f.unpaidWork).toBe(30);
+    expect(f.finalCoins).toBe(10_000 + 300);
+  });
+
+  it('저장 → 불러오기: 두 번째 시대에서도 이어받은 묶음과 진행이 그대로 (상태 지문)', () => {
+    const a = new Game({ eras: threeEras(), seed: 24 });
+    touchAt(a, 200, 1); // 66개 + 눈 둘
+    while (a.phase === 'running') a.advanceTick();
+    a.startNextEra();
+    for (let i = 0; i < 100; i++) a.advanceTick();
+    touchAt(a, 110, 100); // 눈 둘 이어받음 → 1터치에 67개째, 남은 109터치 = 36개 + 눈 하나 → 103개: 지급 1번, 3개 남음
+    expect(a.getWorkStatus()).toMatchObject({ batchDolls: 3, pending: 9, eyes: 1 });
+    const r = restoreGame(JSON.parse(JSON.stringify(saveGame(createSaveData(), a))), threeEras())!;
+    expect(r.status).toBe('resumed');
+    expect(stateHash(r.game!)).toBe(stateHash(a));
+    expect(r.game!.getWorkStatus()).toEqual(a.getWorkStatus());
+  });
+
+  it('버전이 달라 자동 정산되면 지급 예정은 합산하지 않고 다음 시대로 이어진다', () => {
+    const g = new Game({ eras: threeEras(), seed: 25 });
+    for (let i = 0; i < 500; i++) g.advanceTick();
+    touchAt(g, 60, 500); // 20개, 60코인
+    const cash = g.account.cash;
+    const save = saveGame(createSaveData(), g);
+    const r = restoreGame({ ...save, game: { ...save.game!, engineVersion: 'old' } }, threeEras())!;
+    if (r.status !== 'settled_on_version_change') throw new Error(r.status);
+    expect(r.settlement!.workIncome).toBe(0);
+    expect(r.settlement!.finalTotal).toBe(cash);
+    expect(r.game!.getWorkStatus()).toMatchObject({ pending: 60, batchDolls: 20 });
+  });
+
+  it('묶음 지급이 섞인 판도 플레이 기록으로 리플레이된다 (work_payout 기록)', () => {
+    const buf = new TelemetryBuffer(100_000);
+    const g = new Game({ eras: [era], seed: 26, telemetry: buf, telemetryConsent: true });
+    while (g.phase === 'running') {
+      const r = g.advanceTick();
+      if (r.advanced && r.tick % 100 === 0) touchAt(g, 40, r.tick);
+    }
+    const payouts = buf.peek().filter((e) => e.type === 'work_payout');
+    expect(payouts.length).toBeGreaterThan(0);
+    const rp = replay(buf.peek(), [era]);
+    expect(rp.failedActions).toBe(0);
+    expect(rp.game.settlements[0]!.finalTotal).toBe(g.settlements[0]!.finalTotal);
+    expect(rp.game.getWorkStatus()).toMatchObject({ pending: g.getWorkStatus().pending, batchDolls: g.getWorkStatus().batchDolls });
   });
 });

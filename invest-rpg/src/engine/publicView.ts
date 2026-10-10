@@ -22,7 +22,7 @@ import type { Era } from '../data/schema.ts';
 import type { EraSettlement } from './eraManager.ts';
 import {
   Game, type FinalSummary, type GameOptions, type GamePhase, type GameSpeed, type GameTradeResult, type OrderPreview, type PauseReason,
-  type SaveReason, type WorkStatus,
+  type InteriorResult, type SaveReason, type WorkStatus,
 } from './game.ts';
 import type { TouchResult } from './work.ts';
 import type { ScheduledNews } from './newsEngine.ts';
@@ -420,10 +420,9 @@ export class PublicGame {
     this.g.toggleFavorite(this.internal(stockId));
   }
 
-  /** 외부 유입 입금 (인형 눈 붙이기·결제·광고 보상). 결제·광고 SDK는 앱이 붙이고, 결과 금액만 여기로 */
   // ───────── 작업실 ─────────
 
-  /** 작업실 터치 (nowMs = 실제 시각). 3번째 터치마다 인형 완성 → 정산 예정 작업 수입 +3 */
+  /** 작업실 터치 (nowMs = 실제 시각). 3번째 터치마다 인형 완성 → 지급 예정 +3, 100개를 채우면 바로 지급 */
   workTouch(nowMs: number): TouchResult {
     return this.g.workTouch(nowMs);
   }
@@ -440,8 +439,32 @@ export class PublicGame {
     return this.g.account.cash;
   }
 
+  /** 마지막 작업 수입 묶음 지급 (seq가 바뀌면 화면이 알림을 띄운다) */
+  get lastWorkPayout(): { coins: number; seq: number } | null {
+    return this.g.lastWorkPayout;
+  }
+
+  /** 외부 유입 입금 (결제·광고 보상). 결제·광고 SDK는 앱이 붙이고, 결과 금액만 여기로 */
   deposit(amount: number, source: DepositSource): DepositResult {
     return this.g.deposit(amount, source);
+  }
+
+  // ───────── 인테리어 ─────────
+
+  /** 인테리어 단계 (0~7, 세 화면 공통, 시대를 넘어 이어짐) */
+  get interiorLevel(): number {
+    return this.g.interiorLevel;
+  }
+  get interiorMaxLevel(): number {
+    return this.g.config.interior.maxLevel;
+  }
+  /** 다음 단계 값 (최고 단계면 null) */
+  get interiorNextCost(): number | null {
+    return this.g.interiorNextCost;
+  }
+  /** 한 단계 올리기 (보유 현금에서) */
+  upgradeInterior(): InteriorResult {
+    return this.g.upgradeInterior();
   }
 
   // ───────── 뉴스·해설·사후 공개 ─────────

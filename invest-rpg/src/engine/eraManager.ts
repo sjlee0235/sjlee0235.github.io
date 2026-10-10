@@ -86,7 +86,7 @@ export interface EraSettlement {
   endAssets: number;
   /** 수익률 % = 시간가중수익률(TWR). 입금이 없으면 (종료 자산 − 시작 자금) ÷ 시작 자금 × 100 과 같다 */
   returnPct: number;
-  /** 입금을 뺀 순손익 = 종료 자산 − 시작 자금 − 이번 시대 입금 합계 */
+  /** 입금·출금을 뺀 순손익 = 종료 자산 − 시작 자금 − 이번 시대 입금 합계 + 이번 시대 출금 합계 */
   profitAmount: number;
   /** 이번 시대 출처별 입금 합계 */
   deposits: DepositTotals;
@@ -96,7 +96,7 @@ export interface EraSettlement {
   settledOnVersionChange?: boolean;
   /** 투자 결과: 청산 후 투자 코인과 수익률(시간가중, 작업 수입 제외) */
   investmentResult: { coins: number; returnPct: number };
-  /** 시대 종료 때 합산된 작업 수입 (즉시 지급 모드에서는 0, 대신 deposits.work에 잡힌다) */
+  /** 시대 종료 때 합산된 작업 수입 (즉시·묶음 지급 모드에서는 0, 대신 시대 중 지급분이 deposits.work에 잡힌다) */
   workIncome: number;
   /** 최종 코인 = 투자 결과 + 작업 수입. 다음 시대 시작 자금 */
   finalTotal: number;
@@ -125,7 +125,7 @@ export function settleAccount(
     workIncome: 0,
     finalTotal: endAssets,
     brokeTimeSec: 0,
-    profitAmount: endAssets - startCash - depositTotal(twr.deposits),
+    profitAmount: endAssets - startCash - depositTotal(twr.deposits) + (twr.withdrawals ?? 0),
     deposits: { ...twr.deposits },
     stocks: account.getPerformance().map((p) => ({
       stockId: p.stockId,

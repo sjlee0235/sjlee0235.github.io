@@ -1,7 +1,8 @@
 // 리플레이: 플레이 기록(텔레메트리)의 매매만으로 판 전체를 똑같이 다시 돌린다.
 //
 // 가격·뉴스는 시드로 정해지고 플레이어의 매매에 영향받지 않으므로,
-// game_start(시드·시작 자금) + trade(언제 무엇을 몇 주) + deposit(언제 얼마) 만 있으면 같은 결과가 다시 나온다.
+// game_start(시드·시작 자금) + trade(언제 무엇을 몇 주) + deposit(언제 얼마) + work(인형) + interior_upgrade 만 있으면
+// 같은 결과가 다시 나온다.
 // 쓰임새
 // - 기록이 맞는지 검증 (리플레이 결과 = 기록된 era_end)
 // - "이 플레이어가 그냥 들고만 있었다면?" 같은 가정 비교 (매매 목록만 바꿔서 다시 돌림)
@@ -30,6 +31,9 @@ export function actionsFromEvents(events: readonly TelemetryEvent[]): ReplayActi
     } else if (e.type === 'work_credit') {
       const d = e.data as EngineEventMap['work_credit'];
       out.push({ kind: 'work', eraIndex: e.eraIndex, tick: e.tick, dolls: d.dolls });
+    } else if (e.type === 'interior_upgrade') {
+      const d = e.data as EngineEventMap['interior_upgrade'];
+      out.push({ kind: 'interior', eraIndex: e.eraIndex, tick: e.tick, level: d.level });
     } else if (e.type === 'deposit') {
       const d = e.data as EngineEventMap['deposit'];
       out.push({ kind: 'deposit', eraIndex: e.eraIndex, tick: e.tick, amount: d.amount, source: d.source });
@@ -50,6 +54,10 @@ export interface ReplayResult {
 export function applyAction(game: Game, a: SavedActionData): boolean {
   if (a.kind === 'deposit') return game.deposit(a.amount, a.source).ok;
   if (a.kind === 'work') return game.applyWorkCredit(a.dolls) >= 0;
+  if (a.kind === 'interior') {
+    const r = game.upgradeInterior();
+    return r.ok && r.level === a.level;
+  }
   return (a.side === 'buy' ? game.buy(a.stockId, a.quantity) : game.sell(a.stockId, a.quantity)).ok;
 }
 
@@ -81,6 +89,8 @@ export function replay(
   const game = new Game({
     eras, seed: s.seed, config, startEraIndex: s.startEraIndex, startCash: s.startCash, draws,
     pastEraReturns: s.pastEraReturns ?? [],
+    ...(s.interiorLevel !== undefined ? { interiorLevel: s.interiorLevel } : {}),
+    ...(s.workCarry ? { workCarry: s.workCarry } : {}),
   });
   if (game.config.orderDelayTicks > 0) throw new Error('주문 지연 옵션이 켜진 기록은 리플레이하지 않음');
   // 기록 시작 전(이어 하기·판 도중 동의) 행동도 함께 넣는다

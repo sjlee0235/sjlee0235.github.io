@@ -104,7 +104,7 @@ export class LivingRoomScreen implements Screen {
     this.unlockMusic();
     const r = petDog(this.dog, stage, this.rng);
     this.dog = r.state;
-    this.ctx.track('dog_touch', { reaction: r.reaction });
+    this.ctx.track('dog_touch', { count: r.state.touches, reaction: null });
     const dog = this.dogEl;
     if (!dog) return;
     const key = `dog.${stage}`;

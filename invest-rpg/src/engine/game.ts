@@ -29,8 +29,8 @@ import { settleEra, sortEras, startEraSession, type EraSession, type EraSettleme
 import type { NewsTag, ScheduledKind, ScheduledNews } from './newsEngine.ts';
 import type { PricePoint, StockTickChange } from './priceEngine.ts';
 import { buildReport, type AppliedRate, type StockReport } from './report.ts';
-import { applyDeposit, cumulativeReturnPct, startTwr, twrPct, type TwrState } from './returns.ts';
-import { applyTouch, creditFor, newWorkState, TouchLimiter, type TouchResult, type WorkState } from './work.ts';
+import { applyDeposit, applyWithdrawal, cumulativeReturnPct, startTwr, twrPct, type TwrState } from './returns.ts';
+import { applyTouch, creditFor, newWorkState, TouchLimiter, type TouchResult, type WorkCarry, type WorkState } from './work.ts';
 import {
   balanceHash, ENGINE_VERSION, TELEMETRY_SCHEMA_VERSION,
   type AppEventMap, type AppEventType, type DecisionContext, type EngineEventMap, type SavedActionData,
@@ -78,6 +78,10 @@ export interface GameOptions {
   pastEraSummaries?: readonly EraSummary[];
   /** 기록에 남길 모드 (기본 main) */
   telemetryMode?: 'main' | 'tutorial';
+  /** 시작할 때의 인테리어 단계 (세이브 불러오기·다음 시대 이월용, 기본 0) */
+  interiorLevel?: number;
+  /** 시작할 때 이어받는 작업 묶음 (batch 지급의 지급 예정 코인·묶음 완성 수) */
+  workCarry?: WorkCarry;
   /** 세이브에서 이어 하기인가 (기록용) */
   restored?: boolean;
 }
@@ -87,7 +91,7 @@ export interface EraSummary {
   eraId: string;
   /** 투자 수익률 (시간가중, 작업 수입 제외) */
   returnPct: number;
-  /** 시대 종료 때 합산된 작업 수입 */
+  /** 이번 시대에 받은 작업 수입 (시대 중 지급 + 시대 종료 합산) */
   workIncome: number;
   /** 최종 코인 (투자 결과 + 작업 수입) = 다음 시대 시작 자금 */
   finalTotal: number;
@@ -100,21 +104,34 @@ export interface FinalSummary {
   finalCoins: number;
   /** 시대별 투자 수익률의 곱 (작업 수입 제외) */
   cumulativeReturnPct: number;
+  /** 아직 지급 전인 작업 수입 (batch: 인형 묶음을 다 못 채움). 최종 요약에 "지급 예정"으로만 표시 */
+  unpaidWork: number;
+  /** 마지막 인테리어 단계 */
+  interiorLevel: number;
 }
 
 /** 작업실 화면용 상태 */
 export interface WorkStatus {
   /** 지금 인형에 붙은 눈 수 (0~2) */
   eyes: number;
-  /** 정산 예정 작업 수입 (시대 종료 때 지급) */
+  /** 지급 예정 작업 수입 (batch: 묶음을 채우면 지급) */
   pending: number;
+  /** batch: 지금 묶음에서 완성한 인형 수 (0 ~ batchDolls-1) */
+  batchDolls: number;
+  /** batch: 묶음 크기 (100) */
+  batchSize: number;
   /** 이번 시대 적립 합계 / 완성 인형 수 */
   earned: number;
   dollsCompleted: number;
   touchesPerDoll: number;
   coinsPerDoll: number;
-  payoutMode: 'era_end' | 'immediate';
+  payoutMode: 'batch' | 'era_end' | 'immediate';
 }
+
+/** 인테리어 업그레이드 결과 */
+export type InteriorResult =
+  | { ok: true; level: number; cost: number }
+  | { ok: false; error: 'max-level' | 'insufficient-cash' | 'not-running' };
 
 /** 시대 동안 모으는 기록용 통계 */
 interface EraStats {
@@ -211,7 +228,7 @@ export interface NewsArchiveEntry {
 export type SavedAction = SavedActionData;
 
 /** 저장이 필요한 이유 (화면은 이 값이 있으면 saveGame()을 부른다) */
-export type SaveReason = 'trade' | 'deposit' | 'news' | 'background' | 'interval' | 'era-end';
+export type SaveReason = 'trade' | 'deposit' | 'interior' | 'news' | 'background' | 'interval' | 'era-end';
 
 /** 세이브용 상태 스냅샷 (가격·계좌·즐겨찾기·수익률 진행 상태) */
 export interface GameStateSnapshot {
@@ -227,8 +244,10 @@ export interface GameStateSnapshot {
   /** 뉴스 피드 읽음 상태 (내부 뉴스 id) */
   readNewsIds: string[];
   readReportIds: string[];
-  /** 작업 상태 (지금 인형 진행, 정산 예정 수입 등) */
+  /** 작업 상태 (지금 인형 진행, 지급 예정 수입 등) */
   work: WorkState;
+  /** 인테리어 단계 (0~7) */
+  interiorLevel: number;
 }
 
 /** 시대 종료 후 공개 (사후 학습용, 내부 id 그대로) */
@@ -290,6 +309,10 @@ export class Game {
   private twr: TwrState = startTwr(0);
   private readonly pastEraSummaries: EraSummary[];
   private work: WorkState = newWorkState();
+  private _interior = 0;
+  private _lastWorkPayout: { coins: number; seq: number } | null = null;
+  /** 이번 시대 시작 때의 인테리어 단계·작업 묶음 (세이브: 시대 처음부터 리플레이하기 위해) */
+  private _eraStart: { interiorLevel: number; work: WorkCarry } = { interiorLevel: 0, work: { pending: 0, batchDolls: 0 } };
   private limiter: TouchLimiter;
   /** 이번 틱에 완성한 인형 (텔레메트리는 틱마다 묶어서 보낸다) */
   private workTelemetry = { dolls: 0, coins: 0 };
@@ -310,6 +333,8 @@ export class Game {
       ? options.pastEraSummaries.map((x) => ({ ...x }))
       : (options.pastEraReturns ?? []).map((r, i) => ({ eraId: `past-${i}`, returnPct: r, workIncome: 0, finalTotal: 0 }));
     this.limiter = new TouchLimiter(this.config.work.maxTouchesPerSec);
+    this._interior = Math.max(0, Math.min(this.config.interior.maxLevel, Math.floor(options.interiorLevel ?? 0)));
+    this.work = newWorkState(0, options.workCarry);
     this.session = this.beginEra(options.startEraIndex ?? 0);
     if (options.telemetryConsent) this.setConsent(true, options.restored ?? false);
   }
@@ -354,6 +379,8 @@ export class Game {
       resumeTick: this.tick === 0 && this._eraActions.length === 0 ? null : this.tick,
       priorActions: this._eraActions.map((a) => ({ ...a })),
       pastEraReturns: this.eraReturns,
+      interiorLevel: this._eraStart.interiorLevel,
+      workCarry: { ...this._eraStart.work },
     });
     this.emitEraStart();
   }
@@ -454,7 +481,9 @@ export class Game {
   get eraSummaries(): EraSummary[] {
     return [
       ...this.pastEraSummaries.map((x) => ({ ...x })),
-      ...this._settlements.map((s) => ({ eraId: s.eraId, returnPct: s.returnPct, workIncome: s.workIncome, finalTotal: s.finalTotal })),
+      ...this._settlements.map((s) => ({
+        eraId: s.eraId, returnPct: s.returnPct, workIncome: s.workIncome + s.deposits.work, finalTotal: s.finalTotal,
+      })),
     ];
   }
   /** 마지막 시대가 끝난 뒤에만: 시대별 투자 수익률, 작업 수입, 최종 총 코인 */
@@ -467,6 +496,8 @@ export class Game {
       totalWorkIncome: eras.reduce((a, e) => a + e.workIncome, 0),
       finalCoins: this.account.cash,
       cumulativeReturnPct: cumulativeReturnPct(eras.map((e) => e.returnPct)),
+      unpaidWork: this.work.pending,
+      interiorLevel: this._interior,
     };
   }
   /** 저장이 필요한 이유들 (비어 있으면 저장 불필요). saveGame()이 비운다 */
@@ -563,7 +594,8 @@ export class Game {
       this.flushWorkTelemetry();
       const payout = this.config.work.payoutMode === 'era_end' ? this.work.pending : 0;
       settlement = { ...settleEra(this.session, this.account, this.twr, payout), brokeTimeSec: this.stats.brokeTicks * this.config.tickSeconds };
-      this.work = { ...this.work, pending: 0 };
+      // batch 지급: 다 못 채운 묶음(지급 예정 코인)은 다음 시대로 이어진다
+      if (payout > 0) this.work = { ...this.work, pending: 0 };
       this._settlements.push(settlement);
       this._phase = 'era-ended';
       this.saveReasons.add('era-end');
@@ -586,7 +618,7 @@ export class Game {
           investedShare: st.ticks === 0 ? 0 : st.investedTicks / st.ticks,
           profitAmount: settlement.profitAmount,
           deposits: { ...settlement.deposits },
-          workIncome: settlement.workIncome,
+          workIncome: settlement.workIncome + settlement.deposits.work,
           workTouches: this.work.touches,
           workRejectedTouches: this.work.rejectedTouches,
           dollsCompleted: this.work.dollsCompleted,
@@ -639,23 +671,42 @@ export class Game {
 
   /**
    * 인형 n개 완성분을 적립한다 (workTouch가 부르고, 세이브·기록 리플레이도 이것을 부른다).
-   * era_end: 정산 예정 수입에 쌓임(현금 그대로) / immediate: 바로 입금(시간가중수익률 구간 나눔)
+   * batch: 지급 예정에 쌓다가 묶음(100개)을 채우는 순간 입금하고 지급 예정·묶음 수를 0으로
+   * era_end: 정산 예정 수입에 쌓임(현금 그대로) / immediate: 바로 입금
+   * 입금은 시간가중수익률 구간을 나눈다 (수익으로 세지 않음)
    */
   applyWorkCredit(dolls: number): number {
     if (!Number.isInteger(dolls) || dolls <= 0 || this._phase !== 'running') return 0;
-    const coins = creditFor(this.work, dolls, this.config.work);
-    const immediate = this.config.work.payoutMode === 'immediate';
-    this.work = {
-      ...this.work,
-      dollsCompleted: this.work.dollsCompleted + dolls,
-      earned: this.work.earned + coins,
-      pending: this.work.pending + (immediate ? 0 : coins),
-    };
-    if (immediate && coins > 0) {
-      const assetsBefore = this.totalAssets;
-      this.account.deposit(coins, 'work', this.tick);
-      this.twr = applyDeposit(this.twr, assetsBefore, coins, 'work');
+    const rules = this.config.work;
+    const mode = rules.payoutMode;
+    let total = 0;
+    // 묶음 경계를 넘을 수 있으므로 인형 하나씩 처리한다 (n은 보통 1)
+    for (let i = 0; i < dolls; i++) {
+      const coins = creditFor(this.work, 1, rules);
+      total += coins;
+      this.work = { ...this.work, dollsCompleted: this.work.dollsCompleted + 1, earned: this.work.earned + coins };
+      if (mode === 'immediate') {
+        this.depositWork(coins);
+      } else if (mode === 'era_end') {
+        this.work = { ...this.work, pending: this.work.pending + coins };
+      } else {
+        const batchDolls = this.work.batchDolls + 1;
+        const pending = this.work.pending + coins;
+        if (batchDolls >= rules.batchDolls) {
+          this.work = { ...this.work, batchDolls: 0, pending: 0 };
+          this.depositWork(pending);
+          this.saveReasons.add('deposit');
+          if (this.isRecording) {
+            this.flushWorkTelemetry();
+            this.emit('work_payout', { coins: pending, dolls: batchDolls, cashAfter: this.account.cash });
+          }
+          this._lastWorkPayout = { coins: pending, seq: (this._lastWorkPayout?.seq ?? 0) + 1 };
+        } else {
+          this.work = { ...this.work, batchDolls, pending };
+        }
+      }
     }
+    const coins = total;
     const last = this._eraActions.at(-1);
     if (last && last.kind === 'work' && last.tick === this.tick) last.dolls += dolls;
     else this._eraActions.push({ kind: 'work', tick: this.tick, dolls });
@@ -664,11 +715,25 @@ export class Game {
     return coins;
   }
 
+  private depositWork(coins: number): void {
+    if (coins <= 0) return;
+    const assetsBefore = this.totalAssets;
+    this.account.deposit(coins, 'work', this.tick);
+    this.twr = applyDeposit(this.twr, assetsBefore, coins, 'work');
+  }
+
+  /** 마지막 묶음 지급 (화면이 seq가 바뀐 것을 보고 "작업 수입 N코인이 들어왔어요"를 띄운다) */
+  get lastWorkPayout(): { coins: number; seq: number } | null {
+    return this._lastWorkPayout;
+  }
+
   getWorkStatus(): WorkStatus {
     const w = this.config.work;
     return {
       eyes: this.work.progress,
       pending: this.work.pending,
+      batchDolls: this.work.batchDolls,
+      batchSize: w.batchDolls,
       earned: this.work.earned,
       dollsCompleted: this.work.dollsCompleted,
       touchesPerDoll: w.touchesPerDoll,
@@ -688,6 +753,48 @@ export class Game {
     const data = { ...this.workTelemetry, payoutMode: this.config.work.payoutMode };
     this.workTelemetry = { dolls: 0, coins: 0 };
     if (this.isRecording) this.emit('work_credit', data);
+  }
+
+  // ───────── 인테리어 업그레이드 ─────────
+
+  /** 인테리어 단계 (0~7). 거실·작업실·TV 세 화면이 같은 단계이고, 시대가 바뀌어도 이어진다 */
+  get interiorLevel(): number {
+    return this._interior;
+  }
+
+  /** 다음 단계 값 (최고 단계면 null) */
+  get interiorNextCost(): number | null {
+    return this._interior >= this.config.interior.maxLevel ? null : this.config.interior.costPerLevel;
+  }
+
+  /**
+   * 인테리어 한 단계 올리기. 보유 현금에서 2,000코인 (평가금액 아님). 확인 창·되돌리기 없음.
+   * 수익률에서는 출금으로 처리한다 (시간가중수익률 구간을 나누고 손실로 세지 않음).
+   */
+  upgradeInterior(): InteriorResult {
+    if (this._phase !== 'running' || this.isSuspended) return { ok: false, error: 'not-running' };
+    const cost = this.interiorNextCost;
+    if (cost === null) return { ok: false, error: 'max-level' };
+    const assetsBefore = this.totalAssets;
+    const r = this.account.withdraw(cost);
+    if (!r.ok) return { ok: false, error: 'insufficient-cash' };
+    this.twr = applyWithdrawal(this.twr, assetsBefore, cost);
+    this._interior += 1;
+    this.flushWorkTelemetry();
+    this._eraActions.push({ kind: 'interior', tick: this.tick, level: this._interior });
+    this.saveReasons.add('interior');
+    if (this.isRecording) this.emit('interior_upgrade', { level: this._interior, cost, cashAfter: this.account.cash });
+    return { ok: true, level: this._interior, cost };
+  }
+
+  /** 이번 시대 시작 때의 인테리어 단계·작업 묶음 (세이브용) */
+  get eraStartCarry(): { interiorLevel: number; work: WorkCarry } {
+    return { interiorLevel: this._eraStart.interiorLevel, work: { ...this._eraStart.work } };
+  }
+
+  /** 지금 작업 묶음 (다음 시대·세이브 정산용) */
+  get workCarry(): WorkCarry {
+    return { pending: this.work.pending, batchDolls: this.work.batchDolls };
   }
 
   // ───────── 배속 ─────────
@@ -938,6 +1045,7 @@ export class Game {
       favorites: [...this.session.favorites],
       twr: { ...this.twr, deposits: { ...this.twr.deposits } },
       work: { ...this.work },
+      interiorLevel: this._interior,
       readNewsIds: [...this.readNews].sort(),
       readReportIds: [...this.readReports].sort(),
     };
@@ -988,7 +1096,8 @@ export class Game {
     this.orders = [];
     this.stats = Game.emptyStats(this.account.cash);
     this._eraActions = [];
-    this.work = newWorkState(this.work.progress);
+    this.work = newWorkState(this.work.progress, { pending: this.work.pending, batchDolls: this.work.batchDolls });
+    this._eraStart = { interiorLevel: this._interior, work: { pending: this.work.pending, batchDolls: this.work.batchDolls } };
     this.twr = startTwr(this.account.cash);
     const session = startEraSession(era, index, this.seed, this.config, this.account.cash, {
       ...(this.options.draws?.[era.id] ? { draw: this.options.draws[era.id] } : {}),

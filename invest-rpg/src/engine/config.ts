@@ -73,8 +73,22 @@ export const TOUCHES_PER_DOLL = 3;
 export const COINS_PER_DOLL = 3;
 /** 초당 터치 상한: 자동 클릭·과도한 연타 방지. 넘는 터치는 무시 (가정값) */
 export const MAX_TOUCHES_PER_SEC = 6;
-/** 작업 수입 지급 방식: 'era_end' = 시대 종료 때 합산(기본), 'immediate' = 완성할 때마다 즉시 입금 */
-export const WORK_PAYOUT_MODE: 'era_end' | 'immediate' = 'era_end';
+/**
+ * 작업 수입 지급 방식
+ * - 'batch' (기본): 인형을 WORK_BATCH_DOLLS개 완성하는 순간 모아 둔 코인을 한꺼번에 입금하고, 지급 예정·완성 수를 0으로 되돌린다.
+ *   다 못 채운 묶음(지급 예정 코인·완성 수)은 시대가 바뀌어도 이어진다 (2026-10-10 결정: 밤 12시 지급 대신)
+ * - 'era_end': 시대 종료 때 합산 / 'immediate': 완성할 때마다 즉시 입금
+ */
+export type WorkPayoutMode = 'batch' | 'era_end' | 'immediate';
+export const WORK_PAYOUT_MODE: WorkPayoutMode = 'batch';
+/** 'batch' 지급: 인형 몇 개를 완성하면 지급하는가. 100개 = 300터치 */
+export const WORK_BATCH_DOLLS = 100;
+
+// ───────── 인테리어 업그레이드 (거실·작업실·TV 공통 단계) ─────────
+/** 최고 단계. Lv0(처음 상태) → Lv7(완성), 7번 구입 */
+export const INTERIOR_MAX_LEVEL = 7;
+/** 한 단계 올리는 값(코인). 2026-10-10 결정: 1,000 → 2,000 (7단계 합계 14,000) */
+export const INTERIOR_COST = 2000;
 /** 시대당 작업 수입 상한(코인). null = 상한 없음 (기본, 켜지 않는다) */
 export const WORK_INCOME_CAP_PER_ERA: number | null = null;
 
@@ -83,8 +97,16 @@ export interface WorkRules {
   touchesPerDoll: number;
   coinsPerDoll: number;
   maxTouchesPerSec: number;
-  payoutMode: 'era_end' | 'immediate';
+  payoutMode: WorkPayoutMode;
+  /** 'batch' 지급의 묶음 크기 (인형 수) */
+  batchDolls: number;
   incomeCapPerEra: number | null;
+}
+
+export interface InteriorRules {
+  maxLevel: number;
+  /** 한 단계 값(코인). 보유 현금에서 낸다 */
+  costPerLevel: number;
 }
 
 /** % 값을 0.1% 단위 정수로. 1.5 → 15 */
@@ -182,6 +204,8 @@ export interface GameConfig {
 
   /** 작업(인형 눈 붙이기) 규칙 */
   work: WorkRules;
+  /** 인테리어 업그레이드 규칙 */
+  interior: InteriorRules;
 
   /** (기본 OFF) 주문 체결 지연 틱 */
   orderDelayTicks: number;
@@ -237,14 +261,20 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
     coinsPerDoll: COINS_PER_DOLL,
     maxTouchesPerSec: MAX_TOUCHES_PER_SEC,
     payoutMode: WORK_PAYOUT_MODE,
+    batchDolls: WORK_BATCH_DOLLS,
     incomeCapPerEra: WORK_INCOME_CAP_PER_ERA,
   }),
+  interior: Object.freeze({ maxLevel: INTERIOR_MAX_LEVEL, costPerLevel: INTERIOR_COST }),
   orderDelayTicks: ORDER_DELAY_TICKS,
   indirectExtraDelayTicks: INDIRECT_EXTRA_DELAY_TICKS,
 });
 
 export function makeConfig(overrides: Partial<GameConfig> = {}): GameConfig {
-  return { ...DEFAULT_CONFIG, ...overrides, work: { ...DEFAULT_CONFIG.work, ...overrides.work } };
+  return {
+    ...DEFAULT_CONFIG, ...overrides,
+    work: { ...DEFAULT_CONFIG.work, ...overrides.work },
+    interior: { ...DEFAULT_CONFIG.interior, ...overrides.interior },
+  };
 }
 
 /** 엔진이 실제로 쓰는 틱 단위 규칙 (config의 초 값을 틱 수로 바꾼 것) */

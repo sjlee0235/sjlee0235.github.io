@@ -61,3 +61,11 @@ export function shuffle<T>(items: readonly T[], rng: Rng): T[] {
   }
   return out;
 }
+
+/**
+ * 연출용 난수 (강아지 움직임·음악 순서 등). 시장 난수와 다른 갈래의 시드라 서로 영향을 주지 않는다
+ * → 강아지를 몇 번 만져도 시장 결과(시드 재현)는 그대로. 테스트에서는 seed를 고정해서 쓴다.
+ */
+export function createPresentationRng(seed: number, purpose: string): Rng {
+  return createRng(deriveSeed(seed, 'presentation', purpose));
+}

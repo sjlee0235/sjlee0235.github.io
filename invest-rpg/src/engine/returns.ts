@@ -7,6 +7,9 @@
 // → 입금 자체는 수익률을 바꾸지 않고, "투자로 늘린 비율"만 남는다.
 // 구간 시작 자산이 0이면(파산 상태에서 입금 등) 그 구간은 건너뛴다.
 //
+// 출금(인테리어 구입)도 같은 방식이다: 출금 직전 자산으로 구간을 닫고, 출금 뒤 자산으로 새 구간을 연다
+// → 쓴 돈을 손실로 세지 않는다.
+//
 // 입금이 없으면 단순 수익률과 똑같다.
 
 import type { DepositSource } from './account.ts';
@@ -22,10 +25,12 @@ export interface TwrState {
   segmentStart: number;
   /** 이번 시대 출처별 입금 합계 */
   deposits: DepositTotals;
+  /** 이번 시대 출금 합계 (인테리어 구입) */
+  withdrawals: number;
 }
 
 export function startTwr(startAssets: number): TwrState {
-  return { factor: 1, segmentStart: startAssets, deposits: emptyDepositTotals() };
+  return { factor: 1, segmentStart: startAssets, deposits: emptyDepositTotals(), withdrawals: 0 };
 }
 
 /** 입금 직전 자산으로 구간을 닫고, 입금 뒤 자산으로 새 구간을 연다 */
@@ -35,6 +40,18 @@ export function applyDeposit(twr: TwrState, assetsBefore: number, amount: number
     factor,
     segmentStart: assetsBefore + amount,
     deposits: { ...twr.deposits, [source]: twr.deposits[source] + amount },
+    withdrawals: twr.withdrawals ?? 0,
+  };
+}
+
+/** 출금: 출금 직전 자산으로 구간을 닫고, 출금 뒤 자산으로 새 구간을 연다 (손실로 세지 않음) */
+export function applyWithdrawal(twr: TwrState, assetsBefore: number, amount: number): TwrState {
+  const factor = twr.segmentStart > 0 ? twr.factor * (assetsBefore / twr.segmentStart) : twr.factor;
+  return {
+    factor,
+    segmentStart: assetsBefore - amount,
+    deposits: { ...twr.deposits },
+    withdrawals: (twr.withdrawals ?? 0) + amount,
   };
 }
 

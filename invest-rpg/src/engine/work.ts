@@ -4,7 +4,9 @@
 // - 2터치까지만 하면 0코인 (부분 적립 없음). 진행 중인 인형 상태(0~2터치)는 탭을 옮겨도, 저장해도 유지
 // - 초당 터치 상한(MAX_TOUCHES_PER_SEC): 자동 클릭 프로그램·과도한 연타를 막는다. 넘는 터치는 무시
 // - 실제 시각(ms)은 화면이 넘긴다 (엔진은 시계를 쓰지 않는다)
-// - 지급 방식(시대 종료 합산 / 즉시)과 시대당 상한은 game.ts가 처리한다
+// - 지급 방식(묶음 / 시대 종료 합산 / 즉시)과 시대당 상한은 game.ts가 처리한다
+// - 묶음(batch) 지급: 인형 batchDolls(100)개를 채우는 순간 지급 예정 코인을 입금하고 지급 예정·묶음 완성 수를 0으로.
+//   다 못 채운 묶음은 시대가 바뀌어도 이어진다
 
 import type { WorkRules } from './config.ts';
 
@@ -16,14 +18,22 @@ export interface WorkState {
   /** 이번 시대에 받아들인 터치 수 / 상한 때문에 무시한 터치 수 */
   touches: number;
   rejectedTouches: number;
-  /** 정산 예정 작업 수입 (시대 종료 때 현금으로 합산) */
+  /** 지급 예정 작업 수입 (batch: 묶음을 채우면 입금 / era_end: 시대 종료 때 합산) */
   pending: number;
+  /** batch: 지금 묶음에서 완성한 인형 수 (0 ~ batchDolls-1). 시대가 바뀌어도 이어진다 */
+  batchDolls: number;
   /** 이번 시대에 적립된 작업 수입 합계 (지급 방식과 무관, 상한 적용 후) */
   earned: number;
 }
 
-export function newWorkState(progress = 0): WorkState {
-  return { progress, dollsCompleted: 0, touches: 0, rejectedTouches: 0, pending: 0, earned: 0 };
+/** 시대를 넘어 이어지는 작업 상태 (batch 지급의 지급 예정 코인과 묶음 완성 수) */
+export interface WorkCarry {
+  pending: number;
+  batchDolls: number;
+}
+
+export function newWorkState(progress = 0, carry: WorkCarry = { pending: 0, batchDolls: 0 }): WorkState {
+  return { progress, dollsCompleted: 0, touches: 0, rejectedTouches: 0, pending: carry.pending, batchDolls: carry.batchDolls, earned: 0 };
 }
 
 export interface TouchResult {
