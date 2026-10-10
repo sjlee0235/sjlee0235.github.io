@@ -62,15 +62,24 @@ export const STOCK_NAME_HINT_WORDS = [
   '평화', '전쟁', '안전', '안정', '햇살', '먹구름', '폭풍', '태풍', '가뭄', '단비', '새싹', '봄날', '상승', '하락', '불꽃', '질주',
 ];
 
-/** 종목명 형식(한국어): "2글자 수식어 + 띄어쓰기 + 업종주". 반드시 '주'로 끝난다 (예: 평화 방산주) */
-export const STOCK_NAME_PATTERN = /^[가-힣]{2} [가-힣A-Za-z0-9]+주$/;
-/** 종목명 형식(영어): "... Stock"으로 끝난다 (예: Peace Defense Stock) */
-export const STOCK_NAME_EN_PATTERN = /^\S.* Stock$/;
+/**
+ * 종목명 형식(한국어): "2글자 수식어 + 업종"을 붙여 쓴다. 띄어쓰기 없음, '주'를 붙이지 않음 (예: 노랑제분, 강물신문)
+ * 2026-10-10 시안(DESIGN_HANDOFF 11.2) 결정. 이전 형식은 "노랑 제분주"
+ */
+export const STOCK_NAME_PATTERN = /^[가-힣]{2}[가-힣A-Za-z0-9]{1,6}$/;
+/** 종목명 형식(영어): 'Stock'을 붙이지 않는다 (예: Yellow Flour) */
+export const STOCK_NAME_EN_PATTERN = /^\S(?!.* Stock$).*$/;
 /** 기업 설명 길이(한국어 글자 수): 1~2줄, 80자 안팎. 이 값을 넘으면 경고, 90자를 넘으면 고쳐야 함 */
 export const STOCK_DESCRIPTION_SOFT_MAX = 80;
 export const STOCK_DESCRIPTION_HARD_MAX = 90;
 /** 시대당 opener 스토리(시대 첫 뉴스 후보) 최소 개수 */
 export const MIN_OPENER_STORIES = 3;
+/**
+ * 뉴스 제목(한국어)은 주식창 뉴스 창에서 늘 한 줄 (DESIGN_HANDOFF 11.2). 폭 342px, 14px 굵게 → 한글 약 26자.
+ * 시안 권장 20자 안팎: 24자를 넘으면 경고, 26자를 넘으면 고쳐야 함 (넘치면 화면은 '…'로 자른다)
+ */
+export const NEWS_TITLE_SOFT_MAX = 24;
+export const NEWS_TITLE_HARD_MAX = 26;
 
 /** 종목·뉴스 문장 금지어 점검 (테마 풀 크기와 무관하게 튜토리얼에도 쓴다) */
 export function lintWords(era: Era): LintIssue[] {
@@ -78,11 +87,11 @@ export function lintWords(era: Era): LintIssue[] {
   const add = (rule: string, where: string, message: string) => issues.push({ rule, where, message });
   for (const s of era.stocks) {
     const name = s.name.ko;
-    if (!STOCK_NAME_PATTERN.test(name)) add('stockName', s.id, `종목명 "${name}"이 "2글자 수식어 + 업종주" 형식이 아님 ('주'로 끝나야 함)`);
-    if (!STOCK_NAME_EN_PATTERN.test(s.name.en)) add('stockName', s.id, `영어 종목명 "${s.name.en}"이 "Stock"으로 끝나지 않음`);
+    if (!STOCK_NAME_PATTERN.test(name) || name.endsWith('주')) add('stockName', s.id, `종목명 "${name}"이 "2글자 수식어 + 업종" 붙여쓰기 형식이 아님 (띄어쓰기·'주' 없이)`);
+    if (!STOCK_NAME_EN_PATTERN.test(s.name.en)) add('stockName', s.id, `영어 종목명 "${s.name.en}"에 "Stock"을 붙이지 않음`);
     for (const w of STOCK_NAME_BANNED) if (name.includes(w)) add('stockName', s.id, `종목명 "${name}"에 평가·전망 어감 단어 "${w}"`);
     for (const w of STOCK_NAME_HINT_WORDS) {
-      if (name.split(' ')[0] === w) issues.push({ rule: 'stockNameHint', where: s.id, message: `종목명 "${name}"의 수식어 "${w}"가 뉴스 방향을 암시할 수 있음 (확인)`, severity: 'warning' });
+      if (name.slice(0, 2) === w) issues.push({ rule: 'stockNameHint', where: s.id, message: `종목명 "${name}"의 수식어 "${w}"가 뉴스 방향을 암시할 수 있음 (확인)`, severity: 'warning' });
     }
     const desc = s.description.ko.trim();
     if (desc.length === 0) add('stockDescription', s.id, '기업 설명이 비어 있음');
@@ -91,6 +100,9 @@ export function lintWords(era: Era): LintIssue[] {
     for (const w of STOCK_DESCRIPTION_BANNED) if (s.description.ko.includes(w)) add('stockDescription', s.id, `종목 설명에 전망·평가 표현 "${w}"`);
   }
   for (const n of allNewsOf(era)) {
+    const len = [...n.title.ko].length;
+    if (len > NEWS_TITLE_HARD_MAX) add('newsTitle', n.id, `제목 ${len}자 — 한 줄(${NEWS_TITLE_HARD_MAX}자 이하)로 줄이기: "${n.title.ko}"`);
+    else if (len > NEWS_TITLE_SOFT_MAX) issues.push({ rule: 'newsTitle', where: n.id, message: `제목 ${len}자 (${NEWS_TITLE_SOFT_MAX}자 이하 권장)`, severity: 'warning' });
     const ko = `${n.title.ko} ${n.body.ko}`;
     for (const w of NEWS_DIRECTION_BANNED_KO) if (ko.includes(w)) add('newsDirection', n.id, `주가 방향을 알려주는 표현 "${w}"`);
     const en = `${n.title.en} ${n.body.en}`.toLowerCase();

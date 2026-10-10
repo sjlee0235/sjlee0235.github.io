@@ -126,7 +126,7 @@ export function makeSpecEra(options: SpecEraOptions = {}): Era {
   const stocks: Stock[] = themes.map((t, i) => ({
     id: `${id}-s${i}`,
     themeId: t.id,
-    name: { ko: `${mods[i]!.ko} ${inds[i]!.ko}주`, en: `${mods[i]!.en} ${inds[i]!.en} Stock` },
+    name: { ko: `${mods[i]!.ko}${inds[i]!.ko}`, en: `${mods[i]!.en} ${inds[i]!.en}` },
     description: { ko: '테스트용 가상 회사다.', en: 'A test company.' },
   }));
 

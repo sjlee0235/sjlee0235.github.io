@@ -962,8 +962,8 @@
    "id": "2000s-semiconductor",
    "themeId": "semiconductor",
    "name": {
-    "ko": "은빛 반도체주",
-    "en": "Silver Chip Stock"
+    "ko": "은빛반도체",
+    "en": "Silver Chip"
    },
    "description": {
     "ko": "PC와 휴대폰에 들어가는 메모리 반도체를 만든다.",
@@ -974,8 +974,8 @@
    "id": "2000s-shipbuilding",
    "themeId": "shipbuilding",
    "name": {
-    "ko": "물결 조선주",
-    "en": "Wave Shipbuilding Stock"
+    "ko": "물결조선",
+    "en": "Wave Shipbuilding"
    },
    "description": {
     "ko": "유조선과 컨테이너선을 만드는 조선소를 운영한다.",
@@ -986,8 +986,8 @@
    "id": "2000s-steel",
    "themeId": "steel",
    "name": {
-    "ko": "자갈 철강주",
-    "en": "Pebble Steel Stock"
+    "ko": "자갈철강",
+    "en": "Pebble Steel"
    },
    "description": {
     "ko": "철광석을 녹여 강판과 철근을 만든다.",
@@ -998,8 +998,8 @@
    "id": "2000s-handset",
    "themeId": "handset",
    "name": {
-    "ko": "구름 휴대폰주",
-    "en": "Cloud Handset Stock"
+    "ko": "구름휴대폰",
+    "en": "Cloud Handset"
    },
    "description": {
     "ko": "휴대폰을 설계해 국내외 통신사에 공급한다.",
@@ -1010,8 +1010,8 @@
    "id": "2000s-display",
    "themeId": "display",
    "name": {
-    "ko": "유리 패널주",
-    "en": "Glass Panel Stock"
+    "ko": "유리패널",
+    "en": "Glass Panel"
    },
    "description": {
     "ko": "TV와 모니터에 들어가는 액정 패널을 만든다.",
@@ -1022,8 +1022,8 @@
    "id": "2000s-online_game",
    "themeId": "online_game",
    "name": {
-    "ko": "별빛 게임주",
-    "en": "Starlight Games Stock"
+    "ko": "별빛게임",
+    "en": "Starlight Games"
    },
    "description": {
     "ko": "PC로 즐기는 온라인 롤플레잉 게임을 서비스한다.",
@@ -1034,8 +1034,8 @@
    "id": "2000s-portal",
    "themeId": "portal",
    "name": {
-    "ko": "등대 포털주",
-    "en": "Lighthouse Portal Stock"
+    "ko": "등대포털",
+    "en": "Lighthouse Portal"
    },
    "description": {
     "ko": "검색과 이메일, 카페 서비스를 운영하는 인터넷 회사다.",
@@ -1046,8 +1046,8 @@
    "id": "2000s-shipping",
    "themeId": "shipping",
    "name": {
-    "ko": "돛배 해운주",
-    "en": "Sailboat Shipping Stock"
+    "ko": "돛배해운",
+    "en": "Sailboat Shipping"
    },
    "description": {
     "ko": "화물선으로 철광석과 곡물, 컨테이너를 실어 나른다.",
@@ -1058,8 +1058,8 @@
    "id": "2000s-overseas_plant",
    "themeId": "overseas_plant",
    "name": {
-    "ko": "모래 플랜트주",
-    "en": "Sand Plant Stock"
+    "ko": "모래플랜트",
+    "en": "Sand Plant"
    },
    "description": {
     "ko": "해외에 정유 공장과 발전소를 지어 주는 건설사다.",
@@ -1070,8 +1070,8 @@
    "id": "2000s-machinery",
    "themeId": "machinery",
    "name": {
-    "ko": "단풍 중장비주",
-    "en": "Maple Machinery Stock"
+    "ko": "단풍중장비",
+    "en": "Maple Machinery"
    },
    "description": {
     "ko": "굴착기와 지게차를 만들어 공사 현장에 판다.",
@@ -1082,8 +1082,8 @@
    "id": "2000s-hallyu",
    "themeId": "hallyu",
    "name": {
-    "ko": "노을 엔터주",
-    "en": "Dusk Entertainment Stock"
+    "ko": "노을엔터",
+    "en": "Dusk Entertainment"
    },
    "description": {
     "ko": "가수와 배우를 관리하고 드라마와 공연을 만든다.",
@@ -1094,8 +1094,8 @@
    "id": "2000s-battery",
    "themeId": "battery",
    "name": {
-    "ko": "이슬 전지주",
-    "en": "Dew Battery Stock"
+    "ko": "이슬전지",
+    "en": "Dew Battery"
    },
    "description": {
     "ko": "휴대폰과 노트북에 들어가는 충전용 전지를 만든다.",
@@ -1106,8 +1106,8 @@
    "id": "2000s-renewable",
    "themeId": "renewable",
    "name": {
-    "ko": "바람 신재생주",
-    "en": "Wind Renewables Stock"
+    "ko": "바람신재생",
+    "en": "Wind Renewables"
    },
    "description": {
     "ko": "태양광 모듈과 풍력 발전기 부품을 만든다.",
@@ -1118,8 +1118,8 @@
    "id": "2000s-card",
    "themeId": "card",
    "name": {
-    "ko": "종이 카드주",
-    "en": "Paper Card Stock"
+    "ko": "종이카드",
+    "en": "Paper Card"
    },
    "description": {
     "ko": "신용카드를 발급하고 할부와 현금서비스를 제공한다.",
@@ -1130,8 +1130,8 @@
    "id": "2000s-airline",
    "themeId": "airline",
    "name": {
-    "ko": "새벽 항공주",
-    "en": "Dawn Airlines Stock"
+    "ko": "새벽항공",
+    "en": "Dawn Airlines"
    },
    "description": {
     "ko": "국내선과 국제선 여객기를 운항한다.",
@@ -1142,8 +1142,8 @@
    "id": "2000s-dotcom",
    "themeId": "dotcom",
    "name": {
-    "ko": "파랑 벤처주",
-    "en": "Blue Venture Stock"
+    "ko": "파랑벤처",
+    "en": "Blue Venture"
    },
    "description": {
     "ko": "인터넷 쇼핑몰과 커뮤니티 사이트를 만드는 작은 회사다.",
@@ -1154,8 +1154,8 @@
    "id": "2000s-textile",
    "themeId": "textile",
    "name": {
-    "ko": "솔잎 섬유주",
-    "en": "Pine Textile Stock"
+    "ko": "솔잎섬유",
+    "en": "Pine Textile"
    },
    "description": {
     "ko": "원단을 짜고 의류를 봉제해 수출한다.",
@@ -1166,8 +1166,8 @@
    "id": "2000s-travel",
    "themeId": "travel",
    "name": {
-    "ko": "갈대 여행주",
-    "en": "Reed Travel Stock"
+    "ko": "갈대여행",
+    "en": "Reed Travel"
    },
    "description": {
     "ko": "해외 패키지 여행 상품을 만들어 판다.",
@@ -1178,8 +1178,8 @@
    "id": "2000s-poultry",
    "themeId": "poultry",
    "name": {
-    "ko": "들꽃 양계주",
-    "en": "Wildflower Poultry Stock"
+    "ko": "들꽃양계",
+    "en": "Wildflower Poultry"
    },
    "description": {
     "ko": "닭을 길러 닭고기와 달걀을 판다.",
@@ -1190,8 +1190,8 @@
    "id": "2000s-landline",
    "themeId": "landline",
    "name": {
-    "ko": "연필 전화주",
-    "en": "Pencil Telephone Stock"
+    "ko": "연필전화",
+    "en": "Pencil Telephone"
    },
    "description": {
     "ko": "집과 사무실에 유선전화 서비스를 제공한다.",
@@ -1202,8 +1202,8 @@
    "id": "2000s-records",
    "themeId": "records",
    "name": {
-    "ko": "보라 음반주",
-    "en": "Violet Records Stock"
+    "ko": "보라음반",
+    "en": "Violet Records"
    },
    "description": {
     "ko": "가요 음반을 만들어 CD와 테이프로 판다.",
@@ -1214,8 +1214,8 @@
    "id": "2000s-pc",
    "themeId": "pc",
    "name": {
-    "ko": "하양 컴퓨터주",
-    "en": "White Computer Stock"
+    "ko": "하양컴퓨터",
+    "en": "White Computer"
    },
    "description": {
     "ko": "가정과 학교에 쓰는 데스크톱 PC를 조립해 판다.",
@@ -1226,8 +1226,8 @@
    "id": "2000s-film",
    "themeId": "film",
    "name": {
-    "ko": "호수 필름주",
-    "en": "Lake Film Stock"
+    "ko": "호수필름",
+    "en": "Lake Film"
    },
    "description": {
     "ko": "사진 필름을 만들고 동네 사진관에 인화 장비를 공급한다.",
@@ -1238,8 +1238,8 @@
    "id": "2000s-print",
    "themeId": "print",
    "name": {
-    "ko": "강물 신문주",
-    "en": "River Newspaper Stock"
+    "ko": "강물신문",
+    "en": "River Newspaper"
    },
    "description": {
     "ko": "일간 신문과 주간 잡지를 펴낸다.",
@@ -1250,8 +1250,8 @@
    "id": "2000s-savings_bank",
    "themeId": "savings_bank",
    "name": {
-    "ko": "저녁 저축은행주",
-    "en": "Evening Savings Bank Stock"
+    "ko": "저녁저축은행",
+    "en": "Evening Savings Bank"
    },
    "description": {
     "ko": "높은 금리의 예금을 받아 개인과 건설사에 돈을 빌려준다.",
@@ -1262,8 +1262,8 @@
    "id": "2000s-flour",
    "themeId": "flour",
    "name": {
-    "ko": "노랑 제분주",
-    "en": "Yellow Flour Stock"
+    "ko": "노랑제분",
+    "en": "Yellow Flour"
    },
    "description": {
     "ko": "수입한 밀과 원당으로 밀가루와 설탕을 만든다.",
@@ -1274,8 +1274,8 @@
    "id": "2000s-auto",
    "themeId": "auto",
    "name": {
-    "ko": "검정 자동차주",
-    "en": "Black Motors Stock"
+    "ko": "검정자동차",
+    "en": "Black Motors"
    },
    "description": {
     "ko": "승용차와 소형 트럭을 만들어 국내외에 판다.",
@@ -1286,8 +1286,8 @@
    "id": "2000s-bank",
    "themeId": "bank",
    "name": {
-    "ko": "초록 은행주",
-    "en": "Green Bank Stock"
+    "ko": "초록은행",
+    "en": "Green Bank"
    },
    "description": {
     "ko": "예금을 받아 가계와 기업에 대출해 주는 시중 은행이다.",
@@ -1298,8 +1298,8 @@
    "id": "2000s-securities",
    "themeId": "securities",
    "name": {
-    "ko": "주황 증권주",
-    "en": "Orange Securities Stock"
+    "ko": "주황증권",
+    "en": "Orange Securities"
    },
    "description": {
     "ko": "주식 매매를 중개하고 펀드를 판매한다.",
@@ -1310,8 +1310,8 @@
    "id": "2000s-housing",
    "themeId": "housing",
    "name": {
-    "ko": "우산 건설주",
-    "en": "Umbrella Builders Stock"
+    "ko": "우산건설",
+    "en": "Umbrella Builders"
    },
    "description": {
     "ko": "아파트를 지어 분양하는 주택 건설사다.",
@@ -1322,8 +1322,8 @@
    "id": "2000s-refining",
    "themeId": "refining",
    "name": {
-    "ko": "안개 정유주",
-    "en": "Mist Refining Stock"
+    "ko": "안개정유",
+    "en": "Mist Refining"
    },
    "description": {
     "ko": "수입한 원유로 휘발유와 경유를 만든다.",
@@ -1334,8 +1334,8 @@
    "id": "2000s-mobile",
    "themeId": "mobile",
    "name": {
-    "ko": "고요 통신주",
-    "en": "Calm Telecom Stock"
+    "ko": "고요통신",
+    "en": "Calm Telecom"
    },
    "description": {
     "ko": "휴대폰 통화와 데이터 서비스를 제공하는 통신사다.",
@@ -1346,8 +1346,8 @@
    "id": "2000s-mart",
    "themeId": "mart",
    "name": {
-    "ko": "하늘 유통주",
-    "en": "Sky Retail Stock"
+    "ko": "하늘유통",
+    "en": "Sky Retail"
    },
    "description": {
     "ko": "생활용품과 식료품을 파는 대형 할인점을 운영한다.",
@@ -1358,8 +1358,8 @@
    "id": "2000s-pharma",
    "themeId": "pharma",
    "name": {
-    "ko": "구슬 제약주",
-    "en": "Marble Pharma Stock"
+    "ko": "구슬제약",
+    "en": "Marble Pharma"
    },
    "description": {
     "ko": "감기약과 백신, 병원용 치료제를 만든다.",
@@ -1370,8 +1370,8 @@
    "id": "2000s-food",
    "themeId": "food",
    "name": {
-    "ko": "참새 식품주",
-    "en": "Sparrow Foods Stock"
+    "ko": "참새식품",
+    "en": "Sparrow Foods"
    },
    "description": {
     "ko": "라면과 과자, 분유 같은 가공식품을 만든다.",
@@ -1382,8 +1382,8 @@
    "id": "2000s-defense",
    "themeId": "defense",
    "name": {
-    "ko": "돌담 방산주",
-    "en": "Stonewall Defense Stock"
+    "ko": "돌담방산",
+    "en": "Stonewall Defense"
    },
    "description": {
     "ko": "군용 장갑차와 포를 만들어 군에 납품한다.",
@@ -1397,7 +1397,7 @@
    "type": "breaking",
    "magnitude": 8,
    "title": {
-    "ko": "미국 기술주 폭락, 인터넷 벤처 거품 꺼져",
+    "ko": "미국 기술주 폭락, 벤처 거품 꺼져",
     "en": "US Tech Stocks Crash as the Internet Venture Bubble Bursts"
    },
    "body": {
@@ -1736,7 +1736,7 @@
    "type": "breaking",
    "magnitude": 6,
    "title": {
-    "ko": "국산 온라인 게임, 중국 동시 접속자 수십만 명",
+    "ko": "국산 온라인 게임, 중국서 접속자 수십만",
     "en": "Korean Online Game Draws Hundreds of Thousands of Players in China"
    },
    "body": {
@@ -1839,7 +1839,7 @@
    "type": "breaking",
    "magnitude": 6,
    "title": {
-    "ko": "한국 드라마 일본서 인기, 촬영지 관광 몰려",
+    "ko": "한국 드라마 일본서 인기, 관광객 몰려",
     "en": "Korean Drama Becomes a Hit in Japan, Fans Flock to Filming Sites"
    },
    "body": {
@@ -2058,7 +2058,7 @@
    "type": "breaking",
    "magnitude": 6,
    "title": {
-    "ko": "섬유 수입 쿼터 전면 폐지, 값싼 의류 몰려온다",
+    "ko": "섬유 수입 쿼터 폐지, 값싼 의류 몰려온다",
     "en": "Textile Import Quotas Scrapped, Cheap Apparel Floods In"
    },
    "body": {
@@ -2161,7 +2161,7 @@
    "type": "breaking",
    "magnitude": 6,
    "title": {
-    "ko": "초대형 허리케인, 미국 정유 시설 멈춰 유가 사상 최고",
+    "ko": "초대형 허리케인, 미국 정유 시설 멈춰",
     "en": "Massive Hurricane Shuts US Refineries, Oil Hits a Record"
    },
    "body": {
@@ -2277,7 +2277,7 @@
    "type": "breaking",
    "magnitude": 5,
    "title": {
-    "ko": "MP3 플레이어 판매 급증, 음반 판매는 반 토막",
+    "ko": "MP3 플레이어 판매 급증, 음반은 반 토막",
     "en": "MP3 Player Sales Soar as Album Sales Halve"
    },
    "body": {
@@ -2483,7 +2483,7 @@
    "type": "breaking",
    "magnitude": 4,
    "title": {
-    "ko": "무료 신문·인터넷 뉴스 확산, 신문 구독 감소",
+    "ko": "무료 신문·인터넷 뉴스 확산, 구독 감소",
     "en": "Free Papers and Online News Spread, Newspaper Subscriptions Fall"
    },
    "body": {
@@ -2586,7 +2586,7 @@
    "type": "breaking",
    "magnitude": 7,
    "title": {
-    "ko": "주가지수 사상 첫 2,000 돌파, 펀드에 돈 몰려",
+    "ko": "주가지수 첫 2,000 돌파, 펀드 열풍",
     "en": "Stock Index Tops 2,000 for the First Time as Money Pours into Funds"
    },
    "body": {
@@ -2702,7 +2702,7 @@
    "type": "breaking",
    "magnitude": 7,
    "title": {
-    "ko": "중국 경제 두 자릿수 성장, 철광석·선박 주문 폭주",
+    "ko": "중국 고성장, 철광석·선박 주문 폭주",
     "en": "China Grows at Double Digits, Iron Ore and Ship Orders Soar"
    },
    "body": {
@@ -3015,7 +3015,7 @@
    "type": "breaking",
    "magnitude": 6,
    "title": {
-    "ko": "국제 곡물값 급등, 밀가루·라면값 인상 잇따라",
+    "ko": "국제 곡물값 급등, 밀가루·라면값 인상",
     "en": "Global Grain Prices Surge, Flour and Noodle Prices Rise"
    },
    "body": {
@@ -3118,7 +3118,7 @@
    "type": "breaking",
    "magnitude": 7,
    "title": {
-    "ko": "원·달러 환율 1,500원 돌파, 외화 확보 비상",
+    "ko": "원·달러 환율 1,500원 돌파, 외화 비상",
     "en": "Won Breaks 1,500 per Dollar, Scramble for Foreign Currency"
    },
    "body": {
@@ -3260,7 +3260,7 @@
    "type": "breaking",
    "magnitude": 6,
    "title": {
-    "ko": "저축은행 부동산 PF 대출 부실 우려 커져",
+    "ko": "저축은행 부동산 PF 대출 부실 우려",
     "en": "Savings Banks Face Mounting Property Loan Losses"
    },
    "body": {
@@ -3466,7 +3466,7 @@
    "type": "breaking",
    "magnitude": 5,
    "title": {
-    "ko": "노트북 배터리 발화 사고, 수백만 개 리콜",
+    "ko": "노트북 배터리 발화, 수백만 개 리콜",
     "en": "Laptop Battery Fires Trigger Recall of Millions"
    },
    "body": {
@@ -3775,7 +3775,7 @@
    "type": "breaking",
    "magnitude": 4,
    "title": {
-    "ko": "카메라폰이 휴대폰 판매의 절반 넘어, 사진 문화가 바뀐다",
+    "ko": "카메라폰, 휴대폰 판매의 절반 넘어",
     "en": "Camera Phones Pass Half of Handset Sales, Changing How People Take Photos"
    },
    "body": {
@@ -3895,7 +3895,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "걸프 지역 긴장 고조… 전문가들 '전쟁 나도 단기전'",
+     "ko": "걸프 지역 긴장… '전쟁 나도 단기전'",
      "en": "Gulf Tension Rises… Experts Say Any War Would Be Short"
     },
     "body": {
@@ -4012,7 +4012,7 @@
      "type": "outcome",
      "magnitude": 8,
      "title": {
-      "ko": "개전 3주 만에 수도 함락… 유가 급락, 증시 반등",
+      "ko": "개전 3주 만에 수도 함락… 유가 급락",
       "en": "Capital Falls Three Weeks into the War… Oil Plunges, Stocks Rebound"
      },
      "body": {
@@ -4132,7 +4132,7 @@
      "type": "outcome",
      "magnitude": 8,
      "title": {
-      "ko": "전쟁 장기화… 유가 치솟고 세계 증시 흔들",
+      "ko": "전쟁 장기화… 유가 치솟고 증시 흔들",
       "en": "War Drags On… Oil Soars and Global Markets Shake"
      },
      "body": {
@@ -4265,7 +4265,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "북한 '핵실험 하겠다' 성명… 실험장 주변 움직임 포착",
+     "ko": "북한 '핵실험 하겠다'… 실험장 움직임",
      "en": "North Korea Vows a Nuclear Test… Activity Spotted Near Test Site"
     },
     "body": {
@@ -4634,7 +4634,7 @@
     "type": "tentative",
     "magnitude": 3,
     "title": {
-     "ko": "미국 대형 투자은행 위기설… 인수 협상 잇따라 결렬",
+     "ko": "미국 대형 투자은행 위기설… 인수 협상 결렬",
      "en": "Crisis Rumors Hit a Big US Investment Bank… Takeover Talks Collapse"
     },
     "body": {
@@ -4768,7 +4768,7 @@
      "type": "outcome",
      "magnitude": 9,
      "title": {
-      "ko": "미국 대형 투자은행 파산… 세계 금융위기로 번져",
+      "ko": "미국 대형 투자은행 파산… 금융위기 번져",
       "en": "Big US Investment Bank Collapses… A Global Financial Crisis Spreads"
      },
      "body": {
@@ -5050,7 +5050,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "소비자물가 5% 넘어… 중앙은행 총재 '물가 안정이 우선'",
+     "ko": "물가 5% 넘어… 총재 '물가 안정이 우선'",
      "en": "Consumer Inflation Tops 5%… Central Bank Chief Says Price Stability Comes First"
     },
     "body": {
@@ -5167,7 +5167,7 @@
      "type": "outcome",
      "magnitude": 7,
      "title": {
-      "ko": "기준금리 0.25%p 인상… 대출 이자 부담 커진다",
+      "ko": "기준금리 0.25%p 인상… 대출 이자 부담",
       "en": "Policy Rate Raised by 0.25 Points… Loan Costs Rise"
      },
      "body": {
@@ -5283,7 +5283,7 @@
      "type": "outcome",
      "magnitude": 7,
      "title": {
-      "ko": "중앙은행, 경기 둔화 걱정에 기준금리 동결",
+      "ko": "경기 둔화 걱정에 기준금리 동결",
       "en": "Central Bank Holds Rates on Growth Worries"
      },
      "body": {
@@ -5412,7 +5412,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "카드 연체율 10% 넘어… 현금서비스 한도 줄줄이 축소",
+     "ko": "카드 연체율 10% 넘어… 한도 줄줄이 축소",
      "en": "Card Delinquencies Top 10%… Cash Advance Limits Slashed"
     },
     "body": {
@@ -5529,7 +5529,7 @@
      "type": "outcome",
      "magnitude": 8,
      "title": {
-      "ko": "대형 카드사 유동성 위기… 채권단 긴급 자금 지원",
+      "ko": "대형 카드사 유동성 위기… 긴급 자금 지원",
       "en": "Major Card Issuer Hits a Cash Crunch… Creditors Step In"
      },
      "body": {
@@ -5645,7 +5645,7 @@
      "type": "outcome",
      "magnitude": 7,
      "title": {
-      "ko": "카드사 대규모 증자 성공… 연체 사태 조기 수습",
+      "ko": "카드사 대규모 증자 성공… 연체 사태 수습",
       "en": "Card Issuers Raise Capital… Delinquency Crisis Contained Early"
      },
      "body": {
@@ -5777,7 +5777,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "아시아 괴질 확산… 국내 의심 환자는 잇따라 '음성'",
+     "ko": "아시아 괴질 확산… 국내 의심 환자 '음성'",
      "en": "Mystery Illness Spreads in Asia… Suspected Korean Cases Test Negative"
     },
     "body": {
@@ -5894,7 +5894,7 @@
      "type": "outcome",
      "magnitude": 7,
      "title": {
-      "ko": "국내 확산 없이 괴질 진정… 여행·항공 예약 회복",
+      "ko": "괴질 확산 없이 진정… 여행 예약 회복",
       "en": "Illness Contained Without Spreading in Korea… Travel and Flight Bookings Recover"
      },
      "body": {
@@ -6151,7 +6151,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "통상 협상 막판 시한 연장… 양측 '큰 틀 의견 접근'",
+     "ko": "통상 협상 시한 연장… '큰 틀 의견 접근'",
      "en": "Trade Talks Extended at the Deadline… Both Sides Say They Are Close"
     },
     "body": {
@@ -6281,7 +6281,7 @@
      "type": "outcome",
      "magnitude": 7,
      "title": {
-      "ko": "한미 자유무역협정 타결… 승용차 관세 철폐",
+      "ko": "한미 자유무역협정 타결… 관세 철폐",
       "en": "Korea-US Free Trade Deal Reached… Car Tariffs Scrapped"
      },
      "body": {
@@ -6555,7 +6555,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "닭 집단 폐사 신고… 주변 농가에서도 폐사 늘어",
+     "ko": "닭 집단 폐사 신고… 주변 농가로 번져",
      "en": "Mass Chicken Deaths Reported… More Farms Nearby Losing Birds"
     },
     "body": {
@@ -6659,7 +6659,7 @@
      "type": "outcome",
      "magnitude": 8,
      "title": {
-      "ko": "고병원성 조류인플루엔자 확진… 대규모 살처분",
+      "ko": "조류인플루엔자 확진… 대규모 살처분 단행",
       "en": "Highly Pathogenic Bird Flu Confirmed… Mass Culling Ordered"
      },
      "body": {
@@ -6762,7 +6762,7 @@
      "type": "outcome",
      "magnitude": 7,
      "title": {
-      "ko": "닭 폐사 원인은 저병원성… 이동 제한 풀려",
+      "ko": "폐사 원인은 저병원성… 이동 제한 해제",
       "en": "Chicken Deaths Ruled Low-Pathogenic… Movement Limits Lifted"
      },
      "body": {
@@ -6882,7 +6882,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "산유국 회의 앞두고 '공급은 충분하다' 입장 고수",
+     "ko": "산유국 회의 앞두고 '공급은 충분하다'",
      "en": "Ahead of Producer Meeting, Oil Exporters Insist Supply Is Ample"
     },
     "body": {
@@ -7119,7 +7119,7 @@
      "type": "outcome",
      "magnitude": 8,
      "title": {
-      "ko": "산유국 대규모 증산 합의… 국제 유가 급락",
+      "ko": "산유국 대규모 증산 합의… 유가 급락",
       "en": "Producers Agree to Big Output Boost… Oil Plunges"
      },
      "body": {
@@ -7256,7 +7256,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "올림픽 개최지 투표 임박… 베이징 지지 선언 잇따라",
+     "ko": "올림픽 개최지 투표 임박… 베이징 지지 늘어",
      "en": "Olympic Host Vote Nears… Support for Beijing Grows"
     },
     "body": {
@@ -7360,7 +7360,7 @@
      "type": "outcome",
      "magnitude": 7,
      "title": {
-      "ko": "베이징 올림픽 개최 확정… 중국 인프라 투자 기대",
+      "ko": "베이징 올림픽 확정… 중국 인프라 투자 기대",
       "en": "Beijing Wins the Olympics… China Infrastructure Spending Expected"
      },
      "body": {
@@ -7467,7 +7467,7 @@
      "type": "outcome",
      "magnitude": 7,
      "title": {
-      "ko": "올림픽 개최지 다른 도시로… 중국 건설 붐 기대 꺾여",
+      "ko": "베이징 올림픽 유치 실패… 건설 기대 꺾여",
       "en": "Olympics Go to Another City… Hopes for a China Building Boom Fade"
      },
      "body": {
@@ -7591,7 +7591,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "남반구 겨울철 신종 독감 급증… '가을 재유행' 경고",
+     "ko": "남반구 신종 독감 급증… '재유행' 경고",
      "en": "New Flu Surges in the Southern Winter… Experts Warn of an Autumn Wave"
     },
     "body": {
@@ -7708,7 +7708,7 @@
      "type": "outcome",
      "magnitude": 8,
      "title": {
-      "ko": "신종 독감 가을 대유행… 백신 접종 앞당기고 해외여행 취소",
+      "ko": "신종 독감 가을 대유행… 해외여행 취소",
       "en": "New Flu Sweeps Through Autumn… Vaccination Moved Up, Trips Canceled"
      },
      "body": {
@@ -7828,7 +7828,7 @@
      "type": "outcome",
      "magnitude": 7,
      "title": {
-      "ko": "신종 독감 여름 지나며 잠잠… 재유행 없이 지나가",
+      "ko": "신종 독감 잠잠… 재유행 없이 지나가",
       "en": "New Flu Fades After Summer… No Autumn Wave"
      },
      "body": {
@@ -7964,7 +7964,7 @@
     "type": "tentative",
     "magnitude": 2,
     "title": {
-     "ko": "미국 중앙은행, 신흥국과 통화스와프 확대 검토",
+     "ko": "미국 중앙은행, 신흥국 통화스와프 검토",
      "en": "US Central Bank Weighs Currency Swaps with Emerging Economies"
     },
     "body": {
@@ -8081,7 +8081,7 @@
      "type": "outcome",
      "magnitude": 8,
      "title": {
-      "ko": "300억 달러 통화스와프 체결… 환율 급락, 증시 급반등",
+      "ko": "300억 달러 통화스와프 체결… 환율 급락",
       "en": "$30 Billion Currency Swap Signed… Won Surges, Stocks Rebound"
      },
      "body": {
@@ -8197,7 +8197,7 @@
      "type": "outcome",
      "magnitude": 8,
      "title": {
-      "ko": "통화스와프 협상 지연… 외화 부족 걱정 커져",
+      "ko": "통화스와프 협상 지연… 외화 부족 걱정",
       "en": "Currency Swap Talks Stall… Foreign Currency Fears Grow"
      },
      "body": {

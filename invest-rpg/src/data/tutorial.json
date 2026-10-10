@@ -11,18 +11,18 @@
     { "id": "game", "sentiment": "neutral", "relevance": "peripheral", "name": { "ko": "게임", "en": "Games" }, "keywords": { "ko": ["게임", "온라인", "모바일", "콘솔", "이용자"], "en": ["game", "online", "mobile", "console", "players"] }, "existsEvidence": "튜토리얼용 가상 테마" }
   ],
   "stocks": [
-    { "id": "tut-battery", "themeId": "battery", "name": { "ko": "하늘 배터리주", "en": "Sky Battery Stock" }, "description": { "ko": "전기 버스와 휴대 기기에 들어가는 배터리를 만든다.", "en": "Makes batteries for electric buses and portable devices." } },
-    { "id": "tut-bus", "themeId": "bus", "name": { "ko": "초록 버스주", "en": "Green Bus Stock" }, "description": { "ko": "시내버스와 고속버스를 만드는 회사다.", "en": "Builds city and intercity buses." } },
-    { "id": "tut-oil", "themeId": "oil", "name": { "ko": "검은 정유주", "en": "Black Refinery Stock" }, "description": { "ko": "경유와 휘발유를 만들어 주유소에 판다.", "en": "Produces diesel and gasoline for gas stations." } },
-    { "id": "tut-food", "themeId": "food", "name": { "ko": "노을 식품주", "en": "Dusk Foods Stock" }, "description": { "ko": "과자와 라면을 만든다.", "en": "Makes snacks and instant noodles." } },
-    { "id": "tut-game", "themeId": "game", "name": { "ko": "구름 게임주", "en": "Cloud Games Stock" }, "description": { "ko": "모바일 게임을 서비스한다.", "en": "Runs mobile games." } }
+    { "id": "tut-battery", "themeId": "battery", "name": { "ko": "하늘배터리", "en": "Sky Battery" }, "description": { "ko": "전기 버스와 휴대 기기에 들어가는 배터리를 만든다.", "en": "Makes batteries for electric buses and portable devices." } },
+    { "id": "tut-bus", "themeId": "bus", "name": { "ko": "초록버스", "en": "Green Bus" }, "description": { "ko": "시내버스와 고속버스를 만드는 회사다.", "en": "Builds city and intercity buses." } },
+    { "id": "tut-oil", "themeId": "oil", "name": { "ko": "검은정유", "en": "Black Refinery" }, "description": { "ko": "경유와 휘발유를 만들어 주유소에 판다.", "en": "Produces diesel and gasoline for gas stations." } },
+    { "id": "tut-food", "themeId": "food", "name": { "ko": "노을식품", "en": "Dusk Foods" }, "description": { "ko": "과자와 라면을 만든다.", "en": "Makes snacks and instant noodles." } },
+    { "id": "tut-game", "themeId": "game", "name": { "ko": "구름게임", "en": "Cloud Games" }, "description": { "ko": "모바일 게임을 서비스한다.", "en": "Runs mobile games." } }
   ],
   "breaking": [
     {
       "id": "tut-news-ebus",
       "type": "breaking",
       "magnitude": 7,
-      "title": { "ko": "정부, 경유 버스 대신 전기 버스 1만 대 도입 발표", "en": "Government to Replace Diesel Buses with 10,000 Electric Buses" },
+      "title": { "ko": "정부, 전기 버스 1만 대 도입 발표", "en": "Government to Replace Diesel Buses with 10,000 Electric Buses" },
       "body": { "ko": "정부가 시내 경유 버스를 전기 버스로 바꾸겠다고 발표했다. 버스 제조사와 배터리 회사에 주문이 몰릴 전망이고, 경유 판매는 줄어들 것으로 보인다.", "en": "The government will replace city diesel buses with electric ones. Orders are expected to pour into bus makers and battery companies, while diesel sales are likely to fall." },
       "effects": [
         { "themeId": "battery", "impact": 7, "link": { "strength": 3, "keywords": [{ "newsTerm": "배터리", "themeTerm": "배터리" }] }, "reason": { "ko": "전기 버스마다 큰 배터리가 필요해 주문이 늘어날 것으로 기대", "en": "Each electric bus needs a large battery, so orders are expected to rise" } },
