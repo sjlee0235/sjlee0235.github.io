@@ -1,0 +1,272 @@
+{
+  "common": {
+    "confirm": "OK",
+    "cancel": "Cancel",
+    "coin": "{amount} coins",
+    "close": "Close"
+  },
+  "phase": {
+    "running": "Market open",
+    "era-ended": "Era closed",
+    "finished": "All eras complete",
+    "paused": "Paused"
+  },
+  "sentiment": {
+    "positive": "Positive",
+    "negative": "Negative",
+    "neutral": "Neutral"
+  },
+  "relevance": {
+    "core": "Main theme",
+    "peripheral": "Background theme"
+  },
+  "trade": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "quantity": "Quantity",
+    "maxQuantity": "Max {count} shares",
+    "bought": "Bought {count} shares of {name} at {price} coins.",
+    "sold": "Sold {count} shares of {name} at {price} coins.",
+    "queued": "Order received. It will fill shortly at the price at that time.",
+    "fee": "Fee {fee} coins"
+  },
+  "error": {
+    "invalid-quantity": "Quantity must be a whole number of 1 or more.",
+    "invalid-price": "Invalid price.",
+    "insufficient-cash": "Not enough cash.",
+    "insufficient-shares": "Not enough shares.",
+    "unknown-stock": "Unknown stock.",
+    "not-tradable": "Trading is not available right now."
+  },
+  "portfolio": {
+    "cash": "Cash",
+    "totalAssets": "Total assets",
+    "avgPrice": "Avg. price",
+    "currentPrice": "Price",
+    "unrealizedPnl": "Unrealized P/L",
+    "returnRate": "Return",
+    "favorites": "Watchlist"
+  },
+  "settlement": {
+    "title": "{era} Results",
+    "startCash": "Starting cash",
+    "endAssets": "Ending assets",
+    "returnPct": "Return",
+    "byStock": "P/L by stock",
+    "liquidated": "All holdings were automatically sold at the current price.",
+    "nextEra": "Next era",
+    "formula": "Returns are time-weighted. Money added mid-era (deposits) is not counted as profit; the era is split at each deposit and the segment returns are multiplied.",
+    "profitAmount": "Net profit (excluding deposits)",
+    "deposits": "Deposits this era",
+    "cumulative": "Cumulative return",
+    "versionChange": "The game was updated, so this era was settled at the prices from your last save. The new version applies from the next era.",
+    "investment": "Investment result",
+    "workIncome": "Work income",
+    "total": "Total",
+    "formulaTotal": "Investment + work income = total",
+    "brokeTime": "Time without money to invest",
+    "workPaid": "Work income paid this era",
+    "interiorSpent": "Spent on interior",
+    "nextStart": "Next era starting coins",
+    "pendingWork": "{coins} coins of pending work income will be paid after {dolls} more dolls. It carries over to the next era."
+  },
+  "news": {
+    "type": {
+      "breaking": "Breaking",
+      "tentative": "Tentative",
+      "clue": "Follow-up",
+      "outcome": "Outcome"
+    },
+    "fictionalTag": "Fictional scenario",
+    "reaction": "Market reaction",
+    "archive": "News archive",
+    "relatedTentative": "Related tentative news"
+  },
+  "report": {
+    "title": "Market Report",
+    "line": "{stock} {pct} — {reason}",
+    "auto": "{theme} {effect} from {newsTerm}",
+    "benefit": "benefits",
+    "burden": "is burdened",
+    "more": "+{count} more",
+    "firstNotice": "Market Report figures are what actually moved inside the game. They are not real market data or investment advice.",
+    "tentativeNote": "This was a tentative report, so the effect was small. The outcome report may change things a lot.",
+    "split": "At release {instant} · 5s later {delayed}"
+  },
+  "tutorial": {
+    "title": "New here?",
+    "notice1": "News arrives without warning. Within an era, news items have no time order or connection, and even major historical events may not appear in this round.",
+    "notice2": "Only a 'tentative report' and its 'outcome report' about the same event are connected.",
+    "notice3": "Most of a news story's effect hits the price the moment it is announced, and the rest a few seconds later, so studying ahead works better than buying after you read it.",
+    "notice4": "The reaction rates on screen are fictional in-game numbers. They are not the real market or investment advice.",
+    "stepWaiting": "News is coming soon. Please wait a moment.",
+    "stepReading": "News is out! Time stops during the tutorial. Try buying a related stock.",
+    "stepReaction": "Most of the move hits the price the moment the news appears, and the rest 5 seconds later. Then prices keep swinging for 10 more seconds.",
+    "stepReport": "Two minutes later a Market Report appears right under the news. Check which stocks moved and why.",
+    "done": "Tutorial complete! In the main game, time keeps running when news breaks.",
+    "replay": "Replay the tutorial",
+    "storyTitle": "Kim Yeokjeon's Story",
+    "story1": "Kim Yeokjeon, 28, jumped into stocks on gut feeling and lost every coin saved up.",
+    "story2": "All that is left: a moldy rented room, unpaid bills, cup noodles, and one loyal puppy.",
+    "story3": "This time Yeokjeon will study instead of guessing. The 10,000 coins earned gluing eyes on dolls every night are the last chance.",
+    "story4": "The goal: turn life around. Read the news, invest, and turn this shabby room into a great one.",
+    "howTitle": "How to Play",
+    "how1": "One era lasts 2 hours of game time. The time left is shown at the top left (in the account bar on the trading screen). There is no news for the first 3 minutes, so look around and get ready.",
+    "how2": "When news breaks, related prices move right away. Tap a stock, set the quantity and press [Buy] or [Sell] to trade instantly.",
+    "how3": "When time runs out, the era ends. All your shares are sold automatically, and after the settlement you move on to the next era.",
+    "roomTitle": "Your Room and Work",
+    "room1": "Attach eyes to dolls in the workshop to earn coins. You get paid every time you finish 100 dolls.",
+    "room2": "Spend 2,000 cash coins in the living room to upgrade the interior one level. You need cash, not stocks.",
+    "room3": "Fictional scenarios inspired by real events. In-game numbers are not investment advice.",
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Start",
+    "how4": "Your coins, interior and work progress carry over to the next era. (This test version goes up to the 2000s.)"
+  },
+  "disclaimer": {
+    "fictional": "This is a fictional scenario based on real events and is not investment advice."
+  },
+  "deposit": {
+    "work": "Doll-eye work",
+    "purchase": "Top-up",
+    "ad": "Ad reward",
+    "other": "Other",
+    "done": "{amount} coins added ({source})."
+  },
+  "debrief": {
+    "title": "{era} Review",
+    "themes": "Themes this round",
+    "sentiment": "Era mood",
+    "relevance": "Weight",
+    "stories": "Tentative news and outcomes",
+    "clue": "Where the clue pointed",
+    "actual": "What happened",
+    "followed": "It went the way the clue pointed",
+    "notFollowed": "It went against the clue",
+    "allReports": "All news explanations",
+    "positive": "Positive",
+    "negative": "Negative",
+    "strength": {
+      "3": "Direct",
+      "2": "Close",
+      "1": "Indirect"
+    },
+    "relatedThemes": "Affected stocks"
+  },
+  "telemetry": {
+    "consentTitle": "Play data consent",
+    "consentBody": "We'd like to collect play data (trades, screen time, etc.) to improve game balance. We never collect your name, contact info, or device IDs. You can play the same way without agreeing.",
+    "agree": "Agree",
+    "decline": "Don't agree",
+    "later": "You can change this anytime in Settings."
+  },
+  "tabs": {
+    "living_room": "Living Room",
+    "trading": "Trading",
+    "workshop": "Workshop",
+    "tv_shopping": "Shopping TV",
+    "comingSoon": "Broadcast coming soon"
+  },
+  "era": {
+    "graceNotice": "No news for the first 3 minutes. Look around the stocks and get ready.",
+    "remaining": "Time left {time}"
+  },
+  "speed": {
+    "x1": "1x",
+    "x2": "2x",
+    "badge": "x2"
+  },
+  "newsBadge": "NEWS!",
+  "work": {
+    "pending": "Pending work income",
+    "payoutNote": "Finish 100 dolls to get paid.",
+    "plus": "+{coins}",
+    "eyes": "Eyes: {count}",
+    "done": "Done: {count}",
+    "pendingShort": "Pending",
+    "paid": "100 dolls done! {coins} coins of work income paid.",
+    "dollLabel": "Doll (tap to attach eyes)"
+  },
+  "music": {
+    "genre": {
+      "jazz": "Jazz",
+      "classical": "Classical",
+      "hiphop": "Hip-hop",
+      "rock": "Rock"
+    },
+    "volume": "Music volume",
+    "master": "Master volume",
+    "sfx": "Sound effects",
+    "mute": "Mute",
+    "credits": "Music credits",
+    "tapToStart": "Tap the screen once to turn on sound."
+  },
+  "order": {
+    "max": "Max",
+    "quantity": "Qty",
+    "less": "Fewer",
+    "more": "More",
+    "zero": "Set the quantity to 1 or more.",
+    "filledBuy": "Bought {count} {name} ({amount} coins)",
+    "filledSell": "Sold {count} {name} ({amount} coins)"
+  },
+  "final": {
+    "title": "Final Results",
+    "eraLine": "{era}: investment return {pct}, work income {work} coins",
+    "total": "Final coins {coins}",
+    "totalWork": "Total work income {coins} coins",
+    "cumulative": "Cumulative investment return {pct}",
+    "restart": "Start over",
+    "totalWorkLabel": "Total work income",
+    "cumulativeLabel": "Cumulative investment return",
+    "totalLabel": "Final coins",
+    "unpaid": "{coins} coins of work income not yet paid (pending)",
+    "interior": "You decorated the interior up to level {level}."
+  },
+  "trading": {
+    "listTitle": "Stocks",
+    "feedTitle": "News",
+    "colName": "Name",
+    "colChange": "Change",
+    "return": "Return",
+    "holding": "Holding {qty} · P/L {pnl}",
+    "noHolding": "No holding",
+    "colTrend": "20-min trend",
+    "remaining": "Time left",
+    "scrollHint": "Scroll down for older news ▾",
+    "favorite": "Favorite",
+    "need": "Coins needed (fee {fee})",
+    "myAccount": "My Account",
+    "colQty": "Held",
+    "colValue": "Value",
+    "colPnl": "P/L",
+    "shares": "{count} sh",
+    "stockValue": "Stocks",
+    "noHoldings": "No stocks yet. Pick one in [Stocks] to buy."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "colorMode": "Up color",
+    "colorAuto": "Match language",
+    "colorKorean": "Red up · Blue down",
+    "colorWestern": "Green up · Red down",
+    "telemetry": "Send play data (consent)",
+    "noCredits": "No tracks need attribution yet."
+  },
+  "living": {
+    "upgrade": "Upgrade Interior - {cost}",
+    "upgradeAria": "Upgrade interior, {cost} coins (now level {level}/{max})",
+    "upgradeDone": "Interior Complete",
+    "notEnough": "Not enough cash. Sell some stocks to raise cash.",
+    "dog": "Dog"
+  },
+  "title": {
+    "name": "역전의 방",
+    "continue": "Continue",
+    "newGame": "New Game",
+    "confirmTitle": "Start over?",
+    "confirmBody": "You have saved progress. Starting a new game erases your coins, stocks, interior and work and starts from the beginning.",
+    "confirmYes": "Start over"
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "note": "곡 목록. 형식은 src/audio/music.ts의 MusicTrack, 점검은 npm run lint:audio",
+  "tracks": [
+    {
+      "id": "placeholder-jazz-1",
+      "genre": "jazz",
+      "title": "Placeholder jazz 1",
+      "artist": "(임시 무음)",
+      "file": "assets/audio/music/placeholder/jazz_1.wav",
+      "durationSec": 1,
+      "instrumental": true,
+      "license": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "status": "placeholder"
+    },
+    {
+      "id": "placeholder-jazz-2",
+      "genre": "jazz",
+      "title": "Placeholder jazz 2",
+      "artist": "(임시 무음)",
+      "file": "assets/audio/music/placeholder/jazz_2.wav",
+      "durationSec": 1,
+      "instrumental": true,
+      "license": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "status": "placeholder"
+    },
+    {
+      "id": "placeholder-classical-1",
+      "genre": "classical",
+      "title": "Placeholder classical 1",
+      "artist": "(임시 무음)",
+      "file": "assets/audio/music/placeholder/classical_1.wav",
+      "durationSec": 1,
+      "instrumental": true,
+      "license": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "recordingLicense": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "status": "placeholder"
+    },
+    {
+      "id": "placeholder-classical-2",
+      "genre": "classical",
+      "title": "Placeholder classical 2",
+      "artist": "(임시 무음)",
+      "file": "assets/audio/music/placeholder/classical_2.wav",
+      "durationSec": 1,
+      "instrumental": true,
+      "license": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "recordingLicense": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "status": "placeholder"
+    },
+    {
+      "id": "placeholder-hiphop-1",
+      "genre": "hiphop",
+      "title": "Placeholder hiphop 1",
+      "artist": "(임시 무음)",
+      "file": "assets/audio/music/placeholder/hiphop_1.wav",
+      "durationSec": 1,
+      "instrumental": true,
+      "license": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "status": "placeholder"
+    },
+    {
+      "id": "placeholder-hiphop-2",
+      "genre": "hiphop",
+      "title": "Placeholder hiphop 2",
+      "artist": "(임시 무음)",
+      "file": "assets/audio/music/placeholder/hiphop_2.wav",
+      "durationSec": 1,
+      "instrumental": true,
+      "license": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "status": "placeholder"
+    },
+    {
+      "id": "placeholder-rock-1",
+      "genre": "rock",
+      "title": "Placeholder rock 1",
+      "artist": "(임시 무음)",
+      "file": "assets/audio/music/placeholder/rock_1.wav",
+      "durationSec": 1,
+      "instrumental": true,
+      "license": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "status": "placeholder"
+    },
+    {
+      "id": "placeholder-rock-2",
+      "genre": "rock",
+      "title": "Placeholder rock 2",
+      "artist": "(임시 무음)",
+      "file": "assets/audio/music/placeholder/rock_2.wav",
+      "durationSec": 1,
+      "instrumental": true,
+      "license": {
+        "type": "CC0",
+        "sourceUrl": "",
+        "requiresAttribution": false,
+        "attributionText": "",
+        "commercialUseAllowed": true,
+        "proofFile": null,
+        "retrievedAt": "2026-10-09"
+      },
+      "status": "placeholder"
+    }
+  ]
+}
