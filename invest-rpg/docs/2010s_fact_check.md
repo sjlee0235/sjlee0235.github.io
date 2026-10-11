@@ -1,6 +1,6 @@
 # 2010년대 뉴스 팩트체크 표 (초안)
 
-- 대상: `src/data/eras/2010s.json` — 속보 24개, 스토리 13개(잠정 1 + 결과 2씩 = 39개), 모두 63개
+- 대상: `src/data/eras/2010s.json` — 속보 47개, 스토리 20개(잠정 1 + 결과 2씩 = 60개), 모두 107개 (1~4장: 8차 초안 속보 24·스토리 13, 5~7장: 9차 추가 속보 23·스토리 7)
 - 이 문서는 **앱에 포함되지 않는다**. 검증 편의를 위해 실명(기업·인물·지수·기관)을 그대로 적었다. 게임 데이터(JSON)에는 실명이 없다.
 - 확신도
   - **높음**: 날짜와 핵심 수치를 웹 출처로 확인함
@@ -102,3 +102,76 @@
 - s03 묶인 컨테이너 수와 항공 화물 운임 상승, s04 2018년 2월 비트코인 저점, s10 산유국 "감산 제안 안 함" 보도 일자, s13 관세 발효일 국내 증시 지수
 - 테마 근거 중 해외여행(2010년 출국자 약 1,250만 명 — 2019년 2,871만 명은 [국가지표체계](https://www.index.go.kr/unify/idx-info.do?idxCd=1655)로 확인)과 섬유·의류 생산 해외 이전은 통계로 다시 확인 권장
 - 대부분 뉴스의 "국내 관련 업종 주가 등락 폭"은 찾지 못했다. 현재 영향도는 사건 규모에 따른 판단값이다. 간접(강도 1) 연결 상당수(예: 대지진 → 카메라·자동차, 반도체 수출 → 항공 화물, 바이오 허가 → 화장품)는 실제 주가 기록이 아니라 연결 설명에 따른 판단이다.
+
+## 5. 9차 추가 속보 23개 (뉴스 간격 3~4분 대응)
+
+뉴스 간격을 3~4분으로 줄여 시대당 뉴스가 약 34개가 되면서 풀을 늘렸다. 검색일: 2026-10-11.
+
+| 뉴스 ID | 사실 주장(사건) | 실제 날짜 | 근거 수치 | 출처 | 확신도 |
+|---|---|---|---|---|---|
+| b25-arab-oil | 리비아 내전으로 원유 수출 중단, 브렌트유 2년 반 만의 최고, 국내 건설사 현장 철수 | 2011-02-21 ~ 02-24 | 브렌트 02-24 장중 113달러(2008-09 이후 최고), 02-18 ~ 03-02 배럴당 15달러 상승(하루 150만 배럴 수출 손실). 국내 24개 건설사·2만 2천여 명 진출, 현장 피습·철수 | [EIA](https://www.eia.gov/todayinenergy/detail.php?id=4550), [Ahram(Reuters)](https://english.ahram.org.eg/News/6324.aspx), [머니투데이](https://www.mt.co.kr/estate/2011/02/21/2011022114541953617), [서울신문](https://m.seoul.co.kr/news/2011/02/25/20110225800042) | 높음 |
+| b26-savings-bank | 부산·대전저축은행 영업정지, 이틀 뒤 계열 등 4곳 추가, 예금 인출 행렬 | 2011-02-17 ~ 02-19 | 6개월 영업정지, 원인 부동산 PF 대출 부실. 부산2저축은행 앞 4천여 명 대기. "예금이 시중 은행으로 이동"은 판단 문장(수치 미확인) | [머니투데이](https://www.mt.co.kr/finance/2011/02/17/2011021709402565413), [뉴스토마토](https://newstomato.com/ReadNews.aspx?no=140430), [서울신문](https://m.seoul.co.kr/news/2011/02/18/20110218800046) | 높음 (예금 이동은 중간) |
+| b27-lte-launch | SK텔레콤·LG유플러스 LTE 상용 서비스 시작 | 2011-07-01 | 서울 등 데이터 전용으로 출발, 스마트폰은 9월부터. "최대 다섯 배"는 3G(HSPA 14.4Mbps) 대비 LTE(75Mbps) 이론 속도 기준 판단값 | [ABI Research](https://www.abiresearch.com/blog/south-korea-wakes-up-to-lte), [Engadget](https://www.engadget.com/2011/07/05/sk-telecom-and-lg-u-launch-lte-in-seoul-fellow-south-koreans-s/) | 높음 (속도 배수 중간) |
+| b28-viral-video | 싸이 '강남스타일' 유튜브 첫 10억 뷰 | 2012-12-21 | 1,000,382,639회, 업로드 159일 만 (기네스). "노래 속 동네를 찾는 외국인"은 당시 보도 기억으로 이번 검색에서 수치 미확인 | [Guinness World Records](https://www.guinnessworldrecords.com/news/2012/12/psys-gangnam-style-becomes-first-video-to-be-viewed-1-billion-times-on-youtube-46462/), [YouTube 블로그](https://blog.youtube/news-and-events/ytvev/) | 높음 |
+| b29-yen-easing | 일본은행 양적·질적 완화(QQE), 엔화 급락 | 2013-04-04 | 본원통화·국채·ETF 보유 2년 내 2배, 연 60~70조 엔 증가, 엔화 급락·국채 금리 사상 최저. 국내 자동차·철강 가격 경쟁력 약화는 판단(엔저 우려 보도 다수) | [BIS](https://www.bis.org/publ/qtrpdf/r_qt1306x.htm), [Business Standard(Reuters)](https://www.business-standard.com/amp/article/reuters/boj-to-pump-1-4-trillion-into-economy-in-unprecedented-stimulus-113040400332_1.html) | 높음 |
+| b30-parts-forgery | 원전 제어 케이블 시험 성적서 위조, 신고리 1·2·신월성 1 가동 중단, 전력난 우려 | 2013-05-28 | 시험검증기관이 해외 시험 결과를 위조. 여름 전력 수급 대책 요구. 본문 "제어용 전선"(케이블 TV 테마와 헷갈리지 않게 표현) | [참여연대](https://peoplepower21.org/peace/1034445), [데일리안](https://www.dailian.co.kr/news/view/341183/) | 높음 (절전 요청은 중간) |
+| b31-crypto-exchange | 마운트곡스 파산 보호 신청, 85만 BTC 분실 | 2014-02-28 | 고객분 75만 + 자체 10만 BTC, 부채 약 6,360만 달러. 당시 가격 영향 수치는 미확인(본문에 없음) | [KTOO(NPR)](https://www.ktoo.org/2014/02/28/mtgox-files-for-bankruptcy-nearly-500m-of-bitcoins-lost/), [Cointelegraph](https://cointelegraph.com/news/details-of-mt-gox-s-bankruptcy-protection-filing) | 높음 |
+| b32-cosmetics-surplus | 화장품 무역수지 1995년 집계 이후 첫 흑자 | 2014 (1~8월 누적 1억 4,766만 달러 흑자, 연간 흑자) | 연간 흑자 규모는 약 5억~7억 5천만 달러로 출처마다 다름(본문에 수치 없음). 2014년 수출 약 19억 달러 | [산업통상자원부 자료](https://www.motir.go.kr/attach/down/aa4abe331409819421ff269b271f06a6/3d95f3b11322cc8486050dbf5f0ce6ec), [세계일보](https://www.segye.com/newsView/20151231001910), [한경비즈니스](https://magazine.hankyung.com/business/article/201706274995b) | 높음 |
+| b33-china-ecommerce-ipo | 알리바바 뉴욕 상장, 사상 최대 IPO | 2014-09-19 | 공모가 68달러, 첫날 종가 93.89달러(+38%), 그린슈 포함 약 250억 달러. 국내 업체 중국 온라인몰 입점 확대는 판단 문장 | [Renaissance Capital](https://www.renaissancecapital.com/IPO-Center/News/21211/US-IPO-Pricing-Recap-Alibaba-pops-38-percent-represents-one-third-of-2014-I), [Fortune](https://fortune.com/2014/09/22/alibaba-is-officially-the-biggest-ipo-ever-after-green-shoe-released) | 높음 |
+| b34-handset-subsidy | 단말기유통구조개선법(단통법) 시행, 보조금 상한 | 2014-10-01 | 첫날 번호이동 4,524건(직전 일평균 1만 6,178건), 매장 한산. 이통 3사 2015년 영업이익 +87%. 연간 단말 판매량은 오히려 늘어(2014년 1,823만 → 2015년 1,908만 대) 본문은 "첫날"로 한정 | [메트로신문](https://www.metroseoul.co.kr/article/2014100500096), [시대일보](https://www.sidae.com/article/2016042822588012590) | 높음 |
+| b35-climate-pact | 파리 기후변화협정 채택 | 2015-12-12 | "2도보다 훨씬 낮게", 개도국 포함. 채택국 수는 195개국으로 알려졌으나 이번 검색은 "약 200개 정부"만 확인 → 본문 "190여 나라". 다음 거래일 재생에너지주 상승·석탄주 하락 | [Fortune](https://fortune.com/2015/12/14/paris-climate-deal-sinks-coal-stocks-lifts-renewable-energy/amp), [Common Dreams](https://commondreams.org/news/2015/12/15/after-paris-fossil-fuels-flail-while-solar-stocks-soar) | 높음 |
+| b36-streaming-launch | 넷플릭스 130여 개국 동시 진출(한국 포함) | 2016-01-06 (한국 시간 01-07) | 진출국 190여 개국으로 늘어남, 한국어 지원. "월 1만 원 안팎" 요금은 당시 국내 요금제(9,500~14,500원) 기억값으로 이번 검색에서 미확인 | [Android Central](https://www.androidcentral.com/netflix-expands-130-new-countries-including-india-russia-and-south-korea-and-more), [Tubefilter](https://tubefilter.com/2016/01/06/netflix-global-expansion-130-countries/) | 높음 (요금 중간) |
+| b37-ar-game | 포켓몬 고 열풍, 국내 미출시 상태에서 속초 등에서 실행 | 2016-07 (07-12 무렵 ~) | 속초행 고속버스 예약 상승·매진, 숙박·관광 몰림. 보조 배터리 판매 증가는 판단(수치 미확인) | [스포츠경향](https://sports.khan.co.kr/article/201607130835013), [경향신문](https://www.khan.co.kr/article/201607132013001/amp), [쿠키뉴스](https://www.kukinews.com/article/view/kuk201607250231) | 높음 |
+| b38-quake-reactor | 경주 규모 5.8 지진(관측 이래 최대), 월성 1~4호기 수동 정지 | 2016-09-12 | 일부 자동차·반도체 공장 일시 중단 후 재가동, 사망자 없음(본문 "큰 피해는 없었지만") | [기상청 연보](https://www.kma.go.kr/download_01/earthquake/earthquake_2016.pdf), [데일리안](https://www.dailian.co.kr/news/view/589775/), [참여연대](https://peoplepower21.org/peace/1448001) | 높음 |
+| b39-internet-bank | 카카오뱅크 출범 약 102시간(닷새) 만에 100만 계좌 | 2017-07-27 ~ 07-31 | 1주일 151만 계좌. 기존 은행 수수료 인하 대응은 판단 문장 | [토요경제](https://www.sateconomy.co.kr/news/view/179588224623201), [데일리안](https://www.dailian.co.kr/news/view/650652/) | 높음 |
+| b40-china-steel-cut | 중국 철강 설비 감축(2017년 목표 5천만 톤), 유도로 철강 퇴출, 철강값 상승 | 2017 (연간) | 2016~2017년 1억 2천만 톤 감축(2017년 5,500만 톤), 중대형 제철소 이익 7배. 국내 조선·자동차 원가 부담은 판단(수치 미확인) | [S&P Global](https://www.spglobal.com/energy/en/news-research/blog/metals/030717-timeline-chinas-crackdown-on-induction-furnace-steel), [Fastmarkets](https://www.fastmarkets.com/insights/cisa-conf-2018-seven-things-we-learned-about-china-steel-up-to-2020/), [CNBC](https://www.cnbc.com/2017/08/10/chinas-steel-prices-are-rising-and-thats-worrying-beijing.html) | 중간 |
+| b41-uk-nuclear | 한전, 영국 무어사이드 원전(NuGen) 인수 우선협상대상자 선정 | 2017-12-07 | 최대 3.8GW(원전 3기), UAE 원전 공기·예산 준수가 평가. 2018년 지위 상실(본문은 "협상이 더 남았다"까지만). "20조 원대" 사업비는 당시 국내 보도(약 21조 원) 기억값으로 이번 검색에서 미확인 | [World Nuclear News](https://world-nuclear-news.org/articles/kepco-named-preferred-bidder-for-uk-s-nugen), [Korea Times](https://www.koreatimes.co.kr/amp/business/companies/20171207/kepco-chief-concludes-daunting-task-before-resignation), [Enerdata](https://www.enerdata.net/publications/daily-energy-news/kepco-no-longer-preferred-bidder-uk-nuclear-project-acquisition.html) | 중간 (사업비 확인 필요) |
+| b42-lira-crash | 터키 리라화 폭락, 미국 철강·알루미늄 관세 2배 | 2018-08-10 | 장중 최대 -18%(일부 -22%), 2001년 이후 최악, 신흥국 통화·증시 동반 하락, 유럽 은행주 하락. 국내 건설사 대금 회수 우려는 판단 | [Business Standard(Reuters)](https://www.business-standard.com/amp/article/reuters/turkish-currency-s-freefall-rocks-world-equity-markets-euro-118081100074_1.html), [Bloomberg](https://www.bloomberg.com/news/articles/2018-08-10/turkey-s-meltdown-sends-shockwaves-through-emerging-markets) | 높음 |
+| b43-chip-slump | 메모리 가격 하락, 반도체 수출 급감 | 2019 (연간) | 반도체 수출 939억 달러(-25.9%), 8Gb D램 1년 새 -36.5~-37.6%(2019년 초 기준, 연말까지 추가 하락). 본문 "절반 가까이"는 2018년 고점 대비 판단 | [뉴스토마토](https://newstomato.com/ReadNews.aspx?no=945567), [이투데이](https://www.etoday.co.kr/news/view/1728630), [머니투데이](https://www.mt.co.kr/economy/2019/02/07/2019020711224362459) | 높음 (가격 하락 폭 중간) |
+| b44-digital-coin | 페이스북 리브라 백서 발표, 비트코인 1만 달러 회복 | 2019-06-18 ~ 06-24 | 비트코인 06-24 1만 1,251달러(2018-03 이후 첫 1만 달러 돌파, AFP). 리브라 영향 정도는 분석가마다 다름 | [Inquirer(AFP)](https://technology.inquirer.net/?p=88118), [Verdict](https://www.verdict.co.uk/facebook-cryptocurrency-bitcoin-price/) | 높음 |
+| b45-swine-fever | 아프리카돼지열병 국내 첫 확진(파주) | 2019-09-17 | 돼지고기 경매가 ㎏당 6,062원(+32.9%) 또는 5,828원(+32.4%), 중점관리지역 지정. 소독제·백신 업체 주문 증가는 당시 관련주 급등 보도 기억으로 수치 미확인 | [데일리안](https://www.dailian.co.kr/news/view/826998/), [뉴시스](https://www.newsis.com/view/NISX20190918_0000773217) | 높음 |
+| b46-delivery-app | 딜리버리히어로, 우아한형제들(배달의민족) 인수 합의 | 2019-12-13 | 기업가치 40억 달러(약 4조 7,500억 원), 지분 87~88% 인수 | [Delivery Hero IR 자료](https://irpages2.eqs.com/download/companies/delivery/Presentations/20191213_Delivery_Hero_Woowa_Partnership.pdf), [Korea Herald](https://www.koreaherald.com/article/10738059) | 높음 |
+| b47-open-banking | 오픈뱅킹 전면 시행(핀테크 포함) | 2019-12-18 | 은행 16곳·핀테크 31곳 참여, 이체 수수료 약 10분의 1 | [데일리안](https://www.dailian.co.kr/news/view/838185/), [이투데이](https://www.etoday.co.kr/news/view/1835817) | 높음 |
+
+## 6. 9차 추가 스토리 7개
+
+| 스토리 | 뉴스 | 사실 주장 | 실제 날짜 | 근거 | 출처 | 확신도 |
+|---|---|---|---|---|---|---|
+| s14 유럽 중앙은행 (opener) | 잠정 | 드라기 총재 "유로를 지키기 위해 무엇이든 하겠다, 그것으로 충분할 것", 유럽 증시 반등 | 2012-07-26 (런던) | 남유럽 국채 금리 급등 국면, 유럽 증시·유로화 반등 | [BNP Paribas](https://cdn-group.bnpparibas.com/uploads/file/believe_me_it_will_be_enough.pdf), [European Sources](https://www.europeansources.info/record/ecb-ready-to-do-whatever-it-takes/?print) | 높음 |
+| | 결과(실제) | 조건부 국채 무제한 매입(OMT) 발표, 금리 급락·증시 상승 | 2012-09-06 | 스페인 10년물 -38bp(6.03%). OMT는 실제로 한 번도 쓰이지 않음. 국내 외국인 순매수 규모는 미확인 | [Philstar](https://www.philstar.com/business/2012/09/10/847228/battle-will), [Institutional Investor](https://www.institutionalinvestor.com/article/2bsvidk7xytcc8jbig2rk/portfolio/markets-react-well-but-draghi-debt-plan-is-just-the-first-step) | 높음 |
+| | 결과(**가상**) | 국채 매입 결정 연기 | — | **사실 아님** | — | 가상 |
+| s15 개성공단 | 잠정 | 북한, 남측 인원 출입 차단(귀환만 허용), 앞서 폐쇄 경고 | 2013-04-03 | 약 480명 출입 거부, 861명 체류 | [Inquirer(AFP)](https://newsinfo.inquirer.net/384019/north-korea-blocks-access-to-key-industrial-zone/amp), [UPI](https://www.upi.com/Top_News/US/2013/04/03/UPI-NewsTrack-TopNews/UPI-96041364990400/) | 높음 |
+| | 결과(실제) | 북측 근로자 전원 철수, 가동 잠정 중단 | 2013-04-08 (09-16 재가동) | 4월 8일 김양건 담화, 9월 재가동. 근로자 약 5만 3천 명·입주 기업 123곳(본문 "5만여 명", "120여 개")은 널리 알려진 수치로 이번 검색 결과에는 직접 나오지 않음 | [전북일보](https://www.jjan.kr/articleAmp/20130408466952), [서울신문](https://m.seoul.co.kr/news/2013/05/04/20130504002015), [경북매일](https://www.kbmaeil.com/article/201602160153635) | 높음 (인원·기업 수 중간) |
+| | 결과(**가상**) | 출입 재개, 조업 정상화 (실제 재가동은 5개월 뒤) | — | **사실 아님** (해당 시점 기준) | — | 가상 |
+| s16 폭스바겐 디젤 | 잠정 | 미 환경보호청, 배출가스 조작 장치 위반 통지 | 2015-09-18 | 2.0L 디젤, 검사 때만 저감 장치 작동(주행 시 NOx 최대 40배) | [EPA 보도자료](https://www.epa.gov/archive/epa/newsreleases/epa-california-notify-volkswagen-clean-air-act-violations-carmaker-allegedly-used.html), [IndustryWeek](https://www.industryweek.com/leadership/volkswagen-hit-recall-alleged-emissions-ploy) | 높음 |
+| | 결과(실제) | 1,100만 대 시인, 주가 폭락, 빈터코른 대표 사퇴 | 2015-09-22 ~ 09-23 | 주가 09-21 약 -20%, 09-22 약 -20%(본문 "이틀 새 30% 넘게"), 09-23 사퇴. 국산차 유럽 판매 기회는 판단 | [CNBC](https://www.cnbc.com/2015/09/23/martin-winterkorn-resigns-as-volkswagen-ceo.html), [SBS](https://www.sbs.com.au/news/article/volkswagen-needs-a-fresh-start-ceo-quits-over-diesel-emissions-scandal/1dm1z3n3t) | 높음 |
+| | 결과(**가상**) | 단순 오류 결론, 리콜로 마무리 | — | **사실 아님** | — | 가상 |
+| s17 삼성바이오로직스 회계 | 잠정 | 증선위 고의 분식 여부 최종 심의, 금감원은 고의 분식 의견 | 2018-11 (11-14 결론 직전) | 결론 전 "고의 여부 최대 쟁점" 보도. 금감원 재감리 결론 일자는 이번 검색(사용량 한도로 중단)에서 따로 확인하지 못함 | [한국경제](https://www.hankyung.com/amp/201811112595Y) | 중간 |
+| | 결과(실제) | 고의 분식 결론, 거래 정지, 상장 적격성 심사, 행정소송 예고 | 2018-11-14 (12-10 상장 유지 결정, 12-11 거래 재개) | 대표이사·CFO 해임 권고, 거래 정지 19일 | [한국경제](https://www.hankyung.com/amp/2018111428397), [데일리팜](https://www.dailypharm.com/user/news/79665), [이투데이](https://www.etoday.co.kr/news/view/1697915) | 높음 |
+| | 결과(**가상**) | 고의 위반 없음 결론 | — | **사실 아님** | — | 가상 |
+| s18 애플-삼성 특허 소송 | 잠정 | 배심원 평결 직전, 앞서 갤럭시 탭 10.1 판매 금지 가처분, 원고 25억 달러 청구 | 2012-08 (평결 08-24), 가처분 2012-06-26 | 원고 청구 25억 달러(본문 "3조 원에 가깝다") | [Macworld](https://www.macworld.com/article/1167532/samsung_refused_stay_on_injunction_against_us_sales_of_galaxy_tab_101.html), [Engadget](https://www.engadget.com/2012-07-03-us-court-upholds-ban-on-samsung-galaxy-tab-10-1-sales.html), [Bloomberg](https://www.bloomberg.com/news/articles/2012-08-24/apple-samsung-jury-reaches-verdict-in-patent-trial) | 높음 |
+| | 결과(실제) | 특허 6건 침해, 10억 5천만 달러 배상 평결, 주가 하루 7% 넘게 하락 | 2012-08-24 (주가 08-27) | 08-27 -7.5%(장중 최대 -8%, 약 4년 만의 최대 낙폭), 시가총액 120억 달러 감소. 메모리 납품 지속(간접)은 판단 | [Jolt Digest](https://jolt.law.harvard.edu/digest/apple-inc-v-samsung-electronics-co-ltd), [Business Standard(Reuters)](https://www.business-standard.com/amp/article/international/samsung-shares-drop-12-bln-after-apple-s-court-victory-112082700121_1.html) | 높음 |
+| | 결과(**가상**) | 침해 없음 평결 | — | **사실 아님** | — | 가상 |
+| s19 사우디 석유 시설 피격 (opener) | 잠정 | 아브카이크·쿠라이스 드론 공격, 생산 절반(하루 570만 배럴) 중단, 유가 급등, 정부 "빠른 복구" | 2019-09-14 (유가 09-16) | 브렌트 09-16 종가 +13.3%(68.07달러), 장중 최대 +20%(본문 "15% 가까이") | [CNBC](https://www.cnbc.com/2019/09/15/us-crude-oil-jumps-15percent-after-drone-strikes-disrupt-saudi-crude-production.html), [Irish Times](https://www.irishtimes.com/business/markets/oil-prices-soar-to-three-decade-highs-after-attacks-halve-saudi-output-1.4019476) | 높음 |
+| | 결과(실제) | 생산 절반 이상 회복, 월말 완전 복구 발표, 유가 반락 | 2019-09-17 | 다음 날 유가 약 -6.5%. 월말 완전 복구 여부는 계획 발표 기준(실제 달성은 미확인) | [World Oil](https://www.worldoil.com/news/2019/9/17/saudi-arabia-partially-restores-output-at-damaged-oil-plant), [Energy Voice](https://energyvoice.com/oilandgas/middle-east/207957/oil-price-stabilises-as-saudi-eyes-quick-restoration-of-output) | 높음 |
+| | 결과(**가상**) | 복구 수개월, 유가 100달러 육박 | — | **사실 아님** | — | 가상 |
+| s20 미국 금리 인하 (opener) | 잠정 | 파월 의장 "경기 확장을 지키기 위해 적절히 대응" | 2019-06-04 (시카고 연준 콘퍼런스) | 다우 약 +2.06%(약 500포인트) | [IG](https://www.ig.com/en/news-and-trade-ideas/indices-news/dow-jones-up-500-points-as-fed-says-it-will-act-to-help-us-econo-190604), [InvestorPlace](https://investorplace.com/2019/06/dow-jones-today-finally-the-markets-see-some-relief/) | 높음 (연설 원문은 연준 사이트 접속 실패로 미확인) |
+| | 결과(실제) | 기준금리 0.25%p 인하(2.00~2.25%), 2008-12 이후 첫 인하 | 2019-07-31 | 8대 2 결정, 자산 축소 조기 종료 | [Axios](https://www.axios.com/2019/07/31/fed-cuts-interest-rates-for-first-time-since-2008?stream=top), [Global News](https://globalnews.ca/news/5708559/fed-rate-cut/) | 높음 |
+| | 결과(**가상**) | 금리 동결 | — | **사실 아님** | — | 가상 |
+
+## 7. 9차 작업에서 정한 점
+
+1. **실명 처리**: 게임 데이터에는 기업·지명·기관 실명 대신 일반 표현(예: "북아프리카 산유국", "메신저 회사가 세운 인터넷 은행", "세계 최대 원유 수출국", "유럽 대형 자동차 회사", "남동부 지역")을 썼다. 근거 메모(`source.event`)의 원전 호기 이름·프로그램 이름(OMT)·회사 이름도 일반 표현으로 바꿨다. 실명은 이 문서에만 있다. 나라 이름(터키·독일·중국·일본·영국 등)과 화폐 이름은 썼다.
+2. **b30 원전 부품**: 원문은 "제어 케이블"이지만 케이블 TV 테마와 헷갈리지 않게 "제어용 전선"으로 썼다.
+3. **b34 단통법**: 연간 단말 판매량은 오히려 늘어 "판매 급감"으로 쓰지 않고 시행 첫날 번호이동 감소만 썼다.
+4. **b35 파리 협정**: 채택국 수를 출처로 확정하지 못해 "190여 나라"로 썼다.
+5. **b38 경주 지진**: 사망자는 없었고, 본문은 원전 정지와 "큰 피해는 없었지만"으로만 다뤘다.
+6. **s15 개성공단 가상 결과**: 실제로도 9월에 재가동됐지만 잠정 뉴스 직후 정상화는 사실이 아니라 가상으로 표시했다.
+7. **밸런스 조정**: 뉴스 간격이 3~4분으로 줄어 초고속 추종 수익이 커지는 것을 막으려고 9차 추가 속보의 규모를 4~6으로 낮게 잡았다(b25·b43 6, b29·b40·b42 5, 나머지 4). 영향도는 모두 공식 그대로다. 기존 뉴스는 바꾸지 않았다.
+
+## 8. 9차 직접 확인 권장
+
+- b41 영국 원전 사업비 "20조 원대", b36 국내 월 요금 "1만 원 안팎", b28 "노래 속 동네를 찾는 외국인", b45 소독제·백신 업체 주문 증가
+- s15 북측 근로자 수(약 5만 3천 명)·입주 기업 수(123곳), s17 금감원 재감리 결론 일자, s20 연설 원문(연준 사이트 접속 실패)
+- b43 D램 가격 "1년 새 절반 가까이"(2018년 고점 대비 연말 하락 폭), b40 국내 조선·자동차 업체의 강판 가격 부담 수치
+- 간접(강도 1) 연결 상당수(예: 증강현실 게임 → 보조 배터리, 단통법 → 케이블 TV, 돼지열병 → 해운)는 실제 주가 기록이 아니라 연결 설명에 따른 판단이다.
