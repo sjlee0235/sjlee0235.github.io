@@ -48,3 +48,15 @@
 
 - `npm run audio:placeholder`로 장르당 2곡의 **1초 무음 임시 파일**을 만들어 두었다 (재생 흐름 시험용, `status: 'placeholder'`).
 - 평소 `npm run lint:audio`는 경고만, **`--release`는 임시 곡 때문에 실패하는 것이 정상**이다.
+
+## 5. 9차 (2026-10-11): 배경음악 넣기 요청 — 막힌 것과 넣는 방법
+
+- 요청: 저작권 문제가 없는 장르별 곡을 하나씩 찾아 넣고, LP를 누르면 바로 바뀌게.
+- **막힌 것**: 이 작업 환경(클라우드)의 네트워크 정책이 음원 사이트 접속을 막는다 (incompetech.com, upload.wikimedia.org, commons.wikimedia.org, musopen.org, freemusicarchive.org, pixabay.com, opengameart.org, archive.org 확인). 그래서 곡 파일을 받지 못했고, 확인하지 못한 곡 이름을 지어내 적지도 않았다.
+- **재생 쪽은 준비됨**: LP를 누르면 그 즉시 다음 장르 곡이 시작되고 2초 동안 겹쳐 바뀐다. 장르에 곡이 하나면 끝나면 다시 처음부터.
+- **추천 후보처** (곡마다 라이선스를 다시 확인):
+  - 재즈·힙합(로파이)·락: Kevin MacLeod (incompetech.com) — CC BY 4.0, 설정의 "음악 저작권 표시"에 정해진 문구를 넣으면 상업적 이용·게임 배경음악 가능.
+  - 클래식: 퍼블릭 도메인 작곡 + 퍼블릭 도메인(또는 CC0) **녹음** (예: Musopen이 퍼블릭 도메인으로 공개한 녹음, 위키미디어 공용의 PD 녹음). 작곡과 녹음 라이선스를 따로 적는다.
+- **넣는 방법 (둘 중 하나)**
+  1. 환경 설정의 네트워크 허용 목록에 `incompetech.com`, `upload.wikimedia.org`, `commons.wikimedia.org`를 넣어 주면, 개발 쪽에서 곡을 받아 라이선스 증빙과 함께 넣는다.
+  2. 기획자가 mp3를 받아 `assets/audio/music/`에 넣고, `src/data/audio/music.json`의 장르별 임시 항목을 곡 정보(제목·작곡가·라이선스·출처 주소·표기 문구, `status: 'final'`)로 바꾼다. `npm run lint:audio -- --release`로 확인.
