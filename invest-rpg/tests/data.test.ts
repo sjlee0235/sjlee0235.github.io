@@ -47,6 +47,33 @@ describe('게임에 들어가는 데이터', () => {
   });
 });
 
+describe('세 시대 모두 (8차: 2010·2020년대 추가)', () => {
+  it('2000s · 2010s · 2020s가 모두 등록되어 있고, 시대마다 테마·종목 36개, 속보 20개·스토리 12개·opener 3개 이상', () => {
+    expect(orderBySequence(ALL_ERAS).map((e) => e.id)).toEqual(['2000s', '2010s', '2020s']);
+    for (const era of ALL_ERAS) {
+      expect(era.themes, era.id).toHaveLength(36);
+      expect(era.stocks, era.id).toHaveLength(36);
+      expect(era.breaking.length, era.id).toBeGreaterThanOrEqual(20);
+      expect(era.stories.length, era.id).toBeGreaterThanOrEqual(12);
+      expect(era.stories.filter((s) => s.opener).length, era.id).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it('종목명·브랜드가 시대끼리 겹치지 않는다 (튜토리얼 포함)', () => {
+    const all = [...ALL_ERAS, TUTORIAL_ERA].flatMap((e) => e.stocks);
+    const names = all.map((s) => s.name.ko);
+    expect(new Set(names).size).toBe(names.length);
+    const brands = all.map((s) => s.name.en.split(' ')[0]);
+    expect(new Set(brands).size).toBe(brands.length);
+  });
+
+  it('종목명 뒤 업종은 흔히 쓰는 한국어 (셀·텍·스틸·폰·넷·투어·팜·모터스 같은 영어식 꼬리 없음)', () => {
+    for (const era of ALL_ERAS) {
+      for (const st of era.stocks) expect(st.name.ko, st.id).not.toMatch(/(셀|텍|텍스|스틸|(?<!휴대)폰|넷|투어|팜|(?<!호)텔|모터스|레코드|랩스|소프트|게임즈)$/);
+    }
+  });
+});
+
 describe('2000년대 데이터 (단계 B 초안)', () => {
   const era = ALL_ERAS.find((e) => e.id === '2000s')!;
 

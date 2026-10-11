@@ -124,16 +124,25 @@ try {
     await ctx.close();
   }
 
-  // ── 3) 끝난 판 다시 열기 → 최종 요약 (2000년대 한 시대) ──
+  // ── 3) 3시대(2000→2010→2020년대) 끝까지 → 최종 요약 + 엔딩, 끝난 판 다시 열기 ──
   {
     const ctx = await newCtx(360, 640);
     const page = await ctx.newPage();
     const errors = watchErrors(page);
     await open(page, '?debug=1&seed=6&fresh=1&nointro=1');
-    await dbg(page, 'endEra');
-    await page.waitForSelector('.overlay.settlement');
-    await page.locator('.overlay.settlement .foot .pbtn').click();
-    check(await page.locator('.overlay.final').isVisible(), '2000년대 정산 뒤 최종 요약');
+    await dbg(page, 'interior', 3);
+    for (const [i, era] of ['2000s', '2010s', '2020s'].entries()) {
+      check((await game<string>(page, 'g.eraId')) === era, `${i + 1}번째 시대는 ${era}`);
+      if (i === 1) check(((await page.locator('.acct-col.r .lbl').textContent()) ?? '') === '2010년대 남은 시간' || (await page.getAttribute('.stage', 'data-tab')) !== 'trading', '계좌 바: "2010년대 남은 시간"');
+      await dbg(page, 'endEra');
+      await page.waitForSelector('.overlay.settlement');
+      await page.locator('.overlay.settlement .foot .pbtn').click();
+      await page.waitForTimeout(200);
+      if (i < 2) check(!(await page.locator('.overlay.final').isVisible()), `${era} 정산 뒤에는 다음 시대`);
+    }
+    check(await page.locator('.overlay.final').isVisible(), '2020년대 정산 뒤 최종 요약');
+    check(((await page.locator('.overlay.final .ending-t').textContent()) ?? '').includes('중립 엔딩'), `인생 업그레이드 3단계 → 중립 엔딩 ("${await page.locator('.overlay.final .ending-t').textContent()}")`);
+    check((await page.locator('.overlay.final .body .note').count()) >= 3, '최종 요약에 시대별 줄 3개');
     const saved = await page.evaluate(() => localStorage.getItem('invest-rpg.save'));
     await open(page, '?debug=1&seed=6&nointro=1');
     check(await page.locator('.overlay.final').isVisible(), '끝난 판을 다시 열면 최종 요약이 보인다');

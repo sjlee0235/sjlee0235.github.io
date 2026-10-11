@@ -212,6 +212,16 @@ async function run(): Promise<void> {
       await dbg(p2, 'interior', 2);
       await shot(p2, 'workshop_night_lv4');
       await c2.close();
+      // 2010년대·2020년대 주식창 (뉴스 하나 + 리포트)
+      for (const [era, label] of [[1, '2010s'], [2, '2020s']] as const) {
+        const { ctx: ce, page: pe } = await open(390, 844, `&nointro=1&era=${era}`);
+        await dbg(pe, 'tod', era === 1 ? 'day' : 'night');
+        await dbg(pe, 'tab', 'trading');
+        await dbg(pe, 'nextNews');
+        await dbg(pe, 'advanceSeconds', 125);
+        await shot(pe, `trading_${label}`);
+        await ce.close();
+      }
       const { ctx: c3, page: p3 } = await open(360, 640, '&nointro=1');
       await dbg(p3, 'tod', 'night');
       await dbg(p3, 'nextNews');

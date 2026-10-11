@@ -1,7 +1,9 @@
-// 3시대 연속 이월 시뮬레이션: 가상 시대 3개를 이어서(자금 이월) 전략별 누적 결과를 본다.
+// 3시대 연속 이월 시뮬레이션: 등록된 실제 시대(2000→2010→2020년대)를 이어서(자금 이월) 전략별 누적 결과를 본다.
+// 등록된 시대가 3개 미만이면 가상 시대 3개로 돌린다.
 // 실행: npm run sim:carry            (시드 200개)
 //       npm run sim:carry -- 50      (빠르게)
 
+import { ALL_ERAS, orderBySequence } from '../src/data/eras/index.ts';
 import { cumulativeReturnPct } from '../src/engine/returns.ts';
 import { makeSpecEra } from '../src/dev/specEra.ts';
 import { labelOf, playCarry, quantile, REFERENCE_STRATEGIES, STRATEGIES } from './simLib.ts';
@@ -9,7 +11,8 @@ import { labelOf, playCarry, quantile, REFERENCE_STRATEGIES, STRATEGIES } from '
 declare const process: { argv: string[] };
 
 const SEEDS = Number(process.argv[2] ?? 200);
-const eras = [
+const real = orderBySequence(ALL_ERAS);
+const eras = real.length >= 3 ? real : [
   makeSpecEra({ id: 'era1', order: 1, seed: 2001 }),
   makeSpecEra({ id: 'era2', order: 2, seed: 2002 }),
   makeSpecEra({ id: 'era3', order: 3, seed: 2003 }),
@@ -17,7 +20,7 @@ const eras = [
 const n = (v: number) => Math.round(v).toLocaleString('ko-KR').padStart(10);
 const signed = (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(0)}%`.padStart(8);
 
-console.log(`\n3시대 연속 이월 — 가상 시대 3개 × 시드 ${SEEDS}개, 시작 10,000코인, 입금 없음, 수수료 0.2%`);
+console.log(`\n3시대 연속 이월 — ${real.length >= 3 ? eras.map((e) => e.id).join(' → ') : '가상 시대 3개'} × 시드 ${SEEDS}개, 시작 10,000코인, 입금 없음, 수수료 0.2%`);
 console.log(`\n전략　　　　　　　   최종자산 중앙   하위10%    상위10%   누적수익률 중앙  자산<1,000 경험   최종<1,000`);
 for (const s of [...STRATEGIES, ...REFERENCE_STRATEGIES]) {
   const res = Array.from({ length: SEEDS }, (_, i) => playCarry(eras, s, 900_000 + i + 1));

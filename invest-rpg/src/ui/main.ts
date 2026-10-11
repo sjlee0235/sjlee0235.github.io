@@ -1,8 +1,8 @@
 // 화면 시작점 (npm run dev → http://localhost:5173/)
 //
-// 시대 데이터: 진행 순서(eraSequence.json) 중 콘텐츠가 있는 시대만 쓴다 (지금은 2000년대 하나).
+// 시대 데이터: 진행 순서(eraSequence.json) 중 콘텐츠가 있는 시대만 쓴다 (2000년대 → 2010년대 → 2020년대).
 // 주소 옵션 (개발 서버·시험판 빌드에서만): ?debug=1 (또는 주소 끝 #debug) 디버그 패널, &seed=7 시드 고정, &era=1 시대 선택, &fresh=1 저장 무시,
-//   &virtual=1 아직 콘텐츠가 없는 시대(2010s·2020s)를 개발용 가상 데이터로 채워 3시대로 (화면에 "VIRTUAL DATA")
+//   &virtual=1 콘텐츠가 없는 시대를 개발용 가상 데이터로 채운다 (지금은 세 시대 모두 있어 바뀌는 것 없음)
 
 import { ALL_ERAS, ERA_SEQUENCE, orderBySequence } from '../data/eras/index.ts';
 import type { Era } from '../data/schema.ts';
