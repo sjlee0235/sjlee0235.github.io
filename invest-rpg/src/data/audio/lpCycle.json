@@ -1,0 +1,4 @@
+{
+  "note": "LP를 누를 때마다 바뀌는 장르 순서. 끄기는 없다(음소거·볼륨은 설정에서).",
+  "cycle": ["jazz", "classical", "hiphop", "rock"]
+}

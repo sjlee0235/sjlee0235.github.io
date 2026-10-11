@@ -1,0 +1,33 @@
+{
+  "name": "invest-rpg",
+  "version": "0.1.0",
+  "private": true,
+  "description": "2D 픽셀 투자 시뮬레이션 게임 (엔진 + 화면)",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.engine.json",
+    "demo": "node scripts/demo.ts",
+    "sim": "node scripts/sim.ts",
+    "sim:repeat": "node scripts/simRepeat.ts",
+    "sim:carry": "node scripts/simCarry.ts",
+    "telemetry:report": "node scripts/telemetryReport.ts",
+    "lint:content": "node scripts/lintContent.ts",
+    "check": "npm run typecheck && npm test",
+    "lint:audio": "node scripts/lintAudio.ts",
+    "audio:placeholder": "node scripts/audioPlaceholder.ts",
+    "dev": "vite --host",
+    "build": "vite build",
+    "build:play": "VITE_PLAYTEST=1 vite build --outDir play --emptyOutDir",
+    "preview": "vite preview --host",
+    "shots": "node scripts/shots.ts",
+    "e2e": "node scripts/e2eFlows.ts"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
+  }
+}

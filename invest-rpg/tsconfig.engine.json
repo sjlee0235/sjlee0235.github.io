@@ -1,0 +1,10 @@
+// 엔진/데이터 전용 검사: 브라우저(DOM)·Node 기능 없이도 컴파일되는지 확인한다.
+// 화면 코드가 엔진에 섞이면 여기서 실패한다.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["src/engine", "src/data"]
+}
