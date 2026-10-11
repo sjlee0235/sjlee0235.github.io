@@ -20,6 +20,28 @@
   --buy: #e04040; --tabbg: #ffe9b0; --tv-pressed: #d2c49e; --tv-pressed-t: #4a3a50;
   --green-up: #1f9a4a;
 }
+/* 9차: 시대마다 화면 색이 확 바뀐다 (data-era). 2000년대 = 위 기본(금색) / 2010년대 = 스마트폰 시대 민트 / 2020년대 = AI 시대 네온 핑크.
+   오름·내림·매수 색(--up, --dn, --buy)은 시대와 상관없이 그대로 */
+.stage[data-tod='night'][data-era='2010s'] {
+  --bg: #06141a; --panel: #0f2e36; --hd: #17434d; --bd: #06141a; --hi: #2a6470; --lo: #082027;
+  --text: #eefcfc; --mute: #9cc8cc; --line: #1d4c56; --sel: #22606a; --accent: #3fe0c8; --accent-t: #042a26;
+  --inp: #082027; --btn: #1d4c56; --news-in: #082027; --tabbg: #0a222a;
+}
+.stage[data-tod='day'][data-era='2010s'] {
+  --bg: #13303a; --panel: #e6fbf6; --hd: #a8ecdc; --bd: #13303a; --hi: #ffffff; --lo: #8fd4c4;
+  --text: #0f2a2c; --mute: #3d6e68; --line: #bfe9df; --sel: #b6f0e2; --accent: #0f8f86; --accent-t: #f0fffb;
+  --inp: #f8fffd; --btn: #a8ecdc; --news-in: #f2fffb; --tabbg: #cdf5ea;
+}
+.stage[data-tod='night'][data-era='2020s'] {
+  --bg: #0d0614; --panel: #1f0f33; --hd: #3a1458; --bd: #0d0614; --hi: #5a2a86; --lo: #120822;
+  --text: #fbf2ff; --mute: #c4a8e4; --line: #3b1c5c; --sel: #4c1f74; --accent: #ff4fb8; --accent-t: #2b0418;
+  --inp: #120822; --btn: #3b1c5c; --news-in: #120822; --tabbg: #170a28;
+}
+.stage[data-tod='day'][data-era='2020s'] {
+  --bg: #2a1036; --panel: #fbeefc; --hd: #f3c4ec; --bd: #2a1036; --hi: #ffffff; --lo: #dca6d4;
+  --text: #2c1030; --mute: #7a4a74; --line: #f0cdea; --sel: #f8d0f0; --accent: #c0247f; --accent-t: #fff2fa;
+  --inp: #fffaff; --btn: #f3c4ec; --news-in: #fff6fd; --tabbg: #fbdcf3;
+}
 /* 상승 색상 설정: 초록 상승 · 빨강 하락 */
 .stage[data-scheme='western'] { --up: var(--green-up); }
 .stage[data-scheme='western'][data-tod='night'] { --dn: #ff7a7a; }
@@ -357,3 +379,30 @@ button { cursor: pointer; }
 .ending-b { font-size: 13px; line-height: 1.6; color: var(--text); word-break: keep-all; }
 .mine-empty { padding: 14px 16px; font-size: 13px; color: var(--mute); line-height: 1.5; }
 .list-pnl .row.head, .list-pnl .hd { flex: none; }
+
+/* ───────── 9차: 시대가 확 느껴지게 ───────── */
+/* 거실 벽 달력: 그림 속 쪽지 자리(도트 21~31, 69~89)에 붙인다. 띠 색 = 시대 강조색 */
+.era-cal { position: absolute; left: 36px; top: 186px; width: 84px; height: 98px; z-index: 4; pointer-events: none;
+  background: #fff8ec; box-shadow: 0 0 0 3px #2a1a30, 3px 3px 0 3px rgba(0, 0, 0, .35); display: flex; flex-direction: column; align-items: center; }
+.era-cal .band { align-self: stretch; height: 18px; background: var(--accent); border-bottom: 3px solid #2a1a30;
+  background-image: radial-gradient(circle at 20px 9px, #2a1a30 3px, transparent 4px), radial-gradient(circle at 64px 9px, #2a1a30 3px, transparent 4px); }
+.era-cal .yr { margin-top: 10px; font-size: 30px; font-weight: 800; line-height: 1; color: #2a1a30; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.era-cal .sfx { margin-top: 6px; font-size: 14px; font-weight: 700; color: #b0402a; }
+.stage[data-era='2010s'] .era-cal .sfx { color: #0f8f86; }
+.stage[data-era='2020s'] .era-cal .sfx { color: #c0247f; }
+.stage.at-title .era-cal { display: none; }
+
+/* 시대 시작 카드 */
+.overlay.era-intro { background: radial-gradient(circle at 50% 42%, #1c1230, #06030c); }
+.era-card { width: 340px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; color: #fff; animation: era-in .6s ease-out; }
+@keyframes era-in { from { opacity: 0; transform: translateY(16px) scale(.96); } to { opacity: 1; transform: none; } }
+.era-step { font-size: 13px; font-weight: 700; letter-spacing: .18em; color: var(--accent); }
+.era-title { display: flex; align-items: flex-end; gap: 8px; flex-wrap: nowrap; }
+.era-num { flex: none; }
+.era-num svg { display: block; }
+.era-sfx { flex: none; white-space: nowrap; font-size: 40px; font-weight: 800; line-height: 1; margin-bottom: 14px; text-shadow: 3px 3px 0 #120820; }
+.era-tag { font-size: 17px; font-weight: 700; line-height: 1.4; word-break: keep-all; }
+.era-keys { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.era-key { padding: 4px 10px; font-size: 13px; font-weight: 700; color: var(--accent-t); background: var(--accent); clip-path: var(--poly); }
+.era-hint { margin: 0; font-size: 13px; line-height: 1.6; color: #e8e0ff; word-break: keep-all; padding: 0 8px; }
+.era-card .pbtn { width: 220px; height: 50px; font-size: 18px; font-weight: 700; margin-top: 6px; }

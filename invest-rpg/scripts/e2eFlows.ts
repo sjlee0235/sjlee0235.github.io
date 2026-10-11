@@ -68,6 +68,11 @@ try {
     check(!(await page.locator('.overlay.consent').isVisible()), '따로 뜨는 동의 창은 없다');
     await page.locator('.overlay.tutorial .foot .pbtn').first().click(); // 동의하지 않음
     check(!(await game<boolean>(page, 'g.telemetryConsent')), '동의하지 않으면 기록 꺼짐 (기본)');
+    check(await page.locator('.overlay.era-intro').isVisible(), '시대 시작 카드가 뜬다');
+    check(((await page.locator('.era-intro .era-num svg').getAttribute('aria-label')) ?? '') === '2000' && ((await page.locator('.era-intro .era-step').textContent()) ?? '').includes('1 / 3'), '카드: 큰 도트 숫자 2000, "시대 1 / 3"');
+    check((await game<number>(page, 'g.tick')) === 0, '카드가 떠 있는 동안 시간이 흐르지 않는다');
+    await page.locator('.era-intro .pbtn').click();
+    check((await page.getAttribute('.stage', 'data-era')) === '2000s', '시대 색 테마 data-era=2000s');
     await dbg(page, 'setTimeScale', 10);
     await page.waitForTimeout(1500);
     const left = await game<number>(page, 'g.remainingSeconds');
@@ -90,6 +95,7 @@ try {
     await page.locator('.title-buttons .pbtn').nth(1).click();
     await page.locator('.overlay.confirm-new .foot .pbtn').nth(1).click(); // 새로 시작
     await page.locator('.overlay.tutorial .foot .pbtn').first().click(); // 건너뛰기
+    await page.locator('.era-intro .pbtn').click();
     check(!(await page.locator('.overlay.tutorial').isVisible()) && !(await page.locator('.overlay.consent').isVisible()), '동의는 처음 한 번만 묻는다 (두 번째 튜토리얼은 동의 장 없이 끝남)');
     check((await game<number>(page, 'g.remainingSeconds')) === 7200 && (await game<number>(page, 'g.cash')) === 10_000, '새로하기: 처음부터 (2:00:00, 10,000코인)');
     // 설정 → 저장하고 나가기 → 첫 화면, 이어하기로 그 시점부터
@@ -147,6 +153,7 @@ try {
     await dbg(page, 'interior', 3);
     for (const [i, era] of ['2000s', '2010s', '2020s'].entries()) {
       check((await game<string>(page, 'g.eraId')) === era, `${i + 1}번째 시대는 ${era}`);
+      check((await page.getAttribute('.stage', 'data-era')) === era, `화면 색 테마도 ${era}`);
       if (i === 1) check(((await page.locator('.acct-col.r .lbl').textContent()) ?? '') === '2010년대 남은 시간' || (await page.getAttribute('.stage', 'data-tab')) !== 'trading', '계좌 바: "2010년대 남은 시간"');
       await dbg(page, 'endEra');
       await page.waitForSelector('.overlay.settlement');

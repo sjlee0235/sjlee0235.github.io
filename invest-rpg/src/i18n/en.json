@@ -276,7 +276,8 @@
     "upgradeAria": "Life upgrade, {cost} coins (now {level}/{max})",
     "upgradeDone": "Life upgrade complete",
     "notEnough": "Not enough cash. Sell some stocks to raise cash.",
-    "dog": "Dog"
+    "dog": "Dog",
+    "calendar": "{era} calendar"
   },
   "title": {
     "name": "역전의 방",
@@ -304,6 +305,26 @@
     "happy": {
       "title": "Happy Ending · Life Turned Around",
       "body": "The moldy rented room became a room anyone would envy. A comeback built on study, not gut feeling. Yeokjeon smiled out the window, the dog by their side."
+    }
+  },
+  "eraIntro": {
+    "step": "Era {n} / {total}",
+    "suffix": "s",
+    "start": "Start",
+    "2000s": {
+      "tagline": "When the internet and cell phones changed everything",
+      "keywords": "Dot-com bubble · Cell phones · Korean wave · Financial crisis",
+      "recall": "Venture bubble, China's boom, the global financial crisis… recall what happened back then."
+    },
+    "2010s": {
+      "tagline": "When the smartphone in your hand changed everything",
+      "keywords": "Smartphones · Mobile games · K-pop · Bio",
+      "recall": "The smartphone boom, Chinese tourists, the shipbuilding slump… think back."
+    },
+    "2020s": {
+      "tagline": "When a pandemic and AI arrived together",
+      "keywords": "Pandemic · Batteries · Rate hikes · AI chips",
+      "recall": "The pandemic, inflation and rates, the AI rush… recall recent news."
     }
   }
 }

@@ -148,6 +148,32 @@ export function confirmOverlay(title: string, body: string[], noLabel: string, y
   return dialog('confirm', title, body.map((line) => h('p', { class: 'note', style: 'color:var(--text)' }, line)), [no, yes]);
 }
 
+// ───────── 시대 시작 카드 (9차: 시대가 바뀐 것이 확 느껴지게) ─────────
+
+/** "2010년대" 큰 도트 숫자 + 한 줄 소개 + 키워드 + 배경 지식 힌트 + [시작하기]. artEra = '2000s' 등 */
+export function eraIntroOverlay(locale: Locale, artEra: string, eraName: string, index: number, total: number, onStart: () => void): HTMLElement {
+  const t = (k: string, p?: Record<string, string | number>) => tr(locale, k, p);
+  const year = artEra.replace(/s$/, '');
+  const num = h('div', { class: 'era-num' });
+  num.innerHTML = /^\d{4}$/.test(year) ? titleSvg(year, 5) : '';
+  const start = pbtn('accent', t('eraIntro.start'));
+  start.addEventListener('click', onStart);
+  return h(
+    'div',
+    { class: `overlay era-intro`, role: 'dialog', 'aria-modal': 'true', 'aria-label': eraName },
+    h(
+      'div',
+      { class: 'era-card' },
+      h('div', { class: 'era-step' }, t('eraIntro.step', { n: index + 1, total })),
+      h('div', { class: 'era-title' }, num, h('span', { class: 'era-sfx' }, t('eraIntro.suffix'))),
+      h('div', { class: 'era-tag' }, t(`eraIntro.${artEra}.tagline`)),
+      h('div', { class: 'era-keys' }, ...t(`eraIntro.${artEra}.keywords`).split('·').map((k) => h('span', { class: 'era-key' }, k.trim()))),
+      h('p', { class: 'era-hint' }, t(`eraIntro.${artEra}.recall`)),
+      start,
+    ),
+  );
+}
+
 // ───────── 튜토리얼: 이야기(김역전) → 게임 방법 → 방 꾸미기와 작업 ─────────
 
 export const TUTORIAL_PAGES = [

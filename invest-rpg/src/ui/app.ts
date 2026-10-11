@@ -35,7 +35,7 @@ import { hourglassIcon, ico, inner, pbtn, playIcon, pnl } from './kit.ts';
 import type { IconName } from './icons.ts';
 import { GameLoop, type Clock } from './loop.ts';
 import {
-  confirmNewOverlay, confirmOverlay, consentOverlay, finalOverlay, settingsOverlay, settlementOverlay, titleScreen, tutorialOverlay,
+  confirmNewOverlay, confirmOverlay, consentOverlay, eraIntroOverlay, finalOverlay, settingsOverlay, settlementOverlay, titleScreen, tutorialOverlay,
 } from './overlays.ts';
 import { SceneLayer } from './scene.ts';
 import { LivingRoomScreen } from './screens/livingRoom.ts';
@@ -250,6 +250,8 @@ export class App {
       if (pendingSettlement) this.showSettlement(pendingSettlement, () => this.afterSettlement());
       else if (this.game.phase === 'era-ended') this.showSettlementFromGame();
       else if (this.game.phase === 'finished') this.showFinal();
+      // 시대가 막 시작된 판이면(새로하기) 시대 시작 카드부터
+      else if (this.game.tick === 0 && !this.opts.skipIntro) this.showEraIntro(() => this.loop.start());
       else this.loop.start();
       // 숨긴 탭에서 열렸으면 처음부터 백그라운드 일시정지
       if (document.hidden) this.onVisibility(true);
@@ -402,6 +404,8 @@ export class App {
 
   private applyEraMarks(): void {
     this.virtualMark.hidden = !this.opts.isVirtual(this.game.eraId);
+    // 시대 색 테마 (style.css data-era)
+    this.stage.dataset.era = artEraFor(this.game.eraId);
     this.stage.dataset.scheme = effectiveColorScheme(this.settings);
   }
 
@@ -576,9 +580,32 @@ export class App {
     this.trading.resetForEra();
     this.applyEraMarks();
     this.showTab(this.tabs.current);
-    this.toast(this.t('era.graceNotice'));
     this.persist(true);
-    this.loop.start();
+    const start = () => {
+      this.toast(this.t('era.graceNotice'));
+      this.loop.start();
+    };
+    // 디버그 &nointro=1이면 카드 없이 바로
+    if (this.opts.skipIntro) start();
+    else this.showEraIntro(start);
+  }
+
+  /** 시대 시작 카드: [시작하기]를 누르면 시간이 흐르기 시작한다 (디버그 패널에서도 부른다) */
+  showEraIntro(done: () => void): void {
+    const ids = this.opts.eras.map((e) => e.id);
+    const era = this.opts.eras.find((e) => e.id === this.game.eraId);
+    const el = eraIntroOverlay(
+      this.settings.locale,
+      artEraFor(this.game.eraId),
+      era ? localize(era.displayName, this.settings.locale) : this.game.eraId,
+      Math.max(0, ids.indexOf(this.game.eraId)),
+      ids.length,
+      () => {
+        el.remove();
+        done();
+      },
+    );
+    this.overlays.append(el);
   }
 
   private showFinal(given?: FinalSummary): void {
