@@ -256,28 +256,33 @@ export class App {
       this.persist(true);
     };
     const askConsent = !this.opts.skipIntro && this.opts.storage.get(FIRST_RUN_KEY) !== '1';
-    const afterTutorial = () => (askConsent ? this.askConsent(go) : go());
-    if (tutorial) this.showTutorial(afterTutorial);
-    else afterTutorial();
+    // 9차: 튜토리얼이 있으면 그 마지막 장에서 기록 동의를 받는다. 튜토리얼 없이 들어왔는데 아직 안 물었으면 따로 묻는다
+    if (tutorial) this.showTutorial(go, askConsent ? (agree) => this.applyConsent(agree) : undefined);
+    else if (askConsent) this.askConsent(go);
+    else go();
+  }
+
+  private applyConsent(agree: boolean): void {
+    this.save = setTelemetryConsent(this.save, agree);
+    this.game.setConsent(agree);
+    this.opts.storage.set(FIRST_RUN_KEY, '1');
   }
 
   /** 처음 실행: 플레이 기록 동의 (기본 꺼짐) */
   private askConsent(done: () => void): void {
     const el = consentOverlay(this.settings.locale, (agree) => {
       el.remove();
-      this.save = setTelemetryConsent(this.save, agree);
-      this.game.setConsent(agree);
-      this.opts.storage.set(FIRST_RUN_KEY, '1');
+      this.applyConsent(agree);
       done();
     });
     this.overlays.append(el);
   }
 
-  private showTutorial(done: () => void): void {
+  private showTutorial(done: () => void, consent?: (agree: boolean) => void): void {
     const el = tutorialOverlay(this.settings.locale, () => {
       el.remove();
       done();
-    });
+    }, consent);
     this.overlays.append(el);
   }
 
@@ -625,6 +630,12 @@ export class App {
             this.save = setTelemetryConsent(this.save, on);
             this.game.setConsent(on);
             this.persist(true);
+          },
+          saveAndExit: () => {
+            // 저장하고 첫 화면으로 (새로 고침하면 첫 화면, [이어하기]로 지금 시점부터)
+            this.persist(true);
+            this.saveLocked = true;
+            window.location.reload();
           },
           replayTutorial: () => {
             this.overlays.querySelector('.overlay.settings')?.remove();

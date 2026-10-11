@@ -126,7 +126,9 @@
     "goalTitle": "Goal and endings",
     "goal1": "Goal: complete all 7 life-upgrade levels before the last era (the 2020s) ends!",
     "goal2": "The ending depends on your level when the last era ends: levels 0–2 sad, 3–6 neutral, 7 (complete) happy.",
-    "goal3": "Grow your coins by investing, cash out at the right time, and upgrade the room. That's the road to a comeback."
+    "goal3": "Grow your coins by investing, cash out at the right time, and upgrade the room. That's the road to a comeback.",
+    "consentTitle": "Send play records",
+    "agreeStart": "Agree and start"
   },
   "disclaimer": {
     "fictional": "This is a fictional scenario based on real events and is not investment advice."
@@ -266,7 +268,8 @@
     "colorKorean": "Red up · Blue down",
     "colorWestern": "Green up · Red down",
     "telemetry": "Send play data (consent)",
-    "noCredits": "No tracks need attribution yet."
+    "noCredits": "No tracks need attribution yet.",
+    "saveExit": "Save and exit"
   },
   "living": {
     "upgrade": "Life Upgrade - {cost}",
