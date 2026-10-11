@@ -45,7 +45,7 @@ if (process.argv[2] === 'tutorial') {
   console.log('  → 아크셀전지 5주 매수');
   tut.confirmNews();
   const r = tut.advanceTick();
-  if (r.advanced) for (const c of r.changes.filter((x) => x.cause === 'news')) console.log(`  5초 뒤 나머지: ${c.stockId} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)})`);
+  if (r.advanced) for (const c of r.changes.filter((x) => x.cause === 'news')) console.log(`  3초 뒤 나머지: ${c.stockId} ${n(c.prevPrice)}→${n(c.price)} (${signed(c.rate / 10)})`);
   while (tut.stage === 'reaction') tut.advanceTick();
   printReport(tut.game, tut.report!);
   console.log(`\n${t('ko', 'tutorial.done')}`);

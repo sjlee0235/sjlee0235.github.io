@@ -5,8 +5,8 @@
 
 import type { EngineEventMap, TelemetryEvent } from '../engine/telemetry.ts';
 
-/** 뉴스 뒤 몇 틱 안의 매매를 "그 뉴스에 반응한 매매"로 보나 (12틱 = 1분) */
-export const REACTION_WINDOW_TICKS = 12;
+/** 뉴스 뒤 몇 틱 안의 매매를 "그 뉴스에 반응한 매매"로 보나 (20틱 = 1분, 3초 틱) */
+export const REACTION_WINDOW_TICKS = 20;
 
 /** 업로드 기록 한 줄: 엔진 이벤트 + 앱이 붙이는 구분자 */
 export type TelemetryRecord = TelemetryEvent & {
@@ -19,7 +19,7 @@ export type TelemetryRecord = TelemetryEvent & {
 export type Archetype =
   | 'idle' // 거의 매매 안 함
   | 'holder' // 사서 오래 들고 있음
-  | 'newsSniper' // 뉴스 직후(5초 안) 바로 따라 삼
+  | 'newsSniper' // 뉴스 직후(같은 틱 안) 바로 따라 삼
   | 'newsFollower' // 뉴스를 따라 사지만 반영 뒤에
   | 'storyReader' // 잠정 뉴스의 단서를 보고 미리 삼
   | 'storyContrarian' // 잠정 뉴스의 단서와 반대로 삼

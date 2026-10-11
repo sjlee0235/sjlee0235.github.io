@@ -44,15 +44,15 @@ describe('일시정지 사유 (tutorial / background)', () => {
 });
 
 describe('뉴스 피드와 주가 리포트 행', () => {
-  it('피드는 최신순, 리포트는 발표 120초(24틱) 뒤 그 뉴스 아래에 붙는다', () => {
+  it('피드는 최신순, 리포트는 발표 120초(40틱) 뒤 그 뉴스 아래에 붙는다', () => {
     const g = PublicGame.create({ eras: [era], seed: 4 });
     let firstNewsTick = -1;
     while (g.phase === 'running' && g.tick < 400) {
       const r = g.advanceTick();
       if (!r.advanced) continue;
       if (r.news && firstNewsTick < 0) firstNewsTick = r.tick;
-      if (firstNewsTick > 0 && r.tick === firstNewsTick + 23) expect(g.getFeed().at(-1)!.report).toBeUndefined();
-      if (firstNewsTick > 0 && r.tick === firstNewsTick + 24) {
+      if (firstNewsTick > 0 && r.tick === firstNewsTick + 39) expect(g.getFeed().at(-1)!.report).toBeUndefined();
+      if (firstNewsTick > 0 && r.tick === firstNewsTick + 40) {
         const oldest = g.getFeed().at(-1)!;
         expect(oldest.report).toBeDefined();
         expect(oldest.report!.newsId).toBe(oldest.news.id);
@@ -104,9 +104,9 @@ describe('뉴스 피드와 주가 리포트 행', () => {
 });
 
 describe('배속 1배 / 2배', () => {
-  it('틱 간격: 1배 5,000ms, 2배 2,500ms (게임 시간 1틱 = 5초는 그대로)', () => {
-    expect(tickIntervalMs(1)).toBe(5000);
-    expect(tickIntervalMs(2)).toBe(2500);
+  it('틱 간격: 1배 3,000ms, 2배 1,500ms (게임 시간 1틱 = 3초는 그대로)', () => {
+    expect(tickIntervalMs(1)).toBe(3000);
+    expect(tickIntervalMs(2)).toBe(1500);
   });
 
   it('[시드 5개] 같은 시드에서 1배와 2배의 틱별 가격·뉴스가 완전히 같고, 리포트는 게임 시간 120초 뒤', () => {
@@ -120,7 +120,7 @@ describe('배속 1배 / 2배', () => {
         if (!ra.advanced || !rb.advanced) throw new Error('멈춤');
         if (ra.changes.map((c) => c.price).join() !== rb.changes.map((c) => c.price).join()) throw new Error(`seed ${seed} tick ${ra.tick}`);
         expect(rb.news?.news.id).toBe(ra.news?.news.id);
-        for (const rep of rb.reports) expect(rep.reportTick - rep.publishedTick).toBe(24);
+        for (const rep of rb.reports) expect(rep.reportTick - rep.publishedTick).toBe(40);
       }
       expect(b.settlements[0]!.endAssets).toBe(a.settlements[0]!.endAssets);
     }

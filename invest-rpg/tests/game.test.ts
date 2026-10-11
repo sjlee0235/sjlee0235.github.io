@@ -33,14 +33,14 @@ describe('시대마다 3분 유예', () => {
         while (game.phase === 'running') {
           const r = game.advanceTick();
           if (!r.advanced) continue;
-          if (r.tick < 36) {
+          if (r.tick < 60) {
             expect(r.news).toBeNull();
             if (r.changes.some((c) => c.price !== c.prevPrice)) moved = true;
           }
           if (r.news && !first) first = r;
         }
         expect(moved).toBe(true);
-        expect(first && first.advanced && first.tick).toBe(36);
+        expect(first && first.advanced && first.tick).toBe(60);
         expect(first && first.advanced && first.news!.kind).toBe('tentative');
         if (game.hasNextEra) game.startNextEra();
       }
@@ -49,7 +49,7 @@ describe('시대마다 3분 유예', () => {
 });
 
 describe('뉴스 반영 타이밍 (시간은 멈추지 않음)', () => {
-  it('[시드 30개] 발표 틱 k에는 평소 변동 + 발표 순간 즉시 몫, k+1에 나머지 반영, k+2·k+3 관성, 이후 일반', () => {
+  it('[시드 30개] 발표 틱 k에 즉시 몫. 호재는 k+1 나머지 → 관성 2틱, 악재는 k+1·k+2 나머지 → 관성 2틱, 이후 일반', () => {
     for (let seed = 1; seed <= 30; seed++) {
       const game = newGame(seed);
       let r: AdvanceResult;
@@ -57,22 +57,29 @@ describe('뉴스 반영 타이밍 (시간은 멈추지 않음)', () => {
       while (!(r.advanced && r.news));
       expect(game.phase).toBe('running');
       expect(r.changes.some((c) => c.cause === 'news')).toBe(false);
-      const affected = new Set(r.news!.news.effects.map((e) => e.themeId));
+      const impact = new Map(r.news!.news.effects.map((e) => [e.themeId, e.impact]));
+      const themeOf = (id: string) => game.activeStocks.find((s) => s.id === id)!.themeId;
       // 즉시 몫: 영향받는 종목만, 발표 직후 가격이 이미 움직여 있다
       expect(r.instantChanges.length).toBeGreaterThan(0);
       for (const c of r.instantChanges) {
         expect(c.cause).toBe('instant');
-        expect(affected.has(game.activeStocks.find((s) => s.id === c.stockId)!.themeId)).toBe(true);
+        expect(impact.has(themeOf(c.stockId))).toBe(true);
         expect(game.getPrice(c.stockId)).toBe(c.price);
       }
-      const causesFor = (res: AdvanceResult) => {
+      const seq = new Map<string, string[]>();
+      for (let i = 0; i < 5; i++) {
+        const res = game.advanceTick();
         if (!res.advanced) throw new Error();
-        return res.changes.filter((c) => affected.has(game.activeStocks.find((s) => s.id === c.stockId)!.themeId)).map((c) => c.cause);
-      };
-      expect(new Set(causesFor(game.advanceTick()))).toEqual(new Set(['news']));
-      expect(new Set(causesFor(game.advanceTick()))).toEqual(new Set(['inertia']));
-      expect(new Set(causesFor(game.advanceTick()))).toEqual(new Set(['inertia']));
-      expect(new Set(causesFor(game.advanceTick()))).toEqual(new Set(['random']));
+        for (const c of res.changes) {
+          if (!impact.has(themeOf(c.stockId))) continue;
+          seq.set(c.stockId, [...(seq.get(c.stockId) ?? []), c.cause]);
+        }
+      }
+      for (const [id, causes] of seq) {
+        const up = impact.get(themeOf(id))! > 0;
+        const want = up ? ['news', 'inertia', 'inertia', 'random', 'random'] : ['news', 'news', 'inertia', 'inertia', 'random'];
+        expect(causes).toEqual(want);
+      }
     }
   });
 
@@ -95,34 +102,52 @@ describe('뉴스 반영 타이밍 (시간은 멈추지 않음)', () => {
     }
   });
 
-  it('즉시 몫 0이면 이전 규칙처럼 전부 5초 뒤 반영', () => {
-    const game = new Game({ eras: [makeSpecEra({ id: 'g' })], seed: 4, config: { instantReactionShare: 0 } });
+  it('즉시 몫 0이면 (예전 규칙처럼) 전부 1틱 뒤 반영', () => {
+    const game = new Game({ eras: [makeSpecEra({ id: 'g' })], seed: 4, config: { reactionShares: [0, 1], reactionSharesDown: null } });
     let r: AdvanceResult;
     do r = game.advanceTick();
     while (!(r.advanced && r.news));
     expect(r.instantChanges).toEqual([]);
   });
 
-  it('[시드 20개] 즉시 몫 : 5초 뒤 몫 ≈ 75 : 25', () => {
-    let instant = 0;
-    let total = 0;
+  it('[시드 20개] 몫 비율: 호재 즉시 75 : 3초 뒤 25, 악재 즉시 25 : 3초 뒤 60 : 6초 뒤 15', () => {
+    const sum: Record<'up' | 'down', number[]> = { up: [0, 0, 0], down: [0, 0, 0] };
+    const add = (dir: 'up' | 'down', stage: number, v: number) => { sum[dir][stage] = (sum[dir][stage] ?? 0) + v; };
     for (let seed = 1; seed <= 20; seed++) {
       const game = newGame(seed);
-      let pendingIds = new Set<string>();
+      // 종목 → [방향, 발표 틱]
+      let open = new Map<string, { dir: 'up' | 'down'; tick: number }>();
       while (game.phase !== 'era-ended') {
         const r = game.advanceTick();
         if (!r.advanced) continue;
-        for (const c of r.changes) if (c.cause === 'news' && pendingIds.has(c.stockId)) total += Math.abs(c.requestedRate!);
-        pendingIds = new Set();
-        for (const c of r.instantChanges) {
-          instant += Math.abs(c.requestedRate!);
-          total += Math.abs(c.requestedRate!);
-          pendingIds.add(c.stockId);
+        for (const c of r.changes) {
+          const o = open.get(c.stockId);
+          if (c.cause === 'news' && o) add(o.dir, r.tick - o.tick, Math.abs(c.requestedRate!));
+        }
+        if (r.news) {
+          open = new Map();
+          const impact = new Map(r.news.news.effects.map((e) => [e.themeId, e.impact]));
+          for (const s of game.activeStocks) {
+            const im = impact.get(s.themeId);
+            if (im) open.set(s.id, { dir: im > 0 ? 'up' : 'down', tick: r.tick });
+          }
+          for (const c of r.instantChanges) add(open.get(c.stockId)!.dir, 0, Math.abs(c.requestedRate!));
         }
       }
     }
-    expect(instant / total).toBeGreaterThan(0.68);
-    expect(instant / total).toBeLessThan(0.77);
+    const ratio = (a: number[]) => a.map((x) => x / a.reduce((p, q) => p + q, 0));
+    const [u0, u1, u2] = ratio(sum.up);
+    expect(u0).toBeGreaterThan(0.7);
+    expect(u0).toBeLessThan(0.77);
+    expect(u1).toBeGreaterThan(0.23);
+    expect(u2).toBe(0);
+    const [d0, d1, d2] = ratio(sum.down);
+    expect(d0).toBeGreaterThan(0.2);
+    expect(d0).toBeLessThan(0.26);
+    expect(d1).toBeGreaterThan(0.57);
+    expect(d1).toBeLessThan(0.63);
+    expect(d2).toBeGreaterThan(0.13);
+    expect(d2).toBeLessThan(0.18);
   });
 });
 
@@ -150,12 +175,12 @@ describe('주가 리포트', () => {
     return { game, reports, applied };
   };
 
-  it('[시드 20개] 발표 120초(24틱) 뒤, 영향받은 종목 모두, 반영률 절댓값 순, appliedPct = 실제 적용값', () => {
+  it('[시드 20개] 발표 120초(40틱) 뒤, 영향받은 종목 모두, 반영률 절댓값 순, appliedPct = 실제 적용값', () => {
     for (let seed = 1; seed <= 20; seed++) {
       const { game, reports, applied } = collect(seed);
       expect(reports.length).toBeGreaterThan(0);
       for (const n of reports) {
-        expect(n.reportTick - n.publishedTick).toBe(24);
+        expect(n.reportTick - n.publishedTick).toBe(40);
         expect(n.moreCount).toBe(0);
         const abs = n.items.map((i) => Math.abs(i.appliedPct));
         expect([...abs].sort((a, b) => b - a)).toEqual(abs);
@@ -163,6 +188,7 @@ describe('주가 리포트', () => {
         for (const it of n.items) {
           expect(it.appliedPct).toBeCloseTo(actual.get(it.stockId)! / 10, 9);
           expect(it.appliedPct).toBeCloseTo(it.instantPct + it.delayedPct, 9);
+          expect(it.delayedPct).toBeCloseTo(it.stagePcts.reduce((a, b) => a + b, 0), 9);
         }
         expect(n.items.length + n.moreCount).toBe(actual.size);
         const shown = game.shownNews.find((s) => s.news.id === n.newsId)!;
@@ -179,7 +205,7 @@ describe('주가 리포트', () => {
     const { game, reports } = collect(3);
     const last = game.shownNews.at(-1)!;
     const made = reports.some((r) => r.newsId === last.news.id);
-    expect(made).toBe(last.tick + 24 <= 1440);
+    expect(made).toBe(last.tick + 40 <= 2400);
   });
 
   it('보관함: 뉴스·태그·강도·주가 리포트를 함께 담는다', () => {
@@ -189,7 +215,7 @@ describe('주가 리포트', () => {
     for (const a of archive) {
       expect(['breaking', 'tentative', 'outcome']).toContain(a.tag);
       for (const e of a.effects) expect([1, 2, 3]).toContain(e.strength);
-      if (a.tick + 24 <= 1440) expect(a.report?.newsId).toBe(a.news.id);
+      if (a.tick + 40 <= 2400) expect(a.report?.newsId).toBe(a.news.id);
     }
     expect(archive.some((a) => a.tag === 'tentative')).toBe(true);
     expect(archive.some((a) => a.tag === 'outcome' && a.relatedTentativeId)).toBe(true);
@@ -223,14 +249,14 @@ describe('일시정지·매매·정산', () => {
     expect(game.advanceTick().advanced).toBe(true);
   });
 
-  it('수수료 0.2%, 1440틱에 자동 청산, 수익률 = (최종 − 시작) ÷ 시작, 자금 이월', () => {
+  it('수수료 0.2%, 2400틱(3초 × 2시간)에 자동 청산, 수익률 = (최종 − 시작) ÷ 시작, 자금 이월', () => {
     const game = newGame(5);
     const id = game.activeStocks[0]!.id;
     game.buy(id, 5);
     expect(game.account.cash).toBe(10_000 - 5000 - 10);
     runToEnd(game);
     const st = game.settlements[0]!;
-    expect(game.tick).toBe(1440);
+    expect(game.tick).toBe(2400);
     expect(game.account.getHoldings()).toEqual([]);
     expect(st.startCash).toBe(10_000);
     expect(st.returnPct).toBeCloseTo(((st.endAssets - 10_000) / 10_000) * 100, 10);

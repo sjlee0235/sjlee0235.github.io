@@ -3,6 +3,7 @@
 // 밤/낮 바꾸기, 인형 터치 몰아 하기.
 // 스크린샷 스크립트(npm run shots)도 window.__debug로 이 기능을 쓴다.
 
+import { TICK_SECONDS } from '../engine/config.ts';
 import type { App } from './app.ts';
 import { h } from './dom.ts';
 
@@ -31,7 +32,7 @@ export function mountDebug(app: App, info: { seed: number; eraNames: string[] })
   const api: DebugApi = {
     app,
     nextNews: () => app.debugAdvance(5000, (r) => r.advanced && r.news !== null),
-    advanceSeconds: (sec) => app.debugAdvance(Math.ceil(sec / 5)),
+    advanceSeconds: (sec) => app.debugAdvance(Math.ceil(sec / TICK_SECONDS)),
     endEra: () => app.debugAdvance(100000),
     coins: (amount) => {
       app.game.deposit(amount, 'other');

@@ -111,7 +111,7 @@ export class PriceEngine {
 
   /**
    * 뉴스 발표 순간의 즉시 반영 몫. 틱은 그대로이고, 1분 한도·관성에는 영향을 주지 않는다.
-   * 한도 기준가(P0)는 반영 전 가격이므로 즉시 몫 + 5초 뒤 몫을 합쳐 ±30% 안에 머문다.
+   * 한도 기준가(P0)는 반영 전 가격이므로 즉시 몫 + 그 뒤 몫들을 합쳐 ±30% 안에 머문다.
    */
   applyInstant(rates: ReadonlyMap<string, number>): StockTickChange[] {
     const changes: StockTickChange[] = [];

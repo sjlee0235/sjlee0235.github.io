@@ -32,13 +32,13 @@ function perStock(results: TickResult[]) {
 }
 
 describe('상수', () => {
-  it('5초 틱, 틱당 ±1.5%, 1분=12틱 ±3%, 1틱 뒤 반영, 2틱 관성 50/25/25, 뉴스 사이 ±30%', () => {
-    expect([TICK_SECONDS, MAX_TICK_MOVE, WINDOW_TICKS, WINDOW_CAP]).toEqual([5, 1.5, 12, 3.0]);
+  it('3초 틱(10차), 틱당 ±1.5%, 1분=20틱 ±3%, 1틱 뒤 반영, 2틱 관성 50/25/25, 뉴스 사이 ±30%', () => {
+    expect([TICK_SECONDS, MAX_TICK_MOVE, WINDOW_TICKS, WINDOW_CAP]).toEqual([3, 1.5, 20, 3.0]);
     expect([NEWS_REACTION_TICKS, INERTIA_TICKS, NEWS_BAND_PCT]).toEqual([1, 2, 30]);
     expect(INERTIA_PROBS).toEqual({ same: 50, opposite: 25, flat: 25 });
-    expect(rules.ticksPerEra).toBe(1440);
-    expect(rules.chartHistoryLength).toBe(240);
-    expect(rules.reportDelayTicks).toBe(24);
+    expect(rules.ticksPerEra).toBe(2400);
+    expect(rules.chartHistoryLength).toBe(400);
+    expect(rules.reportDelayTicks).toBe(40);
   });
 
   it('틱 길이로 나누어떨어지지 않는 설정은 오류', () => {
@@ -62,12 +62,12 @@ describe('가격 계산과 반사', () => {
 });
 
 describe('뉴스 없는 구간', () => {
-  it('[시드 150개] 1분(12틱) 누적 ±3% 이내, 틱당 ±1.5% 소수점 1자리, 가격 1 이상 정수', () => {
+  it('[시드 150개] 1분(20틱) 누적 ±3% 이내, 틱당 ±1.5% 소수점 1자리, 가격 1 이상 정수', () => {
     for (const seed of SEEDS) {
       const { results } = runTicks(seed, rules.ticksPerEra);
       for (const [id, ticks] of perStock(results)) {
-        for (let start = 0; start < ticks.length; start += 12) {
-          const sum = ticks.slice(start, start + 12).reduce((a, t) => a + t.rate, 0);
+        for (let start = 0; start < ticks.length; start += WINDOW_TICKS) {
+          const sum = ticks.slice(start, start + WINDOW_TICKS).reduce((a, t) => a + t.rate, 0);
           if (Math.abs(sum) > 30) throw new Error(`seed ${seed} ${id}: ${sum}`);
         }
         for (const t of ticks) {
@@ -77,7 +77,7 @@ describe('뉴스 없는 구간', () => {
         }
       }
     }
-  });
+  }, 30_000);
 
   it('[시드 150개] 0.0% 틱은 5% 이하 (반사 효과)', () => {
     let zero = 0;
@@ -186,9 +186,9 @@ describe('뉴스 사이 ±30% 한도', () => {
 });
 
 describe('차트', () => {
-  it('최근 240개(20분)', () => {
+  it('최근 400개(20분)', () => {
     const { engine } = runTicks(1, 500);
-    expect(engine.getHistory(STOCKS[0]!.id)).toHaveLength(240);
+    expect(engine.getHistory(STOCKS[0]!.id)).toHaveLength(400);
   });
 });
 

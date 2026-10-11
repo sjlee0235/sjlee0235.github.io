@@ -22,7 +22,7 @@ export const TELEMETRY_SCHEMA_VERSION = 3;
  * 엔진 규칙 버전. 같은 시드에서 가격·뉴스가 달라지는 변경(규칙·난수 순서)이 생기면 올린다.
  * 분석할 때 이 값이 다른 기록끼리는 리플레이 결과를 섞지 않는다.
  */
-export const ENGINE_VERSION = '0.6.0';
+export const ENGINE_VERSION = '0.7.0';
 
 /** 어떤 값이든 짧은 지문(해시) 문자열로. 키 순서가 달라도 같은 값이면 같은 지문 */
 export function fingerprint(value: unknown): string {
@@ -137,7 +137,7 @@ export interface EngineEventMap {
     effects: { themeId: string; impact: number; strength: 1 | 2 | 3 }[];
     instant: StockRate[];
   };
-  /** 5초 뒤 나머지 몫 반영 */
+  /** 발표 뒤(3초·6초 뒤) 나머지 몫 반영 */
   news_reacted: { newsId: string; applied: StockRate[] };
   /** 주가 리포트 생성 (화면에 띄울 수 있게 됨) */
   report_created: { newsId: string; stockIds: string[] };

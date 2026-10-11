@@ -1,7 +1,7 @@
 // 주가 리포트(report): 뉴스 발표 120초(게임 시간) 뒤에 "이 뉴스로 무엇이 얼마나 움직였는지" 알려준다.
 // - 시간을 멈추지 않는다. 뉴스 간격 규칙에도 포함되지 않는다.
 // - 활성 테마 중 반영률 절댓값 상위 최대 3개, 나머지는 moreCount
-// - appliedPct = 발표 즉시 반영분(instantPct) + 5초 뒤 반영분(delayedPct). 둘 다 실제로 적용된 값
+// - appliedPct = 발표 즉시 반영분(instantPct) + 그 뒤 반영분(delayedPct = 3초 뒤 + 6초 뒤). 모두 실제로 적용된 값
 //   (배율, ±30% 자르기, 뉴스 사이 한도 적용 후). 관성·일반 변동은 포함하지 않음
 // - 잠정 뉴스는 tentativeNote: true (결과 방향을 암시하는 내용은 넣지 않는다)
 
@@ -15,8 +15,10 @@ export interface StockReportItem {
   appliedPct: number;
   /** 발표 순간 반영된 몫 % */
   instantPct: number;
-  /** 5초 뒤 반영된 몫 % */
+  /** 발표 뒤(3초 뒤 + 6초 뒤 …) 반영된 몫 % 합계 */
   delayedPct: number;
+  /** 발표 뒤 반영된 몫을 틱별로 [3초 뒤 %, 6초 뒤 %, …] */
+  stagePcts: number[];
   /** 작성자가 쓴 이유 (없으면 null → auto로 문구를 만든다) */
   reason: Partial<LocalizedText> | null;
   /** 자동 문구 재료: "{newsTerm}의 영향으로 {테마} {수혜/부담}" */
@@ -41,10 +43,11 @@ export interface StockReport {
   reactionNote?: LocalizedText;
 }
 
-/** 종목 하나에 실제 적용된 뉴스 변동률 (0.1% 단위): 발표 즉시 몫 / 5초 뒤 몫 */
+/** 종목 하나에 실제 적용된 뉴스 변동률 (0.1% 단위): 발표 즉시 몫 / 그 뒤 틱별 몫 */
 export interface AppliedRate {
   instant: number;
-  delayed: number;
+  /** [1틱 뒤, 2틱 뒤, …] */
+  delayed: number[];
 }
 
 export function buildReport(
@@ -62,12 +65,14 @@ export function buildReport(
     .map((s): StockReportItem => {
       const e = effectByTheme.get(s.themeId)!;
       const a = applied.get(s.id)!;
+      const delayed = a.delayed.reduce((x, y) => x + y, 0);
       return {
         stockId: s.id,
         themeId: s.themeId,
-        appliedPct: (a.instant + a.delayed) / 10,
+        appliedPct: (a.instant + delayed) / 10,
         instantPct: a.instant / 10,
-        delayedPct: a.delayed / 10,
+        delayedPct: delayed / 10,
+        stagePcts: a.delayed.map((x) => x / 10),
         reason: e.reason?.ko ? e.reason : null,
         auto: {
           newsTerm: e.link.keywords[0]?.newsTerm ?? scheduled.news.title.ko,

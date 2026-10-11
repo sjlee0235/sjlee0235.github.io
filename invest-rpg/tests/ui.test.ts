@@ -12,7 +12,7 @@ import { displayRemaining, fmtNum, fmtPct, fmtTime } from '../src/ui/format.ts';
 import { dollHitRect } from '../src/ui/screens/workshop.ts';
 import { GameLoop, type Clock } from '../src/ui/loop.ts';
 import {
-  accountSummary, chooseSide, clearSide, dirClass, finalView, holdingRows, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
+  accountSummary, chartView, chooseSide, clearSide, dirClass, finalView, holdingRows, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
   settlementView, sparkPoints, stepQuantity, stockRows, upgradeView, workshopView,
 } from '../src/ui/viewModels.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
@@ -199,6 +199,35 @@ describe('20분 추이선·차트 좌표', () => {
   });
 });
 
+describe('보유 종목 차트: 산 시점·평단가 점선 (10차)', () => {
+  it('평단가는 차트 범위 밖이어도 보이게 범위에 넣고, 산 시점은 보이는 20분 안의 매수만', () => {
+    const hist = Array.from({ length: 5 }, (_, i) => ({ tick: 10 + i, price: 1000 + i * 10 }));
+    expect(chartView(hist, 100, 20, 2, 5, null)).toMatchObject({ avgY: null, buyXs: [] });
+    const v = chartView(hist, 100, 20, 2, 5, { avgPrice: 900, buyTicks: [3, 12, 12, 14] });
+    expect(v.avgY).toBe(18); // 900이 최저 → 맨 아래 (여백 2)
+    expect(v.points.every((p) => p.y < 18)).toBe(true);
+    expect(v.buyXs).toEqual([50, 100]); // 틱 3은 보이는 범위 밖
+  });
+
+  it('[게임] 보유하면 평단가·산 시점이 잡히고, 다 팔면 사라진다. 다시 사면 새로 산 시점만', () => {
+    const g = newGame();
+    const id = g.getStockList()[0]!.id;
+    for (let i = 0; i < 3; i++) g.advanceTick();
+    g.buy(id, 2);
+    const t1 = g.tick;
+    for (let i = 0; i < 3; i++) g.advanceTick();
+    g.buy(id, 1);
+    const m = g.getHoldingMarks(id)!;
+    expect(m.buyTicks).toEqual([t1, g.tick]);
+    expect(m.avgPrice).toBeCloseTo(g.getPortfolio().holdings[0]!.avgPrice, 9);
+    g.sell(id, 3);
+    expect(g.getHoldingMarks(id)).toBeNull();
+    g.advanceTick();
+    g.buy(id, 1);
+    expect(g.getHoldingMarks(id)!.buyTicks).toEqual([g.tick]);
+  });
+});
+
 describe('뉴스 창 (한 건씩, 스크롤하면 이전 뉴스)', () => {
   it('최신이 맨 위(강조), 모든 뉴스가 같은 구조. 120초 뒤 그 뉴스 아래 주가 리포트', () => {
     const g = newGame();
@@ -207,7 +236,7 @@ describe('뉴스 창 (한 건씩, 스크롤하면 이전 뉴스)', () => {
     expect(items).toHaveLength(1);
     expect(items[0]!).toMatchObject({ latest: true, report: null });
     expect(items[0]!.body.length).toBeGreaterThan(0);
-    for (let i = 0; i < 24; i++) g.advanceTick(); // 120초
+    for (let i = 0; i < 40; i++) g.advanceTick(); // 120초
     items = newsItems(g.getFeed(), 'ko');
     expect(items[0]!.report!.lines.length).toBeGreaterThan(0);
     expect(items[0]!.report!.more).toBeNull(); // 영향받은 종목 모두 (외 N개 없음)
@@ -224,7 +253,7 @@ describe('뉴스 창 (한 건씩, 스크롤하면 이전 뉴스)', () => {
     untilNews(g);
     tabs.onTick();
     tabs.select('living_room');
-    for (let i = 0; i < 24; i++) g.advanceTick();
+    for (let i = 0; i < 40; i++) g.advanceTick();
     expect(g.getUnreadReportCount()).toBe(1);
     expect(g.getUnreadCount()).toBe(0);
     expect(tabs.topBar().newsBadge).toBe(false);
@@ -232,16 +261,19 @@ describe('뉴스 창 (한 건씩, 스크롤하면 이전 뉴스)', () => {
     expect(g.getUnreadReportCount()).toBe(0);
   });
 
-  it('리포트 줄: "종목 합계%" + 이유 + "발표 즉시 ○% · 5초 뒤 ○%" (방향 단어 없음, 잠정 뉴스는 안내 문구)', () => {
+  it('리포트 줄: "종목 합계%" + 이유 + "발표 즉시 ○% · 3초 뒤 ○% (· 6초 뒤 ○%)" (방향 단어 없음, 잠정 뉴스는 안내 문구)', () => {
     const g = newGame();
     const first = untilNews(g);
     expect(first.news!.kind).toBe('tentative');
-    for (let i = 0; i < 24; i++) g.advanceTick();
+    for (let i = 0; i < 40; i++) g.advanceTick();
     const rep = g.getFeed()[0]!.report!;
     const v = reportView(rep, 'ko');
     expect(v.notes.join(' ')).toContain('잠정 발표');
     for (const l of v.lines) {
-      expect(l.split).toMatch(/^발표 즉시 .+ · 5초 뒤 .+$/);
+      expect(l.split).toMatch(/^발표 즉시 \S+ · 3초 뒤 \S+( · 6초 뒤 \S+)?$/);
+      // 내리는 영향(악재)은 3단계, 오르는 영향(호재)은 2단계
+      if (l.head.includes('-')) expect(l.split).toContain('6초 뒤');
+      else expect(l.split).not.toContain('6초 뒤');
       expect(l.head).toMatch(/ [+-]?\d+\.\d%$/);
       expect(l.reason).not.toMatch(/호재|악재/);
     }
@@ -270,18 +302,18 @@ describe('속도 선택과 유지', () => {
 });
 
 describe('게임 루프 (가짜 타이머)', () => {
-  it('1배 5초, 2배 2.5초마다 틱. 배속을 바꾸면 바로 새 간격', () => {
+  it('1배 3초, 2배 1.5초마다 틱. 배속을 바꾸면 바로 새 간격', () => {
     const g = newGame();
     const clock = new FakeClock();
     let ticks = 0;
     const loop = new GameLoop(g, clock, () => ticks++);
     loop.start();
-    clock.advance(10_000);
-    expect(ticks).toBe(2);
+    clock.advance(9_000);
+    expect(ticks).toBe(3);
     g.setSpeed(2);
     loop.reschedule();
-    clock.advance(10_000);
-    expect(ticks).toBe(6);
+    clock.advance(9_000);
+    expect(ticks).toBe(9);
   });
 
   it('백그라운드: 멈추고, 돌아와도 밀린 틱을 몰아서 따라잡지 않는다', () => {
@@ -290,7 +322,7 @@ describe('게임 루프 (가짜 타이머)', () => {
     let ticks = 0;
     const loop = new GameLoop(g, clock, () => ticks++);
     loop.start();
-    clock.advance(5_000);
+    clock.advance(3_000);
     expect(ticks).toBe(1);
     loop.setHidden(true);
     expect(g.isPaused).toBe(true);
@@ -298,7 +330,7 @@ describe('게임 루프 (가짜 타이머)', () => {
     expect(ticks).toBe(1);
     loop.setHidden(false);
     expect(g.isPaused).toBe(false);
-    clock.advance(4_999);
+    clock.advance(2_999);
     expect(ticks).toBe(1);
     clock.advance(1);
     expect(ticks).toBe(2);
@@ -421,23 +453,23 @@ describe('정산 창·최종 요약', () => {
   });
 });
 
-describe('남은 시간: 5초 틱 사이에도 1초씩', () => {
+describe('남은 시간: 3초 틱 사이에도 1초씩', () => {
   it('displayRemaining: 틱 사이 지난 초만큼 빼되, 다음 틱 전에는 한 틱 아래로 내려가지 않는다', () => {
     expect([0, 0.19, 0.2, 0.5, 0.99].map((p) => displayRemaining(6000, p, 5))).toEqual([6000, 6000, 5999, 5998, 5996]);
     expect(displayRemaining(2, 0.9, 5)).toBe(0);
   });
 
-  it('게임 루프의 틱 진행 정도: 1배 5초, 2배 2.5초 기준, 멈추면 0', () => {
+  it('게임 루프의 틱 진행 정도: 1배 3초, 2배 1.5초 기준, 멈추면 0', () => {
     const g = newGame();
     const clock = new FakeClock();
     const loop = new GameLoop(g, clock, () => undefined);
     expect(loop.tickProgress).toBe(0);
     loop.start();
-    clock.advance(2000);
+    clock.advance(1200);
     expect(loop.tickProgress).toBeCloseTo(0.4, 6);
     g.setSpeed(2);
     loop.reschedule();
-    clock.advance(1250);
+    clock.advance(750);
     expect(loop.tickProgress).toBeCloseTo(0.5, 6);
     loop.setHidden(true);
     expect(loop.tickProgress).toBe(0);

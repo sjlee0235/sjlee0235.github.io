@@ -91,7 +91,8 @@
     "more": "+{count} more",
     "firstNotice": "Market Report figures are what actually moved inside the game. They are not real market data or investment advice.",
     "tentativeNote": "This was a tentative report, so the effect was small. The outcome report may change things a lot.",
-    "split": "At release {instant} · 5s later {delayed}"
+    "split": "At release {instant}",
+    "splitAfter": "{sec}s later {pct}"
   },
   "tutorial": {
     "title": "New here?",
@@ -181,6 +182,7 @@
   "speed": {
     "x1": "1x",
     "x2": "2x",
+    "label": "Speed",
     "badge": "x2"
   },
   "newsBadge": "NEWS!",
@@ -258,7 +260,8 @@
     "noShares": "You don't own any shares.",
     "colAvg": "Avg cost",
     "remainingEra": "{era} time left",
-    "sellAll": "Sell all"
+    "sellAll": "Sell all",
+    "avgMark": "Avg {price}"
   },
   "settings": {
     "title": "Settings",
@@ -276,8 +279,7 @@
     "upgradeAria": "Life upgrade, {cost} coins (now {level}/{max})",
     "upgradeDone": "Life upgrade complete",
     "notEnough": "Not enough cash. Sell some stocks to raise cash.",
-    "dog": "Dog",
-    "calendar": "{era} calendar"
+    "dog": "Dog"
   },
   "title": {
     "name": "역전의 방",
