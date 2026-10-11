@@ -1,6 +1,7 @@
 # 2020년대 뉴스 팩트체크 표 (단계 B 초안)
 
-- 대상: `src/data/eras/2020s.json`. 속보 24개, 스토리 13개(잠정 1개 + 결과 2개씩, 모두 39개), 합계 63개. opener 스토리는 6개(s01·s02·s05·s06·s08·s12)
+- 대상: `src/data/eras/2020s.json`. 속보 46개, 스토리 21개(잠정 1개 + 결과 2개씩, 모두 63개), 합계 109개. opener 스토리는 8개(s01·s02·s05·s06·s08·s12·s14·s15)
+- 1~5장은 처음 작성분(속보 24개·스토리 13개), 6~9장은 뉴스 간격 3~4분 변경에 맞춘 추가분(속보 22개·스토리 8개, 2026-10-11)이다.
 - 이 문서는 **앱에 포함되지 않는다**. 검증 편의를 위해 실명(기업·인물·지수·기관)을 그대로 적었다. 게임 데이터(JSON)의 제목·본문·근거 메모(`source.event`)에는 실명을 쓰지 않았다.
 - 확신도
   - **높음**: 날짜와 핵심 수치를 웹 출처로 확인함
@@ -109,3 +110,97 @@
 - b05 "중고차 값 상승", b17 "국내 업체 가동 축소", b20 "김·냉동 김밥 수출 증가", b16 "고대역폭 메모리 주문 증가"는 당시 흐름 요약이며 구체 수치 출처를 붙이지 않았다.
 - s03 "하루 수조 원 인출", "투자자 손실 수십조 원"은 규모 요약이다 (정확한 수치 미확인).
 - 대부분 뉴스의 "국내 관련 업종 주가 등락 폭"은 찾지 못했다. 현재 영향도는 사건 규모에 따른 판단값이다.
+
+---
+
+## 6. 추가 속보 22개 (b25~b46, 2026-10-11)
+
+뉴스 간격이 3~4분으로 줄어 시대당 뉴스가 약 34개로 늘었기 때문에 풀을 넓혔다. 영향도는 공식 그대로(±1 조정 없음), 규모는 밸런스 점검 뒤 정한 값이다.
+
+| 뉴스 ID | 사실 주장(사건) | 실제 날짜 | 근거 수치 | 출처 | 확신도 |
+|---|---|---|---|---|---|
+| b25-oil-below-zero | WTI 5월물 선물 사상 첫 마이너스 | 2020-04-20 | 종가 -37.62달러(본문 "마이너스 37달러"), 장중 -40.32달러, 저장 공간(쿠싱) 부족 | [CRS(의회조사국)](https://www.everycrsreport.com/reports/IN11354.html), [OGJ](https://www.ogj.com/general-interest/economics-markets/article/14174443/wti-plunges-into-negative-territory) | 높음 |
+| b26-online-shopping | 2020년 온라인쇼핑 거래액 사상 최대, 음식 배달 급증 | 2020 연간 (2021-02 통계청 발표) | 161조 1,234억 원(+19.1%), 음식서비스 17.4조(+78.6%), 여행·교통 -53.3%, 문화·레저 -69.3% (2023년 표본 개편 전 수치) | [뉴시스](https://mobile.newsis.com/view/NISX20210804_0001536798), [뉴데일리](https://biz.newdaily.co.kr/site/data/html/2021/02/03/2021020300128.amp.html) | 높음 |
+| b27-cinema-empty | 2020년 극장 관객 70% 넘게 감소 | 2020 연간 (2021-02 영진위 결산) | 5,952만 명(-73.7%), 2004년 통합전산망 이후 최저, 매출 5,104억 원(-73.3%). "대작 개봉 연기·스트리밍 직행"은 당시 흐름 요약 | [데일리안](https://www.dailian.co.kr/news/view/965692/), [더팩트](https://news.tf.co.kr/read/ogmeta/1834461.htm) | 높음 (스트리밍 직행 문장은 중간) |
+| b28-zero-rate | 미 연준 제로 금리 긴급 인하, 한은 임시 금통위 0.5%p 인하로 첫 0%대 | 2020-03-15 (미국), 03-16 (한국) | 연준 0~0.25%, 한은 1.25% → 0.75%(사상 첫 0%대, 2008-10 이후 첫 임시 금통위 인하) | [뉴시스](https://www.newsis.com/view/NISX20200316_0000957725), [서울신문](https://m.seoul.co.kr/news/2020/03/17/20200317001026), [아주경제](https://www.ajunews.com/view/20200316161324639) | 높음 |
+| b29-container-rates | 컨테이너 운임(SCFI) 연속 사상 최고, 컨테이너·선복 부족 | 2021-05 ~ 12 | 05-14부터 20주 연속 최고, 12월 초 4,727, 2021 평균 3,792, 2022-01 정점 5,110. "물류비 몇 배"는 흐름 요약 | [트레드링스](https://www.tradlinx.com/blog/?p=5037), [뉴시스](https://mobile.newsis.com/view/NISX20210623_0001487192), [뉴스토마토](https://newstomato.com/ReadNews.aspx?no=1161759) | 높음 |
+| b30-urea-shortage | 중국 요소 수출 검사 의무화로 국내 요소수 품귀 | 2021-10-15 (중국 조치) ~ 11 (국내 품귀) | 산업용 요소 중국 의존 97%(1~9월), 군 수송기로 호주산 요소수 2만 L 긴급 수입. 국내 화학 업체 요소수 관련주 상승은 당시 보도 흐름 | [뉴데일리](https://biz.newdaily.co.kr/site/data/html/2021/11/10/2021111000040.html), [아시아경제](https://view.asiae.co.kr/article/2021110418341620231), [트레드링스](https://www.tradlinx.com/blog/?p=4579) | 중간 (원인 설명은 출처마다 다름) |
+| b31-city-lockdown | 상하이 전면 봉쇄 약 2개월 | 2022-03-28 ~ 06-01 | 푸둥 03-28, 푸시 04-01, 06-01부터 단계적 해제. 상하이항은 축소 운영, 트럭 운송 급감. 국내 화장품·면세 매출 감소는 당시 흐름 요약 | [gCaptain](https://gcaptain.com/shanghai-faces-long-road-to-recovery-as-lockdown-lifts/), [Hellenic Shipping News](https://www.hellenicshippingnews.com/?p=927947), [Port Technology](https://porttechnology.org/news/supply-chain-pressure-amounts-as-shanghai-extends-lockdown) | 높음 (국내 업종 영향은 중간) |
+| b32-won-1400 | 원·달러 환율 13년 6개월 만에 1,400원 돌파 | 2022-09-22 | 종가 1,409.7원(+15.5원), 연준 세 번째 0.75%p 인상 직후, 외환위기·금융위기 이후 세 번째 | [뉴시스](https://mobile.newsis.com/view/NISX20220922_0002022958), [뉴시스(전망)](https://www.newsis.com/view/NISX20220922_0002023489) | 높음 |
+| b33-mutual-run | 새마을금고 연체율 급등·예금 인출, 정부 합동 브리핑 "전액 보장" | 2023-07 (07-06 합동 브리핑) | 7월 중도해지 정기예적금 41.7만 건(전년 2배), 합병 시 5,000만 원 넘는 예금도 보장 | [서울신문](https://m.seoul.co.kr/news/2023/07/06/20230706500043), [KB Think](https://kbthink.com/main/economy/market-analysis/Issue-analysis/series1-230710.html), [파이낸셜뉴스](https://www.fnnews.com/news/202511050552489017) | 높음 |
+| b34-ramen-price-cut | 정부 압박에 신라면 출고가 13년 만에 인하, 업계 동참 | 2023-06-27 발표 (07-01 시행) | 농심 신라면 4.5%·새우깡 6.9%, 삼양 12개 제품 평균 4.7%, 오뚜기 15개 제품 평균 5% | [뉴시스](https://www.newsis.com/view/NISX20230628_0002356173), [한국경제](https://www.hankyung.com/amp/2023062781791) | 높음 |
+| b35-water-release | 후쿠시마 처리수 해양 방류 시작, 중국 일본산 수산물 전면 수입 금지 | 2023-08-24 | 중국 즉시 전면 금지(WTO 통보). 국내 소금 사재기는 방류 전(2023-06) — 본문도 "방류를 앞두고"로 씀. 방사능 검사 확대는 당시 정부 발표 흐름 | [파이낸셜뉴스](https://www.fnnews.com/news/202308261027427567), [경향신문](https://www.khan.co.kr/article/202309021733001) | 높음 (국내 소비 위축 정도는 중간) |
+| b36-rare-metal-curb | 중국 갈륨·게르마늄 수출 허가제 | 2023-07-03 발표, 08-01 시행 | 갈륨·게르마늄 금속과 화합물 12종, 2022년 세계 갈륨 생산의 약 98%가 중국(USGS) | [Mondaq](https://mondaq.com/china/export-controls-trade-investment-sanctions/1340828/china-places-export-controls-on-raw-materials-used-in-semiconductor-manufacturing), [Internet Governance Project](https://www.internetgovernance.org/2023/07/17/what-will-chinas-new-export-controls-achieve/) | 높음 |
+| b37-laver-export | 김 수출 연간 첫 1조 원 돌파 | 2023 연간 (12-20 1조 원 돌파) | 7억 9천만 달러(약 1조 332억 원, +22.2%), 120여 개국. 2024년 9.97억 달러, 2025년 첫 10억 달러. 수출 증가에 따른 국내 김값 상승은 2024년에 두드러짐 | [SBS Biz](https://biz.sbs.co.kr/amp/article/20000155590), [메트로서울](https://www.metroseoul.co.kr/article/20240107500205), [한국경제](https://www.hankyung.com/amp/2025110309541) | 높음 (김값 문장은 중간) |
+| b38-builder-workout | 시공능력 16위 태영건설 워크아웃 신청 | 2023-12-28 | 보증 PF 대출 잔액 약 4.4조 원(3분기 말, 한투 보고서), 정부 공식 우발채무 3.7조 원 — 본문은 "수조 원" | [한국경제](https://www.hankyung.com/amp/2023122867595), [뉴시스](https://www.newsis.com/view/NISX20231228_0002573621), [딜사이트](https://dealsite.co.kr/articles/115459) | 높음 |
+| b39-obesity-drug | 노보노디스크 시가총액이 LVMH 추월(유럽 1위), 월마트 "GLP-1 고객 구매 감소" | 2023-09-01 (시총), 2023-10-04 (월마트) | 시총 약 4,250억 달러 vs 약 4,200억 달러(일시적 역전, 날짜는 출처별 하루 차이). 월마트 "slight pullback in overall basket" | [Fortune](https://fortune.com/2023/09/01/ozempic-novo-nordisks-lvmh-most-valuable-european-company), [Bloomberg](https://www.bloomberg.com/news/articles/2023-09-01/novo-nordisk-briefly-overtakes-lvmh-as-biggest-european-company), [NBC News](https://www.nbcnews.com/business/consumer/ozempic-drug-users-are-buying-less-food-walmart-says-rcna119000) | 높음 ("국내 바이오 신약 개발 속도"는 흐름 요약) |
+| b40-ev-chasm | 전기차 캐즘으로 배터리 3사 실적 부진 | 2024 | LG에너지솔루션 1분기 영업이익 약 -75%, SK온 2분기 11분기 연속 적자(손실 4,601억 원), 삼성SDI 2분기 -37.8%. "하이브리드 확대"는 업계 흐름 | [다음(이데일리)](https://v.daum.net/v/20240430131458976), [다음](https://v.daum.net/v/20240801163021987), [더팩트](https://news.tf.co.kr/read/economy/2289066.htm) | 높음 |
+| b41-carry-crash | 엔캐리 청산·미국 고용 부진에 아시아 증시 폭락 | 2024-08-05 | 코스피 -8.77%(2,441.55, 역대 최대 하락 폭), 코스닥 -11.30%, 양 시장 서킷브레이커, 닛케이 -12.4% | [아이뉴스24](https://www.inews24.com/view/1749768), [CS Monitor](https://csmonitor.com/World/2024/0806/stock-market-recession-carry-trade), [MUFG Research](https://mufgresearch.com/fx/asia-fx-talk-will-the-great-unwind-continue-6-aug-2024/) | 높음 |
+| b42-navy-repair | 한화오션, 국내 최초 미 해군 함정 MRO 수주 | 2024-08 | 군수지원함 월리 쉬라함. 2023-07 MSRA 체결, 2024-11 두 번째(급유함) 수주. "한 해 20조 원 규모"는 함정 정비 시장 145억 달러 추정 환산 | [다음](https://v.daum.net/v/20240816003116392), [뉴시스](https://mobile.newsis.com/view/NISX20241112_0002956435), [JoongAng Daily](https://www.koreajoongangdaily.com/business/145/11792757) | 높음 (시장 규모는 중간) |
+| b43-mill-closure | 포스코 포항 1선재공장 폐쇄 | 2024-11-19 (07월 1제강공장 폐쇄 뒤 넉 달여) | 45년 가동, 중국 선재 생산능력 약 1.4억 톤 vs 세계 수요 약 0.9억 톤. "반덤핑 관세 요청"은 업계 흐름(2024~2025 중국산 후판 반덤핑 제소) | [비즈워치](https://news.bizwatch.co.kr/article/industry/2024/11/20/0009), [주간경향](https://weekly.khan.co.kr/article/202412020600051), [뉴스핌](https://newspim.com/news/view/20241120000774) | 높음 |
+| b44-steel-tariff | 미국 철강·알루미늄 관세 25% → 50% | 2025-06-04 (06-03 포고문) | 파생 상품은 철강·알루미늄 함량에 부과, 영국만 25% 유지 | [Steptoe](https://www.steptoe.com/en/news-publications/global-trade-and-investment-law-blog/president-trump-increases-steel-and-aluminum-tariffs-to-50.html), [MFAT(뉴질랜드)](https://www.mfat.govt.nz/en/trade/mfat-market-reports/us-trade-update-increase-to-steel-and-aluminium-tariffs-june-2025), [Barnes & Thornburg](https://laborandemployment.btlaw.com/post/102kdl2/u-s-doubles-tariffs-on-steel-and-aluminum) | 높음 |
+| b45-missile-export | 천궁-II 10개 포대 사우디 수출 계약 공개 | 2024-02-06 공개 (계약 2023-11) | 32억 달러(LIG넥스원 공시 약 4조 3,398억 원), 2022-01 UAE(35억 달러)에 이어 두 번째 중동 수출 | [세계일보](https://www.segye.com/newsView/20240206517943), [뉴데일리](https://www.newdaily.co.kr/site/data/html/2024/02/07/2024020700083.amp.html) | 높음 |
+| b46-visa-free-tour | 중국 단체관광객 15일 무비자 입국 시행 | 2025-09-29 (2026-06-30까지) | 전담 여행사 모객 3인 이상, 첫날 명동 면세점 붐빔. 면세점 주가 수치는 찾지 못함 | [뉴시스](https://www.newsis.com/view/NISX20250929_0003349027), [SBS Biz](https://biz.sbs.co.kr/amp/article/20000251719), [다음](https://v.daum.net/v/20250908134913391) | 높음 (주가 반응은 미확인) |
+
+## 7. 추가 스토리 8개 (s14~s21, 2026-10-11)
+
+| 스토리 | 뉴스 | 사실 주장 | 실제 날짜 | 근거 | 출처 | 확신도 |
+|---|---|---|---|---|---|---|
+| s14 한미 통화스와프 (opener) | 잠정 | 환율 하루 40원 상승, 코스피 -8%대, 정부 "통화스와프 긴밀히 논의" | 2020-03-19 (장중) | 1,285.7원(+40원), 코스피 -8.39%. 정부 발언 문구는 당시 보도 흐름 요약(정확한 인용 미확인) | [머니투데이](https://www.mt.co.kr/economy/2020/03/19/2020031922462010005), [데일리안](https://m.dailian.co.kr/news/view/877759) | 중간 |
+| | 결과(실제) | 한은-연준 600억 달러 통화스와프 체결 | 2020-03-19 체결, 시장 반영 03-20 | 최소 6개월(이후 3차례 연장, 2021-12 종료), 03-20 코스피 +7.4%, 환율 1,246.5원(-39.2원) | [머니투데이](https://www.mt.co.kr/economy/2020/03/19/2020031922462010005), [매일신문](https://www.imaeil.com/page/view/2020032022025247391) | 높음 |
+| | 결과(**가상**) | 통화 협정 불발, 1,300원 돌파 | — | **사실 아님** | — | 가상 |
+| s15 코인 거래소 파산 (opener) | 잠정 | FTX 대규모 인출, 바이낸스 인수 의향서 "실사 후 철회 가능", 고객 자금 유용 보도 | 2022-11-06 ~ 11-08 | 72시간 인출 약 60억 달러(본문 "수조 원") | [Axios](https://www.axios.com/2022/11/09/binance-walks-away-ftx), [Fortune](https://fortune.com/2022/11/09/binance-ftx-deal-called-off-crypto-mergers) | 높음 |
+| | 결과(실제) | 바이낸스 인수 철회, FTX 파산 신청 | 2022-11-09 (철회), 11-11 (파산) | 130여 개 계열 법인 파산 신청, 고객 자금 수십억 달러 부족(추정치 출처별 차이), 비트코인 2년 만의 최저 | [TechCrunch](https://techcrunch.com/2022/11/11/ftx-files-for-bankruptcy-ceo-sam-bankman-fried-steps-down/), [Axios](https://www.axios.com/2022/11/09/binance-walks-away-ftx) | 높음 ("게임 코인 폭락"은 당시 흐름, 중간) |
+| | 결과(**가상**) | 인수 성사, 시장 진정 | — | **사실 아님** | — | 가상 |
+| s16 한국 빅스텝 | 잠정 | 6월 물가 6%대(외환위기 이후 처음), 사상 첫 0.5%p 인상 관측 | 2022-07-05 ~ 07-12 | 6월 소비자물가 6.0%. 총재 "물가 우선" 발언은 당시 흐름 요약 | [이코노미스트](https://economist.co.kr/article/view/ecn202207130029), [더팩트](https://news.tf.co.kr/read/ogmeta/1951388.htm) | 중간 |
+| | 결과(실제) | 기준금리 1.75% → 2.25%, 사상 첫 빅스텝 | 2022-07-13 | 0.25%p 오를 때마다 가계 이자 부담 연 약 3.3조 원 증가 추산, 은행 예금 금리 즉시 인상 | [이코노미스트](https://economist.co.kr/article/view/ecn202207130029), [딜사이트](https://dealsite.co.kr/articles/89282), [노컷뉴스](https://nocutnews.co.kr/news/5761336) | 높음 |
+| | 결과(**가상**) | 0.25%p 인상에 그침 | — | **사실 아님** | — | 가상 |
+| s17 미국 빅컷 | 잠정 | 고용 둔화, 첫 인하 기정사실, 회의 직전 0.5%p 쪽 우세 | 2024-09-16 ~ 09-17 | FedWatch 09-16 기준 50bp 약 52% vs 25bp 약 48% (2차 출처 집계) | [LongPort(FedWatch 인용)](https://longportapp.cn/news/214386602), [Columbia Business School](https://business.columbia.edu/insights/finance-economics/analyzing-feds-rationale-behind-half-point-rate-cut) | 중간 (확률 수치는 2차 출처) |
+| | 결과(실제) | 연준 0.5%p 인하(4.75~5.00%), 2020-03 이후 첫 인하 | 2024-09-18 | 11대 1 표결, 점도표 연내 0.5%p 추가 인하 시사. "바이오 등 성장주 강세"는 국내 흐름 요약(구체 수치 미확인) | [Times of Israel](https://www.timesofisrael.com/liveblog_entry/us-fed-makes-larger-half-point-cut-in-first-rate-reduction-since-2020/), [Bankrate](https://www.bankrate.com/banking/federal-reserve/fed-meeting-news-today-september-2024) | 높음 (성장주 문장은 중간) |
+| | 결과(**가상**) | 0.25%p 인하에 그침 | — | **사실 아님** | — | 가상 |
+| s18 MSCI 관찰대상국 | 잠정 | 공매도 재개(2025-03-31) 뒤 관찰대상국 기대, MSCI는 외환시장·규제 변화 지적 | 2025-06 (발표 직전) | MSCI가 이전 리뷰부터 지적해 온 항목 요약 | [뉴시스](https://www.newsis.com/view/NISX20250625_0003227157), [YTN](https://www.ytn.co.kr/_ln/0104_202506250620595267) | 중간 |
+| | 결과(실제) | 관찰대상국 등재 불발 | 2025-06-24 (한국 시간 06-25) | 공매도 접근성은 개선 평가, 외환시장·규제 불확실성 등 남음. 편입 시 약 292억 달러(약 44조 원) 유입 추정은 2026년 기사 수치. 2026-06에도 불발 | [SBS Biz](https://biz.sbs.co.kr/amp/article/20000242549), [한국경제](https://www.hankyung.com/article/2025062577387), [헤럴드경제(2026)](https://www.heraldk.com/article/2026062316343179318) | 높음 |
+| | 결과(**가상**) | 관찰대상국 첫 등재 | — | **사실 아님** | — | 가상 |
+| s19 애플카 협상설 | 잠정 | 애플-현대차·기아 전기차 협력설로 주가 급등, 애플 비밀주의·하청 우려 | 2021-01-08 ~ 02-06 | 01-08~02-05 개인 기아 862만 주 순매수 | [뉴시스](https://mobile.newsis.com/view/NISX20210208_0001333880), [경향신문](https://www.khan.co.kr/article/202102071705001/amp) | 높음 |
+| | 결과(실제) | 현대차·기아 "애플과 자율주행차 협의 안 함" 공시 | 2021-02-08 | 기아 -14.98%, 현대차 -6.21%, 그룹 5개사 시총 약 13.5조 원 감소 | [경향신문](https://www.khan.co.kr/article/202102081653001), [뉴시스](https://www.newsis.com/view/NISX20210208_0001333880) | 높음 |
+| | 결과(**가상**) | 위탁 생산 계약 체결 | — | **사실 아님** | — | 가상 |
+| s20 미중 제네바 회담 | 잠정 | 미중 첫 고위급 무역 회담, "상당한 진전", "건설적" | 2025-05-10 ~ 05-11 | 회담 직후 양측 발언 | [ETV Bharat](https://www.etvbharat.com/en/!international/us-china-trade-talks-in-geneva-switzerland-enn25051200617), [Geneva Solutions](https://genevasolutions.news/sustainable-business-finance/united-states-and-china-reach-trade-truce-in-geneva) | 높음 |
+| | 결과(실제) | 상호 관세 115%p 인하, 90일 유예 | 2025-05-12 (05-14 발효) | 미국 145% → 30%, 중국 125% → 10%, 세계 증시 상승. "물동량 다시 증가"는 이후 컨테이너 예약 증가 보도 흐름 요약 | [Boston.com(AP)](https://www.boston.com/news/politics/2025/05/12/us-china-tariffs/), [Khaosod(AP)](https://www.khaosodenglish.com/news/international/2025/05/12/us-and-china-agree-to-pause-sky-high-tariffs-for-90-days/) | 높음 (물동량 문장은 중간) |
+| | 결과(**가상**) | 회담 결렬 | — | **사실 아님** | — | 가상 |
+| s21 중국 리오프닝 | 잠정 | 봉쇄 항의 시위 확산, 대도시 PCR 완화, 쑨춘란 "병원성 약화" | 2022-11-26 ~ 12-06 | 우루무치 화재 뒤 여러 도시 항의, 11-30 쑨춘란 부총리 발언 | [Deccan Herald(Reuters)](https://www.deccanherald.com/amp/story/world%2Fchinese-make-travel-plans-as-covid-rules-ease-further-1175459.html), [뉴스토마토](https://newstomato.com/ReadNews.aspx?no=1165159) | 중간 (부총리 발언 출처 미첨부) |
+| | 결과(실제) | 방역 추가 최적화 10개 조치, 제로 코로나 사실상 폐기 | 2022-12-07 (2023-01-08 입국 격리 폐지) | 상시 PCR·건강코드 폐지, 지역 이동 음성 증명 폐지. 아모레퍼시픽 11-04~12-07 +23.29%, 연말 항공·화장품 강세 | [더팩트](https://news.tf.co.kr/read/ogmeta/1984832.htm), [다음](https://v.daum.net/v/20221225175202475?f=p), [Caixin](https://www.caixinglobal.com/2022-12-28/china-to-drop-outbound-travel-restrictions-with-end-of-zero-covid-101982849.html) | 높음 |
+| | 결과(**가상**) | 봉쇄 재강화 | — | **사실 아님** | — | 가상 |
+
+## 8. 밸런스 조정으로 바꾼 기존 항목 (2026-10-11)
+
+뉴스 간격 3~4분에서 균등 보유(+25%)와 초고속 추종(+104%)이 목표를 넘어 내용만으로 맞췄다 (엔진·설정은 그대로). 사실 관계는 바뀌지 않았고 규모만 낮췄다 (영향도는 공식으로 다시 계산).
+
+| 뉴스 ID | 규모 | 이유 |
+|---|---|---|
+| b02-retail-wave | 6 → 5 | 호재만 큰 속보가 초고속 추종 수익을 키움 |
+| b04-lng-slots | 7 → 6 | 같음 |
+| b05-car-chip-shortage | 6 → 5 | 호재 1개(반도체)에 몰리는 구조 |
+| b06-canal-blocked | 6 → 5 | 호재 쪽 영향 축소 |
+| b09-drama-global | 6 → 5 | 호재만 큰 속보 |
+| b10-invasion | 9 → 8 | 직접 호재 2개(±9)가 커서 |
+| b12-ev-subsidy | 7 → 6 | 호재 쪽 영향 축소 |
+| b16-ai-chatbot | 7 → 6 | 호재만 있는 속보 |
+| b18-short-ban | 6 → 5 | 호재만 큰 속보 |
+| b19-value-up | 6 → 5 | 같음 |
+| b21-transformer | 6 → 5 | 호재만 있는 속보 |
+| b23-index-4000 | 7 → 5 | 같음 |
+| b24-strait-closed | 8 → 7 | 직접 호재(정유) 축소 |
+
+- 밸런스 결과 (`node scripts/checkEra.ts src/data/eras/2020s.json 150`): 무작위 -5.6%, 균등 보유 +11.6%, 지연 추종 +1.7%, 초고속 추종 +74.3%, 분위기 +21.1%, 역분위기 -25.1%, 잠정 정방향 +33.2%, 잠정 역방향 -33.6% — 모두 목표 안. 구조 오류·가이드 점검 0건.
+
+## 9. 직접 확인 권장 (추가분)
+
+- b30 요소수: 품귀 원인(중국 전력난·석탄 수급·호주 무역 분쟁) 설명이 출처마다 다르다. 본문은 "중국이 요소 수출에 검사를 의무화"만 썼다.
+- b31·b35·b36·b40: 국내 업종(화장품·면세, 수산물 소비, 반도체 소재, 하이브리드 전환) 영향 문장은 당시 흐름 요약이며 구체 수치 출처는 붙이지 않았다.
+- b37 "국내 김값이 크게 올라"는 주로 2024년 흐름이다 (수출 1조 원 돌파는 2023년).
+- b42 "한 해 20조 원 규모"는 함정 정비 시장 추정치(145억 달러) 환산이라 기관마다 다를 수 있다.
+- b46 면세점 주가 반응 수치는 찾지 못했다. 무비자 시행 기간(2026-06-30까지 한시 → 연장 여부)은 보도가 엇갈린다.
+- s14 잠정의 정부 발언, s16 잠정의 총재 발언, s18 잠정의 MSCI 지적 문구, s21 잠정의 부총리 발언은 당시 보도 흐름을 요약한 것으로 정확한 인용은 확인하지 못했다.
+- s17 잠정의 FedWatch 확률(약 52%)은 CME 원자료가 아닌 2차 출처 수치다.
+- 실제 결과 쪽 영향도는 사건 규모에 따른 판단값이며, 국내 관련 업종 주가 등락 폭(예: s20 해운, s17 바이오)은 대부분 찾지 못했다.
+- 이번에 넣지 않은 후보: 비트코인 현물 ETF 승인(승인 뒤 오히려 가격이 내려 결과 방향이 모호), 메모리 감산 선언(실적 최악인데 주가는 올라 방향이 모호), 체코 원전 우선협상자 선정(기존 s05와 겹침). 밈 주식 열풍·계란값·로보택시는 검증하지 않아 넣지 않았다.

@@ -1583,7 +1583,7 @@
     {
       "id": "b02-retail-wave",
       "type": "breaking",
-      "magnitude": 6,
+      "magnitude": 5,
       "title": {
         "ko": "개인 투자자, 사상 최대 규모 순매수",
         "en": "Retail Investors Make Record Net Purchases"
@@ -1595,7 +1595,7 @@
       "effects": [
         {
           "themeId": "securities",
-          "impact": 6,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -1612,7 +1612,7 @@
         },
         {
           "themeId": "hbm",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -1625,7 +1625,7 @@
         },
         {
           "themeId": "bio",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -1638,7 +1638,7 @@
         },
         {
           "themeId": "bank",
-          "impact": -4,
+          "impact": -3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -1679,7 +1679,7 @@
       "realDate": "2020",
       "source": {
         "event": "개인 투자자 대규모 순매수 운동: 개인이 주식시장 두 곳에서 대규모 순매수, 신규 계좌 급증",
-        "impactRationale": "직접 1개(±6), 밀접 3개(±4), 간접 2개(±2) — 공식 그대로",
+        "impactRationale": "직접 1개(±5), 밀접 3개(±3), 간접 2개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
@@ -1789,7 +1789,7 @@
     {
       "id": "b04-lng-slots",
       "type": "breaking",
-      "magnitude": 7,
+      "magnitude": 6,
       "title": {
         "ko": "중동 산유국, LNG선 100척 건조 예약",
         "en": "Gulf Producer Reserves Slots for 100 LNG Carriers"
@@ -1801,7 +1801,7 @@
       "effects": [
         {
           "themeId": "shipbuilding",
-          "impact": 7,
+          "impact": 6,
           "link": {
             "strength": 3,
             "keywords": [
@@ -1885,14 +1885,14 @@
       "realDate": "2020-06-01",
       "source": {
         "event": "중동 가스 수출국이 국내 조선 3사와 LNG 운반선 100척 이상 건조 슬롯 계약(약 23.6조 원)",
-        "impactRationale": "직접 1개(±7), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+        "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
     {
       "id": "b05-car-chip-shortage",
       "type": "breaking",
-      "magnitude": 6,
+      "magnitude": 5,
       "title": {
         "ko": "차량용 반도체 부족, 자동차 공장 멈춰",
         "en": "Car-Chip Shortage Halts Auto Plants"
@@ -1904,7 +1904,7 @@
       "effects": [
         {
           "themeId": "auto",
-          "impact": -6,
+          "impact": -5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -1921,7 +1921,7 @@
         },
         {
           "themeId": "hbm",
-          "impact": 6,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -1992,14 +1992,14 @@
       "realDate": "2021-04 (국내 공장 휴업 04-07~)",
       "source": {
         "event": "차량용 반도체 부족으로 완성차 공장 휴업",
-        "impactRationale": "직접 2개(±6), 간접 4개(±2) — 공식 그대로",
+        "impactRationale": "직접 2개(±5), 간접 4개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
     {
       "id": "b06-canal-blocked",
       "type": "breaking",
-      "magnitude": 6,
+      "magnitude": 5,
       "title": {
         "ko": "초대형 선박이 운하 막아, 운임 치솟아",
         "en": "Giant Ship Blocks Canal, Freight Rates Soar"
@@ -2011,7 +2011,7 @@
       "effects": [
         {
           "themeId": "shipping",
-          "impact": 6,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -2028,7 +2028,7 @@
         },
         {
           "themeId": "shipbuilding",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -2108,7 +2108,7 @@
       "realDate": "2021-03-23 ~ 03-29",
       "source": {
         "event": "초대형 컨테이너선 좌초로 아시아-유럽 운하 약 1주 마비",
-        "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 5개(±2) — 공식 그대로",
+        "impactRationale": "직접 1개(±5), 밀접 1개(±3), 간접 5개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
@@ -2334,7 +2334,7 @@
     {
       "id": "b09-drama-global",
       "type": "breaking",
-      "magnitude": 6,
+      "magnitude": 5,
       "title": {
         "ko": "한국 드라마, 94개국 스트리밍 1위",
         "en": "Korean Drama Tops Streaming Charts in 94 Countries"
@@ -2346,7 +2346,7 @@
       "effects": [
         {
           "themeId": "kcontent",
-          "impact": 6,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -2363,7 +2363,7 @@
         },
         {
           "themeId": "kpop",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -2443,14 +2443,14 @@
       "realDate": "2021-09-17 공개 ~ 10-19 실적 발표",
       "source": {
         "event": "한국 생존 게임 드라마가 글로벌 스트리밍 94개국 1위, 4주 1억 4,200만 가구 시청",
-        "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 5개(±2) — 공식 그대로",
+        "impactRationale": "직접 1개(±5), 밀접 1개(±3), 간접 5개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
     {
       "id": "b10-invasion",
       "type": "breaking",
-      "magnitude": 9,
+      "magnitude": 8,
       "title": {
         "ko": "러시아 우크라이나 침공, 유가·곡물값 급등",
         "en": "Russia Invades Ukraine, Oil and Grain Prices Surge"
@@ -2462,7 +2462,7 @@
       "effects": [
         {
           "themeId": "defense",
-          "impact": 9,
+          "impact": 8,
           "link": {
             "strength": 3,
             "keywords": [
@@ -2479,7 +2479,7 @@
         },
         {
           "themeId": "refining",
-          "impact": 9,
+          "impact": 8,
           "link": {
             "strength": 3,
             "keywords": [
@@ -2535,7 +2535,7 @@
         },
         {
           "themeId": "nuclear",
-          "impact": 3,
+          "impact": 2,
           "link": {
             "strength": 1,
             "keywords": [],
@@ -2548,7 +2548,7 @@
         },
         {
           "themeId": "shipbuilding",
-          "impact": 3,
+          "impact": 2,
           "link": {
             "strength": 1,
             "keywords": [],
@@ -2561,7 +2561,7 @@
         },
         {
           "themeId": "petrochem",
-          "impact": -3,
+          "impact": -2,
           "link": {
             "strength": 1,
             "keywords": [],
@@ -2574,7 +2574,7 @@
         },
         {
           "themeId": "space",
-          "impact": 3,
+          "impact": 2,
           "link": {
             "strength": 1,
             "keywords": [],
@@ -2589,7 +2589,7 @@
       "realDate": "2022-02-24",
       "source": {
         "event": "러시아의 우크라이나 전면 침공, 브렌트유 100달러 돌파, 유럽 국방비 증액",
-        "impactRationale": "직접 2개(±9), 밀접 3개(±5), 간접 4개(±3) — 공식 그대로",
+        "impactRationale": "직접 2개(±8), 밀접 3개(±5), 간접 4개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
@@ -2725,7 +2725,7 @@
     {
       "id": "b12-ev-subsidy",
       "type": "breaking",
-      "magnitude": 7,
+      "magnitude": 6,
       "title": {
         "ko": "미국, 북미 조립 전기차에만 보조금",
         "en": "US Limits EV Subsidies to North American-Built Cars"
@@ -2737,7 +2737,7 @@
       "effects": [
         {
           "themeId": "auto",
-          "impact": -7,
+          "impact": -6,
           "link": {
             "strength": 3,
             "keywords": [
@@ -2754,7 +2754,7 @@
         },
         {
           "themeId": "battery",
-          "impact": 7,
+          "impact": 6,
           "link": {
             "strength": 3,
             "keywords": [
@@ -2825,7 +2825,7 @@
       "realDate": "2022-08-16",
       "source": {
         "event": "미국 기후·물가 대응 법 서명, 북미 조립 전기차만 세액공제",
-        "impactRationale": "직접 2개(±7), 밀접 1개(±4), 간접 3개(±2) — 공식 그대로",
+        "impactRationale": "직접 2개(±6), 밀접 1개(±4), 간접 3개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
@@ -3154,7 +3154,7 @@
     {
       "id": "b16-ai-chatbot",
       "type": "breaking",
-      "magnitude": 7,
+      "magnitude": 6,
       "title": {
         "ko": "대화형 AI, 두 달 만에 이용자 1억 명",
         "en": "Chatbot AI Hits 100 Million Users in Two Months"
@@ -3166,7 +3166,7 @@
       "effects": [
         {
           "themeId": "hbm",
-          "impact": 7,
+          "impact": 6,
           "link": {
             "strength": 3,
             "keywords": [
@@ -3250,7 +3250,7 @@
       "realDate": "2023-02-01 보도",
       "source": {
         "event": "대화형 AI 서비스 공개 2개월 만에 월 이용자 1억 명 추정(투자은행 분석)",
-        "impactRationale": "직접 1개(±7), 밀접 2개(±4), 간접 3개(±2) — 공식 그대로",
+        "impactRationale": "직접 1개(±6), 밀접 2개(±4), 간접 3개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
@@ -3360,7 +3360,7 @@
     {
       "id": "b18-short-ban",
       "type": "breaking",
-      "magnitude": 6,
+      "magnitude": 5,
       "title": {
         "ko": "공매도 전면 금지, 2차전지주 상한가",
         "en": "Short Selling Banned, Battery Stocks Hit Limit-Up"
@@ -3372,7 +3372,7 @@
       "effects": [
         {
           "themeId": "battery",
-          "impact": 6,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -3389,7 +3389,7 @@
         },
         {
           "themeId": "securities",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -3402,7 +3402,7 @@
         },
         {
           "themeId": "bio",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -3456,14 +3456,14 @@
       "realDate": "2023-11-05 의결, 11-06 시행",
       "source": {
         "event": "공매도 전면 금지 첫날 2차전지 소재 대형주 상한가, 대표 주가지수 +5.66%",
-        "impactRationale": "직접 1개(±6), 밀접 2개(±4), 간접 3개(±2) — 공식 그대로",
+        "impactRationale": "직접 1개(±5), 밀접 2개(±3), 간접 3개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
     {
       "id": "b19-value-up",
       "type": "breaking",
-      "magnitude": 6,
+      "magnitude": 5,
       "title": {
         "ko": "기업 가치 높이기 정책 발표",
         "en": "Government Unveils Corporate Value-Up Plan"
@@ -3475,7 +3475,7 @@
       "effects": [
         {
           "themeId": "bank",
-          "impact": 6,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -3492,7 +3492,7 @@
         },
         {
           "themeId": "securities",
-          "impact": 6,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -3509,7 +3509,7 @@
         },
         {
           "themeId": "auto",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -3563,7 +3563,7 @@
       "realDate": "2024-02-26",
       "source": {
         "event": "기업 가치 제고(밸류업) 지원방안 발표, 대표 주가지수 PBR 약 1배",
-        "impactRationale": "직접 2개(±6), 밀접 1개(±4), 간접 3개(±2) — 공식 그대로",
+        "impactRationale": "직접 2개(±5), 밀접 1개(±3), 간접 3개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
@@ -3673,7 +3673,7 @@
     {
       "id": "b21-transformer",
       "type": "breaking",
-      "magnitude": 6,
+      "magnitude": 5,
       "title": {
         "ko": "AI 데이터센터 전력난, 변압기 주문 밀려",
         "en": "AI Power Crunch Swamps Transformer Makers"
@@ -3685,7 +3685,7 @@
       "effects": [
         {
           "themeId": "power_equip",
-          "impact": 6,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -3702,7 +3702,7 @@
         },
         {
           "themeId": "cable",
-          "impact": 6,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -3719,7 +3719,7 @@
         },
         {
           "themeId": "nuclear",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -3773,7 +3773,7 @@
       "realDate": "2024 ~ 2025",
       "source": {
         "event": "AI 데이터센터·전력망 교체로 미국 변압기 납기 장기화, 국내 전력기기 수주 잔고 사상 최대",
-        "impactRationale": "직접 2개(±6), 밀접 1개(±4), 간접 3개(±2) — 공식 그대로",
+        "impactRationale": "직접 2개(±5), 밀접 1개(±3), 간접 3개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": true
       }
     },
@@ -3922,7 +3922,7 @@
     {
       "id": "b23-index-4000",
       "type": "breaking",
-      "magnitude": 7,
+      "magnitude": 5,
       "title": {
         "ko": "주가지수 사상 첫 4,000 돌파",
         "en": "Stock Index Breaks 4,000 for the First Time"
@@ -3934,7 +3934,7 @@
       "effects": [
         {
           "themeId": "securities",
-          "impact": 7,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -3951,7 +3951,7 @@
         },
         {
           "themeId": "hbm",
-          "impact": 7,
+          "impact": 5,
           "link": {
             "strength": 3,
             "keywords": [
@@ -3968,7 +3968,7 @@
         },
         {
           "themeId": "shipbuilding",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -3981,7 +3981,7 @@
         },
         {
           "themeId": "defense",
-          "impact": 4,
+          "impact": 3,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -4022,14 +4022,14 @@
       "realDate": "2025-10-27",
       "source": {
         "event": "대표 주가지수 사상 첫 4,000 돌파(종가 4,042.83), 연간 상승률 약 64%, 반도체 대표주 10만 원",
-        "impactRationale": "직접 2개(±7), 밀접 2개(±4), 간접 2개(±2) — 공식 그대로",
+        "impactRationale": "직접 2개(±5), 밀접 2개(±3), 간접 2개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": false
       }
     },
     {
       "id": "b24-strait-closed",
       "type": "breaking",
-      "magnitude": 8,
+      "magnitude": 7,
       "title": {
         "ko": "중동 전쟁에 해협 봉쇄, 유가 치솟아",
         "en": "Mideast War Shuts Key Strait, Oil Soars"
@@ -4041,7 +4041,7 @@
       "effects": [
         {
           "themeId": "refining",
-          "impact": 8,
+          "impact": 7,
           "link": {
             "strength": 3,
             "keywords": [
@@ -4058,7 +4058,7 @@
         },
         {
           "themeId": "securities",
-          "impact": -5,
+          "impact": -4,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -4071,7 +4071,7 @@
         },
         {
           "themeId": "airline",
-          "impact": -5,
+          "impact": -4,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -4084,7 +4084,7 @@
         },
         {
           "themeId": "petrochem",
-          "impact": -5,
+          "impact": -4,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -4097,7 +4097,7 @@
         },
         {
           "themeId": "defense",
-          "impact": 5,
+          "impact": 4,
           "link": {
             "strength": 2,
             "keywords": [],
@@ -4164,8 +4164,2412 @@
       "realDate": "2026-02 말 ~ 03 (03-09 브렌트 약 +24%, 국내 증시 하루 -8% 이상)",
       "source": {
         "event": "중동 전쟁으로 호르무즈 해협 유조선 통행 사실상 중단, 유가 급등, 국내 증시 하루 8% 넘게 하락",
-        "impactRationale": "직접 1개(±8), 밀접 4개(±5), 간접 4개(±2) — 공식 그대로",
+        "impactRationale": "직접 1개(±7), 밀접 4개(±4), 간접 4개(±2) — 공식 그대로 (밸런스 조정으로 규모 낮춤)",
         "needsVerification": true
+      }
+    },
+    {
+      "id": "b25-oil-below-zero",
+      "type": "breaking",
+      "magnitude": 5,
+      "title": {
+        "ko": "국제 유가 사상 첫 마이너스… 원유 넘쳐나",
+        "en": "Oil Price Turns Negative for the First Time"
+      },
+      "body": {
+        "ko": "감염병 확산으로 원유 수요가 줄고 저장 탱크까지 가득 차면서, 만기가 다가온 원유 선물 가격이 사상 처음으로 배럴당 마이너스 37달러까지 떨어졌다. 원유를 가진 쪽이 돈을 얹어 주고 넘기는 일이 벌어졌다. 정유사들은 재고 손실이 커질 것을 걱정하고 있다.",
+        "en": "With demand collapsing in the pandemic and storage tanks full, expiring crude futures fell below zero for the first time ever, to minus $37 a barrel. Holders paid buyers to take oil off their hands. Refiners fear heavy inventory losses."
+      },
+      "effects": [
+        {
+          "themeId": "refining",
+          "impact": -5,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "유가",
+                "themeTerm": "유가"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "유가가 무너져 재고 손실",
+            "en": "Collapsing oil prices hit inventories"
+          }
+        },
+        {
+          "themeId": "shipbuilding",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "저유가 → 해양 설비 발주 취소 우려"
+          },
+          "reason": {
+            "ko": "해양 설비 발주가 끊길 우려",
+            "en": "Offshore rig orders at risk"
+          }
+        },
+        {
+          "themeId": "airline",
+          "impact": -3,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "원유가 남아돌 만큼 하늘길이 멈춤 → 항공 수요 실종"
+          },
+          "reason": {
+            "ko": "비행기가 뜨지 못해 수요 실종",
+            "en": "Grounded fleets, no demand"
+          }
+        },
+        {
+          "themeId": "securities",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "원자재 선물 혼란 → 원유 연계 상품 손실"
+          },
+          "reason": {
+            "ko": "원유 연계 상품에서 손실",
+            "en": "Oil-linked products lost money"
+          }
+        },
+        {
+          "themeId": "petrochem",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "원유값 하락 → 나프타 원료값 하락"
+          },
+          "reason": {
+            "ko": "원료값이 내려 원가 부담 감소",
+            "en": "Cheaper feedstock"
+          }
+        },
+        {
+          "themeId": "shipping",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "남는 원유를 바다 위 배에 저장 → 선박 수요"
+          },
+          "reason": {
+            "ko": "원유를 배에 쌓아 두는 수요 증가",
+            "en": "Ships used as floating storage"
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "석유 업계 투자 축소 → 강관 수요 감소"
+          },
+          "reason": {
+            "ko": "석유 업계용 강관 수요 감소",
+            "en": "Less demand for oil-field pipes"
+          }
+        }
+      ],
+      "realDate": "2020-04-20",
+      "source": {
+        "event": "미국 원유 선물(만기 임박 월물) 종가 배럴당 약 -37.6달러, 사상 첫 마이너스",
+        "impactRationale": "직접 1개(±5), 밀접 1개(±3), 간접 5개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b26-online-shopping",
+      "type": "breaking",
+      "magnitude": 6,
+      "title": {
+        "ko": "온라인 쇼핑 거래액 사상 최대… 집콕 소비",
+        "en": "Online Shopping Hits a Record as People Stay Home"
+      },
+      "body": {
+        "ko": "감염병 확산으로 바깥 활동이 줄면서 온라인 쇼핑 거래액이 한 해 160조 원을 넘어 통계 작성 이후 최대를 기록했다. 음식 배달 거래액은 80% 가까이 늘었다. 반면 여행·문화 서비스 거래는 절반 넘게 줄었다.",
+        "en": "With people staying home during the pandemic, online shopping topped 160 trillion won in a year, the most since records began. Food delivery orders jumped nearly 80%, while travel and culture services fell by more than half."
+      },
+      "effects": [
+        {
+          "themeId": "delivery",
+          "impact": 4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "집콕 → 음식 배달 주문 증가"
+          },
+          "reason": {
+            "ko": "음식 배달 주문이 크게 늘어남",
+            "en": "Food delivery orders surged"
+          }
+        },
+        {
+          "themeId": "platform",
+          "impact": 4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "온라인 주문·결제 증가 → 인터넷 서비스 이용 증가"
+          },
+          "reason": {
+            "ko": "온라인 주문·결제가 늘어남",
+            "en": "More online orders and payments"
+          }
+        },
+        {
+          "themeId": "travel",
+          "impact": -6,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "여행",
+                "themeTerm": "여행"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "여행 상품 거래가 절반 넘게 줄어듦",
+            "en": "Travel bookings more than halved"
+          }
+        },
+        {
+          "themeId": "department_store",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "소비가 온라인으로 이동 → 오프라인 매장 매출 감소"
+          },
+          "reason": {
+            "ko": "손님이 온라인으로 옮겨 감",
+            "en": "Shoppers moved online"
+          }
+        },
+        {
+          "themeId": "cinema",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "문화 서비스 거래 감소 → 극장 방문 감소"
+          },
+          "reason": {
+            "ko": "문화 서비스 지출이 줄어듦",
+            "en": "Less spending on culture"
+          }
+        },
+        {
+          "themeId": "food",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "집밥 수요 → 가공식품 온라인 구매 증가"
+          },
+          "reason": {
+            "ko": "집에서 먹는 가공식품 구매 증가",
+            "en": "More packaged food bought online"
+          }
+        },
+        {
+          "themeId": "duty_free",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "해외여행 급감 → 공항 면세점 매출 급감"
+          },
+          "reason": {
+            "ko": "공항 면세점 손님이 끊김",
+            "en": "Airport duty-free emptied"
+          }
+        },
+        {
+          "themeId": "hbm",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "비대면 확산 → 서버용 메모리 수요"
+          },
+          "reason": {
+            "ko": "서버용 메모리 수요 증가",
+            "en": "More server memory demand"
+          }
+        }
+      ],
+      "realDate": "2020 연간 (2021-02 발표)",
+      "source": {
+        "event": "연간 온라인쇼핑 거래액 161.1조 원(+19.1%), 음식서비스 +78.6%, 여행·교통 -53.3%",
+        "impactRationale": "직접 1개(±6), 밀접 3개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b27-cinema-empty",
+      "type": "breaking",
+      "magnitude": 6,
+      "title": {
+        "ko": "영화관 관객 70% 넘게 줄어… 역대 최저",
+        "en": "Cinema Audiences Plunge Over 70%"
+      },
+      "body": {
+        "ko": "감염병 여파로 한 해 극장 관객이 6천만 명에도 못 미쳐 전년보다 70% 넘게 줄었다. 통합 집계를 시작한 이후 가장 적다. 대작 영화들은 개봉을 미루거나 극장 대신 스트리밍으로 직행하고 있다.",
+        "en": "Pandemic fallout cut annual cinema admissions below 60 million, down more than 70% and the lowest since unified tracking began. Big films are delaying release or going straight to streaming."
+      },
+      "effects": [
+        {
+          "themeId": "cinema",
+          "impact": -6,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "관객",
+                "themeTerm": "관객"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "관객이 70% 넘게 줄어 매출 급감",
+            "en": "Admissions fell over 70%"
+          }
+        },
+        {
+          "themeId": "kcontent",
+          "impact": 4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "극장 대신 스트리밍 직행 → OTT 콘텐츠 수요"
+          },
+          "reason": {
+            "ko": "새 영화가 스트리밍으로 몰림",
+            "en": "New films went to streaming"
+          }
+        },
+        {
+          "themeId": "kpop",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "모임 자제 → 오프라인 공연 취소"
+          },
+          "reason": {
+            "ko": "공연이 줄줄이 취소됨",
+            "en": "Concerts were cancelled"
+          }
+        },
+        {
+          "themeId": "department_store",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "복합 쇼핑몰 방문 감소"
+          },
+          "reason": {
+            "ko": "쇼핑몰 방문객이 줄어듦",
+            "en": "Fewer mall visitors"
+          }
+        },
+        {
+          "themeId": "platform",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "집에서 영상 소비 → 인터넷 서비스 이용 증가"
+          },
+          "reason": {
+            "ko": "집에서 보는 영상 이용 증가",
+            "en": "More home viewing online"
+          }
+        },
+        {
+          "themeId": "food",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "집에서 즐기는 간식 → 가공식품 소비 증가"
+          },
+          "reason": {
+            "ko": "집에서 먹는 간식 소비 증가",
+            "en": "More snacks eaten at home"
+          }
+        }
+      ],
+      "realDate": "2020 연간 (2021-02 결산 발표)",
+      "source": {
+        "event": "연간 극장 관객 5,952만 명(-73.7%), 2004년 통합전산망 집계 이후 최저",
+        "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b28-zero-rate",
+      "type": "breaking",
+      "magnitude": 7,
+      "title": {
+        "ko": "미국 제로 금리… 한국도 첫 0%대 금리",
+        "en": "US Goes to Zero; Korea Enters 0% Rates"
+      },
+      "body": {
+        "ko": "미국 중앙은행이 긴급회의를 열어 기준금리를 사실상 0%로 내렸다. 한국 중앙은행도 임시 회의에서 금리를 한 번에 0.5%p 낮춰 사상 처음 0%대 금리 시대를 열었다. 은행들은 예금과 대출의 이자 차이가 줄어 수익이 줄어들 것을 걱정한다.",
+        "en": "The US central bank held an emergency meeting and cut rates to effectively zero. Korea's central bank followed with a half-point cut at an unscheduled meeting, taking rates below 1% for the first time. Banks worry that a thinner gap between deposit and loan rates will squeeze profits."
+      },
+      "effects": [
+        {
+          "themeId": "bank",
+          "impact": -7,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "금리",
+                "themeTerm": "금리"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "예대 금리 차가 줄어 이자 수익 감소",
+            "en": "Thinner lending margins"
+          }
+        },
+        {
+          "themeId": "securities",
+          "impact": 4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "저금리 → 예금 대신 주식으로 자금 이동"
+          },
+          "reason": {
+            "ko": "갈 곳 없는 돈이 증시로 몰림",
+            "en": "Cheap money flowed into stocks"
+          }
+        },
+        {
+          "themeId": "savings_bank",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "금리 인하 → 대출 이자 수익 축소"
+          },
+          "reason": {
+            "ko": "고금리 대출 이자 수익이 줄어듦",
+            "en": "High-rate loan income shrank"
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "대출 이자 부담 감소 → 부동산 수요"
+          },
+          "reason": {
+            "ko": "대출 부담이 줄어 집 수요 증가",
+            "en": "Cheaper mortgages"
+          }
+        },
+        {
+          "themeId": "crypto",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "돈 풀림 → 위험자산 선호"
+          },
+          "reason": {
+            "ko": "풀린 돈이 코인으로 흘러감",
+            "en": "Easy money reached crypto"
+          }
+        },
+        {
+          "themeId": "bio",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "저금리 → 신약 개발 자금 조달 쉬워짐"
+          },
+          "reason": {
+            "ko": "연구 자금 조달이 쉬워짐",
+            "en": "Easier funding for drug R&D"
+          }
+        },
+        {
+          "themeId": "hbm",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "저금리 → 기술주 선호"
+          },
+          "reason": {
+            "ko": "기술주로 자금이 몰림",
+            "en": "Money favored tech"
+          }
+        }
+      ],
+      "realDate": "2020-03-15 (미국), 03-16 (한국 0.75%)",
+      "source": {
+        "event": "미국 기준금리 0~0.25%로 긴급 인하, 한국 임시 금통위 1.25% → 0.75% (사상 첫 0%대)",
+        "impactRationale": "직접 1개(±7), 밀접 2개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b29-container-rates",
+      "type": "breaking",
+      "magnitude": 6,
+      "title": {
+        "ko": "컨테이너 운임 연일 최고… 배 구하기 전쟁",
+        "en": "Container Rates Keep Setting Records"
+      },
+      "body": {
+        "ko": "물동량이 몰리고 항만마다 배가 밀리면서 컨테이너선 운임이 집계 이후 최고치를 몇 주째 갈아치우고 있다. 빈 컨테이너가 모자라 수출 기업들은 배를 구하지 못하고 있다. 물류비가 몇 배로 뛰어 중소 수출 기업의 부담이 커졌다.",
+        "en": "With cargo surging and ports congested, container freight rates have set new records for weeks. Exporters cannot find empty boxes or space on ships, and logistics costs have multiplied for small exporters."
+      },
+      "effects": [
+        {
+          "themeId": "shipping",
+          "impact": 6,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "운임",
+                "themeTerm": "운임"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "운임이 사상 최고로 올라 실적 개선",
+            "en": "Record freight rates"
+          }
+        },
+        {
+          "themeId": "shipbuilding",
+          "impact": 4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "선박 부족 → 컨테이너선 발주 증가"
+          },
+          "reason": {
+            "ko": "부족한 배를 새로 주문함",
+            "en": "Owners ordered more ships"
+          }
+        },
+        {
+          "themeId": "auto",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "선적 공간 부족 → 차량·부품 수출 차질"
+          },
+          "reason": {
+            "ko": "수출 차량을 실을 배가 부족",
+            "en": "Car shipments were delayed"
+          }
+        },
+        {
+          "themeId": "display",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "부품 수입 지연 → 패널 생산 차질"
+          },
+          "reason": {
+            "ko": "부품 수입이 늦어짐",
+            "en": "Component imports delayed"
+          }
+        },
+        {
+          "themeId": "cosmetics",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "물류비 상승 → 화장품 수출 원가 증가"
+          },
+          "reason": {
+            "ko": "수출 운송비 부담 증가",
+            "en": "Higher shipping costs"
+          }
+        },
+        {
+          "themeId": "petrochem",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "선적 지연 → 화학 제품 수출 차질"
+          },
+          "reason": {
+            "ko": "수출 선적이 늦어짐",
+            "en": "Export shipments delayed"
+          }
+        },
+        {
+          "themeId": "department_store",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "수입품 입고 지연 → 매장 재고 부족"
+          },
+          "reason": {
+            "ko": "수입 상품 입고가 늦어짐",
+            "en": "Imported goods arrived late"
+          }
+        }
+      ],
+      "realDate": "2021-05 ~ 12 (12월 초 운임지수 4,727)",
+      "source": {
+        "event": "컨테이너 운임지수 20주 연속 사상 최고, 컨테이너 부족으로 수출기업 선적난",
+        "impactRationale": "직접 1개(±6), 밀접 2개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b30-urea-shortage",
+      "type": "breaking",
+      "magnitude": 6,
+      "title": {
+        "ko": "요소수 품귀… 화물차 멈출라 사재기",
+        "en": "Urea Solution Runs Out, Trucks at Risk"
+      },
+      "body": {
+        "ko": "중국이 요소 수출에 검사를 의무화하면서 경유 차량에 꼭 넣어야 하는 요소수가 동났다. 주유소마다 사재기 줄이 늘어섰고, 물류·건설 현장이 멈출 수 있다는 걱정이 커진다. 정부는 군 수송기까지 보내 해외 물량을 들여오고 있다.",
+        "en": "After China required inspections on urea exports, the urea solution that diesel vehicles need has sold out. Lines formed at gas stations, and logistics and construction sites may halt. The government sent military planes to bring in supplies."
+      },
+      "effects": [
+        {
+          "themeId": "auto",
+          "impact": -6,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "차량",
+                "themeTerm": "차량"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "경유차 운행 차질 우려",
+            "en": "Diesel vehicles may stop"
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "건설 장비·레미콘 차 멈춤 우려 → 공사 차질"
+          },
+          "reason": {
+            "ko": "건설 장비가 멈출 수 있음",
+            "en": "Construction equipment at risk"
+          }
+        },
+        {
+          "themeId": "petrochem",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "요소수 부족 → 국내 화학 업체 요소·요소수 생산 확대"
+          },
+          "reason": {
+            "ko": "국내 화학 업체 요소수 판매 증가",
+            "en": "Local chemical makers sold more"
+          }
+        },
+        {
+          "themeId": "delivery",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "요소수 부족 → 배송 화물차 운행 차질"
+          },
+          "reason": {
+            "ko": "배송 차량 운행 차질 우려",
+            "en": "Delivery trucks at risk"
+          }
+        },
+        {
+          "themeId": "department_store",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "물류 지연 → 매장 상품 입고 지연"
+          },
+          "reason": {
+            "ko": "상품 입고가 늦어짐",
+            "en": "Store deliveries delayed"
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "화물 운송 차질 → 철강재 출하 지연"
+          },
+          "reason": {
+            "ko": "철강재 출하가 늦어짐",
+            "en": "Steel shipments delayed"
+          }
+        }
+      ],
+      "realDate": "2021-10-15 (중국 검사 의무화) ~ 11 (국내 품귀)",
+      "source": {
+        "event": "중국 요소 등 비료 수출 검사 의무화, 산업용 요소 중국 의존 97%, 군 수송기로 호주산 요소수 긴급 수입",
+        "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b31-city-lockdown",
+      "type": "breaking",
+      "magnitude": 7,
+      "title": {
+        "ko": "중국 최대 경제도시 봉쇄… 공장·항만 멈춰",
+        "en": "China's Biggest Business Hub Locked Down"
+      },
+      "body": {
+        "ko": "감염 확산으로 중국 최대 경제도시가 두 달 가까이 통째로 봉쇄됐다. 공장이 멈추고 항만 화물 처리가 늦어지면서 부품 공급망이 흔들린다. 중국 소비가 얼어붙어 화장품과 면세점 매출도 빠르게 줄고 있다.",
+        "en": "China's largest business city has been locked down for nearly two months. Factories stopped and port handling slowed, shaking parts supply chains. Chinese spending froze, and cosmetics and duty-free sales are falling fast."
+      },
+      "effects": [
+        {
+          "themeId": "cosmetics",
+          "impact": -7,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "화장품",
+                "themeTerm": "화장품"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "중국 화장품 매출이 크게 줄어듦",
+            "en": "Sales in China fell sharply"
+          }
+        },
+        {
+          "themeId": "duty_free",
+          "impact": -7,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "면세점",
+                "themeTerm": "면세점"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "중국 보따리상 구매가 끊김",
+            "en": "Chinese resellers stopped buying"
+          }
+        },
+        {
+          "themeId": "auto",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "중국 부품 공장 정지 → 자동차 생산 차질"
+          },
+          "reason": {
+            "ko": "부품이 모자라 생산 차질",
+            "en": "Parts shortages hit output"
+          }
+        },
+        {
+          "themeId": "petrochem",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "중국 수요 위축 → 화학 제품 수출 감소"
+          },
+          "reason": {
+            "ko": "중국 수출이 줄어듦",
+            "en": "Exports to China dropped"
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "중국 경기 둔화 → 철강 수요 감소"
+          },
+          "reason": {
+            "ko": "중국 철강 수요가 줄어듦",
+            "en": "Chinese steel demand fell"
+          }
+        },
+        {
+          "themeId": "display",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "부품 공급 차질 → 패널 생산 지연"
+          },
+          "reason": {
+            "ko": "부품이 늦어져 생산 지연",
+            "en": "Component delays"
+          }
+        },
+        {
+          "themeId": "shipping",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "항만 적체 → 선박 회전 지연, 운임 상승"
+          },
+          "reason": {
+            "ko": "항만이 막혀 운임이 오름",
+            "en": "Port jams lifted rates"
+          }
+        }
+      ],
+      "realDate": "2022-03-28 ~ 06-01",
+      "source": {
+        "event": "중국 최대 경제도시 전면 봉쇄 약 2개월(동부 03-28, 서부 04-01), 06-01부터 단계적 해제. 항만은 축소 운영",
+        "impactRationale": "직접 2개(±7), 밀접 2개(±4), 간접 3개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b32-won-1400",
+      "type": "breaking",
+      "magnitude": 6,
+      "title": {
+        "ko": "원·달러 환율 1,400원 돌파… 13년 만",
+        "en": "Won Breaks 1,400 per Dollar"
+      },
+      "body": {
+        "ko": "미국의 연이은 큰 폭 금리 인상에 달러가 치솟으면서 원·달러 환율이 13년여 만에 1,400원을 넘었다. 외환위기와 금융위기 때에 이어 세 번째다. 외국인 투자자들은 국내 증시에서 돈을 빼고 있고, 해외여행 비용과 수입 곡물값은 크게 올랐다.",
+        "en": "Successive jumbo US rate hikes sent the dollar soaring, pushing the won past 1,400 for the first time in over 13 years, only the third time ever. Foreign investors are pulling money out of Korean stocks, and overseas trips and imported grain have become far more expensive."
+      },
+      "effects": [
+        {
+          "themeId": "securities",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "달러 강세 → 외국인 자금 유출"
+          },
+          "reason": {
+            "ko": "외국인이 증시에서 돈을 뺌",
+            "en": "Foreigners pulled money out"
+          }
+        },
+        {
+          "themeId": "airline",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "달러 강세 → 항공기 리스료·항공유 비용 증가"
+          },
+          "reason": {
+            "ko": "달러로 내는 비용이 늘어남",
+            "en": "Dollar costs rose"
+          }
+        },
+        {
+          "themeId": "travel",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "환율 상승 → 해외여행 비용 증가"
+          },
+          "reason": {
+            "ko": "해외여행 비용이 크게 오름",
+            "en": "Overseas trips got pricier"
+          }
+        },
+        {
+          "themeId": "refining",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "원화 약세 → 달러로 파는 석유 제품 수출 환산 이익"
+          },
+          "reason": {
+            "ko": "석유 제품 수출 이익 증가",
+            "en": "Fuel exports worth more"
+          }
+        },
+        {
+          "themeId": "food",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "환율 상승 → 수입 곡물값 상승"
+          },
+          "reason": {
+            "ko": "수입 곡물 원가가 오름",
+            "en": "Imported grain cost more"
+          }
+        },
+        {
+          "themeId": "auto",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "원화 약세 → 수출 가격 경쟁력"
+          },
+          "reason": {
+            "ko": "원화 약세로 수출 이익 증가",
+            "en": "Weak won helped exporters"
+          }
+        },
+        {
+          "themeId": "shipbuilding",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "달러로 받는 수주 대금 → 환산 이익"
+          },
+          "reason": {
+            "ko": "달러 수주 대금 가치가 오름",
+            "en": "Dollar contracts worth more"
+          }
+        },
+        {
+          "themeId": "hbm",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "원화 약세 → 반도체 수출 환산 이익"
+          },
+          "reason": {
+            "ko": "반도체 수출 이익이 늘어남",
+            "en": "Weak won lifted chip exporters"
+          }
+        }
+      ],
+      "realDate": "2022-09-22",
+      "source": {
+        "event": "원·달러 환율 종가 1,409.7원, 2009-03 이후 13년 6개월 만에 1,400원 돌파 (외환위기·금융위기 이후 세 번째)",
+        "impactRationale": "밀접 3개(±4), 간접 5개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b33-mutual-run",
+      "type": "breaking",
+      "magnitude": 7,
+      "title": {
+        "ko": "상호금융 연체율 치솟아 예금 인출 행렬",
+        "en": "Depositors Line Up to Pull Money from Co-op Lenders"
+      },
+      "body": {
+        "ko": "부동산 PF 대출 부실로 연체율이 치솟은 동네 상호금융 금고에서 예금 인출이 줄을 이었다. 정부는 합동 브리핑을 열고 \"합병되더라도 모든 예금을 보장하겠다\"고 밝혔다. 2금융권 전체로 불안이 번질까 걱정하는 목소리가 크다.",
+        "en": "Depositors lined up to withdraw from neighborhood co-op lenders whose delinquency rates soared on bad property-project loans. The government held a joint briefing promising to protect every deposit even in a merger. Many fear the anxiety could spread across non-bank lenders."
+      },
+      "effects": [
+        {
+          "themeId": "savings_bank",
+          "impact": -7,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "2금융권",
+                "themeTerm": "2금융권"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "2금융권 전체로 불안이 번짐",
+            "en": "Fear spread to non-bank lenders"
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "PF 대출 회수 → 건설 자금줄 축소"
+          },
+          "reason": {
+            "ko": "PF 자금줄이 말라 붙음",
+            "en": "Project financing dried up"
+          }
+        },
+        {
+          "themeId": "bank",
+          "impact": 4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "불안한 예금 → 시중은행으로 이동"
+          },
+          "reason": {
+            "ko": "빠져나온 예금이 시중은행으로",
+            "en": "Deposits moved to big banks"
+          }
+        },
+        {
+          "themeId": "delivery",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "지역 가계 불안 → 동네 상권 외식·배달 위축"
+          },
+          "reason": {
+            "ko": "동네 상권 소비가 줄어듦",
+            "en": "Local spending fell"
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "건설 위축 → 철근 수요 감소"
+          },
+          "reason": {
+            "ko": "건설 자재 수요 감소",
+            "en": "Less construction steel"
+          }
+        },
+        {
+          "themeId": "department_store",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "가계 불안 → 소비 위축"
+          },
+          "reason": {
+            "ko": "가계가 지갑을 닫음",
+            "en": "Households cut spending"
+          }
+        }
+      ],
+      "realDate": "2023-07 (07-06 정부 합동 브리핑)",
+      "source": {
+        "event": "상호금융 금고 연체율 급등, 예금 인출 확산, 정부 합동 브리핑에서 전액 보장 발표 (한 달 중도해지 41.7만 건)",
+        "impactRationale": "직접 1개(±7), 밀접 2개(±4), 간접 3개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b34-ramen-price-cut",
+      "type": "breaking",
+      "magnitude": 4,
+      "title": {
+        "ko": "정부 압박에 라면값 13년 만에 내려",
+        "en": "Ramen Prices Cut for First Time in 13 Years"
+      },
+      "body": {
+        "ko": "밀가루 값이 내렸는데도 라면값은 그대로라는 정부의 압박에 라면 업체들이 대표 제품 출고가를 4~5% 내리기로 했다. 대표 라면값 인하는 13년 만이다. 과자·빵 같은 가공식품 업체들도 줄줄이 가격 인하에 들어갔다.",
+        "en": "Under government pressure that noodle prices had not followed cheaper flour, ramen makers cut factory prices of flagship products by 4-5%, the first cut in 13 years. Makers of snacks, bread and other packaged foods followed with their own cuts."
+      },
+      "effects": [
+        {
+          "themeId": "kfood",
+          "impact": -4,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "라면",
+                "themeTerm": "라면"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "라면값을 내려 이익이 줄어듦",
+            "en": "Lower ramen prices cut margins"
+          }
+        },
+        {
+          "themeId": "food",
+          "impact": -2,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "가격 인하 압박 → 가공식품 업체 이익 감소"
+          },
+          "reason": {
+            "ko": "가공식품 가격 인하가 이어짐",
+            "en": "Packaged food prices cut"
+          }
+        },
+        {
+          "themeId": "cosmetics",
+          "impact": -1,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "정부 가격 압박 → 다른 소비재로 번질 우려"
+          },
+          "reason": {
+            "ko": "소비재 가격 통제 우려",
+            "en": "Price-control worries spread"
+          }
+        },
+        {
+          "themeId": "petrochem",
+          "impact": -1,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "식품 가격 인하 → 포장재 납품 단가 인하 압박"
+          },
+          "reason": {
+            "ko": "포장재 납품 단가 압박",
+            "en": "Packaging price pressure"
+          }
+        },
+        {
+          "themeId": "department_store",
+          "impact": 1,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "밥상 물가 부담 완화 → 소비 여력"
+          },
+          "reason": {
+            "ko": "물가 부담이 줄어 소비 여력 증가",
+            "en": "Eased grocery bills"
+          }
+        },
+        {
+          "themeId": "travel",
+          "impact": 1,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "물가 부담 완화 → 여가 소비 여력"
+          },
+          "reason": {
+            "ko": "여가 소비 여력이 생김",
+            "en": "More room for leisure spending"
+          }
+        }
+      ],
+      "realDate": "2023-06-27 발표 (07-01 시행)",
+      "source": {
+        "event": "대표 라면 출고가 4.5% 인하(13년 만), 다른 라면·과자·빵 업체 잇따라 인하",
+        "impactRationale": "직접 1개(±4), 밀접 1개(±2), 간접 4개(±1) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b35-water-release",
+      "type": "breaking",
+      "magnitude": 6,
+      "title": {
+        "ko": "일본 원전 오염수 방류… 수산물 소비 위축",
+        "en": "Japan Starts Releasing Plant Water to Sea"
+      },
+      "body": {
+        "ko": "일본이 원전 오염수의 바다 방류를 시작하자 중국은 일본산 수산물 수입을 전면 금지했다. 국내에서도 수산물 등 식품을 꺼리는 소비자가 늘었고, 방류를 앞두고는 소금 사재기까지 벌어졌다. 정부는 방사능 검사를 대폭 늘리기로 했다.",
+        "en": "Japan began discharging treated nuclear-plant water into the sea, and China banned all Japanese seafood. Korean consumers grew wary of seafood and other foods, and salt was hoarded ahead of the release. The government will expand radiation testing."
+      },
+      "effects": [
+        {
+          "themeId": "food",
+          "impact": -6,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "식품",
+                "themeTerm": "식품"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "수산 식품 소비가 줄어듦",
+            "en": "Seafood consumption fell"
+          }
+        },
+        {
+          "themeId": "diagnostics",
+          "impact": 6,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "검사",
+                "themeTerm": "검사"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "방사능 검사 수요가 늘어남",
+            "en": "More radiation testing"
+          }
+        },
+        {
+          "themeId": "nuclear",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "오염수 논란 → 원전 여론 악화"
+          },
+          "reason": {
+            "ko": "원전을 꺼리는 여론이 커짐",
+            "en": "Public turned wary of nuclear"
+          }
+        },
+        {
+          "themeId": "kfood",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "중국의 일본산 수산물 금수 → 국산 김 등 대체 수요"
+          },
+          "reason": {
+            "ko": "국산 수산 가공품 대체 수요",
+            "en": "Korean seafood filled the gap"
+          }
+        },
+        {
+          "themeId": "department_store",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "수산물 매장 매출 감소"
+          },
+          "reason": {
+            "ko": "수산물 코너 매출이 줄어듦",
+            "en": "Seafood counters slowed"
+          }
+        },
+        {
+          "themeId": "delivery",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "횟집 등 수산물 배달 주문 감소"
+          },
+          "reason": {
+            "ko": "수산물 배달 주문 감소",
+            "en": "Fewer seafood orders"
+          }
+        }
+      ],
+      "realDate": "2023-08-24",
+      "source": {
+        "event": "일본 원전 처리수 해양 방류 시작, 중국 일본산 수산물 전면 수입 금지, 국내 소금 사재기(방류 전)",
+        "impactRationale": "직접 2개(±6), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b36-rare-metal-curb",
+      "type": "breaking",
+      "magnitude": 5,
+      "title": {
+        "ko": "중국, 반도체 원료 갈륨·게르마늄 수출 통제",
+        "en": "China Curbs Gallium and Germanium Exports"
+      },
+      "body": {
+        "ko": "중국이 반도체와 디스플레이에 쓰이는 갈륨·게르마늄 등 희소 금속을 허가 없이 수출하지 못하게 했다. 세계 생산의 대부분을 중국이 차지해, 미국의 반도체 규제에 대한 맞대응이라는 해석이 나온다. 국내 업체들은 재고와 대체 수입처를 점검하고 있다.",
+        "en": "China barred exports of gallium, germanium and related metals used in chips and displays without a license. With China dominating world output, the move is seen as retaliation for US chip controls. Korean firms are checking inventories and alternative suppliers."
+      },
+      "effects": [
+        {
+          "themeId": "hbm",
+          "impact": -3,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "반도체 원료 통제 → 메모리 생산 소재 불안"
+          },
+          "reason": {
+            "ko": "반도체 원료 공급이 불안해짐",
+            "en": "Chip material supply at risk"
+          }
+        },
+        {
+          "themeId": "display",
+          "impact": -5,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "디스플레이",
+                "themeTerm": "디스플레이"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "패널 소재 공급이 불안해짐",
+            "en": "Panel materials at risk"
+          }
+        },
+        {
+          "themeId": "solar",
+          "impact": -3,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "희소 금속 통제 → 태양광 셀 소재 원가 상승"
+          },
+          "reason": {
+            "ko": "셀 소재 원가가 오를 우려",
+            "en": "Cell material costs may rise"
+          }
+        },
+        {
+          "themeId": "auto",
+          "impact": -3,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "반도체 소재 불안 → 차량용 반도체·전장 부품 차질 우려"
+          },
+          "reason": {
+            "ko": "차량용 반도체 수급 우려",
+            "en": "Car-chip supply worries"
+          }
+        },
+        {
+          "themeId": "space",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "게르마늄 → 위성용 태양 전지 소재"
+          },
+          "reason": {
+            "ko": "위성 부품 소재 수급 우려",
+            "en": "Satellite cell materials"
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "희소 금속 대체 공급 → 국내 제련 업체 생산 기대"
+          },
+          "reason": {
+            "ko": "국내 제련 업체 대체 생산 기대",
+            "en": "Local smelters may supply"
+          }
+        }
+      ],
+      "realDate": "2023-07-03 발표 (08-01 시행)",
+      "source": {
+        "event": "중국 당국 갈륨·게르마늄 관련 품목 수출 허가제, 중국이 세계 갈륨 생산의 약 98%",
+        "impactRationale": "직접 1개(±5), 밀접 3개(±3), 간접 2개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b37-laver-export",
+      "type": "breaking",
+      "magnitude": 5,
+      "title": {
+        "ko": "김 수출, 처음으로 1조 원 넘어",
+        "en": "Laver Exports Top 1 Trillion Won"
+      },
+      "body": {
+        "ko": "조미김과 마른김 수출이 한 해 1조 원을 넘어 사상 최대를 기록했다. 120여 개국으로 팔려 나가며 간식용 김이 해외 마트의 인기 상품이 됐다. 수출이 늘면서 국내 김값이 크게 올라 식품 업체들의 원가 부담도 커졌다.",
+        "en": "Seasoned and dried laver exports topped 1 trillion won in a year, a record, with sales to more than 120 countries as laver snacks became a hit in overseas supermarkets. Domestic laver prices jumped as exports grew, raising costs for food makers."
+      },
+      "effects": [
+        {
+          "themeId": "kfood",
+          "impact": 5,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "김",
+                "themeTerm": "김"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "김 수출이 사상 최대",
+            "en": "Record laver exports"
+          }
+        },
+        {
+          "themeId": "food",
+          "impact": -3,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "수출 증가 → 국내 김값 상승, 식품 원가 부담"
+          },
+          "reason": {
+            "ko": "국내 김값이 올라 원가 부담",
+            "en": "Higher laver costs at home"
+          }
+        },
+        {
+          "themeId": "kcontent",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "한식 인기 → 한류 콘텐츠 관심"
+          },
+          "reason": {
+            "ko": "한식 인기와 한류가 함께 퍼짐",
+            "en": "K-food and K-content fed each other"
+          }
+        },
+        {
+          "themeId": "shipping",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "수출 물량 증가 → 컨테이너 수요"
+          },
+          "reason": {
+            "ko": "수출 물량이 늘어남",
+            "en": "More export cargo"
+          }
+        },
+        {
+          "themeId": "kpop",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "한류 확산 선순환"
+          },
+          "reason": {
+            "ko": "한류 인기가 함께 커짐",
+            "en": "The Korean wave kept growing"
+          }
+        },
+        {
+          "themeId": "delivery",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "김값 상승 → 김밥 등 분식 가맹점 원가 부담"
+          },
+          "reason": {
+            "ko": "분식 재료비가 올라감",
+            "en": "Snack-bar ingredient costs rose"
+          }
+        }
+      ],
+      "realDate": "2023 연간 (12-20 1조 원 돌파)",
+      "source": {
+        "event": "김 수출 7억 9천만 달러(약 1조 332억 원), 전년 대비 +22.2%, 120여 개국. 2024년 9.97억 달러",
+        "impactRationale": "직접 1개(±5), 밀접 1개(±3), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b38-builder-workout",
+      "type": "breaking",
+      "magnitude": 7,
+      "title": {
+        "ko": "중견 건설사 워크아웃 신청… PF 공포 확산",
+        "en": "Midsize Builder Seeks Debt Workout"
+      },
+      "body": {
+        "ko": "부동산 PF 대출 보증을 감당하지 못한 시공능력 16위 건설사가 결국 워크아웃을 신청했다. 보증한 PF 대출만 수조 원에 이른다. 다른 건설사와 2금융권으로 부실이 번질 수 있다는 우려에 금융당국이 긴급 점검에 나섰다.",
+        "en": "Unable to cover its guarantees on property-project loans, Korea's 16th-largest builder applied for a debt workout. Its guaranteed loans run to several trillion won. Regulators launched emergency checks amid fears the damage could spread to other builders and non-bank lenders."
+      },
+      "effects": [
+        {
+          "themeId": "construction",
+          "impact": -7,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "건설사",
+                "themeTerm": "건설사"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "건설사 연쇄 부실 우려",
+            "en": "Fears of builder failures"
+          }
+        },
+        {
+          "themeId": "savings_bank",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "PF 대출 부실 → 2금융권 손실"
+          },
+          "reason": {
+            "ko": "PF 대출 손실 우려",
+            "en": "Project-loan losses feared"
+          }
+        },
+        {
+          "themeId": "securities",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "PF 보증 증권사 손실 → 금융 불안"
+          },
+          "reason": {
+            "ko": "증권사 PF 손실 우려",
+            "en": "Brokers' PF exposure"
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "공사 중단 → 철근 수요 감소"
+          },
+          "reason": {
+            "ko": "건설 자재 수요가 줄어듦",
+            "en": "Less construction steel"
+          }
+        },
+        {
+          "themeId": "solar",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "PF 경색 → 태양광 발전 사업 자금 조달 차질"
+          },
+          "reason": {
+            "ko": "발전 사업 자금줄이 막힘",
+            "en": "Solar project funding froze"
+          }
+        },
+        {
+          "themeId": "department_store",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "집값 불안 → 소비 위축"
+          },
+          "reason": {
+            "ko": "자산 불안에 소비가 줄어듦",
+            "en": "Wealth worries cut spending"
+          }
+        }
+      ],
+      "realDate": "2023-12-28",
+      "source": {
+        "event": "시공능력 16위 중견 건설사 워크아웃 신청, 보증 PF 대출 잔액 약 4.4조 원(3분기 말, 추정치는 출처별 차이)",
+        "impactRationale": "직접 1개(±7), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b39-obesity-drug",
+      "type": "breaking",
+      "magnitude": 6,
+      "title": {
+        "ko": "비만 치료제 품귀… 제약사 유럽 시총 1위",
+        "en": "Weight-Loss Drug Maker Tops Europe by Value"
+      },
+      "body": {
+        "ko": "주사로 체중을 크게 줄이는 비만 치료제가 품귀를 빚으면서 이 약을 만든 제약사가 유럽 시가총액 1위에 올랐다. 미국 대형 마트는 \"약을 쓰는 고객이 먹을거리를 덜 산다\"고 밝혔다. 국내 바이오 업체들도 비슷한 신약 개발에 속도를 내고 있다.",
+        "en": "An injectable weight-loss drug is in short supply, and its maker has become Europe's most valuable company. A big US retailer said customers on the drug are buying less food. Korean biotech firms are speeding up similar drug development."
+      },
+      "effects": [
+        {
+          "themeId": "bio",
+          "impact": 6,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "신약",
+                "themeTerm": "신약"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "비만 신약 개발 경쟁에 관심 집중",
+            "en": "Obesity-drug race drew money"
+          }
+        },
+        {
+          "themeId": "food",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "식욕 억제 → 가공식품 소비 감소 우려"
+          },
+          "reason": {
+            "ko": "먹을거리 소비가 줄 우려",
+            "en": "Less food buying feared"
+          }
+        },
+        {
+          "themeId": "delivery",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "식사량 감소 → 배달 음식 수요 감소 우려"
+          },
+          "reason": {
+            "ko": "배달 음식 수요가 줄 우려",
+            "en": "Fewer meal orders feared"
+          }
+        },
+        {
+          "themeId": "diagnostics",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "비만·당뇨 검사 수요 증가"
+          },
+          "reason": {
+            "ko": "비만 관련 검사 수요 증가",
+            "en": "More obesity-related testing"
+          }
+        },
+        {
+          "themeId": "platform",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "비대면 진료·처방 수요 → 인터넷 서비스"
+          },
+          "reason": {
+            "ko": "비대면 진료 이용이 늘어남",
+            "en": "More telehealth use"
+          }
+        },
+        {
+          "themeId": "cinema",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "간식 매출 감소 우려 → 극장 매점 매출"
+          },
+          "reason": {
+            "ko": "매점 간식 매출 감소 우려",
+            "en": "Concession-sales worries"
+          }
+        }
+      ],
+      "realDate": "2023-09-01 (시총 역전), 2023-10-04 (미국 마트 발언)",
+      "source": {
+        "event": "비만 치료제 제약사 시가총액 유럽 1위(명품 기업 추월), 미국 대형 마트 \"처방 고객 구매량 소폭 감소\"",
+        "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b40-ev-chasm",
+      "type": "breaking",
+      "magnitude": 6,
+      "title": {
+        "ko": "전기차 주춤… 배터리 실적 반 토막",
+        "en": "EV Sales Stall, Battery Profits Halve"
+      },
+      "body": {
+        "ko": "비싼 값과 부족한 충전소 탓에 전기차를 사려는 사람이 줄어드는 '캐즘'이 길어지고 있다. 국내 배터리 업체들은 분기 영업이익이 70% 넘게 줄거나 적자로 돌아섰다. 완성차 업체들은 전기차 출시를 미루고 하이브리드 차를 늘리고 있다.",
+        "en": "High prices and too few chargers have stretched the EV demand \"chasm.\" Korean battery makers saw quarterly operating profit fall more than 70% or swing to losses. Carmakers are delaying EV launches and adding hybrids."
+      },
+      "effects": [
+        {
+          "themeId": "battery",
+          "impact": -6,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "배터리",
+                "themeTerm": "배터리"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "배터리 주문이 줄어 실적 악화",
+            "en": "Battery orders fell"
+          }
+        },
+        {
+          "themeId": "petrochem",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "배터리 소재 화학 수요 감소"
+          },
+          "reason": {
+            "ko": "배터리 소재 수요가 줄어듦",
+            "en": "Less battery-material demand"
+          }
+        },
+        {
+          "themeId": "auto",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "전기차 전략 수정 비용"
+          },
+          "reason": {
+            "ko": "전기차 투자 계획 조정 부담",
+            "en": "EV plan reset costs"
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "전기차 생산 축소 → 차체 강판 수요 감소"
+          },
+          "reason": {
+            "ko": "전기차용 강판 수요 감소",
+            "en": "Less EV sheet-steel demand"
+          }
+        },
+        {
+          "themeId": "refining",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "내연기관·하이브리드 수요 유지 → 휘발유 소비"
+          },
+          "reason": {
+            "ko": "휘발유 수요가 유지됨",
+            "en": "Gasoline demand held up"
+          }
+        },
+        {
+          "themeId": "power_equip",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "남는 배터리 라인 → 전력망 저장장치 전환"
+          },
+          "reason": {
+            "ko": "전력망 저장장치 투자 증가",
+            "en": "Lines shifted to grid storage"
+          }
+        }
+      ],
+      "realDate": "2024 (1분기 최대 배터리 업체 영업이익 -75%, 2분기 한 업체 11분기 연속 적자)",
+      "source": {
+        "event": "전기차 수요 정체(캐즘)로 국내 배터리 3사 실적 부진, 완성차 하이브리드 확대",
+        "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b41-carry-crash",
+      "type": "breaking",
+      "magnitude": 7,
+      "title": {
+        "ko": "엔화 투자금 썰물… 증시 사상 최대 낙폭",
+        "en": "Yen-Funded Money Flees, Record Stock Drop"
+      },
+      "body": {
+        "ko": "싼 엔화를 빌려 해외 주식에 투자했던 자금이 한꺼번에 빠져나가면서 아시아 증시가 동시에 무너졌다. 국내 주가지수는 하루 9% 가까이 떨어져 사상 최대 낙폭을 기록했고, 매매가 20분간 멈췄다. 일본 증시도 12% 넘게 떨어졌다.",
+        "en": "Money borrowed in cheap yen to buy foreign stocks rushed out all at once, sinking Asian markets together. Korea's main index fell nearly 9% in a day, its biggest drop ever, and trading halted for 20 minutes. Japan's market fell more than 12%."
+      },
+      "effects": [
+        {
+          "themeId": "securities",
+          "impact": -7,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "주가지수",
+                "themeTerm": "주가지수"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "증시가 사상 최대 낙폭",
+            "en": "Record one-day plunge"
+          }
+        },
+        {
+          "themeId": "hbm",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "외국인 매도 → 반도체 대형주 급락"
+          },
+          "reason": {
+            "ko": "외국인이 반도체주를 팔아 치움",
+            "en": "Foreigners dumped chip stocks"
+          }
+        },
+        {
+          "themeId": "crypto",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "위험자산 동반 투매 → 코인 급락"
+          },
+          "reason": {
+            "ko": "코인도 함께 급락",
+            "en": "Crypto sold off too"
+          }
+        },
+        {
+          "themeId": "battery",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "투매 확산 → 성장주 하락"
+          },
+          "reason": {
+            "ko": "성장주가 함께 떨어짐",
+            "en": "Growth stocks fell"
+          }
+        },
+        {
+          "themeId": "platform",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "투매 확산 → 기술주 하락"
+          },
+          "reason": {
+            "ko": "기술주가 함께 떨어짐",
+            "en": "Tech stocks fell"
+          }
+        },
+        {
+          "themeId": "airline",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "엔화 급등 → 일본 노선 여행 수요 감소"
+          },
+          "reason": {
+            "ko": "일본 노선 수요가 줄 우려",
+            "en": "Japan routes may soften"
+          }
+        },
+        {
+          "themeId": "food",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "경기 방어주로 자금 이동"
+          },
+          "reason": {
+            "ko": "불안할 때 찾는 방어주로 자금 이동",
+            "en": "Money hid in defensives"
+          }
+        }
+      ],
+      "realDate": "2024-08-05",
+      "source": {
+        "event": "엔캐리 트레이드 청산 우려·미국 고용 부진, 국내 대표 주가지수 -8.77%(사상 최대 하락 폭), 두 시장 서킷브레이커, 일본 대표 지수 -12.4%",
+        "impactRationale": "직접 1개(±7), 밀접 2개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b42-navy-repair",
+      "type": "breaking",
+      "magnitude": 5,
+      "title": {
+        "ko": "미 해군 군함 정비, 국내 조선소 첫 수주",
+        "en": "Korean Yard Wins First US Navy Repair Job"
+      },
+      "body": {
+        "ko": "국내 조선소가 처음으로 미국 해군 함정의 정비·수리 사업을 따냈다. 미국은 자국 조선소만으로는 군함을 제때 고치기 어려워 동맹국 조선소에 문을 열고 있다. 국내 조선업계가 한 해 20조 원 규모로 추정되는 함정 정비 시장에 본격 진출하게 됐다.",
+        "en": "A Korean shipyard won a US Navy ship maintenance and repair contract for the first time. Unable to fix warships on time at home, the US is opening the work to allied yards. Korean shipbuilders are now entering a naval repair market estimated at about 20 trillion won a year."
+      },
+      "effects": [
+        {
+          "themeId": "shipbuilding",
+          "impact": 5,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "조선소",
+                "themeTerm": "조선소"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "미 해군 정비 시장에 진출",
+            "en": "Entered US Navy repair market"
+          }
+        },
+        {
+          "themeId": "defense",
+          "impact": 3,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "군함 정비 → 함정 방산 수출 기대"
+          },
+          "reason": {
+            "ko": "함정 방산 협력이 넓어짐",
+            "en": "Naval defense ties widened"
+          }
+        },
+        {
+          "themeId": "steel",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "함정 수리 → 선박용 강재 수요"
+          },
+          "reason": {
+            "ko": "선박용 강판 수요 증가",
+            "en": "More ship-plate demand"
+          }
+        },
+        {
+          "themeId": "securities",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "조선 대형주 강세 → 지수"
+          },
+          "reason": {
+            "ko": "조선주 강세가 지수를 받침",
+            "en": "Shipbuilders lifted the index"
+          }
+        },
+        {
+          "themeId": "cable",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "함정 수리 → 선박용 전선 교체 수요"
+          },
+          "reason": {
+            "ko": "선박용 전선 수요 증가",
+            "en": "Ship cable replacement"
+          }
+        },
+        {
+          "themeId": "shipping",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "조선소 도크 부족 → 상선 인도 지연"
+          },
+          "reason": {
+            "ko": "새 상선 인도가 늦어질 우려",
+            "en": "New merchant ships delayed"
+          }
+        }
+      ],
+      "realDate": "2024-08",
+      "source": {
+        "event": "국내 조선소 최초 미 해군 군수지원함 정비(MRO) 수주. 앞서 함정정비협약 체결, 같은 해 두 번째 수주",
+        "impactRationale": "직접 1개(±5), 밀접 1개(±3), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b43-mill-closure",
+      "type": "breaking",
+      "magnitude": 7,
+      "title": {
+        "ko": "중국산 저가 철강 공세… 제철소 공장 폐쇄",
+        "en": "Cheap Chinese Steel Forces Mill Closure"
+      },
+      "body": {
+        "ko": "중국산 저가 철강재가 쏟아지면서 국내 최대 제철소가 45년 된 공장을 닫았다. 넉 달여 만에 두 번째 공장 폐쇄다. 업계는 \"팔수록 손해\"라며 반덤핑 관세를 요청하고 있다.",
+        "en": "A flood of cheap Chinese steel led Korea's largest steelmaker to close a 45-year-old mill, its second closure in about four months. The industry says it loses money on every sale and is asking for anti-dumping duties."
+      },
+      "effects": [
+        {
+          "themeId": "steel",
+          "impact": -7,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "철강재",
+                "themeTerm": "철강재"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "저가 공세에 공장 문을 닫음",
+            "en": "Mill closed under price pressure"
+          }
+        },
+        {
+          "themeId": "shipbuilding",
+          "impact": 4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "철강값 하락 → 선박용 후판 원가 하락"
+          },
+          "reason": {
+            "ko": "배 만드는 강판 원가가 내려감",
+            "en": "Cheaper ship plate"
+          }
+        },
+        {
+          "themeId": "bank",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "철강 업계 대출 부실 우려"
+          },
+          "reason": {
+            "ko": "철강 업계 대출 부실 우려",
+            "en": "Steel-sector loan worries"
+          }
+        },
+        {
+          "themeId": "power_equip",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "철강값 하락 → 변압기용 강판 원가 하락"
+          },
+          "reason": {
+            "ko": "변압기 소재 원가가 내려감",
+            "en": "Cheaper transformer steel"
+          }
+        },
+        {
+          "themeId": "petrochem",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "중국 공급 과잉 확산 → 화학 제품 가격 압박"
+          },
+          "reason": {
+            "ko": "중국산 화학 제품 공세도 우려",
+            "en": "Chinese chemical glut too"
+          }
+        },
+        {
+          "themeId": "solar",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "중국 공급 과잉 확산 → 태양광 모듈값 압박"
+          },
+          "reason": {
+            "ko": "중국산 저가 공세가 태양광에도",
+            "en": "Chinese glut hit solar too"
+          }
+        }
+      ],
+      "realDate": "2024-11-19 (07월 1제강 폐쇄에 이어)",
+      "source": {
+        "event": "국내 최대 제철소 선재 공장 폐쇄(45년 가동), 중국 선재 생산능력 1.4억 톤 vs 세계 수요 약 0.9억 톤",
+        "impactRationale": "직접 1개(±7), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b44-steel-tariff",
+      "type": "breaking",
+      "magnitude": 7,
+      "title": {
+        "ko": "미국, 철강 관세 50%로 두 배 인상",
+        "en": "US Doubles Steel Tariff to 50%"
+      },
+      "body": {
+        "ko": "미국이 수입 철강·알루미늄에 매기는 관세를 25%에서 50%로 두 배 올렸다. 철강이 들어간 부품 같은 파생 상품에도 같은 세율이 붙는다. 국내 철강 업계는 미국 수출이 사실상 막혔다며 현지 생산을 검토하고 있다.",
+        "en": "The US doubled its tariff on imported steel and aluminum from 25% to 50%, applying the rate to the metal content of derivative products such as parts. Korean steelmakers say US exports are effectively blocked and are considering local production."
+      },
+      "effects": [
+        {
+          "themeId": "steel",
+          "impact": -7,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "철강",
+                "themeTerm": "철강"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "미국 수출길이 사실상 막힘",
+            "en": "US exports effectively blocked"
+          }
+        },
+        {
+          "themeId": "auto",
+          "impact": -4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "철강 파생 부품 관세 → 자동차 부품 원가 상승"
+          },
+          "reason": {
+            "ko": "부품 관세로 원가 부담",
+            "en": "Parts tariffs raised costs"
+          }
+        },
+        {
+          "themeId": "cable",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "알루미늄 파생 관세 → 전선 수출 부담"
+          },
+          "reason": {
+            "ko": "알루미늄 전선 수출 부담",
+            "en": "Aluminum cable exports hit"
+          }
+        },
+        {
+          "themeId": "shipping",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "대미 철강 물동량 감소"
+          },
+          "reason": {
+            "ko": "미국행 철강 화물이 줄어듦",
+            "en": "Less steel cargo to US"
+          }
+        },
+        {
+          "themeId": "battery",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "알루미늄 파생 관세 → 배터리 부품 원가"
+          },
+          "reason": {
+            "ko": "배터리 알루미늄 부품 원가 상승",
+            "en": "Aluminum battery parts cost more"
+          }
+        },
+        {
+          "themeId": "construction",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "철강 수출길 막힘 → 국내 철강 공급 과잉 속 업계 투자 위축"
+          },
+          "reason": {
+            "ko": "해외 건설 철강 조달 불확실",
+            "en": "Steel uncertainty for builders"
+          }
+        }
+      ],
+      "realDate": "2025-06-04 (06-03 포고문)",
+      "source": {
+        "event": "미국 무역확장법 232조 철강·알루미늄 관세 25% → 50%, 파생 상품은 철강·알루미늄 함량에 부과",
+        "impactRationale": "직접 1개(±7), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b45-missile-export",
+      "type": "breaking",
+      "magnitude": 6,
+      "title": {
+        "ko": "중동에 지대공 미사일 4조 원 수출",
+        "en": "Missile-Defense Deal Worth 4 Trillion Won"
+      },
+      "body": {
+        "ko": "국산 중거리 지대공 미사일 10개 포대를 중동 산유국에 수출하는 4조 원대 계약이 공개됐다. 같은 미사일의 중동 수출은 두 번째다. 중동 국가들은 잦은 드론·미사일 공격에 방공망 보강을 서두르고 있다.",
+        "en": "A deal worth over 4 trillion won to export ten batteries of a Korean medium-range surface-to-air missile to a Middle Eastern oil producer was made public, the system's second sale in the region. Gulf states are rushing to bolster air defenses against frequent drone and missile attacks."
+      },
+      "effects": [
+        {
+          "themeId": "defense",
+          "impact": 6,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "미사일",
+                "themeTerm": "미사일"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "대형 방산 수출 계약",
+            "en": "Big defense export deal"
+          }
+        },
+        {
+          "themeId": "space",
+          "impact": 4,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "레이더·유도 기술 → 항공우주 부품 수요"
+          },
+          "reason": {
+            "ko": "레이더·유도 부품 수요 증가",
+            "en": "Radar and guidance parts"
+          }
+        },
+        {
+          "themeId": "robot",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "드론 방어 → 무인 체계 관심"
+          },
+          "reason": {
+            "ko": "무인 방어 체계 관심 증가",
+            "en": "Unmanned systems interest"
+          }
+        },
+        {
+          "themeId": "securities",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "방산 대형주 강세 → 지수"
+          },
+          "reason": {
+            "ko": "방산주 강세가 지수를 받침",
+            "en": "Defense lifted the index"
+          }
+        },
+        {
+          "themeId": "cable",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "방공 기지 → 전력 케이블 수요"
+          },
+          "reason": {
+            "ko": "기지용 전력 케이블 수요",
+            "en": "Base power cables"
+          }
+        },
+        {
+          "themeId": "airline",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "중동 공습 위험 → 항로 우회 비용"
+          },
+          "reason": {
+            "ko": "중동 항로 우회 비용",
+            "en": "Middle East reroutes"
+          }
+        }
+      ],
+      "realDate": "2024-02-06 공개 (계약 2023-11)",
+      "source": {
+        "event": "국산 중거리 지대공 미사일 10개 포대 중동 산유국 수출 32억 달러(약 4.3조 원) 공개, 다른 중동 국가에 이어 두 번째",
+        "impactRationale": "직접 1개(±6), 밀접 1개(±4), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
+      }
+    },
+    {
+      "id": "b46-visa-free-tour",
+      "type": "breaking",
+      "magnitude": 5,
+      "title": {
+        "ko": "중국 단체관광객 무비자 입국 시작",
+        "en": "Visa-Free Entry for Chinese Tour Groups"
+      },
+      "body": {
+        "ko": "중국인 단체관광객이 비자 없이 15일간 국내를 여행할 수 있게 됐다. 시행 첫날부터 도심 면세점과 화장품 매장에 관광객이 몰렸다. 업계는 중국 단체 관광객이 빠르게 늘어날 것으로 본다.",
+        "en": "Chinese tour groups can now visit Korea for 15 days without a visa. On the first day, tourists crowded downtown duty-free shops and cosmetics stores, and the industry expects Chinese group tours to grow quickly."
+      },
+      "effects": [
+        {
+          "themeId": "duty_free",
+          "impact": 5,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "면세점",
+                "themeTerm": "면세점"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "단체 관광객이 면세점에 몰림",
+            "en": "Tour groups filled duty-free shops"
+          }
+        },
+        {
+          "themeId": "travel",
+          "impact": 5,
+          "link": {
+            "strength": 3,
+            "keywords": [
+              {
+                "newsTerm": "관광객",
+                "themeTerm": "관광객"
+              }
+            ]
+          },
+          "reason": {
+            "ko": "중국 단체 관광 상품 증가",
+            "en": "More Chinese group tours"
+          }
+        },
+        {
+          "themeId": "cosmetics",
+          "impact": 3,
+          "link": {
+            "strength": 2,
+            "keywords": [],
+            "chain": "관광객 쇼핑 → 화장품 매장 매출"
+          },
+          "reason": {
+            "ko": "화장품 매장 매출 증가",
+            "en": "Cosmetics stores busier"
+          }
+        },
+        {
+          "themeId": "department_store",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "관광객 쇼핑 → 백화점 매출"
+          },
+          "reason": {
+            "ko": "관광객 쇼핑이 늘어남",
+            "en": "More tourist shopping"
+          }
+        },
+        {
+          "themeId": "kfood",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "관광객 → 한식·K-푸드 소비"
+          },
+          "reason": {
+            "ko": "관광객의 K-푸드 소비 증가",
+            "en": "Tourists bought K-food"
+          }
+        },
+        {
+          "themeId": "game",
+          "impact": -2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "관광 소비주로 자금 이동 → 게임주 소외"
+          },
+          "reason": {
+            "ko": "관광주로 자금이 옮겨 감",
+            "en": "Money rotated to tourism"
+          }
+        },
+        {
+          "themeId": "kpop",
+          "impact": 2,
+          "link": {
+            "strength": 1,
+            "keywords": [],
+            "chain": "관광객 → 케이팝 공연·굿즈 소비"
+          },
+          "reason": {
+            "ko": "케이팝 공연·굿즈 소비 증가",
+            "en": "Tourists bought K-pop goods"
+          }
+        }
+      ],
+      "realDate": "2025-09-29 (2026-06-30까지 한시)",
+      "source": {
+        "event": "전담 여행사 모객 3인 이상 중국 단체관광객 15일 무비자 입국 시행, 첫날 도심 면세점 붐빔",
+        "impactRationale": "직접 2개(±5), 밀접 1개(±3), 간접 4개(±2) — 공식 그대로",
+        "needsVerification": false
       }
     }
   ],
@@ -8633,6 +11037,2705 @@
       ],
       "leansTo": "s13-developer-default-declared",
       "memo": "중국 대형 부동산 개발사 이자 연체. 단서(공사 중단 단지 증가, 협력사 대금 미지급) → 실제: 제한적 디폴트 판정"
+    },
+    {
+      "id": "s14-swap-line",
+      "tentative": {
+        "id": "s14-swap-tent",
+        "type": "tentative",
+        "magnitude": 2,
+        "title": {
+          "ko": "환율 치솟아… \"미국과 통화 협정 논의\"",
+          "en": "Won Plunges… Swap Line Talks with US"
+        },
+        "body": {
+          "ko": "달러 사재기로 원·달러 환율이 하루 40원 뛰어 1,280원을 넘었고 주가지수는 8% 넘게 떨어졌다. 정부는 \"미국 중앙은행과 달러를 맞바꾸는 통화 협정을 긴밀히 논의하고 있다\"고 밝혔다. 금융위기 때도 같은 협정이 맺어진 뒤 시장이 빠르게 진정됐다.",
+          "en": "A dash for dollars sent the won down 40 won in a day past 1,280, and stocks fell more than 8%. The government says it is in close talks with the US central bank on a currency swap line. During the financial crisis, a similar deal quickly calmed markets."
+        },
+        "effects": [
+          {
+            "themeId": "securities",
+            "impact": -2,
+            "link": {
+              "strength": 3,
+              "keywords": [
+                {
+                  "newsTerm": "주가지수",
+                  "themeTerm": "주가지수"
+                }
+              ]
+            },
+            "reason": {
+              "ko": "달러 부족에 증시 급락",
+              "en": "Dollar crunch hit stocks"
+            }
+          },
+          {
+            "themeId": "airline",
+            "impact": -1,
+            "link": {
+              "strength": 2,
+              "keywords": [],
+              "chain": "환율 급등 → 달러 비용 증가"
+            },
+            "reason": {
+              "ko": "달러 비용이 늘어남",
+              "en": "Dollar costs rose"
+            }
+          },
+          {
+            "themeId": "department_store",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "환율 급등 → 수입 명품 가격 상승"
+            },
+            "reason": {
+              "ko": "수입 상품 가격이 오름",
+              "en": "Imported goods pricier"
+            }
+          },
+          {
+            "themeId": "travel",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "환율 급등 → 여행 비용 증가"
+            },
+            "reason": {
+              "ko": "여행 비용이 늘어남",
+              "en": "Pricier trips"
+            }
+          },
+          {
+            "themeId": "bank",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "외화 조달 불안"
+            },
+            "reason": {
+              "ko": "외화 조달이 불안함",
+              "en": "Dollar funding stress"
+            }
+          },
+          {
+            "themeId": "shipbuilding",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "원화 약세 → 달러 수주 환산 이익"
+            },
+            "reason": {
+              "ko": "달러 수주 가치 상승",
+              "en": "Dollar orders worth more"
+            }
+          }
+        ],
+        "realDate": "2020-03-19 (장중)",
+        "source": {
+          "event": "원·달러 1,285.7원(+40원), 국내 대표 주가지수 -8.39%, 한미 통화스와프 논의",
+          "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 4개(±1) — 공식 그대로",
+          "needsVerification": true
+        }
+      },
+      "news": [
+        {
+          "id": "s14-swap-signed",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "한미 600억 달러 통화 협정… 환율 급락",
+            "en": "$60 Billion Swap Line Signed; Won Rallies"
+          },
+          "body": {
+            "ko": "한국과 미국 중앙은행이 600억 달러 규모의 통화 협정을 맺었다. 은행들은 필요하면 원화를 맡기고 달러를 빌릴 수 있게 됐다. 다음 날 환율은 하루 만에 40원 가까이 떨어졌고, 증시는 7% 넘게 올랐다.",
+            "en": "Korea and US central banks signed a $60 billion currency swap line, letting Korean banks borrow dollars against won when needed. The next day the won rallied nearly 40 won and stocks jumped more than 7%."
+          },
+          "effects": [
+            {
+              "themeId": "securities",
+              "impact": 8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "증시",
+                    "themeTerm": "증시"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "외환 불안이 줄어 증시 반등",
+                "en": "Stocks rebounded"
+              }
+            },
+            {
+              "themeId": "bank",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "달러 공급 → 은행 외화 조달 숨통"
+              },
+              "reason": {
+                "ko": "외화 조달 걱정이 줄어듦",
+                "en": "Dollar funding eased"
+              }
+            },
+            {
+              "themeId": "airline",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "환율 하락 → 달러 비용 감소"
+              },
+              "reason": {
+                "ko": "달러로 내는 비용이 줄어듦",
+                "en": "Lower dollar costs"
+              }
+            },
+            {
+              "themeId": "auto",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "원화 강세 → 수출 가격 경쟁력 약화"
+              },
+              "reason": {
+                "ko": "원화 강세로 수출 이익 감소",
+                "en": "Stronger won hurt exports"
+              }
+            },
+            {
+              "themeId": "shipbuilding",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "원화 강세 → 달러 수주 대금 환산 이익 감소"
+              },
+              "reason": {
+                "ko": "달러 수주 대금 가치가 줄어듦",
+                "en": "Dollar orders worth less"
+              }
+            },
+            {
+              "themeId": "refining",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "원화 강세 → 석유 제품 수출 환산 이익 감소"
+              },
+              "reason": {
+                "ko": "수출 환산 이익이 줄어듦",
+                "en": "Fuel exports worth less"
+              }
+            }
+          ],
+          "realDate": "2020-03-19 체결 (시장 반영 03-20)",
+          "source": {
+            "event": "한미 중앙은행 600억 달러 통화스와프(최소 6개월), 다음 날 국내 대표 주가지수 +7.4%, 환율 1,246.5원(-39.2원)",
+            "impactRationale": "직접 1개(±8), 밀접 2개(±5), 간접 3개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        },
+        {
+          "id": "s14-swap-stalled",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "통화 협정 불발… 환율 1,300원 돌파",
+            "en": "Swap Talks Stall; Won Breaks 1,300"
+          },
+          "body": {
+            "ko": "미국 중앙은행이 한국과의 통화 협정을 미루기로 하면서 원·달러 환율이 1,300원을 넘어섰다. 달러를 구하려는 기업과 은행이 몰려 외환시장 불안이 커졌다. 외국인은 증시에서 매도를 이어 갔다.",
+            "en": "The US central bank put off a swap line with Korea, sending the won past 1,300. Firms and lenders scrambled for dollars, and foreigners kept selling stocks."
+          },
+          "effects": [
+            {
+              "themeId": "securities",
+              "impact": -8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "증시",
+                    "themeTerm": "증시"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "외환 불안이 줄어 증시 반등",
+                "en": "Stocks rebounded"
+              }
+            },
+            {
+              "themeId": "bank",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "달러 공급 → 은행 외화 조달 숨통"
+              },
+              "reason": {
+                "ko": "외화 조달 걱정이 줄어듦",
+                "en": "Dollar funding eased"
+              }
+            },
+            {
+              "themeId": "airline",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "환율 하락 → 달러 비용 감소"
+              },
+              "reason": {
+                "ko": "달러로 내는 비용이 줄어듦",
+                "en": "Lower dollar costs"
+              }
+            },
+            {
+              "themeId": "auto",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "원화 강세 → 수출 가격 경쟁력 약화"
+              },
+              "reason": {
+                "ko": "원화 강세로 수출 이익 감소",
+                "en": "Stronger won hurt exports"
+              }
+            },
+            {
+              "themeId": "shipbuilding",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "원화 강세 → 달러 수주 대금 환산 이익 감소"
+              },
+              "reason": {
+                "ko": "달러 수주 대금 가치가 줄어듦",
+                "en": "Dollar orders worth less"
+              }
+            },
+            {
+              "themeId": "refining",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "원화 강세 → 석유 제품 수출 환산 이익 감소"
+              },
+              "reason": {
+                "ko": "수출 환산 이익이 줄어듦",
+                "en": "Fuel exports worth less"
+              }
+            }
+          ],
+          "realDate": "가상",
+          "source": {
+            "event": "가상 시나리오: 한미 통화스와프 불발",
+            "impactRationale": "직접 1개(±8), 밀접 2개(±5), 간접 3개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "newsId": "s14-swap-signed",
+          "isHistorical": true
+        },
+        {
+          "newsId": "s14-swap-stalled",
+          "isHistorical": false
+        }
+      ],
+      "leansTo": "s14-swap-signed",
+      "opener": true,
+      "memo": "한미 통화스와프. 단서(정부 \"긴밀히 논의\", 금융위기 때 같은 협정으로 진정) → 실제: 600억 달러 체결, 다음 날 증시 +7.4%"
+    },
+    {
+      "id": "s15-exchange-collapse",
+      "tentative": {
+        "id": "s15-exchange-tent",
+        "type": "tentative",
+        "magnitude": 2,
+        "title": {
+          "ko": "코인 거래소 인출 사태… 경쟁사 인수 의향",
+          "en": "Crypto Exchange Run; Rival Offers to Buy"
+        },
+        "body": {
+          "ko": "세계 2위 코인 거래소에서 사흘 동안 수조 원이 빠져나가자 1위 거래소가 인수 의향서를 냈다. 다만 1위 거래소는 \"장부를 살펴본 뒤 철회할 수 있다\"고 못 박았다. 고객 돈을 계열사로 빼돌렸다는 보도도 나오고 있다.",
+          "en": "After billions of dollars left the world's second-largest crypto exchange in three days, the largest exchange signed a letter of intent to buy it, but warned it could walk away after checking the books. Reports say customer money was moved to an affiliate."
+        },
+        "effects": [
+          {
+            "themeId": "crypto",
+            "impact": -2,
+            "link": {
+              "strength": 3,
+              "keywords": [
+                {
+                  "newsTerm": "거래소",
+                  "themeTerm": "거래소"
+                }
+              ]
+            },
+            "reason": {
+              "ko": "거래소 불안이 커짐",
+              "en": "Exchange jitters"
+            }
+          },
+          {
+            "themeId": "securities",
+            "impact": -1,
+            "link": {
+              "strength": 2,
+              "keywords": [],
+              "chain": "가상자산 불안 → 투자 심리 위축"
+            },
+            "reason": {
+              "ko": "투자 심리가 위축됨",
+              "en": "Sentiment soured"
+            }
+          },
+          {
+            "themeId": "game",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "게임 코인 불안"
+            },
+            "reason": {
+              "ko": "게임 코인 시세 불안",
+              "en": "Game tokens wobbled"
+            }
+          },
+          {
+            "themeId": "platform",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "블록체인 사업 불안"
+            },
+            "reason": {
+              "ko": "블록체인 사업 우려",
+              "en": "Blockchain worries"
+            }
+          },
+          {
+            "themeId": "bank",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "안전자산 선호"
+            },
+            "reason": {
+              "ko": "안전한 예금 선호",
+              "en": "Safety bid for deposits"
+            }
+          },
+          {
+            "themeId": "cosmetics",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "위험자산 회피 → 투자 심리 위축"
+            },
+            "reason": {
+              "ko": "투자 심리 위축",
+              "en": "Risk-off mood"
+            }
+          }
+        ],
+        "realDate": "2022-11-06 ~ 11-08",
+        "source": {
+          "event": "세계 2위 코인 거래소 대규모 인출(뱅크런), 1위 거래소 인수 의향서(11-08), 고객 자금 계열 투자사 유용 보도",
+          "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 4개(±1) — 공식 그대로",
+          "needsVerification": true
+        }
+      },
+      "news": [
+        {
+          "id": "s15-exchange-bankrupt",
+          "type": "outcome",
+          "magnitude": 9,
+          "title": {
+            "ko": "인수 철회… 세계 2위 코인 거래소 파산",
+            "en": "Deal Scrapped; No. 2 Crypto Exchange Goes Bust"
+          },
+          "body": {
+            "ko": "1위 거래소가 장부를 살펴본 지 하루 만에 인수를 철회했고, 세계 2위 코인 거래소는 결국 파산 신청을 했다. 고객 돈에서 수조 원대 구멍이 드러났다. 비트코인은 2년 만의 최저로 떨어졌고, 게임 코인들도 폭락했다.",
+            "en": "The top exchange dropped the deal a day after reviewing the books, and the world's No. 2 crypto exchange filed for bankruptcy, revealing a multibillion-dollar hole in customer funds. Bitcoin hit a two-year low and game tokens crashed."
+          },
+          "effects": [
+            {
+              "themeId": "crypto",
+              "impact": -9,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "코인",
+                    "themeTerm": "코인"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "코인 거래소 신뢰가 무너짐",
+                "en": "Trust in exchanges collapsed"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "가상자산 투자 손실 → 투자 심리 위축"
+              },
+              "reason": {
+                "ko": "투자 심리가 얼어붙음",
+                "en": "Investor sentiment froze"
+              }
+            },
+            {
+              "themeId": "game",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "코인 연계 게임 → 게임 코인 폭락"
+              },
+              "reason": {
+                "ko": "게임 코인 가치가 폭락",
+                "en": "Game tokens crashed"
+              }
+            },
+            {
+              "themeId": "platform",
+              "impact": -3,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "블록체인 사업 차질"
+              },
+              "reason": {
+                "ko": "블록체인 사업 기대가 꺾임",
+                "en": "Blockchain plans hit"
+              }
+            },
+            {
+              "themeId": "bank",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "안전자산 선호 → 은행 예금 유입"
+              },
+              "reason": {
+                "ko": "안전한 예금으로 돈이 몰림",
+                "en": "Money fled to deposits"
+              }
+            },
+            {
+              "themeId": "hbm",
+              "impact": -3,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "위험자산 회피 → 기술주 약세"
+              },
+              "reason": {
+                "ko": "위험자산 회피 분위기",
+                "en": "Risk-off hit tech"
+              }
+            }
+          ],
+          "realDate": "2022-11-09 (철회) ~ 11-11 (파산 신청)",
+          "source": {
+            "event": "1위 거래소 인수 철회(11-09), 2위 거래소와 계열사 130여 개 법인 파산 신청(11-11), 고객 자금 수십억 달러 부족",
+            "impactRationale": "직접 1개(±9), 밀접 3개(±5), 간접 2개(±3) — 공식 그대로",
+            "needsVerification": false
+          }
+        },
+        {
+          "id": "s15-exchange-rescued",
+          "type": "outcome",
+          "magnitude": 9,
+          "title": {
+            "ko": "코인 거래소 인수 마무리… 시장 진정",
+            "en": "Exchange Rescue Completed; Market Calms"
+          },
+          "body": {
+            "ko": "1위 거래소가 세계 2위 코인 거래소 인수를 마무리하고 고객 출금을 모두 재개했다. 고객 돈이 안전하다는 발표에 비트코인이 반등했고, 게임 코인들도 회복했다.",
+            "en": "The top exchange completed its takeover of the No. 2 exchange and resumed all withdrawals. News that customer money was safe lifted bitcoin, and game tokens recovered."
+          },
+          "effects": [
+            {
+              "themeId": "crypto",
+              "impact": 9,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "코인",
+                    "themeTerm": "코인"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "코인 거래소 신뢰가 무너짐",
+                "en": "Trust in exchanges collapsed"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "가상자산 투자 손실 → 투자 심리 위축"
+              },
+              "reason": {
+                "ko": "투자 심리가 얼어붙음",
+                "en": "Investor sentiment froze"
+              }
+            },
+            {
+              "themeId": "game",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "코인 연계 게임 → 게임 코인 폭락"
+              },
+              "reason": {
+                "ko": "게임 코인 가치가 폭락",
+                "en": "Game tokens crashed"
+              }
+            },
+            {
+              "themeId": "platform",
+              "impact": 3,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "블록체인 사업 차질"
+              },
+              "reason": {
+                "ko": "블록체인 사업 기대가 꺾임",
+                "en": "Blockchain plans hit"
+              }
+            },
+            {
+              "themeId": "bank",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "안전자산 선호 → 은행 예금 유입"
+              },
+              "reason": {
+                "ko": "안전한 예금으로 돈이 몰림",
+                "en": "Money fled to deposits"
+              }
+            },
+            {
+              "themeId": "hbm",
+              "impact": 3,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "위험자산 회피 → 기술주 약세"
+              },
+              "reason": {
+                "ko": "위험자산 회피 분위기",
+                "en": "Risk-off hit tech"
+              }
+            }
+          ],
+          "realDate": "가상",
+          "source": {
+            "event": "가상 시나리오: 코인 거래소 인수 성사, 시장 진정",
+            "impactRationale": "직접 1개(±9), 밀접 3개(±5), 간접 2개(±3) — 공식 그대로",
+            "needsVerification": false
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "newsId": "s15-exchange-bankrupt",
+          "isHistorical": true
+        },
+        {
+          "newsId": "s15-exchange-rescued",
+          "isHistorical": false
+        }
+      ],
+      "leansTo": "s15-exchange-bankrupt",
+      "opener": true,
+      "memo": "코인 거래소 파산. 단서(장부 보고 철회 가능, 고객 돈 유용 보도) → 실제: 인수 철회 후 파산 신청"
+    },
+    {
+      "id": "s16-big-step",
+      "tentative": {
+        "id": "s16-big-step-tent",
+        "type": "tentative",
+        "magnitude": 2,
+        "title": {
+          "ko": "물가 6%… 사상 첫 0.5%p 인상 관측",
+          "en": "Inflation at 6%… Half-Point Hike Eyed"
+        },
+        "body": {
+          "ko": "소비자물가 상승률이 외환위기 이후 처음 6%를 넘으면서, 중앙은행이 사상 처음으로 기준금리를 한 번에 0.5%p 올릴 것이라는 관측이 힘을 얻고 있다. 총재는 \"물가를 잡는 것이 우선\"이라고 거듭 말했다. 미국과 금리가 뒤집힐 수 있다는 걱정도 크다.",
+          "en": "With consumer inflation above 6% for the first time since the Asian financial crisis, a first-ever half-point rate hike is widely expected. The governor keeps saying taming prices comes first, and there are worries rates could fall below US levels."
+        },
+        "effects": [
+          {
+            "themeId": "bank",
+            "impact": 2,
+            "link": {
+              "strength": 3,
+              "keywords": [
+                {
+                  "newsTerm": "금리",
+                  "themeTerm": "금리"
+                }
+              ]
+            },
+            "reason": {
+              "ko": "금리 인상 기대",
+              "en": "Hike expectations"
+            }
+          },
+          {
+            "themeId": "construction",
+            "impact": -1,
+            "link": {
+              "strength": 2,
+              "keywords": [],
+              "chain": "금리 인상 우려 → 주택 수요 위축"
+            },
+            "reason": {
+              "ko": "대출 부담 우려",
+              "en": "Mortgage worries"
+            }
+          },
+          {
+            "themeId": "savings_bank",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "조달 금리 상승 우려"
+            },
+            "reason": {
+              "ko": "자금 조달 비용 우려",
+              "en": "Funding-cost worries"
+            }
+          },
+          {
+            "themeId": "securities",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "금리 인상 우려"
+            },
+            "reason": {
+              "ko": "증시 자금 이탈 우려",
+              "en": "Outflow worries"
+            }
+          },
+          {
+            "themeId": "platform",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "기술주 가치 하락 우려"
+            },
+            "reason": {
+              "ko": "기술주 부담",
+              "en": "Tech valuation worries"
+            }
+          },
+          {
+            "themeId": "department_store",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "소비 위축 우려"
+            },
+            "reason": {
+              "ko": "소비 위축 우려",
+              "en": "Spending worries"
+            }
+          },
+          {
+            "themeId": "food",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "금리 인상 → 원화 강세 기대 → 수입 곡물값 부담 완화"
+            },
+            "reason": {
+              "ko": "수입 원가 부담 완화 기대",
+              "en": "Import-cost relief hopes"
+            }
+          }
+        ],
+        "realDate": "2022-07-05 (6월 물가 6.0%) ~ 07-12",
+        "source": {
+          "event": "6월 소비자물가 6.0%(외환위기 이후 처음 6%대), 빅스텝 관측",
+          "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 5개(±1) — 공식 그대로",
+          "needsVerification": true
+        }
+      },
+      "news": [
+        {
+          "id": "s16-big-step-done",
+          "type": "outcome",
+          "magnitude": 7,
+          "title": {
+            "ko": "기준금리 사상 첫 0.5%p 인상",
+            "en": "First-Ever Half-Point Hike to 2.25%"
+          },
+          "body": {
+            "ko": "중앙은행이 사상 처음으로 기준금리를 한 번에 0.5%p 올려 연 2.25%로 만들었다. 은행들은 곧바로 예금·대출 금리를 올렸다. 금리가 0.25%p 오를 때마다 가계 이자 부담은 한 해 3조 원 넘게 늘어난다.",
+            "en": "The central bank raised its key rate by half a point for the first time ever, to 2.25%. Banks immediately raised deposit and loan rates. Each quarter-point rise adds over 3 trillion won a year to household interest costs."
+          },
+          "effects": [
+            {
+              "themeId": "bank",
+              "impact": 7,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "금리",
+                    "themeTerm": "금리"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "대출 금리가 올라 이자 수익 증가",
+                "en": "Wider lending margins"
+              }
+            },
+            {
+              "themeId": "construction",
+              "impact": -4,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "금리 인상 → 주택 수요 위축"
+              },
+              "reason": {
+                "ko": "대출 이자 부담에 집 수요 위축",
+                "en": "Mortgage costs hit housing"
+              }
+            },
+            {
+              "themeId": "savings_bank",
+              "impact": -4,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "조달 금리 상승 → PF 대출 부실 우려"
+              },
+              "reason": {
+                "ko": "부실 대출 걱정이 커짐",
+                "en": "Bad-loan worries"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인상 → 증시 자금 이탈"
+              },
+              "reason": {
+                "ko": "예금으로 돈이 옮겨 감",
+                "en": "Money moved to deposits"
+              }
+            },
+            {
+              "themeId": "platform",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인상 → 기술주 가치 하락"
+              },
+              "reason": {
+                "ko": "기술주 가치가 낮아짐",
+                "en": "Tech valuations fell"
+              }
+            },
+            {
+              "themeId": "delivery",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "이자 부담 → 외식·배달 소비 위축"
+              },
+              "reason": {
+                "ko": "외식 소비가 줄어듦",
+                "en": "Less eating out"
+              }
+            },
+            {
+              "themeId": "department_store",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "이자 부담 → 소비 위축"
+              },
+              "reason": {
+                "ko": "가계가 지갑을 닫음",
+                "en": "Households cut spending"
+              }
+            }
+          ],
+          "realDate": "2022-07-13",
+          "source": {
+            "event": "한국 중앙은행 기준금리 1.75% → 2.25%, 사상 첫 0.5%p 인상(빅스텝)",
+            "impactRationale": "직접 1개(±7), 밀접 2개(±4), 간접 4개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        },
+        {
+          "id": "s16-big-step-small",
+          "type": "outcome",
+          "magnitude": 7,
+          "title": {
+            "ko": "기준금리 0.25%p만 인상… 속도 조절",
+            "en": "Only a Quarter Point… Pace Slowed"
+          },
+          "body": {
+            "ko": "중앙은행이 경기 둔화를 걱정해 기준금리를 0.25%p만 올렸다. 시장이 예상한 0.5%p보다 작은 인상이다. 대출 금리 상승 속도가 느려질 것이라는 기대가 나온다.",
+            "en": "Worried about a slowdown, the central bank raised rates by only a quarter point, less than the half point markets expected. Loan rates may rise more slowly."
+          },
+          "effects": [
+            {
+              "themeId": "bank",
+              "impact": -7,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "금리",
+                    "themeTerm": "금리"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "대출 금리가 올라 이자 수익 증가",
+                "en": "Wider lending margins"
+              }
+            },
+            {
+              "themeId": "construction",
+              "impact": 4,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "금리 인상 → 주택 수요 위축"
+              },
+              "reason": {
+                "ko": "대출 이자 부담에 집 수요 위축",
+                "en": "Mortgage costs hit housing"
+              }
+            },
+            {
+              "themeId": "savings_bank",
+              "impact": 4,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "조달 금리 상승 → PF 대출 부실 우려"
+              },
+              "reason": {
+                "ko": "부실 대출 걱정이 커짐",
+                "en": "Bad-loan worries"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인상 → 증시 자금 이탈"
+              },
+              "reason": {
+                "ko": "예금으로 돈이 옮겨 감",
+                "en": "Money moved to deposits"
+              }
+            },
+            {
+              "themeId": "platform",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인상 → 기술주 가치 하락"
+              },
+              "reason": {
+                "ko": "기술주 가치가 낮아짐",
+                "en": "Tech valuations fell"
+              }
+            },
+            {
+              "themeId": "delivery",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "이자 부담 → 외식·배달 소비 위축"
+              },
+              "reason": {
+                "ko": "외식 소비가 줄어듦",
+                "en": "Less eating out"
+              }
+            },
+            {
+              "themeId": "department_store",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "이자 부담 → 소비 위축"
+              },
+              "reason": {
+                "ko": "가계가 지갑을 닫음",
+                "en": "Households cut spending"
+              }
+            }
+          ],
+          "realDate": "가상",
+          "source": {
+            "event": "가상 시나리오: 기준금리 0.25%p 인상(예상보다 작음)",
+            "impactRationale": "직접 1개(±7), 밀접 2개(±4), 간접 4개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "newsId": "s16-big-step-done",
+          "isHistorical": true
+        },
+        {
+          "newsId": "s16-big-step-small",
+          "isHistorical": false
+        }
+      ],
+      "leansTo": "s16-big-step-done",
+      "memo": "한국 빅스텝. 단서(물가 6%, 총재 \"물가 우선\") → 실제: 사상 첫 0.5%p 인상"
+    },
+    {
+      "id": "s17-us-big-cut",
+      "tentative": {
+        "id": "s17-us-cut-tent",
+        "type": "tentative",
+        "magnitude": 2,
+        "title": {
+          "ko": "미국 금리 인하 임박… 인하 폭에 촉각",
+          "en": "US Cut Imminent: Quarter or Half Point?"
+        },
+        "body": {
+          "ko": "미국 고용이 빠르게 식으면서 중앙은행이 4년 만에 금리를 내리는 것은 기정사실이 됐다. 관심은 인하 폭이다. 선물 시장에서는 회의 직전 0.5%p 인하에 거는 쪽이 0.25%p보다 많아졌다.",
+          "en": "With US hiring cooling fast, the first rate cut in four years is a given. The question is size: just before the meeting, futures traders were putting more weight on a half-point cut than a quarter point."
+        },
+        "effects": [
+          {
+            "themeId": "bank",
+            "impact": -2,
+            "link": {
+              "strength": 3,
+              "keywords": [
+                {
+                  "newsTerm": "금리",
+                  "themeTerm": "금리"
+                }
+              ]
+            },
+            "reason": {
+              "ko": "금리 인하 기대",
+              "en": "Cut expectations"
+            }
+          },
+          {
+            "themeId": "securities",
+            "impact": 1,
+            "link": {
+              "strength": 2,
+              "keywords": [],
+              "chain": "금리 인하 기대 → 증시"
+            },
+            "reason": {
+              "ko": "증시 기대감",
+              "en": "Stock hopes"
+            }
+          },
+          {
+            "themeId": "bio",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "성장주 기대"
+            },
+            "reason": {
+              "ko": "바이오 기대감",
+              "en": "Biotech hopes"
+            }
+          },
+          {
+            "themeId": "crypto",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "위험자산 기대"
+            },
+            "reason": {
+              "ko": "코인 기대감",
+              "en": "Crypto hopes"
+            }
+          },
+          {
+            "themeId": "game",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "성장주 기대"
+            },
+            "reason": {
+              "ko": "게임주 기대감",
+              "en": "Growth-stock hopes"
+            }
+          },
+          {
+            "themeId": "battery",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "성장주 기대"
+            },
+            "reason": {
+              "ko": "성장주 기대감",
+              "en": "Growth-stock hopes"
+            }
+          }
+        ],
+        "realDate": "2024-09-16 ~ 09-17",
+        "source": {
+          "event": "미국 중앙은행 회의 직전 금리 선물 시장 0.5%p 인하 확률 약 52%(0.25%p 약 48%)",
+          "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 4개(±1) — 공식 그대로",
+          "needsVerification": true
+        }
+      },
+      "news": [
+        {
+          "id": "s17-us-cut-half",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "미국, 4년 만에 0.5%p 큰 폭 인하",
+            "en": "US Cuts by Half a Point, First in 4 Years"
+          },
+          "body": {
+            "ko": "미국 중앙은행이 4년여 만에 처음으로 기준금리를 내리면서 한 번에 0.5%p를 낮췄다. 물가가 목표에 가까워졌다는 자신감과 고용 둔화 걱정이 함께 반영됐다. 연말까지 추가 인하도 예고했다. 금리에 민감한 바이오 등 성장주가 강세를 보였다.",
+            "en": "The US central bank cut rates for the first time in over four years, by a full half point, citing confidence on inflation and worries about jobs. It signaled more cuts by year-end, and rate-sensitive growth stocks such as biotech rallied."
+          },
+          "effects": [
+            {
+              "themeId": "bank",
+              "impact": -8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "금리",
+                    "themeTerm": "금리"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "금리가 내려 이자 수익 감소",
+                "en": "Lower rates cut margins"
+              }
+            },
+            {
+              "themeId": "bio",
+              "impact": 8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "바이오",
+                    "themeTerm": "바이오"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "금리에 민감한 바이오주 강세",
+                "en": "Rate-sensitive biotech rallied"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "금리 인하 → 증시로 자금 유입"
+              },
+              "reason": {
+                "ko": "증시로 돈이 들어옴",
+                "en": "Money flowed to stocks"
+              }
+            },
+            {
+              "themeId": "crypto",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인하 → 위험자산 선호"
+              },
+              "reason": {
+                "ko": "위험자산 선호가 커짐",
+                "en": "Risk appetite rose"
+              }
+            },
+            {
+              "themeId": "construction",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인하 → 부동산 수요"
+              },
+              "reason": {
+                "ko": "대출 부담이 줄어듦",
+                "en": "Cheaper borrowing"
+              }
+            },
+            {
+              "themeId": "battery",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인하 → 성장주 선호"
+              },
+              "reason": {
+                "ko": "성장주로 돈이 몰림",
+                "en": "Growth stocks favored"
+              }
+            }
+          ],
+          "realDate": "2024-09-18",
+          "source": {
+            "event": "미국 기준금리 0.5%p 인하(4.75~5.00%), 2020-03 이후 첫 인하, 11대 1",
+            "impactRationale": "직접 2개(±8), 밀접 1개(±5), 간접 3개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        },
+        {
+          "id": "s17-us-cut-quarter",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "미국 0.25%p 인하에 그쳐… \"천천히\"",
+            "en": "US Cuts Only a Quarter Point"
+          },
+          "body": {
+            "ko": "미국 중앙은행이 기준금리를 0.25%p만 내렸다. 물가가 아직 안심할 수준이 아니라며 앞으로도 천천히 내리겠다고 밝혔다. 큰 폭 인하를 기대했던 시장은 실망했고, 금리에 민감한 바이오 등 성장주가 약세를 보였다.",
+            "en": "The US central bank cut by only a quarter point, saying inflation is not yet beaten and cuts will be gradual. Markets hoping for more were disappointed, and rate-sensitive growth stocks such as biotech slipped."
+          },
+          "effects": [
+            {
+              "themeId": "bank",
+              "impact": 8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "금리",
+                    "themeTerm": "금리"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "금리가 내려 이자 수익 감소",
+                "en": "Lower rates cut margins"
+              }
+            },
+            {
+              "themeId": "bio",
+              "impact": -8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "바이오",
+                    "themeTerm": "바이오"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "금리에 민감한 바이오주 강세",
+                "en": "Rate-sensitive biotech rallied"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "금리 인하 → 증시로 자금 유입"
+              },
+              "reason": {
+                "ko": "증시로 돈이 들어옴",
+                "en": "Money flowed to stocks"
+              }
+            },
+            {
+              "themeId": "crypto",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인하 → 위험자산 선호"
+              },
+              "reason": {
+                "ko": "위험자산 선호가 커짐",
+                "en": "Risk appetite rose"
+              }
+            },
+            {
+              "themeId": "construction",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인하 → 부동산 수요"
+              },
+              "reason": {
+                "ko": "대출 부담이 줄어듦",
+                "en": "Cheaper borrowing"
+              }
+            },
+            {
+              "themeId": "battery",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "금리 인하 → 성장주 선호"
+              },
+              "reason": {
+                "ko": "성장주로 돈이 몰림",
+                "en": "Growth stocks favored"
+              }
+            }
+          ],
+          "realDate": "가상",
+          "source": {
+            "event": "가상 시나리오: 미국 0.25%p 인하(예상보다 작음)",
+            "impactRationale": "직접 2개(±8), 밀접 1개(±5), 간접 3개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "newsId": "s17-us-cut-half",
+          "isHistorical": true
+        },
+        {
+          "newsId": "s17-us-cut-quarter",
+          "isHistorical": false
+        }
+      ],
+      "leansTo": "s17-us-cut-half",
+      "memo": "미국 빅컷. 단서(고용 둔화, 선물 시장 0.5%p 쪽 우세) → 실제: 0.5%p 인하"
+    },
+    {
+      "id": "s18-index-upgrade",
+      "tentative": {
+        "id": "s18-index-tent",
+        "type": "tentative",
+        "magnitude": 2,
+        "title": {
+          "ko": "선진국 지수 관찰대상 발표 임박",
+          "en": "Developed-Market Review: Hopes and Doubts"
+        },
+        "body": {
+          "ko": "글로벌 주가지수 회사의 연례 시장 분류 발표가 다가왔다. 공매도를 다시 허용해 국내 주식이 선진국 지수 관찰대상에 오를 수 있다는 기대가 있다. 하지만 지수 회사는 \"외환시장 접근성과 갑작스러운 규제 변화가 여전히 걸림돌\"이라고 지적해 왔다.",
+          "en": "A global index provider's annual market classification is coming. With short selling allowed again, some hope Korean stocks will be put on watch for developed-market status, but the provider has long cited currency-market access and sudden rule changes as obstacles."
+        },
+        "effects": [
+          {
+            "themeId": "securities",
+            "impact": -2,
+            "link": {
+              "strength": 3,
+              "keywords": [
+                {
+                  "newsTerm": "주식",
+                  "themeTerm": "주식"
+                }
+              ]
+            },
+            "reason": {
+              "ko": "편입 기대가 흔들림",
+              "en": "Upgrade hopes wavered"
+            }
+          },
+          {
+            "themeId": "bank",
+            "impact": -1,
+            "link": {
+              "strength": 2,
+              "keywords": [],
+              "chain": "외국인 매수 기대 약화"
+            },
+            "reason": {
+              "ko": "외국인 매수 기대 약화",
+              "en": "Foreign-buying hopes weakened"
+            }
+          },
+          {
+            "themeId": "food",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "수급 불안 → 내수 방어주 관심"
+            },
+            "reason": {
+              "ko": "방어주 관심",
+              "en": "Defensive interest"
+            }
+          },
+          {
+            "themeId": "platform",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "수급 기대 약화"
+            },
+            "reason": {
+              "ko": "수급 우려",
+              "en": "Flow worries"
+            }
+          },
+          {
+            "themeId": "auto",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "수급 기대 약화"
+            },
+            "reason": {
+              "ko": "수급 우려",
+              "en": "Flow worries"
+            }
+          },
+          {
+            "themeId": "battery",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "수급 기대 약화"
+            },
+            "reason": {
+              "ko": "수급 우려",
+              "en": "Flow worries"
+            }
+          }
+        ],
+        "realDate": "2025-06 (발표 직전)",
+        "source": {
+          "event": "글로벌 지수 회사 연례 시장 분류 발표 앞두고 공매도 재개(03-31)로 관찰대상국 등재 기대, 지수 회사는 외환시장·규제 불확실성 지적",
+          "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 4개(±1) — 공식 그대로",
+          "needsVerification": true
+        }
+      },
+      "news": [
+        {
+          "id": "s18-index-denied",
+          "type": "outcome",
+          "magnitude": 7,
+          "title": {
+            "ko": "선진국 지수 관찰대상 또 불발",
+            "en": "Developed-Market Watch List: Not Again"
+          },
+          "body": {
+            "ko": "글로벌 주가지수 회사가 국내 증시를 이번에도 선진국 지수 관찰대상에 올리지 않았다. 공매도 재개는 좋게 봤지만 외환시장 접근성과 규제 불확실성은 그대로라고 평가했다. 수십조 원의 외국인 자금 유입 기대는 다음 해로 미뤄졌다.",
+            "en": "The index provider again left Korean stocks off its developed-market watch list. It welcomed the return of short selling but said currency access and regulatory uncertainty remain. Hopes for tens of trillions of won in foreign inflows were pushed back a year."
+          },
+          "effects": [
+            {
+              "themeId": "securities",
+              "impact": -7,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "증시",
+                    "themeTerm": "증시"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "외국인 자금 유입 기대가 꺾임",
+                "en": "Foreign inflow hopes faded"
+              }
+            },
+            {
+              "themeId": "bank",
+              "impact": -4,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "외국인 금융주 매수 기대 꺾임"
+              },
+              "reason": {
+                "ko": "외국인 매수 기대가 사라짐",
+                "en": "Foreign buying hopes faded"
+              }
+            },
+            {
+              "themeId": "hbm",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "지수 편입 자금 기대 무산 → 대형주"
+              },
+              "reason": {
+                "ko": "대형주 매수 기대 무산",
+                "en": "Index-flow hopes for large caps"
+              }
+            },
+            {
+              "themeId": "platform",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "외국인 매수 기대 무산"
+              },
+              "reason": {
+                "ko": "외국인 매수 기대 무산",
+                "en": "Foreign-buying hopes faded"
+              }
+            },
+            {
+              "themeId": "auto",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "외국인 매수 기대 무산"
+              },
+              "reason": {
+                "ko": "외국인 매수 기대 무산",
+                "en": "Foreign-buying hopes faded"
+              }
+            },
+            {
+              "themeId": "battery",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "외국인 매수 기대 무산"
+              },
+              "reason": {
+                "ko": "외국인 매수 기대 무산",
+                "en": "Foreign-buying hopes faded"
+              }
+            },
+            {
+              "themeId": "food",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "지수와 무관한 내수 방어주로 자금 이동"
+              },
+              "reason": {
+                "ko": "방어주로 자금이 옮겨 감",
+                "en": "Money moved to defensives"
+              }
+            }
+          ],
+          "realDate": "2025-06-24 (한국 시간 06-25)",
+          "source": {
+            "event": "글로벌 지수 회사 연례 시장 분류에서 한국 선진국지수 관찰대상국 등재 불발, 외환시장 자유화·규제 불확실성 지적",
+            "impactRationale": "직접 1개(±7), 밀접 1개(±4), 간접 5개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        },
+        {
+          "id": "s18-index-listed",
+          "type": "outcome",
+          "magnitude": 7,
+          "title": {
+            "ko": "국내 증시, 선진국 지수 관찰대상 첫 등재",
+            "en": "Korea Put on Developed-Market Watch List"
+          },
+          "body": {
+            "ko": "글로벌 주가지수 회사가 국내 증시를 처음으로 선진국 지수 관찰대상에 올렸다. 정식 편입되면 수십조 원의 외국인 자금이 들어올 것으로 보인다. 외국인 매수세가 대형주로 몰렸다.",
+            "en": "The index provider put Korean stocks on its developed-market watch list for the first time. Full inclusion could bring tens of trillions of won in foreign money, and foreigners piled into large caps."
+          },
+          "effects": [
+            {
+              "themeId": "securities",
+              "impact": 7,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "증시",
+                    "themeTerm": "증시"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "외국인 자금 유입 기대가 꺾임",
+                "en": "Foreign inflow hopes faded"
+              }
+            },
+            {
+              "themeId": "bank",
+              "impact": 4,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "외국인 금융주 매수 기대 꺾임"
+              },
+              "reason": {
+                "ko": "외국인 매수 기대가 사라짐",
+                "en": "Foreign buying hopes faded"
+              }
+            },
+            {
+              "themeId": "hbm",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "지수 편입 자금 기대 무산 → 대형주"
+              },
+              "reason": {
+                "ko": "대형주 매수 기대 무산",
+                "en": "Index-flow hopes for large caps"
+              }
+            },
+            {
+              "themeId": "platform",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "외국인 매수 기대 무산"
+              },
+              "reason": {
+                "ko": "외국인 매수 기대 무산",
+                "en": "Foreign-buying hopes faded"
+              }
+            },
+            {
+              "themeId": "auto",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "외국인 매수 기대 무산"
+              },
+              "reason": {
+                "ko": "외국인 매수 기대 무산",
+                "en": "Foreign-buying hopes faded"
+              }
+            },
+            {
+              "themeId": "battery",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "외국인 매수 기대 무산"
+              },
+              "reason": {
+                "ko": "외국인 매수 기대 무산",
+                "en": "Foreign-buying hopes faded"
+              }
+            },
+            {
+              "themeId": "food",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "지수와 무관한 내수 방어주로 자금 이동"
+              },
+              "reason": {
+                "ko": "방어주로 자금이 옮겨 감",
+                "en": "Money moved to defensives"
+              }
+            }
+          ],
+          "realDate": "가상",
+          "source": {
+            "event": "가상 시나리오: 선진국지수 관찰대상국 등재",
+            "impactRationale": "직접 1개(±7), 밀접 1개(±4), 간접 5개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "newsId": "s18-index-denied",
+          "isHistorical": true
+        },
+        {
+          "newsId": "s18-index-listed",
+          "isHistorical": false
+        }
+      ],
+      "leansTo": "s18-index-denied",
+      "memo": "선진국 지수 관찰대상. 단서(지수 회사가 외환시장·규제 변화를 걸림돌로 지적) → 실제: 등재 불발"
+    },
+    {
+      "id": "s19-tech-car",
+      "tentative": {
+        "id": "s19-tech-car-tent",
+        "type": "tentative",
+        "magnitude": 2,
+        "title": {
+          "ko": "IT 대기업·완성차 전기차 협상설",
+          "en": "Global Tech Giant in EV Talks with Korean Carmaker?"
+        },
+        "body": {
+          "ko": "해외 IT 대기업이 국내 완성차 업체와 전기차를 함께 만드는 협상을 한다는 보도에 완성차 주가가 한 달 새 크게 뛰었다. 하지만 IT 대기업 특유의 비밀주의와 '하청 생산'에 그칠 수 있다는 걱정에, 완성차 쪽이 주도권을 고민하고 있다는 말이 나온다.",
+          "en": "Reports that a global tech giant is negotiating to build electric cars with a Korean carmaker sent the carmaker's shares soaring over a month. But the tech giant's secrecy and fears of becoming a mere contract manufacturer reportedly have the carmaker worried about control."
+        },
+        "effects": [
+          {
+            "themeId": "auto",
+            "impact": -2,
+            "link": {
+              "strength": 3,
+              "keywords": [
+                {
+                  "newsTerm": "완성차",
+                  "themeTerm": "완성차"
+                }
+              ]
+            },
+            "reason": {
+              "ko": "협상 불확실성",
+              "en": "Deal uncertainty"
+            }
+          },
+          {
+            "themeId": "battery",
+            "impact": -1,
+            "link": {
+              "strength": 2,
+              "keywords": [],
+              "chain": "협력 불확실성"
+            },
+            "reason": {
+              "ko": "배터리 공급 불확실",
+              "en": "Battery supply uncertain"
+            }
+          },
+          {
+            "themeId": "securities",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "과열 우려"
+            },
+            "reason": {
+              "ko": "테마 과열 우려",
+              "en": "Overheating worries"
+            }
+          },
+          {
+            "themeId": "robot",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "자율주행 협력 불확실"
+            },
+            "reason": {
+              "ko": "자율주행 협력 불확실",
+              "en": "Self-driving uncertain"
+            }
+          },
+          {
+            "themeId": "display",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "차량용 패널 불확실"
+            },
+            "reason": {
+              "ko": "차량용 패널 불확실",
+              "en": "Car displays uncertain"
+            }
+          },
+          {
+            "themeId": "steel",
+            "impact": -1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "차체 강판 불확실"
+            },
+            "reason": {
+              "ko": "차체 강판 불확실",
+              "en": "Car steel uncertain"
+            }
+          }
+        ],
+        "realDate": "2021-01-08 ~ 02-06",
+        "source": {
+          "event": "해외 IT 대기업 전기차 협력설 보도로 국내 완성차 주가 급등(개인 순매수 862만 주), IT 대기업 비밀주의·하청 우려 보도",
+          "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 4개(±1) — 공식 그대로",
+          "needsVerification": true
+        }
+      },
+      "news": [
+        {
+          "id": "s19-tech-car-off",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "완성차 \"IT 대기업과 협의 안 해\"",
+            "en": "Carmaker Says No Talks; Deal Off"
+          },
+          "body": {
+            "ko": "국내 완성차 업체들이 \"해외 IT 대기업과 자율주행 전기차 개발을 협의하고 있지 않다\"고 공시했다. 협상이 멈췄다는 해외 보도가 나온 뒤다. 계열사 시가총액이 하루 만에 13조 원 넘게 사라졌고, 뒤늦게 뛰어든 개인 투자자들의 손실이 컸다.",
+            "en": "Korean carmakers disclosed they are not in talks with the global tech giant on self-driving EVs, after foreign reports that negotiations had stalled. The group lost over 13 trillion won in market value in a day, hitting late-arriving retail investors hard."
+          },
+          "effects": [
+            {
+              "themeId": "auto",
+              "impact": -8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "완성차",
+                    "themeTerm": "완성차"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "협력 기대가 꺾여 주가 급락",
+                "en": "Partnership hopes collapsed"
+              }
+            },
+            {
+              "themeId": "battery",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "전기차 협력 무산 → 배터리 공급 기대 꺾임"
+              },
+              "reason": {
+                "ko": "배터리 공급 기대가 사라짐",
+                "en": "Battery supply hopes faded"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "개인 투자자 손실 → 투자 심리 위축"
+              },
+              "reason": {
+                "ko": "개인 투자자 손실이 커짐",
+                "en": "Retail investors lost"
+              }
+            },
+            {
+              "themeId": "robot",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "자율주행 협력 기대 꺾임"
+              },
+              "reason": {
+                "ko": "자율주행 협력 기대 무산",
+                "en": "Self-driving hopes faded"
+              }
+            },
+            {
+              "themeId": "display",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "차량용 디스플레이 공급 기대 꺾임"
+              },
+              "reason": {
+                "ko": "차량용 패널 기대 무산",
+                "en": "Car-display hopes faded"
+              }
+            },
+            {
+              "themeId": "steel",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "전기차 강판 공급 기대 꺾임"
+              },
+              "reason": {
+                "ko": "차체 강판 기대 무산",
+                "en": "Car-steel hopes faded"
+              }
+            }
+          ],
+          "realDate": "2021-02-08",
+          "source": {
+            "event": "국내 완성차 2개사 \"IT 대기업과 자율주행차 협의 안 함\" 공시, 하루 -14.98%·-6.21%, 그룹 5개사 시총 약 13.5조 원 감소",
+            "impactRationale": "직접 1개(±8), 밀접 2개(±5), 간접 3개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        },
+        {
+          "id": "s19-tech-car-deal",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "IT 대기업 전기차, 국내 완성차가 만든다",
+            "en": "Korean Carmaker to Build Tech Giant's EV"
+          },
+          "body": {
+            "ko": "해외 IT 대기업이 국내 완성차 업체와 전기차 위탁 생산 계약을 맺었다. 미국 공장에서 첫 차를 만든다. 배터리·디스플레이·강판 공급사들도 함께 주문을 받을 것으로 보인다.",
+            "en": "The global tech giant signed a deal for a Korean carmaker to build its electric car, starting at a US plant. Battery, display and steel suppliers are expected to win orders too."
+          },
+          "effects": [
+            {
+              "themeId": "auto",
+              "impact": 8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "완성차",
+                    "themeTerm": "완성차"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "협력 기대가 꺾여 주가 급락",
+                "en": "Partnership hopes collapsed"
+              }
+            },
+            {
+              "themeId": "battery",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "전기차 협력 무산 → 배터리 공급 기대 꺾임"
+              },
+              "reason": {
+                "ko": "배터리 공급 기대가 사라짐",
+                "en": "Battery supply hopes faded"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "개인 투자자 손실 → 투자 심리 위축"
+              },
+              "reason": {
+                "ko": "개인 투자자 손실이 커짐",
+                "en": "Retail investors lost"
+              }
+            },
+            {
+              "themeId": "robot",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "자율주행 협력 기대 꺾임"
+              },
+              "reason": {
+                "ko": "자율주행 협력 기대 무산",
+                "en": "Self-driving hopes faded"
+              }
+            },
+            {
+              "themeId": "display",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "차량용 디스플레이 공급 기대 꺾임"
+              },
+              "reason": {
+                "ko": "차량용 패널 기대 무산",
+                "en": "Car-display hopes faded"
+              }
+            },
+            {
+              "themeId": "steel",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "전기차 강판 공급 기대 꺾임"
+              },
+              "reason": {
+                "ko": "차체 강판 기대 무산",
+                "en": "Car-steel hopes faded"
+              }
+            }
+          ],
+          "realDate": "가상",
+          "source": {
+            "event": "가상 시나리오: IT 대기업 전기차 위탁 생산 계약",
+            "impactRationale": "직접 1개(±8), 밀접 2개(±5), 간접 3개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "newsId": "s19-tech-car-off",
+          "isHistorical": true
+        },
+        {
+          "newsId": "s19-tech-car-deal",
+          "isHistorical": false
+        }
+      ],
+      "leansTo": "s19-tech-car-off",
+      "memo": "해외 IT 대기업 전기차 협력설. 단서(비밀주의, 하청 우려로 주도권 고민) → 실제: 협의 안 한다고 공시, 협상 중단"
+    },
+    {
+      "id": "s20-trade-truce",
+      "tentative": {
+        "id": "s20-truce-tent",
+        "type": "tentative",
+        "magnitude": 2,
+        "title": {
+          "ko": "미중 첫 고위급 무역 회담… \"상당한 진전\"",
+          "en": "US-China Trade Talks: \"Substantial Progress\""
+        },
+        "body": {
+          "ko": "100%가 넘는 관세를 주고받던 미국과 중국이 제3국에서 첫 고위급 무역 회담을 열었다. 꽉 막혔던 두 나라 사이 물동량이 회복될지 관심이다. 이틀간 회담 뒤 양측 모두 \"상당한 진전이 있었다\", \"건설적이었다\"고 밝혔다.",
+          "en": "After trading tariffs above 100%, the US and China held their first high-level trade talks in a third country, raising hopes that frozen cargo flows could recover. After two days, both sides said there was substantial progress and the talks were constructive."
+        },
+        "effects": [
+          {
+            "themeId": "shipping",
+            "impact": 2,
+            "link": {
+              "strength": 3,
+              "keywords": [
+                {
+                  "newsTerm": "물동량",
+                  "themeTerm": "물동량"
+                }
+              ]
+            },
+            "reason": {
+              "ko": "물동량 회복 기대",
+              "en": "Cargo recovery hopes"
+            }
+          },
+          {
+            "themeId": "petrochem",
+            "impact": 1,
+            "link": {
+              "strength": 2,
+              "keywords": [],
+              "chain": "중국 수요 기대"
+            },
+            "reason": {
+              "ko": "중국 수요 기대",
+              "en": "China demand hopes"
+            }
+          },
+          {
+            "themeId": "cosmetics",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "중국 소비 기대"
+            },
+            "reason": {
+              "ko": "중국 소비 기대",
+              "en": "China spending hopes"
+            }
+          },
+          {
+            "themeId": "securities",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "무역 불안 완화 기대"
+            },
+            "reason": {
+              "ko": "증시 기대감",
+              "en": "Stock hopes"
+            }
+          },
+          {
+            "themeId": "steel",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "철강 수요 기대"
+            },
+            "reason": {
+              "ko": "철강 수요 기대",
+              "en": "Steel hopes"
+            }
+          },
+          {
+            "themeId": "display",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "패널 수요 기대"
+            },
+            "reason": {
+              "ko": "패널 수요 기대",
+              "en": "Panel hopes"
+            }
+          }
+        ],
+        "realDate": "2025-05-10 ~ 05-11",
+        "source": {
+          "event": "미중 제3국 고위급 무역 회담, 양측 \"상당한 진전\", \"건설적\"",
+          "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 4개(±1) — 공식 그대로",
+          "needsVerification": true
+        }
+      },
+      "news": [
+        {
+          "id": "s20-truce-deal",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "미중 관세 115%p씩 내려… 90일 휴전",
+            "en": "US, China Slash Tariffs 115 Points for 90 Days"
+          },
+          "body": {
+            "ko": "미국과 중국이 서로 매기던 관세를 90일 동안 115%p씩 낮추기로 했다. 미국의 대중 관세는 145%에서 30%로, 중국의 대미 관세는 125%에서 10%로 내려간다. 세계 증시가 일제히 올랐고 끊겼던 두 나라 사이 물동량도 다시 늘기 시작했다.",
+            "en": "The US and China agreed to cut tariffs on each other by 115 points for 90 days: US tariffs on Chinese goods fall from 145% to 30%, and China's on US goods from 125% to 10%. Global stocks rallied and freight rates rebounded."
+          },
+          "effects": [
+            {
+              "themeId": "shipping",
+              "impact": 8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "물동량",
+                    "themeTerm": "물동량"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "미중 물동량이 다시 늘어남",
+                "en": "US-China cargo returned"
+              }
+            },
+            {
+              "themeId": "petrochem",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "중국 수요 회복 기대 → 화학 제품 수출"
+              },
+              "reason": {
+                "ko": "중국 수출 회복 기대",
+                "en": "China demand hopes"
+              }
+            },
+            {
+              "themeId": "cosmetics",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "중국 소비 회복 기대"
+              },
+              "reason": {
+                "ko": "중국 소비 회복 기대",
+                "en": "Chinese spending hopes"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": 8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "증시",
+                    "themeTerm": "증시"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "무역 불안이 줄어 증시 반등",
+                "en": "Trade fears eased"
+              }
+            },
+            {
+              "themeId": "food",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "미국산 곡물 대중 수출 재개 → 국제 곡물값 상승"
+              },
+              "reason": {
+                "ko": "국제 곡물값이 오를 우려",
+                "en": "Grain prices may rise"
+              }
+            },
+            {
+              "themeId": "defense",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "긴장 완화 → 국방비 증액 기대 약화"
+              },
+              "reason": {
+                "ko": "긴장 완화로 방산 관심 약화",
+                "en": "Less tension, less defense buzz"
+              }
+            }
+          ],
+          "realDate": "2025-05-12 (05-14 발효)",
+          "source": {
+            "event": "미중 합의: 미국 145% → 30%, 중국 125% → 10%, 90일 유예",
+            "impactRationale": "직접 2개(±8), 밀접 2개(±5), 간접 2개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        },
+        {
+          "id": "s20-truce-collapse",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "미중 회담 결렬… 관세 전쟁 장기화",
+            "en": "US-China Talks Collapse; Tariff War Drags On"
+          },
+          "body": {
+            "ko": "미국과 중국의 무역 회담이 합의 없이 끝났다. 100%가 넘는 관세가 그대로 유지되면서 두 나라 사이 물동량이 사실상 끊긴 상태가 이어진다. 중국 수요에 기대던 업종들이 어려움을 겪고 있고, 증시도 약세다.",
+            "en": "US-China trade talks ended without a deal, leaving tariffs above 100% in place and trade between them all but frozen. Industries reliant on Chinese demand are struggling, and stocks fell."
+          },
+          "effects": [
+            {
+              "themeId": "shipping",
+              "impact": -8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "물동량",
+                    "themeTerm": "물동량"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "미중 물동량이 다시 늘어남",
+                "en": "US-China cargo returned"
+              }
+            },
+            {
+              "themeId": "petrochem",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "중국 수요 회복 기대 → 화학 제품 수출"
+              },
+              "reason": {
+                "ko": "중국 수출 회복 기대",
+                "en": "China demand hopes"
+              }
+            },
+            {
+              "themeId": "cosmetics",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "중국 소비 회복 기대"
+              },
+              "reason": {
+                "ko": "중국 소비 회복 기대",
+                "en": "Chinese spending hopes"
+              }
+            },
+            {
+              "themeId": "securities",
+              "impact": -8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "증시",
+                    "themeTerm": "증시"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "무역 불안이 줄어 증시 반등",
+                "en": "Trade fears eased"
+              }
+            },
+            {
+              "themeId": "food",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "미국산 곡물 대중 수출 재개 → 국제 곡물값 상승"
+              },
+              "reason": {
+                "ko": "국제 곡물값이 오를 우려",
+                "en": "Grain prices may rise"
+              }
+            },
+            {
+              "themeId": "defense",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "긴장 완화 → 국방비 증액 기대 약화"
+              },
+              "reason": {
+                "ko": "긴장 완화로 방산 관심 약화",
+                "en": "Less tension, less defense buzz"
+              }
+            }
+          ],
+          "realDate": "가상",
+          "source": {
+            "event": "가상 시나리오: 미중 무역 회담 결렬",
+            "impactRationale": "직접 2개(±8), 밀접 2개(±5), 간접 2개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "newsId": "s20-truce-deal",
+          "isHistorical": true
+        },
+        {
+          "newsId": "s20-truce-collapse",
+          "isHistorical": false
+        }
+      ],
+      "leansTo": "s20-truce-deal",
+      "memo": "미중 제3국 무역 회담. 단서(양측 \"상당한 진전\", \"건설적\") → 실제: 관세 115%p 인하, 90일 휴전"
+    },
+    {
+      "id": "s21-china-reopen",
+      "tentative": {
+        "id": "s21-reopen-tent",
+        "type": "tentative",
+        "magnitude": 2,
+        "title": {
+          "ko": "중국 봉쇄 반발 확산… \"방역 완화\" 관측",
+          "en": "Anger at Lockdowns Spreads in China"
+        },
+        "body": {
+          "ko": "3년 가까운 봉쇄에 지친 주민들의 항의가 중국 여러 도시로 번졌다. 일부 대도시는 상시 PCR 검사 의무를 슬그머니 풀기 시작했다. 방역 책임자도 \"바이러스의 독성이 약해졌다\"며 새로운 단계를 언급했다.",
+          "en": "Protests by residents worn out by nearly three years of lockdowns spread across Chinese cities. Some big cities quietly dropped routine testing rules, and the top pandemic official said the virus had weakened and spoke of a new stage."
+        },
+        "effects": [
+          {
+            "themeId": "diagnostics",
+            "impact": -2,
+            "link": {
+              "strength": 3,
+              "keywords": [
+                {
+                  "newsTerm": "방역",
+                  "themeTerm": "방역"
+                }
+              ]
+            },
+            "reason": {
+              "ko": "방역 완화로 검사 수요 감소 우려",
+              "en": "Testing demand may fall"
+            }
+          },
+          {
+            "themeId": "cosmetics",
+            "impact": 1,
+            "link": {
+              "strength": 2,
+              "keywords": [],
+              "chain": "중국 소비 회복 기대"
+            },
+            "reason": {
+              "ko": "중국 소비 회복 기대",
+              "en": "China spending hopes"
+            }
+          },
+          {
+            "themeId": "travel",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "중국 여행 기대"
+            },
+            "reason": {
+              "ko": "여행 기대",
+              "en": "Travel hopes"
+            }
+          },
+          {
+            "themeId": "airline",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "중국 노선 기대"
+            },
+            "reason": {
+              "ko": "노선 재개 기대",
+              "en": "Route hopes"
+            }
+          },
+          {
+            "themeId": "petrochem",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "중국 수요 기대"
+            },
+            "reason": {
+              "ko": "중국 수요 기대",
+              "en": "China demand hopes"
+            }
+          },
+          {
+            "themeId": "kpop",
+            "impact": 1,
+            "link": {
+              "strength": 1,
+              "keywords": [],
+              "chain": "중국 팬덤 소비 기대"
+            },
+            "reason": {
+              "ko": "중국 팬 소비 기대",
+              "en": "Chinese fan spending hopes"
+            }
+          }
+        ],
+        "realDate": "2022-11-26 ~ 12-06",
+        "source": {
+          "event": "중국 여러 도시 봉쇄 항의, 일부 대도시 상시 PCR 완화, 방역 책임자 \"변이 병원성 약화\" 발언(11-30)",
+          "impactRationale": "직접 1개(±2), 밀접 1개(±1), 간접 4개(±1) — 공식 그대로",
+          "needsVerification": true
+        }
+      },
+      "news": [
+        {
+          "id": "s21-reopen-done",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "중국, '제로 코로나' 사실상 폐기",
+            "en": "China Effectively Drops Zero-COVID"
+          },
+          "body": {
+            "ko": "중국이 상시 PCR 검사와 지역 이동 때 음성 증명 의무를 없애는 등 방역 조치를 대거 풀었다. 3년 가까이 이어진 강력한 봉쇄 정책을 사실상 접은 것이다. 중국 소비 회복 기대에 화장품·면세점·항공 관련 업체가 주목받고 있다.",
+            "en": "China scrapped routine PCR testing and negative-test requirements for travel between regions, effectively ending nearly three years of strict lockdown policy. Hopes for a Chinese spending recovery put cosmetics, duty-free and airline firms in focus."
+          },
+          "effects": [
+            {
+              "themeId": "cosmetics",
+              "impact": 8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "화장품",
+                    "themeTerm": "화장품"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "중국 화장품 소비 회복 기대",
+                "en": "China cosmetics demand returned"
+              }
+            },
+            {
+              "themeId": "duty_free",
+              "impact": 8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "면세점",
+                    "themeTerm": "면세점"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "중국인 손님 회복 기대",
+                "en": "Chinese shoppers expected back"
+              }
+            },
+            {
+              "themeId": "travel",
+              "impact": 5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "중국 여행 재개 기대"
+              },
+              "reason": {
+                "ko": "중국 여행 재개 기대",
+                "en": "China travel to resume"
+              }
+            },
+            {
+              "themeId": "airline",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "중국 노선 재개 기대"
+              },
+              "reason": {
+                "ko": "중국 노선 운항 재개 기대",
+                "en": "China routes to resume"
+              }
+            },
+            {
+              "themeId": "department_store",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "중국 관광객 쇼핑 회복 기대"
+              },
+              "reason": {
+                "ko": "관광객 쇼핑 회복 기대",
+                "en": "Tourist shopping hopes"
+              }
+            },
+            {
+              "themeId": "diagnostics",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "상시 PCR 검사 폐지 → 검사 수요 감소"
+              },
+              "reason": {
+                "ko": "검사 수요가 줄어듦",
+                "en": "Less testing demand"
+              }
+            }
+          ],
+          "realDate": "2022-12-07 (2023-01-08 입국 격리 폐지)",
+          "source": {
+            "event": "중국 당국 방역 추가 완화 10개 조치(상시 PCR·건강코드 폐지), 2023-01-08 입국 격리 폐지",
+            "impactRationale": "직접 2개(±8), 밀접 1개(±5), 간접 3개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        },
+        {
+          "id": "s21-reopen-tighter",
+          "type": "outcome",
+          "magnitude": 8,
+          "title": {
+            "ko": "중국, 봉쇄 다시 강화",
+            "en": "China Tightens Lockdowns Again"
+          },
+          "body": {
+            "ko": "중국 당국이 \"방역 정책은 흔들림 없이 유지한다\"며 확진자가 나온 지역의 봉쇄를 오히려 강화했다. 중국 소비 회복 기대가 꺾이면서 화장품과 면세점 업계의 중국 매출 전망도 다시 어두워졌다.",
+            "en": "Chinese authorities vowed to keep their pandemic policy unchanged and tightened lockdowns in affected areas. Hopes for a Chinese consumer recovery faded."
+          },
+          "effects": [
+            {
+              "themeId": "cosmetics",
+              "impact": -8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "화장품",
+                    "themeTerm": "화장품"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "중국 화장품 소비 회복 기대",
+                "en": "China cosmetics demand returned"
+              }
+            },
+            {
+              "themeId": "duty_free",
+              "impact": -8,
+              "link": {
+                "strength": 3,
+                "keywords": [
+                  {
+                    "newsTerm": "면세점",
+                    "themeTerm": "면세점"
+                  }
+                ]
+              },
+              "reason": {
+                "ko": "중국인 손님 회복 기대",
+                "en": "Chinese shoppers expected back"
+              }
+            },
+            {
+              "themeId": "travel",
+              "impact": -5,
+              "link": {
+                "strength": 2,
+                "keywords": [],
+                "chain": "중국 여행 재개 기대"
+              },
+              "reason": {
+                "ko": "중국 여행 재개 기대",
+                "en": "China travel to resume"
+              }
+            },
+            {
+              "themeId": "airline",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "중국 노선 재개 기대"
+              },
+              "reason": {
+                "ko": "중국 노선 운항 재개 기대",
+                "en": "China routes to resume"
+              }
+            },
+            {
+              "themeId": "department_store",
+              "impact": -2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "중국 관광객 쇼핑 회복 기대"
+              },
+              "reason": {
+                "ko": "관광객 쇼핑 회복 기대",
+                "en": "Tourist shopping hopes"
+              }
+            },
+            {
+              "themeId": "diagnostics",
+              "impact": 2,
+              "link": {
+                "strength": 1,
+                "keywords": [],
+                "chain": "상시 PCR 검사 폐지 → 검사 수요 감소"
+              },
+              "reason": {
+                "ko": "검사 수요가 줄어듦",
+                "en": "Less testing demand"
+              }
+            }
+          ],
+          "realDate": "가상",
+          "source": {
+            "event": "가상 시나리오: 중국 봉쇄 재강화",
+            "impactRationale": "직접 2개(±8), 밀접 1개(±5), 간접 3개(±2) — 공식 그대로",
+            "needsVerification": false
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "newsId": "s21-reopen-done",
+          "isHistorical": true
+        },
+        {
+          "newsId": "s21-reopen-tighter",
+          "isHistorical": false
+        }
+      ],
+      "leansTo": "s21-reopen-done",
+      "memo": "중국 리오프닝. 단서(항의 확산, 대도시 PCR 완화, 방역 책임자 \"독성 약화\") → 실제: 방역 10개 완화 조치, 제로 코로나 폐기"
     }
   ]
 }
