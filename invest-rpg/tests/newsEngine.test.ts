@@ -7,26 +7,27 @@ import { effect, makeNews, makeSpecEra } from './fixtures/makeEra.ts';
 
 const config = makeConfig();
 const rules = getTickRules(config);
-const era = makeSpecEra();
+// 9차: 뉴스 간격 3~4분(시대당 슬롯 약 34개)에 맞춰 뉴스 풀도 실제 확장 목표(속보 40·스토리 20)로
+const era = makeSpecEra({ breakingCount: 40, storyCount: 20 });
 const SEEDS = Array.from({ length: 200 }, (_, i) => i + 1);
 const activeFor = (seed: number) => applyDraw(era, drawEra(era, seed, config), config);
 const scheduleFor = (seed: number, cfg = config) => buildNewsSchedule(activeFor(seed), createRng(seed), cfg);
 
 describe('뉴스 슬롯', () => {
-  it('[시드 200개] 첫 뉴스는 정확히 3분(36틱), 간격 4~7분, 평균 약 21개', () => {
+  it('[시드 200개] 첫 뉴스는 정확히 3분(36틱), 간격 3~4분, 평균 약 34개 (9차)', () => {
     let total = 0;
     for (const seed of SEEDS) {
       const slots = makeNewsSlots(rules, createRng(seed));
       expect(slots[0]).toBe(36);
       for (let i = 1; i < slots.length; i++) {
         const gap = slots[i]! - slots[i - 1]!;
-        if (gap < 48 || gap > 84) throw new Error(`seed ${seed}: ${gap}`);
+        if (gap < 36 || gap > 48) throw new Error(`seed ${seed}: ${gap}`);
       }
-      expect(slots.length).toBeLessThanOrEqual(30);
+      expect(slots.length).toBeLessThanOrEqual(40);
       total += slots.length;
     }
-    expect(total / 200).toBeGreaterThan(20);
-    expect(total / 200).toBeLessThan(23);
+    expect(total / 200).toBeGreaterThan(31);
+    expect(total / 200).toBeLessThan(37);
   });
 });
 
@@ -67,7 +68,9 @@ describe('시대 시작 3분 유예와 첫 잠정 뉴스', () => {
 });
 
 describe('스토리 규칙', () => {
-  it('[시드 200개] 결과는 잠정 후 15분 안의 슬롯, 간격 4~7분 유지, 동시 1개, 종료 15분 전 새 잠정 없음', () => {
+  it('[시드 200개] 결과는 잠정 후 15분 안의 슬롯, 간격 3~4분 유지, 동시 1개, 종료 15분 전 새 잠정 없음', () => {
+    let inSlot = 0;
+    let gaps = 0;
     for (const seed of SEEDS) {
       const s = scheduleFor(seed);
       let open: string | null = null;
@@ -76,7 +79,10 @@ describe('스토리 규칙', () => {
         const n = s[i]!;
         if (i > 0) {
           const gap = n.tick - s[i - 1]!.tick;
-          if (gap < 48 || gap > 84) throw new Error(`seed ${seed}: 간격 ${gap}`);
+          // 9차: 슬롯이 늘어 쓸 수 있는 뉴스가 떨어지면 빈 슬롯이 생길 수 있다 (간격 = 슬롯 간격의 합)
+          if (gap < 36 || gap > 48 * 3) throw new Error(`seed ${seed}: 간격 ${gap}`);
+          if (gap <= 48) inSlot++;
+          gaps++;
         }
         if (n.kind === 'tentative') {
           expect(open, `seed ${seed}`).toBeNull();
@@ -92,9 +98,12 @@ describe('스토리 규칙', () => {
       }
       expect(open).toBeNull();
     }
+    // 빈 슬롯은 드물다 (가상 시대 기준 95% 이상의 간격이 한 슬롯)
+    expect(inSlot / gaps).toBeGreaterThan(0.95);
   });
 
-  it('[시드 200개] 슬롯 기준 속보 비율 평균 28~40%', () => {
+  // 9차: 간격이 3~4분으로 줄어 스토리(동시 1개, 결과는 15분 안) 사이 빈자리를 속보가 더 채운다 → 28~40% → 30~50%
+  it('[시드 200개] 슬롯 기준 속보 비율 평균 30~50%', () => {
     let breaking = 0;
     let total = 0;
     for (const seed of SEEDS) {
@@ -102,8 +111,8 @@ describe('스토리 규칙', () => {
       total += s.length;
       breaking += s.filter((n) => n.kind === 'breaking').length;
     }
-    expect(breaking / total).toBeGreaterThanOrEqual(0.28);
-    expect(breaking / total).toBeLessThanOrEqual(0.4);
+    expect(breaking / total).toBeGreaterThanOrEqual(0.3);
+    expect(breaking / total).toBeLessThanOrEqual(0.5);
   });
 
   it('[시드 200개] 결과는 단서(leansTo)대로 약 65%, 아니면 35%', () => {

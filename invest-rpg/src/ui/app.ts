@@ -35,7 +35,7 @@ import { hourglassIcon, ico, inner, pbtn, playIcon, pnl } from './kit.ts';
 import type { IconName } from './icons.ts';
 import { GameLoop, type Clock } from './loop.ts';
 import {
-  confirmNewOverlay, confirmOverlay, consentOverlay, finalOverlay, settingsOverlay, settlementOverlay, titleScreen, tutorialOverlay,
+  confirmNewOverlay, confirmOverlay, consentOverlay, eraIntroOverlay, finalOverlay, settingsOverlay, settlementOverlay, titleScreen, tutorialOverlay,
 } from './overlays.ts';
 import { SceneLayer } from './scene.ts';
 import { LivingRoomScreen } from './screens/livingRoom.ts';
@@ -250,34 +250,41 @@ export class App {
       if (pendingSettlement) this.showSettlement(pendingSettlement, () => this.afterSettlement());
       else if (this.game.phase === 'era-ended') this.showSettlementFromGame();
       else if (this.game.phase === 'finished') this.showFinal();
+      // 시대가 막 시작된 판이면(새로하기) 시대 시작 카드부터
+      else if (this.game.tick === 0 && !this.opts.skipIntro) this.showEraIntro(() => this.loop.start());
       else this.loop.start();
       // 숨긴 탭에서 열렸으면 처음부터 백그라운드 일시정지
       if (document.hidden) this.onVisibility(true);
       this.persist(true);
     };
     const askConsent = !this.opts.skipIntro && this.opts.storage.get(FIRST_RUN_KEY) !== '1';
-    const afterTutorial = () => (askConsent ? this.askConsent(go) : go());
-    if (tutorial) this.showTutorial(afterTutorial);
-    else afterTutorial();
+    // 9차: 튜토리얼이 있으면 그 마지막 장에서 기록 동의를 받는다. 튜토리얼 없이 들어왔는데 아직 안 물었으면 따로 묻는다
+    if (tutorial) this.showTutorial(go, askConsent ? (agree) => this.applyConsent(agree) : undefined);
+    else if (askConsent) this.askConsent(go);
+    else go();
+  }
+
+  private applyConsent(agree: boolean): void {
+    this.save = setTelemetryConsent(this.save, agree);
+    this.game.setConsent(agree);
+    this.opts.storage.set(FIRST_RUN_KEY, '1');
   }
 
   /** 처음 실행: 플레이 기록 동의 (기본 꺼짐) */
   private askConsent(done: () => void): void {
     const el = consentOverlay(this.settings.locale, (agree) => {
       el.remove();
-      this.save = setTelemetryConsent(this.save, agree);
-      this.game.setConsent(agree);
-      this.opts.storage.set(FIRST_RUN_KEY, '1');
+      this.applyConsent(agree);
       done();
     });
     this.overlays.append(el);
   }
 
-  private showTutorial(done: () => void): void {
+  private showTutorial(done: () => void, consent?: (agree: boolean) => void): void {
     const el = tutorialOverlay(this.settings.locale, () => {
       el.remove();
       done();
-    });
+    }, consent);
     this.overlays.append(el);
   }
 
@@ -397,6 +404,8 @@ export class App {
 
   private applyEraMarks(): void {
     this.virtualMark.hidden = !this.opts.isVirtual(this.game.eraId);
+    // 시대 색 테마 (style.css data-era)
+    this.stage.dataset.era = artEraFor(this.game.eraId);
     this.stage.dataset.scheme = effectiveColorScheme(this.settings);
   }
 
@@ -571,9 +580,32 @@ export class App {
     this.trading.resetForEra();
     this.applyEraMarks();
     this.showTab(this.tabs.current);
-    this.toast(this.t('era.graceNotice'));
     this.persist(true);
-    this.loop.start();
+    const start = () => {
+      this.toast(this.t('era.graceNotice'));
+      this.loop.start();
+    };
+    // 디버그 &nointro=1이면 카드 없이 바로
+    if (this.opts.skipIntro) start();
+    else this.showEraIntro(start);
+  }
+
+  /** 시대 시작 카드: [시작하기]를 누르면 시간이 흐르기 시작한다 (디버그 패널에서도 부른다) */
+  showEraIntro(done: () => void): void {
+    const ids = this.opts.eras.map((e) => e.id);
+    const era = this.opts.eras.find((e) => e.id === this.game.eraId);
+    const el = eraIntroOverlay(
+      this.settings.locale,
+      artEraFor(this.game.eraId),
+      era ? localize(era.displayName, this.settings.locale) : this.game.eraId,
+      Math.max(0, ids.indexOf(this.game.eraId)),
+      ids.length,
+      () => {
+        el.remove();
+        done();
+      },
+    );
+    this.overlays.append(el);
   }
 
   private showFinal(given?: FinalSummary): void {
@@ -625,6 +657,12 @@ export class App {
             this.save = setTelemetryConsent(this.save, on);
             this.game.setConsent(on);
             this.persist(true);
+          },
+          saveAndExit: () => {
+            // 저장하고 첫 화면으로 (새로 고침하면 첫 화면, [이어하기]로 지금 시점부터)
+            this.persist(true);
+            this.saveLocked = true;
+            window.location.reload();
           },
           replayTutorial: () => {
             this.overlays.querySelector('.overlay.settings')?.remove();

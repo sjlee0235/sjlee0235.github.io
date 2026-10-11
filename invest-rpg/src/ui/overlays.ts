@@ -8,7 +8,7 @@ import type { PublicEraDebrief, PublicSettlement } from '../engine/publicView.ts
 import { localize, t as tr } from '../i18n/index.ts';
 import type { AppSettings } from '../settings/settings.ts';
 import { h } from './dom.ts';
-import { pbtn, pnl } from './kit.ts';
+import { face, pbtn, pnl } from './kit.ts';
 import { titleSvg } from './title.ts';
 import { finalView, settlementView } from './viewModels.ts';
 
@@ -148,6 +148,32 @@ export function confirmOverlay(title: string, body: string[], noLabel: string, y
   return dialog('confirm', title, body.map((line) => h('p', { class: 'note', style: 'color:var(--text)' }, line)), [no, yes]);
 }
 
+// ───────── 시대 시작 카드 (9차: 시대가 바뀐 것이 확 느껴지게) ─────────
+
+/** "2010년대" 큰 도트 숫자 + 한 줄 소개 + 키워드 + 배경 지식 힌트 + [시작하기]. artEra = '2000s' 등 */
+export function eraIntroOverlay(locale: Locale, artEra: string, eraName: string, index: number, total: number, onStart: () => void): HTMLElement {
+  const t = (k: string, p?: Record<string, string | number>) => tr(locale, k, p);
+  const year = artEra.replace(/s$/, '');
+  const num = h('div', { class: 'era-num' });
+  num.innerHTML = /^\d{4}$/.test(year) ? titleSvg(year, 5) : '';
+  const start = pbtn('accent', t('eraIntro.start'));
+  start.addEventListener('click', onStart);
+  return h(
+    'div',
+    { class: `overlay era-intro`, role: 'dialog', 'aria-modal': 'true', 'aria-label': eraName },
+    h(
+      'div',
+      { class: 'era-card' },
+      h('div', { class: 'era-step' }, t('eraIntro.step', { n: index + 1, total })),
+      h('div', { class: 'era-title' }, num, h('span', { class: 'era-sfx' }, t('eraIntro.suffix'))),
+      h('div', { class: 'era-tag' }, t(`eraIntro.${artEra}.tagline`)),
+      h('div', { class: 'era-keys' }, ...t(`eraIntro.${artEra}.keywords`).split('·').map((k) => h('span', { class: 'era-key' }, k.trim()))),
+      h('p', { class: 'era-hint' }, t(`eraIntro.${artEra}.recall`)),
+      start,
+    ),
+  );
+}
+
 // ───────── 튜토리얼: 이야기(김역전) → 게임 방법 → 방 꾸미기와 작업 ─────────
 
 export const TUTORIAL_PAGES = [
@@ -157,37 +183,65 @@ export const TUTORIAL_PAGES = [
   { title: 'tutorial.goalTitle', lines: ['tutorial.goal1', 'tutorial.goal2', 'tutorial.goal3'] },
 ] as const;
 
-export function tutorialOverlay(locale: Locale, onDone: () => void): HTMLElement {
+/**
+ * 튜토리얼. consent를 주면 마지막에 '플레이 기록 보내기' 동의 장을 붙인다 (9차: 튜토리얼 안에서 동의를 받는다).
+ * [건너뛰기]를 눌러도 동의 장은 건너뛰지 않는다. 동의 장의 버튼: [동의하지 않음] / [동의하고 시작]
+ */
+export function tutorialOverlay(locale: Locale, onDone: () => void, consent?: (agree: boolean) => void): HTMLElement {
   const t = (k: string) => tr(locale, k);
+  const pages = TUTORIAL_PAGES.length + (consent ? 1 : 0);
   let page = 0;
   const hd = h('div', { class: 'hd' });
   const body = h('div', { class: 'body' });
   const dots = h('div', { class: 'page-dots' });
   const skip = pbtn('', t('tutorial.skip'));
   const next = pbtn('accent', '');
-  const render = () => {
-    const p = TUTORIAL_PAGES[page]!;
-    hd.textContent = t(p.title);
-    body.replaceChildren(...p.lines.map((k) => h('p', { class: page === 0 ? 'story' : 'note', style: page === 0 ? '' : 'color:var(--text)' }, t(k))));
-    dots.replaceChildren(...TUTORIAL_PAGES.map((_, i) => h('span', { class: `pip ${i <= page ? 'on' : ''}` })));
-    const last = page === TUTORIAL_PAGES.length - 1;
-    next.querySelector('.face')!.textContent = t(last ? 'tutorial.start' : 'tutorial.next');
-    skip.hidden = last;
+  const answer = (agree: boolean) => {
+    consent?.(agree);
+    onDone();
   };
-  skip.addEventListener('click', onDone);
+  const onConsentPage = () => consent !== undefined && page === TUTORIAL_PAGES.length;
+  const render = () => {
+    if (onConsentPage()) {
+      hd.textContent = t('tutorial.consentTitle');
+      body.replaceChildren(
+        h('p', { class: 'note', style: 'color:var(--text)' }, t('telemetry.consentBody')),
+        h('p', { class: 'note' }, t('telemetry.later')),
+      );
+    } else {
+      const p = TUTORIAL_PAGES[page]!;
+      hd.textContent = t(p.title);
+      body.replaceChildren(...p.lines.map((k) => h('p', { class: page === 0 ? 'story' : 'note', style: page === 0 ? '' : 'color:var(--text)' }, t(k))));
+    }
+    dots.replaceChildren(...Array.from({ length: pages }, (_, i) => h('span', { class: `pip ${i <= page ? 'on' : ''}` })));
+    const last = page === pages - 1;
+    face(skip).textContent = t(onConsentPage() ? 'telemetry.decline' : 'tutorial.skip');
+    face(next).textContent = t(onConsentPage() ? 'tutorial.agreeStart' : last ? 'tutorial.start' : 'tutorial.next');
+    skip.hidden = last && !onConsentPage();
+    root.classList.toggle('consent-page', onConsentPage());
+  };
+  skip.addEventListener('click', () => {
+    if (onConsentPage()) answer(false);
+    else if (consent) {
+      page = TUTORIAL_PAGES.length; // 건너뛰어도 기록 동의는 묻는다
+      render();
+    } else onDone();
+  });
   next.addEventListener('click', () => {
-    if (page === TUTORIAL_PAGES.length - 1) onDone();
+    if (onConsentPage()) answer(true);
+    else if (page === pages - 1) onDone();
     else {
       page++;
       render();
     }
   });
-  render();
-  return h(
+  const root = h(
     'div',
     { class: 'overlay tutorial', role: 'dialog', 'aria-modal': 'true' },
     pnl('dialog', hd, body, h('div', { class: 'foot' }, skip, next), dots),
   );
+  render();
+  return root;
 }
 
 // ───────── 설정 ─────────
@@ -199,6 +253,8 @@ export interface SettingsHandlers {
   telemetryConsent: boolean;
   setConsent(on: boolean): void;
   replayTutorial(): void;
+  /** 저장하고 첫 화면으로 */
+  saveAndExit(): void;
 }
 
 export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTMLElement {
@@ -242,6 +298,8 @@ export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTM
 
   const close = pbtn('accent', t('common.close'));
   close.addEventListener('click', handlers.close);
+  const exit = pbtn('save-exit', t('settings.saveExit'));
+  exit.addEventListener('click', handlers.saveAndExit);
 
   return dialog(
     'settings',
@@ -264,6 +322,6 @@ export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTM
           : [h('div', {}, t('settings.noCredits'))]),
       ),
     ],
-    [close],
+    [exit, close],
   );
 }

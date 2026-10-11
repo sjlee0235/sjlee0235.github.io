@@ -23,6 +23,8 @@ export interface DebugApi {
   tod(t: 'night' | 'day' | null): void;
   /** 인테리어를 n단계 올림 (모자라는 코인은 지급) */
   interior(n: number): void;
+  /** 시대 시작 카드 보기 (닫으면 그대로) */
+  eraIntro(): void;
 }
 
 export function mountDebug(app: App, info: { seed: number; eraNames: string[] }): DebugApi {
@@ -50,6 +52,7 @@ export function mountDebug(app: App, info: { seed: number; eraNames: string[] })
       app.debugRefresh();
     },
     tod: (t) => app.forceTod(t),
+    eraIntro: () => app.showEraIntro(() => undefined),
     interior: (n) => {
       for (let i = 0; i < n; i++) {
         const cost = app.game.interiorNextCost;

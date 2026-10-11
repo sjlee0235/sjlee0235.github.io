@@ -4,8 +4,9 @@
 // - 강아지: dogBrain.ts 상태 머신. 연출 난수는 시장 난수와 분리
 
 import type { MusicGenre } from '../../audio/music.ts';
+import { localize } from '../../i18n/index.ts';
 import { createPresentationRng, type Rng } from '../../engine/rng.ts';
-import { dogFile, dogStageFor, DOG_POSES, heartsFile, SCALE, type DogArtStage } from '../art.ts';
+import { artEraFor, dogFile, dogStageFor, DOG_POSES, heartsFile, SCALE, type DogArtStage } from '../art.ts';
 import type { Screen, UiContext } from '../context.ts';
 import { flash, h, setText } from '../dom.ts';
 import { dogSprite, newDog, stepDog, touchDog, type DogEnv, type DogState } from '../dogBrain.ts';
@@ -23,6 +24,8 @@ export class LivingRoomScreen implements Screen {
   private readonly upLabel: HTMLElement;
   private readonly pips: HTMLElement[];
   private readonly lpHit: HTMLButtonElement;
+  private readonly calEl: HTMLElement;
+  private readonly calYear: HTMLElement;
   private readonly dogEl: HTMLElement;
   private readonly heartsEl: HTMLElement;
   private readonly dogHit: HTMLButtonElement;
@@ -49,9 +52,13 @@ export class LivingRoomScreen implements Screen {
       e.preventDefault();
       this.touchDog();
     });
+    // 9차: 벽 달력 (지금 시대를 큰 숫자로). 그림 속 쪽지 자리에 붙인다
+    this.calYear = h('div', { class: 'yr' });
+    this.calEl = h('div', { class: 'era-cal', role: 'img' }, h('div', { class: 'band' }), this.calYear, h('div', { class: 'sfx' }, ctx.t('eraIntro.suffix')));
     this.el = h(
       'div',
       { class: 'view living' },
+      this.calEl,
       h('div', { class: 'upgrade' }, this.upBtn, h('div', { class: 'pips' }, ...this.pips)),
       this.lpHit,
       this.dogEl,
@@ -61,6 +68,9 @@ export class LivingRoomScreen implements Screen {
   }
 
   enter(): void {
+    const era = artEraFor(this.ctx.game.eraId);
+    setText(this.calYear, era.replace(/s$/, ''));
+    this.calEl.setAttribute('aria-label', this.ctx.t('living.calendar', { era: localize(this.ctx.game.eraName, this.ctx.locale()) }));
     const stage = dogStageFor(this.ctx.game.eraId);
     if (!this.dog || stage !== this.dogStage) {
       this.dogStage = stage;

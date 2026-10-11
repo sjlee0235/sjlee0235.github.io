@@ -167,7 +167,7 @@ async function run(): Promise<void> {
     // 설정 창
     await page.locator('.gear-btn').click();
     await shot(page, 'settings');
-    await page.locator('.overlay.settings .foot .pbtn').click();
+    await page.locator('.overlay.settings .foot .pbtn').last().click();
 
     // 시대 정산 창
     await dbg(page, 'endEra');
@@ -212,10 +212,15 @@ async function run(): Promise<void> {
       await dbg(p2, 'interior', 2);
       await shot(p2, 'workshop_night_lv4');
       await c2.close();
-      // 2010년대·2020년대 주식창 (뉴스 하나 + 리포트)
+      // 2010년대·2020년대: 시대 시작 카드, 거실 달력, 주식창 (뉴스 하나 + 리포트)
       for (const [era, label] of [[1, '2010s'], [2, '2020s']] as const) {
         const { ctx: ce, page: pe } = await open(390, 844, `&nointro=1&era=${era}`);
         await dbg(pe, 'tod', era === 1 ? 'day' : 'night');
+        await dbg(pe, 'eraIntro');
+        await shot(pe, `era_intro_${label}`);
+        await pe.locator('.era-intro .pbtn').click();
+        await dbg(pe, 'tab', 'living_room');
+        await shot(pe, `living_${label}_calendar`);
         await dbg(pe, 'tab', 'trading');
         await dbg(pe, 'nextNews');
         await dbg(pe, 'advanceSeconds', 125);

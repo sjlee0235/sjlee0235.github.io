@@ -18,6 +18,13 @@ describe('제목 도트 글자', () => {
     expect(titleSvg('역전의 방', 5)).toContain('aria-label="역전의 방"');
   });
 
+  it('시대 숫자(0·1·2)는 폭 10도트로 그린다 (9차 시대 시작 카드)', () => {
+    const g = titleBitmap('2010');
+    // 1(외곽) + 4글자×10 + 사이 3×2 + 1(외곽)
+    expect(g[0]!.length).toBe(1 + 40 + 6 + 1);
+    expect(titleSvg('2020', 5)).toContain('aria-label="2020"');
+  });
+
   it('없는 글자는 오류', () => {
     expect(() => titleBitmap('역전의 집')).toThrow();
   });

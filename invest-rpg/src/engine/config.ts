@@ -31,9 +31,9 @@ export const GRACE_PERIOD_SEC = 180;
 export const FIRST_NEWS_AT_SEC = 180;
 /** 첫 뉴스 종류: 항상 잠정 뉴스(스토리의 시작). opener 스토리 중에서 고른다 */
 export const FIRST_NEWS_TYPE = 'tentative' as const;
-/** 뉴스 간격(초): 4분 ~ 7분 */
-export const NEWS_GAP_MIN_SECONDS = 240;
-export const NEWS_GAP_MAX_SECONDS = 420;
+/** 뉴스 간격(초): 3분 ~ 4분 (9차 결정, 이전 4~7분 — "진행이 느리다") */
+export const NEWS_GAP_MIN_SECONDS = 180;
+export const NEWS_GAP_MAX_SECONDS = 240;
 /** 진행 중인 스토리가 없을 때 새 스토리(잠정 뉴스)를 시작할 확률 */
 export const P_START_STORY = 0.85;
 /**
