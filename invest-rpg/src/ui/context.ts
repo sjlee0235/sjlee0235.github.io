@@ -26,6 +26,8 @@ export interface UiContext {
   readonly assetBase: string;
   /** 실제 시각 ms (작업실 터치 상한·강아지 연속 터치용) */
   now(): number;
+  /** 확인 창: [취소] / [확인]. 확인을 누르면 onYes (게임 시간은 멈추지 않는다) */
+  confirm(opts: { title: string; body: string[]; yes: string; onYes: () => void }): void;
   /** 화면 아래 짧은 안내 */
   toast(text: string, kind?: 'info' | 'error'): void;
   /** 저장이 필요하면 저장 */

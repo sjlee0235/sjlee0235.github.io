@@ -150,13 +150,13 @@ describe('주가 리포트', () => {
     return { game, reports, applied };
   };
 
-  it('[시드 20개] 발표 120초(24틱) 뒤, 최대 3개, 반영률 절댓값 순, appliedPct = 실제 적용값', () => {
+  it('[시드 20개] 발표 120초(24틱) 뒤, 영향받은 종목 모두, 반영률 절댓값 순, appliedPct = 실제 적용값', () => {
     for (let seed = 1; seed <= 20; seed++) {
       const { game, reports, applied } = collect(seed);
       expect(reports.length).toBeGreaterThan(0);
       for (const n of reports) {
         expect(n.reportTick - n.publishedTick).toBe(24);
-        expect(n.items.length).toBeLessThanOrEqual(3);
+        expect(n.moreCount).toBe(0);
         const abs = n.items.map((i) => Math.abs(i.appliedPct));
         expect([...abs].sort((a, b) => b - a)).toEqual(abs);
         const actual = applied.get(n.newsId)!;

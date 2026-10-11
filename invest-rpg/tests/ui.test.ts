@@ -12,10 +12,11 @@ import { displayRemaining, fmtNum, fmtPct, fmtTime } from '../src/ui/format.ts';
 import { dollHitRect } from '../src/ui/screens/workshop.ts';
 import { GameLoop, type Clock } from '../src/ui/loop.ts';
 import {
-  accountSummary, dirClass, finalView, holdingRows, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
+  accountSummary, chooseSide, clearSide, dirClass, finalView, holdingRows, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
   settlementView, sparkPoints, stepQuantity, stockRows, upgradeView, workshopView,
 } from '../src/ui/viewModels.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
+import { endingFor } from '../src/engine/config.ts';
 
 const era = makeSpecEra({ id: 'ui' });
 const newGame = (seed = 4) => PublicGame.create({ eras: [era], seed });
@@ -111,17 +112,27 @@ describe('탭·NEWS!·코인 표시', () => {
   });
 });
 
-describe('주문 패널 (수량 맞추고 매수/매도 버튼이 바로 체결)', () => {
-  it('수량은 숫자만 0~999, −/+는 1씩, 최대는 현금으로 살 수 있는 최대 (못 사면 보유 수량)', () => {
+describe('주문 패널 (매수·매도를 먼저 고르고 수량·최대)', () => {
+  it('처음엔 방향 없음·수량 0, 고르면 수량 1, 최대는 고른 방향 기준 (매수 = 현금, 매도 = 보유 수량)', () => {
     const g = newGame();
     const s = g.getStockList()[0]!;
     let o = newOrderState(s.id);
-    expect(o.quantity).toBe(1);
-    o = setMax(o, g.maxQty('buy', s.id), 0);
+    expect(o).toEqual({ stockId: s.id, quantity: 0, side: null });
+    o = chooseSide(o, 'buy', g.maxQty('buy', s.id));
+    expect(o).toMatchObject({ side: 'buy', quantity: 1 });
+    o = setMax(o, g.maxQty('buy', s.id));
     expect(o.quantity).toBe(g.maxBuyQuantity(s.id));
     expect(g.previewOrder('buy', s.id, o.quantity).error).toBeNull();
-    expect(setMax(o, 0, 5).quantity).toBe(5);
-    expect(setMax(o, 5000, 0).quantity).toBe(999);
+    // 보유 0주에서 매도를 고르면 수량 0, 최대도 0 (현금 기준으로 섞이지 않는다)
+    let sell = chooseSide(newOrderState(s.id), 'sell', g.maxQty('sell', s.id));
+    expect(sell).toMatchObject({ side: 'sell', quantity: 0 });
+    expect(setMax(sell, g.maxQty('sell', s.id)).quantity).toBe(0);
+    // 3주 사면 매도 최대는 3
+    expect(g.buy(s.id, 3).ok).toBe(true);
+    sell = setMax(sell, g.maxQty('sell', s.id));
+    expect(sell.quantity).toBe(3);
+    expect(clearSide(sell)).toMatchObject({ side: null, quantity: 0 });
+    expect(setMax(o, 5000).quantity).toBe(999);
     expect(setQuantity(o, -3).quantity).toBe(0);
     expect(setQuantity(o, 2.7).quantity).toBe(2);
     expect(setQuantity(o, 1234).quantity).toBe(999);
@@ -130,7 +141,7 @@ describe('주문 패널 (수량 맞추고 매수/매도 버튼이 바로 체결)
     expect([parseQuantity('12a'), parseQuantity(''), parseQuantity('-7'), parseQuantity('0012')]).toEqual([12, 0, 7, 12]);
   });
 
-  it('필요 코인 = 수량 × 현재가 + 수수료, 현금이 모자라면 오류 문구', () => {
+  it('매수: 필요 코인 = 수량 × 현재가 + 수수료 / 매도: 받을 코인 = 수량 × 현재가 − 수수료, 모자라면 오류 문구', () => {
     const g = newGame();
     const s = g.getStockList()[0]!;
     const p = g.previewOrder('buy', s.id, 3);
@@ -138,6 +149,11 @@ describe('주문 패널 (수량 맞추고 매수/매도 버튼이 바로 체결)
     expect(v).toEqual({ label: `필요 코인 (수수료 ${p.fee})`, value: fmtNum(p.total), error: false });
     expect(p.total).toBe(3 * s.price + p.fee);
     expect(needView(g.previewOrder('buy', s.id, 999), 'ko')).toMatchObject({ value: '현금이 부족합니다.', error: true });
+    expect(needView(g.previewOrder('sell', s.id, 1), 'ko')).toMatchObject({ value: '보유 수량이 부족합니다.', error: true });
+    g.buy(s.id, 2);
+    const q = g.previewOrder('sell', s.id, 2);
+    expect(needView(q, 'ko')).toEqual({ label: `받을 코인 (수수료 ${q.fee})`, value: fmtNum(q.total), error: false });
+    expect(q.total).toBe(2 * q.price - q.fee);
   });
 
   it('체결 안내와 오류 문구', () => {
@@ -194,7 +210,7 @@ describe('뉴스 창 (한 건씩, 스크롤하면 이전 뉴스)', () => {
     for (let i = 0; i < 24; i++) g.advanceTick(); // 120초
     items = newsItems(g.getFeed(), 'ko');
     expect(items[0]!.report!.lines.length).toBeGreaterThan(0);
-    expect(items[0]!.report!.lines.length).toBeLessThanOrEqual(3);
+    expect(items[0]!.report!.more).toBeNull(); // 영향받은 종목 모두 (외 N개 없음)
     untilNews(g);
     items = newsItems(g.getFeed(), 'ko');
     expect(items.map((i) => i.latest)).toEqual([true, false]);
@@ -232,11 +248,11 @@ describe('뉴스 창 (한 건씩, 스크롤하면 이전 뉴스)', () => {
   });
 });
 
-describe('거실: 인테리어 업그레이드 버튼', () => {
-  it('"인테리어 업그레이드 - 2,000", 코인이 모자라면 흐리게(누를 수는 있음), Lv7이면 "인테리어 완성"', () => {
-    expect(upgradeView(0, 7, 2000, 10_000, 'ko')).toMatchObject({ label: '인테리어 업그레이드 - 2,000', state: 'ok', filled: 0 });
+describe('거실: 인생 업그레이드 버튼', () => {
+  it('"인생 업그레이드 - 2,000", 코인이 모자라면 흐리게(누를 수는 있음), Lv7이면 "인생 업그레이드 완성"', () => {
+    expect(upgradeView(0, 7, 2000, 10_000, 'ko')).toMatchObject({ label: '인생 업그레이드 - 2,000', state: 'ok', filled: 0 });
     expect(upgradeView(3, 7, 2000, 1999, 'ko')).toMatchObject({ state: 'poor', filled: 3 });
-    expect(upgradeView(7, 7, null, 50_000, 'ko')).toMatchObject({ label: '인테리어 완성', state: 'done', filled: 7 });
+    expect(upgradeView(7, 7, null, 50_000, 'ko')).toMatchObject({ label: '인생 업그레이드 완성', state: 'done', filled: 7 });
   });
 });
 
@@ -384,7 +400,7 @@ describe('정산 창·최종 요약', () => {
 
   it('최종 요약: 시대별 줄, 최종 코인, 남은 지급 예정과 인테리어 단계', () => {
     const v = finalView(
-      { eras: [{ eraId: '2000s', returnPct: 12.34, workIncome: 300, finalTotal: 11_500 }], totalWorkIncome: 300, finalCoins: 11_500, cumulativeReturnPct: 12.34, unpaidWork: 30, interiorLevel: 3 },
+      { eras: [{ eraId: '2000s', returnPct: 12.34, workIncome: 300, finalTotal: 11_500 }], totalWorkIncome: 300, finalCoins: 11_500, cumulativeReturnPct: 12.34, unpaidWork: 30, interiorLevel: 3, ending: 'neutral' },
       { '2000s': '2000년대' },
       'ko',
     );
@@ -392,6 +408,16 @@ describe('정산 창·최종 요약', () => {
     expect(v.total).toBe('11,500');
     expect(v.unpaid).toContain('30코인');
     expect(v.interior).toContain('3단계');
+    expect(v.ending).toBe('neutral');
+    expect(v.endingTitle).toContain('중립 엔딩');
+  });
+
+  it('엔딩: 마지막 단계 0~2 새드 / 3~6 중립 / 7 해피', () => {
+    const base = { eras: [], totalWorkIncome: 0, finalCoins: 0, cumulativeReturnPct: 0, unpaidWork: 0 };
+    const ending = (lv: number) => finalView({ ...base, interiorLevel: lv, ending: endingFor(lv) }, {}, 'ko').ending;
+    expect([0, 1, 2, 3, 4, 5, 6, 7].map(ending)).toEqual(['sad', 'sad', 'sad', 'neutral', 'neutral', 'neutral', 'neutral', 'happy']);
+    expect(finalView({ ...base, interiorLevel: 7, ending: 'happy' }, {}, 'ko').endingTitle).toContain('해피 엔딩');
+    expect(finalView({ ...base, interiorLevel: 0, ending: 'sad' }, {}, 'ko').endingTitle).toContain('새드 엔딩');
   });
 });
 
@@ -431,7 +457,7 @@ describe('작업실 인형 터치 범위', () => {
 });
 
 describe('주식창 내 계좌', () => {
-  it('보유 종목 줄: 수량·평가금액·산 뒤 손익률, 요약: 현금·주식 평가', () => {
+  it('보유 종목 줄: 수량·평가금액·평단가·산 뒤 손익률, 요약: 현금·주식 평가', () => {
     const g = newGame();
     const s = g.getStockList()[0]!;
     g.buy(s.id, 3);
@@ -440,6 +466,8 @@ describe('주식창 내 계좌', () => {
     const rows = holdingRows(p, 'ko');
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ id: s.id, qty: '3주', value: fmtNum(p.holdings[0]!.marketValue), pnlPct: fmtPct(p.holdings[0]!.unrealizedPnlPct) });
+    expect(rows[0]!.avg).toBe(fmtNum(Math.round(p.holdings[0]!.avgPrice)));
+    expect(Math.round(p.holdings[0]!.avgPrice)).toBeGreaterThanOrEqual(Math.round(s.price)); // 수수료 포함 평단가
     expect(accountSummary(p, 'ko')).toEqual({ cash: fmtNum(p.cash), stockValue: fmtNum(p.holdings[0]!.marketValue), count: 1 });
   });
 });

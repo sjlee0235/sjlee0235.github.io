@@ -3,6 +3,7 @@
 
 import type { Locale } from '../data/schema.ts';
 import { changeColor, type ChangeColor, type ColorScheme } from '../engine/colors.ts';
+import { endingFor, type Ending } from '../engine/config.ts';
 import type { FinalSummary, WorkStatus } from '../engine/game.ts';
 import type { PricePoint } from '../engine/priceEngine.ts';
 import type {
@@ -52,6 +53,8 @@ export interface HoldingRowView {
   qty: string;
   /** 평가금액 (현재가 × 수량) */
   value: string;
+  /** 구매 평단가 (수수료 포함 평균 매입가, 반올림) */
+  avg: string;
   /** 산 뒤 손익률 (평균 매입가 대비, 수수료 포함) */
   pnlPct: string;
   dir: '' | 'up' | 'dn';
@@ -71,6 +74,7 @@ export function holdingRows(p: PublicPortfolio, locale: Locale): HoldingRowView[
     name: localize(h.name, locale),
     qty: t(locale, 'trading.shares', { count: fmtNum(h.quantity, locale) }),
     value: fmtNum(h.marketValue, locale),
+    avg: fmtNum(Math.round(h.avgPrice), locale),
     pnlPct: fmtPct(h.unrealizedPnlPct),
     dir: dirClass(h.unrealizedPnlPct),
   }));
@@ -112,16 +116,28 @@ export function linePoints(prices: readonly number[], w: number, h: number, pad 
   }));
 }
 
-// ───────── 주문 패널 (수량 맞추고 매수/매도 버튼이 바로 체결) ─────────
+// ───────── 주문 패널 (매수·매도를 먼저 고르고 → 수량·최대 → 매수하기/매도하기) ─────────
 
 export const QTY_MAX = 999;
+
+export type OrderSide = 'buy' | 'sell';
 
 export interface OrderState {
   stockId: string;
   quantity: number;
+  /** 고른 방향. null이면 아직 고르지 않음 (수량 칸이 잠겨 있다) */
+  side: OrderSide | null;
 }
 
-export const newOrderState = (stockId: string): OrderState => ({ stockId, quantity: 1 });
+export const newOrderState = (stockId: string): OrderState => ({ stockId, quantity: 0, side: null });
+
+/** 매수·매도 고르기: 수량은 1 (그 방향으로 1주도 안 되면 0) */
+export function chooseSide(o: OrderState, side: OrderSide, maxQty: number): OrderState {
+  return { ...o, side, quantity: Math.min(1, Math.max(0, maxQty)) };
+}
+
+/** 방향 고르기 전으로 (취소·체결 뒤) */
+export const clearSide = (o: OrderState): OrderState => ({ ...o, side: null, quantity: 0 });
 
 /** 수량 입력: 숫자만, 0~999 */
 export function setQuantity(o: OrderState, quantity: number): OrderState {
@@ -137,9 +153,9 @@ export function parseQuantity(text: string): number {
 
 export const stepQuantity = (o: OrderState, delta: number) => setQuantity(o, o.quantity + delta);
 
-/** '최대': 지금 현금으로 살 수 있는 최대 수량 (수수료 포함, 999 이하). 살 수 없고 보유 중이면 보유 수량 */
-export function setMax(o: OrderState, maxBuy: number, holding: number): OrderState {
-  return setQuantity(o, maxBuy > 0 ? maxBuy : holding);
+/** '최대': 고른 방향의 최대 수량 (매수 = 지금 현금으로 수수료까지 내고 살 수 있는 수, 매도 = 보유 수량). 999 이하 */
+export function setMax(o: OrderState, maxForSide: number): OrderState {
+  return setQuantity(o, maxForSide);
 }
 
 export interface NeedView {
@@ -148,10 +164,10 @@ export interface NeedView {
   error: boolean;
 }
 
-/** "필요 코인 (수수료 19)" + 9,715 (매수 기준). 현금이 모자라면 오류 문구 */
-export function needView(p: { total: number; fee: number; error: string | null }, locale: Locale): NeedView {
-  const label = t(locale, 'trading.need', { fee: fmtNum(p.fee, locale) });
-  if (p.error === 'insufficient-cash') return { label, value: t(locale, 'error.insufficient-cash'), error: true };
+/** 매수: "필요 코인 (수수료 19)" + 9,715 / 매도: "받을 코인 (수수료 19)" + 9,677. 현금·보유가 모자라면 오류 문구 */
+export function needView(p: { side: OrderSide; total: number; fee: number; error: string | null }, locale: Locale): NeedView {
+  const label = t(locale, p.side === 'buy' ? 'trading.need' : 'trading.receive', { fee: fmtNum(p.fee, locale) });
+  if (p.error === 'insufficient-cash' || p.error === 'insufficient-shares') return { label, value: t(locale, `error.${p.error}`), error: true };
   return { label, value: fmtNum(p.total, locale), error: false };
 }
 
@@ -322,6 +338,10 @@ export interface FinalView {
   totalWork: string;
   unpaid: string | null;
   interior: string;
+  /** 엔딩 (마지막 인테리어 단계: 0~2 새드 / 3~6 중립 / 7 해피) */
+  ending: Ending;
+  endingTitle: string;
+  endingBody: string;
 }
 
 export function finalView(f: FinalSummary, eraNames: Readonly<Record<string, string>>, locale: Locale): FinalView {
@@ -335,6 +355,10 @@ export function finalView(f: FinalSummary, eraNames: Readonly<Record<string, str
     totalWork: fmtNum(f.totalWorkIncome, locale),
     unpaid: f.unpaidWork > 0 ? t(locale, 'final.unpaid', { coins: fmtNum(f.unpaidWork, locale) }) : null,
     interior: t(locale, 'final.interior', { level: f.interiorLevel }),
+    // 예전 저장(엔딩 필드 없음)도 같은 규칙으로
+    ending: endingFor(f.interiorLevel),
+    endingTitle: t(locale, `ending.${endingFor(f.interiorLevel)}.title`),
+    endingBody: t(locale, `ending.${endingFor(f.interiorLevel)}.body`),
   };
 }
 

@@ -67,7 +67,7 @@ export const STOCK_NAME_HINT_WORDS = [
  * 띄어쓰기 없음, '주'를 붙이지 않음 (예: 밀레아제분, 큐라제약). 순우리말일 필요는 없다 (2026-10-10 사용자 결정).
  * 실존 기업명·상표는 쓰지 않는다. 이전 형식: "노랑제분"(2글자 수식어 + 업종), 그 전 "노랑 제분주"
  */
-export const STOCK_NAME_PATTERN = /^[가-힣A-Za-z0-9]{3,6}$/;
+export const STOCK_NAME_PATTERN = /^[가-힣A-Za-z0-9]{3,7}$/;
 /** 종목명 형식(영어): 'Stock'을 붙이지 않는다 (예: Yellow Flour) */
 export const STOCK_NAME_EN_PATTERN = /^\S(?!.* Stock$).*$/;
 /** 기업 설명 길이(한국어 글자 수): 1~2줄, 80자 안팎. 이 값을 넘으면 경고, 90자를 넘으면 고쳐야 함 */
@@ -88,7 +88,7 @@ export function lintWords(era: Era): LintIssue[] {
   const add = (rule: string, where: string, message: string) => issues.push({ rule, where, message });
   for (const s of era.stocks) {
     const name = s.name.ko;
-    if (!STOCK_NAME_PATTERN.test(name) || name.endsWith('주')) add('stockName', s.id, `종목명 "${name}"이 "브랜드 + 업종" 붙여쓰기 3~6자 형식이 아님 (띄어쓰기·'주' 없이)`);
+    if (!STOCK_NAME_PATTERN.test(name) || name.endsWith('주')) add('stockName', s.id, `종목명 "${name}"이 "브랜드 + 업종" 붙여쓰기 3~7자 형식이 아님 (3~7자, 띄어쓰기·'주' 없이)`);
     if (!STOCK_NAME_EN_PATTERN.test(s.name.en)) add('stockName', s.id, `영어 종목명 "${s.name.en}"에 "Stock"을 붙이지 않음`);
     for (const w of STOCK_NAME_BANNED) if (name.includes(w)) add('stockName', s.id, `종목명 "${name}"에 평가·전망 어감 단어 "${w}"`);
     for (const w of STOCK_NAME_HINT_WORDS) {

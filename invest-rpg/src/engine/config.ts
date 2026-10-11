@@ -54,6 +54,8 @@ export const INSTANT_REACTION_SHARE = 0.75;
 export const AUTOSAVE_SECONDS = 30;
 /** 뉴스 발표 몇 초 뒤에 주가 리포트를 만드는가 */
 export const REPORT_DELAY_SECONDS = 120;
+/** 주가 리포트에 싣는 종목 수 상한 (8차 결정: 영향받은 종목 모두. 뉴스 영향 테마는 최대 9개) */
+export const REPORT_MAX_ITEMS = 99;
 /** (기본 OFF) 주문이 N틱 뒤 가격으로 체결 */
 export const ORDER_DELAY_TICKS = 0;
 /** (기본 OFF) 간접(강도 2·1) 영향을 직접 영향보다 N틱 늦게 반영 */
@@ -92,6 +94,20 @@ export const WORK_BATCH_DOLLS = 100;
 export const INTERIOR_MAX_LEVEL = 7;
 /** 한 단계 올리는 값(코인). 2026-10-10 결정: 1,000 → 2,000 (7단계 합계 14,000) */
 export const INTERIOR_COST = 2000;
+
+/**
+ * 엔딩 (8차 결정): 마지막 시대가 끝났을 때의 인테리어(인생 업그레이드) 단계로 정한다.
+ * 0~2단계 새드 / 3~6단계 중립 / 7단계(완성) 해피
+ */
+export type Ending = 'sad' | 'neutral' | 'happy';
+export const ENDING_NEUTRAL_FROM = 3;
+export const ENDING_HAPPY_FROM = INTERIOR_MAX_LEVEL;
+
+export function endingFor(interiorLevel: number): Ending {
+  if (interiorLevel >= ENDING_HAPPY_FROM) return 'happy';
+  if (interiorLevel >= ENDING_NEUTRAL_FROM) return 'neutral';
+  return 'sad';
+}
 /** 시대당 작업 수입 상한(코인). null = 상한 없음 (기본, 켜지 않는다) */
 export const WORK_INCOME_CAP_PER_ERA: number | null = null;
 
@@ -243,7 +259,7 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
   impactMultiplier: { strong: [0.6, 1.4] as const, weak: [0.4, 1.6] as const },
   autosaveSeconds: AUTOSAVE_SECONDS,
   reportDelaySeconds: REPORT_DELAY_SECONDS,
-  reportMaxItems: 3,
+  reportMaxItems: REPORT_MAX_ITEMS,
   draw: {
     sentimentCounts: { positive: 7, negative: 7, neutral: 6 },
     minCore: 11,

@@ -113,7 +113,7 @@ describe('콘텐츠 점검 (lint:content)', () => {
     expect(errors('밀레아제분')).toEqual([]);
     expect(errors('오닉스컴퓨터')).toEqual([]);
     expect(errors('카이로모터스주')).toContain('stockName'); // 7자 + '주'
-    expect(errors('솔레아에너지기술')).toContain('stockName'); // 6자 넘음
+    expect(errors('솔레아에너지기술연구')).toContain('stockName'); // 7자 넘음
     expect(errors('PC')).toContain('stockName'); // 3자 미만
     expect(errors('평화방산')).toEqual([]);
     expect(warnings('평화방산')).toContain('stockNameHint'); // "평화"는 막지 않고 경고만

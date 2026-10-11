@@ -56,7 +56,7 @@ describe('뉴스 피드와 주가 리포트 행', () => {
         const oldest = g.getFeed().at(-1)!;
         expect(oldest.report).toBeDefined();
         expect(oldest.report!.newsId).toBe(oldest.news.id);
-        expect(oldest.report!.items.length).toBeLessThanOrEqual(3);
+        expect(oldest.report!.moreCount).toBe(0);
         expect(oldest.report!.tentativeNote).toBe(true); // 첫 뉴스는 잠정
       }
     }

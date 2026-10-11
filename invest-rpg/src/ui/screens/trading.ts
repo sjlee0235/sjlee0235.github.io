@@ -4,17 +4,18 @@
 // 지키는 것
 // - 공개용 뷰(PublicGame)만 쓴다. 호재/악재 방향, 테마 분위기·비중은 어디에도 표시하지 않는다
 // - 뉴스는 팝업이 아니다. 뉴스 창에 쌓이고(최신이 위, 스크롤하면 이전 뉴스), 발표 120초 뒤 그 뉴스 아래 '주가 리포트'
-// - 주문: 수량을 맞추고 [매수]/[매도]를 누르면 현재가로 바로 체결, 짧은 안내만
+// - 주문: [매수]/[매도]를 먼저 고르고 → 수량 입력·최대(고른 방향 기준) → [매수하기]/[매도하기]로 현재가 체결, 짧은 안내만
+// - 내 계좌: [일괄매도] → 확인 창에서 [확인]을 눌러야 보유 종목 전부 매도
 
 import type { PublicAdvanceResult } from '../../engine/publicView.ts';
 import { localize } from '../../i18n/index.ts';
 import type { Screen, UiContext } from '../context.ts';
 import { clear, h, setText } from '../dom.ts';
 import { fmtNum, fmtPct } from '../format.ts';
-import { ico, inner, playIcon, pbtn, pnl } from '../kit.ts';
+import { face, ico, inner, playIcon, pbtn, pnl } from '../kit.ts';
 import {
-  dirClass, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, setMax, setQuantity, sparkPoints,
-  stepQuantity, stockRows, accountSummary, holdingRows, type NewsItemView, type OrderState, type StockRowView,
+  chooseSide, clearSide, dirClass, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, setMax, setQuantity, sparkPoints,
+  stepQuantity, type OrderSide, stockRows, accountSummary, holdingRows, type NewsItemView, type OrderState, type StockRowView,
 } from '../viewModels.ts';
 
 const SVG = 'http://www.w3.org/2000/svg';
@@ -35,6 +36,7 @@ export class TradingScreen implements Screen {
   // 계좌 바
   private readonly assetsV: HTMLElement;
   private readonly timeV: HTMLElement;
+  private readonly timeL: HTMLElement;
   private readonly retV: HTMLElement;
   private readonly cashV: HTMLElement;
   // 목록 보기: 전체 종목 / 내 계좌(보유 종목)
@@ -42,6 +44,10 @@ export class TradingScreen implements Screen {
   private readonly modeBtns: Record<'all' | 'mine', HTMLButtonElement>;
   private readonly allHead: HTMLElement;
   private readonly mineHead: HTMLElement;
+  private readonly mineSum: HTMLElement;
+  private readonly mineCash: HTMLElement;
+  private readonly mineStock: HTMLElement;
+  private readonly sellAllBtn: HTMLButtonElement;
   private readonly mineBody: HTMLElement;
   private mineSig = '';
   private readonly speedBtns: Record<1 | 2, HTMLButtonElement>;
@@ -58,6 +64,7 @@ export class TradingScreen implements Screen {
   private orderEls: {
     name: HTMLElement; price: HTMLElement; pct: HTMLElement; line: SVGPolylineElement; area: SVGPolygonElement; cur: HTMLElement;
     desc: HTMLElement; qty: HTMLInputElement; needL: HTMLElement; needV: HTMLElement; need: HTMLElement;
+    qtyRow: HTMLElement; pickHint: HTMLElement; pickRow: HTMLElement; goRow: HTMLElement; go: HTMLButtonElement;
   } | null = null;
   // 뉴스
   private readonly newsWin: HTMLElement;
@@ -71,6 +78,7 @@ export class TradingScreen implements Screen {
     // 계좌 바
     this.assetsV = h('span', { class: 'v' });
     this.timeV = h('span', { class: 'acct-time' });
+    this.timeL = h('span', { class: 'lbl' });
     this.retV = h('b', {});
     this.cashV = h('b', {});
     const speedBtn = (s: 1 | 2) => {
@@ -91,7 +99,7 @@ export class TradingScreen implements Screen {
         'div',
         { class: 'acct-top' },
         h('div', { class: 'acct-col' }, h('span', { class: 'lbl' }, t('portfolio.totalAssets')), h('div', { class: 'acct-assets' }, ico('coin', 24), this.assetsV)),
-        h('div', { class: 'acct-col r' }, h('span', { class: 'lbl' }, t('trading.remaining')), this.timeV),
+        h('div', { class: 'acct-col r' }, this.timeL, this.timeV),
       ),
       h('div', { class: 'acct-sep' }),
       h(
@@ -131,12 +139,27 @@ export class TradingScreen implements Screen {
       h('span', {}, t('trading.colName')),
       h('span', { style: 'text-align:center' }, t('trading.colQty')),
       h('span', { style: 'text-align:right' }, t('trading.colValue')),
+      h('span', { style: 'text-align:right' }, t('trading.colAvg')),
       h('span', { style: 'text-align:right' }, t('trading.colPnl')),
+    );
+    // 내 계좌 요약 줄: 현금 · 주식 평가 · [일괄매도]
+    this.mineCash = h('b', { class: 'sum-cash' });
+    this.mineStock = h('b', { class: 'sum-stock' });
+    this.sellAllBtn = pbtn('sell sell-all', t('trading.sellAll'));
+    this.sellAllBtn.addEventListener('click', () => this.askSellAll());
+    this.mineSum = h(
+      'div',
+      { class: 'mine-sum' },
+      h('span', { class: 'lbl' }, t('portfolio.cash')), this.mineCash,
+      h('span', { class: 'lbl' }, t('trading.stockValue')), this.mineStock,
+      h('span', { class: 'sp' }),
+      this.sellAllBtn,
     );
     this.listPnl = pnl(
       'list-pnl tall',
       h('div', { class: 'hd list-tabs' }, this.modeBtns.all, this.modeBtns.mine),
       this.allHead,
+      this.mineSum,
       this.mineHead,
       this.listBody,
       this.mineBody,
@@ -191,6 +214,8 @@ export class TradingScreen implements Screen {
     const { ctx } = this;
     const p = ctx.game.getPortfolio();
     setText(this.assetsV, fmtNum(p.totalAssets, ctx.locale()));
+    // "2000년대 남은 시간"
+    setText(this.timeL, ctx.t('trading.remainingEra', { era: localize(ctx.game.eraName, ctx.locale()) }));
 
     setText(this.retV, fmtPct(p.currentReturnPct));
     setText(this.cashV, fmtNum(p.cash, ctx.locale()));
@@ -223,6 +248,7 @@ export class TradingScreen implements Screen {
     this.allHead.hidden = mine;
     this.listBody.hidden = mine;
     this.mineHead.hidden = !mine;
+    this.mineSum.hidden = !mine;
     this.mineBody.hidden = !mine;
     for (const m of ['all', 'mine'] as const) {
       this.modeBtns[m].classList.toggle('on', this.mode === m);
@@ -230,41 +256,78 @@ export class TradingScreen implements Screen {
     }
   }
 
-  /** 내 계좌: 현금·주식 평가 요약 + 보유 종목 (종목명, 수량, 평가금액, 산 뒤 손익률). 누르면 주문 패널 */
+  /** 내 계좌: 현금·주식 평가 요약(+ 일괄매도) + 보유 종목 (종목명, 수량, 평가금액, 평단가, 산 뒤 손익률). 누르면 주문 패널 */
   private updateMine(): void {
     const { ctx } = this;
     const p = ctx.game.getPortfolio();
     const s = accountSummary(p, ctx.locale());
     setText(this.modeBtns.mine, `${ctx.t('trading.myAccount')} (${s.count})`);
     if (this.mode !== 'mine') return;
+    setText(this.mineCash, s.cash);
+    setText(this.mineStock, s.stockValue);
+    this.sellAllBtn.disabled = s.count === 0;
     const rows = holdingRows(p, ctx.locale());
     const sig = rows.map((r) => r.id).join('|') + ctx.locale();
     if (sig !== this.mineSig) {
       this.mineSig = sig;
       clear(this.mineBody);
-      this.mineBody.append(
-        h('div', { class: 'row hold sum' }, h('span', { class: 'lbl' }, ctx.t('portfolio.cash')), h('span', { class: 'n sum-cash' }), h('span', { class: 'lbl', style: 'text-align:right' }, ctx.t('trading.stockValue')), h('span', { class: 'n sum-stock' })),
-      );
       if (rows.length === 0) this.mineBody.append(h('div', { class: 'mine-empty' }, ctx.t('trading.noHoldings')));
       for (const r of rows) {
         const row = h('div', { class: 'row hold', 'data-id': r.id, role: 'button' },
-          h('span', { class: 'nm' }, r.name), h('span', { class: 'q' }), h('span', { class: 'n v' }), h('span', { class: 'n p' }));
+          h('span', { class: 'nm' }, r.name), h('span', { class: 'q' }), h('span', { class: 'n v' }), h('span', { class: 'n a' }), h('span', { class: 'n p' }));
         row.addEventListener('click', () => this.openOrder(r.id));
         this.mineBody.append(row);
       }
     }
-    setText(this.mineBody.querySelector('.sum-cash')!, s.cash);
-    setText(this.mineBody.querySelector('.sum-stock')!, s.stockValue);
     for (const r of rows) {
       const row = this.mineBody.querySelector<HTMLElement>(`.row[data-id="${r.id}"]`);
       if (!row) continue;
       setText(row.querySelector('.q')!, r.qty);
       setText(row.querySelector('.v')!, r.value);
+      setText(row.querySelector('.a')!, r.avg);
       const pe = row.querySelector<HTMLElement>('.p')!;
       setText(pe, r.pnlPct);
       pe.className = `n p ${r.dir}`;
       row.classList.toggle('sel', this.order?.stockId === r.id);
     }
+  }
+
+  /** (화면·디버그) 일괄매도: 확인 창에서 [확인]을 누르면 보유 종목을 지금 가격으로 전부 매도 */
+  askSellAll(): void {
+    const { ctx } = this;
+    const holdings = ctx.game.getPortfolio().holdings;
+    if (holdings.length === 0) {
+      ctx.toast(ctx.t('trading.noShares'), 'error');
+      return;
+    }
+    const expected = holdings.reduce((a, x) => a + ctx.game.previewOrder('sell', x.id, x.quantity).total, 0);
+    ctx.confirm({
+      title: ctx.t('sellAll.title'),
+      body: [ctx.t('sellAll.body', { count: holdings.length }), ctx.t('sellAll.expect', { amount: fmtNum(expected, ctx.locale()) })],
+      yes: ctx.t('common.confirm'),
+      onYes: () => this.sellAll(),
+    });
+  }
+
+  private sellAll(): void {
+    const { ctx } = this;
+    let count = 0;
+    let received = 0;
+    for (const x of ctx.game.getPortfolio().holdings) {
+      const r = ctx.game.sell(x.id, x.quantity);
+      if (!r.ok) continue;
+      count++;
+      if ('trade' in r) received += r.trade.amount - r.trade.fee;
+    }
+    if (count === 0) {
+      ctx.toast(ctx.t('trading.noShares'), 'error');
+      return;
+    }
+    ctx.toast(ctx.t('sellAll.done', { count, amount: fmtNum(received, ctx.locale()) }));
+    if (this.order) this.order = clearSide(this.order);
+    ctx.persist();
+    ctx.refreshTop();
+    this.update();
   }
 
   // ───────── 종목 목록 ─────────
@@ -397,21 +460,38 @@ export class TradingScreen implements Screen {
       this.order = stepQuantity(this.order!, 1);
       this.updateOrder();
     });
+    // 최대: 고른 방향 기준 (매수 = 현금으로 살 수 있는 수, 매도 = 보유 수량)
     max.addEventListener('click', () => {
-      const id = this.order!.stockId;
-      const m = ctx.game.maxQty('buy', id);
-      const held = ctx.game.getPortfolio().holdings.find((x) => x.id === id)?.quantity ?? 0;
-      this.order = setMax(this.order!, m, held);
-      ctx.track('max_button', { stockId: id, side: m > 0 ? 'buy' : 'sell', quantity: this.order.quantity });
+      const cur = this.order!;
+      if (!cur.side) return;
+      this.order = setMax(cur, ctx.game.maxQty(cur.side, cur.stockId));
+      ctx.track('max_button', { stockId: cur.stockId, side: cur.side, quantity: this.order.quantity });
       this.updateOrder();
     });
     const needL = h('div', { class: 'lbl2' });
     const needV = h('div', { class: 'v' });
     const need = h('div', { class: 'need' }, needL, needV);
+    const qtyRow = h('div', { class: 'qty-row' }, minus, h('div', { class: 'pnl qty-box' }, h('div', { class: 'in' }, qty)), plus, max, need);
+    const pickHint = h('div', { class: 'qty-row pick-hint' }, t('trading.pickSide'));
+
+    // 1단계: 방향 고르기 [매수] [매도]
     const buy = pbtn('buy', t('trade.buy'));
     const sell = pbtn('sell', t('trade.sell'));
-    buy.addEventListener('click', () => this.execute('buy'));
-    sell.addEventListener('click', () => this.execute('sell'));
+    buy.addEventListener('click', () => this.pickSide('buy'));
+    sell.addEventListener('click', () => this.pickSide('sell'));
+    const pickRow = h('div', { class: 'trade-row' }, buy, sell);
+    // 2단계: [취소] [매수하기 / 매도하기]
+    const back = pbtn('back', t('common.cancel'));
+    back.addEventListener('click', () => {
+      this.order = clearSide(this.order!);
+      this.updateOrder();
+    });
+    const go = pbtn('go', '');
+    go.addEventListener('click', () => {
+      const side = this.order?.side;
+      if (side) this.execute(side);
+    });
+    const goRow = h('div', { class: 'trade-row' }, back, go);
 
     box.append(
       h(
@@ -420,11 +500,26 @@ export class TradingScreen implements Screen {
         h('div', { class: 'order-head' }, name, price, pct, h('span', { class: 'sp' }), close),
         chart,
         desc,
-        h('div', { class: 'qty-row' }, minus, h('div', { class: 'pnl qty-box' }, h('div', { class: 'in' }, qty)), plus, max, need),
-        h('div', { class: 'trade-row' }, buy, sell),
+        pickHint,
+        qtyRow,
+        pickRow,
+        goRow,
       ),
     );
-    this.orderEls = { name, price, pct, line, area, cur, desc, qty, needL, needV, need };
+    this.orderEls = { name, price, pct, line, area, cur, desc, qty, needL, needV, need, qtyRow, pickHint, pickRow, goRow, go };
+  }
+
+  /** (화면·디버그) 매수·매도 고르기. 팔 주식이 없으면 안내만 */
+  pickSide(side: OrderSide): void {
+    const o = this.order;
+    if (!o) return;
+    const max = this.ctx.game.maxQty(side, o.stockId);
+    if (side === 'sell' && max === 0) {
+      this.ctx.toast(this.ctx.t('trading.noShares'), 'error');
+      return;
+    }
+    this.order = chooseSide(o, side, max);
+    this.updateOrder();
   }
 
   private updateOrder(syncInput = true): void {
@@ -459,11 +554,21 @@ export class TradingScreen implements Screen {
       : t('trading.noHolding');
     setText(els.desc, `${localize(stock.description, locale)} · ${holding}`);
     if (syncInput && els.qty.value !== String(o.quantity)) els.qty.value = String(o.quantity);
-    const nv = needView(ctx.game.previewOrder('buy', o.stockId, Math.max(1, o.quantity)), locale);
-    const shown = o.quantity === 0 ? { ...nv, value: '0', error: false } : nv;
-    setText(els.needL, shown.label);
-    setText(els.needV, shown.value);
-    els.need.classList.toggle('err', shown.error);
+    // 방향을 고르기 전: 수량 칸 대신 안내, [매수] [매도]. 고른 뒤: 수량 칸, [취소] [매수하기/매도하기]
+    const side = o.side;
+    els.pickHint.hidden = side !== null;
+    els.qtyRow.hidden = side === null;
+    els.pickRow.hidden = side !== null;
+    els.goRow.hidden = side === null;
+    if (side) {
+      els.go.className = `pbtn go ${side}`;
+      setText(face(els.go), t(side === 'buy' ? 'trading.doBuy' : 'trading.doSell'));
+      const nv = needView(ctx.game.previewOrder(side, o.stockId, Math.max(1, o.quantity)), locale);
+      const shown = o.quantity === 0 ? { ...nv, value: '0', error: false } : nv;
+      setText(els.needL, shown.label);
+      setText(els.needV, shown.value);
+      els.need.classList.toggle('err', shown.error);
+    }
   }
 
   private execute(side: 'buy' | 'sell'): void {
@@ -480,6 +585,8 @@ export class TradingScreen implements Screen {
     ctx.toast(msg.text, msg.ok ? 'info' : 'error');
     if (r.ok) {
       this.orderDone = true;
+      // 체결되면 다시 방향 고르기부터
+      this.order = clearSide(o);
       ctx.persist();
       ctx.refreshTop();
     }

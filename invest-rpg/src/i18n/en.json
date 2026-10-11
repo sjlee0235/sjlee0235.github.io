@@ -112,16 +112,21 @@
     "story4": "The goal: turn life around. Read the news, invest, and turn this shabby room into a great one.",
     "howTitle": "How to Play",
     "how1": "One era lasts 2 hours of game time. The time left is shown at the top left (in the account bar on the trading screen). There is no news for the first 3 minutes, so look around and get ready.",
-    "how2": "When news breaks, related prices move right away. Tap a stock, set the quantity and press [Buy] or [Sell] to trade instantly.",
+    "how2": "When news breaks, related prices move at once. Tap a stock, choose [Buy] or [Sell] first, set a quantity or tap [Max], then tap [Buy now]/[Sell now].",
     "how3": "When time runs out, the era ends. All your shares are sold automatically, and after the settlement you move on to the next era.",
     "roomTitle": "Your Room and Work",
     "room1": "Attach eyes to dolls in the workshop to earn coins. You get paid every time you finish 100 dolls.",
-    "room2": "Spend 2,000 cash coins in the living room to upgrade the interior one level. You need cash, not stocks.",
+    "room2": "In the living room, [Life Upgrade] improves the room one level per 2,000 cash coins (7 levels). You need cash, not stocks.",
     "room3": "Fictional scenarios inspired by real events. In-game numbers are not investment advice.",
     "skip": "Skip",
     "next": "Next",
     "start": "Start",
-    "how4": "Your coins, interior and work progress carry over to the next era. (This test version goes up to the 2000s.)"
+    "how4": "Coins, life upgrades and work progress carry over to the next era. The eras run 2000s → 2010s → 2020s.",
+    "how5": "News is based on events that really happened in each era. Recall what happened back then and you can guess how a tentative story ends. Use your knowledge of the era when you invest!",
+    "goalTitle": "Goal and endings",
+    "goal1": "Goal: complete all 7 life-upgrade levels before the last era (the 2020s) ends!",
+    "goal2": "The ending depends on your level when the last era ends: levels 0–2 sad, 3–6 neutral, 7 (complete) happy.",
+    "goal3": "Grow your coins by investing, cash out at the right time, and upgrade the room. That's the road to a comeback."
   },
   "disclaimer": {
     "fictional": "This is a fictional scenario based on real events and is not investment advice."
@@ -221,7 +226,8 @@
     "cumulativeLabel": "Cumulative investment return",
     "totalLabel": "Final coins",
     "unpaid": "{coins} coins of work income not yet paid (pending)",
-    "interior": "You decorated the interior up to level {level}."
+    "interior": "You reached life upgrade level {level}.",
+    "endingLabel": "Ending"
   },
   "trading": {
     "listTitle": "Stocks",
@@ -242,7 +248,15 @@
     "colPnl": "P/L",
     "shares": "{count} sh",
     "stockValue": "Stocks",
-    "noHoldings": "No stocks yet. Pick one in [Stocks] to buy."
+    "noHoldings": "No stocks yet. Pick one in [Stocks] to buy.",
+    "receive": "Coins you get (fee {fee})",
+    "pickSide": "First choose [Buy] or [Sell]",
+    "doBuy": "Buy now",
+    "doSell": "Sell now",
+    "noShares": "You don't own any shares.",
+    "colAvg": "Avg cost",
+    "remainingEra": "{era} time left",
+    "sellAll": "Sell all"
   },
   "settings": {
     "title": "Settings",
@@ -255,9 +269,9 @@
     "noCredits": "No tracks need attribution yet."
   },
   "living": {
-    "upgrade": "Upgrade Interior - {cost}",
-    "upgradeAria": "Upgrade interior, {cost} coins (now level {level}/{max})",
-    "upgradeDone": "Interior Complete",
+    "upgrade": "Life Upgrade - {cost}",
+    "upgradeAria": "Life upgrade, {cost} coins (now {level}/{max})",
+    "upgradeDone": "Life upgrade complete",
     "notEnough": "Not enough cash. Sell some stocks to raise cash.",
     "dog": "Dog"
   },
@@ -268,5 +282,25 @@
     "confirmTitle": "Start over?",
     "confirmBody": "You have saved progress. Starting a new game erases your coins, stocks, interior and work and starts from the beginning.",
     "confirmYes": "Start over"
+  },
+  "sellAll": {
+    "title": "Sell all",
+    "body": "Sell all {count} stocks you hold at the current prices?",
+    "expect": "Expected: {amount} coins after fees (prices keep moving)",
+    "done": "Sold all {count} stocks. +{amount} coins"
+  },
+  "ending": {
+    "sad": {
+      "title": "Sad Ending · The Same Old Room",
+      "body": "Time went by, but the room barely changed. Among the moldy walls and the creaky chair, Yeokjeon hugged the dog and muttered, \"Next time I'll win by studying.\""
+    },
+    "neutral": {
+      "title": "Neutral Ending · Halfway There",
+      "body": "The room now feels like a real home. It isn't the dream room yet, but Yeokjeon can now read the news and decide alone. The comeback is still in progress."
+    },
+    "happy": {
+      "title": "Happy Ending · Life Turned Around",
+      "body": "The moldy rented room became a room anyone would envy. A comeback built on study, not gut feeling. Yeokjeon smiled out the window, the dog by their side."
+    }
   }
 }

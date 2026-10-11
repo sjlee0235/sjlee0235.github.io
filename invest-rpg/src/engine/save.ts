@@ -22,7 +22,7 @@
 
 import type { Era } from '../data/schema.ts';
 import { Account } from './account.ts';
-import { makeConfig, type GameConfig } from './config.ts';
+import { endingFor, makeConfig, type GameConfig } from './config.ts';
 import type { EraDraw } from './eraDraw.ts';
 import { finalizeEra, sortEras, type EraSettlement } from './eraManager.ts';
 import { Game, type EraSummary, type FinalSummary, type GameStateSnapshot, type SavedAction } from './game.ts';
@@ -275,6 +275,7 @@ function settleFromSnapshot(
         cumulativeReturnPct: cumulativeReturnPct(returns),
         unpaidWork: workCarry.pending,
         interiorLevel,
+        ending: endingFor(interiorLevel),
       };
   return { status: 'settled_on_version_change', game, settlement, reason, finalSummary };
 }

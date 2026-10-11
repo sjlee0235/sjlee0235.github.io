@@ -77,15 +77,19 @@ function debriefSection(d: PublicEraDebrief, locale: Locale): HTMLElement {
 
 // ───────── 최종 요약 ─────────
 
-export function finalOverlay(f: FinalSummary, eraNames: Record<string, string>, locale: Locale, onRestart: () => void): HTMLElement {
+/** 최종 요약 + 엔딩. roomImage = 마지막 단계 거실 그림 주소 (엔딩 칸 배경) */
+export function finalOverlay(f: FinalSummary, eraNames: Record<string, string>, locale: Locale, onRestart: () => void, roomImage?: string): HTMLElement {
   const t = (k: string, p?: Record<string, string | number>) => tr(locale, k, p);
   const v = finalView(f, eraNames, locale);
   const restart = pbtn('accent', t('final.restart'));
   restart.addEventListener('click', onRestart);
+  const room = h('div', { class: 'ending-room' });
+  if (roomImage) room.style.backgroundImage = `url("${roomImage}")`;
   return dialog(
-    'final',
+    `final ending-${v.ending}`,
     v.title,
     [
+      h('div', { class: 'ending' }, room, h('div', { class: 'ending-t' }, v.endingTitle), h('p', { class: 'ending-b' }, v.endingBody)),
       ...v.lines.map((l) => h('div', { class: 'note' }, l)),
       kv(t('final.totalWorkLabel'), t('common.coin', { amount: v.totalWork })),
       kv(t('final.cumulativeLabel'), v.cumulative),
@@ -135,12 +139,22 @@ export function confirmNewOverlay(locale: Locale, onAnswer: (ok: boolean) => voi
   return dialog('confirm-new', t('title.confirmTitle'), [h('p', { class: 'note', style: 'color:var(--text)' }, t('title.confirmBody'))], [no, yes]);
 }
 
+/** 일반 확인 창: [취소] [확인] */
+export function confirmOverlay(title: string, body: string[], noLabel: string, yesLabel: string, onAnswer: (ok: boolean) => void): HTMLElement {
+  const no = pbtn('', noLabel);
+  const yes = pbtn('accent', yesLabel);
+  no.addEventListener('click', () => onAnswer(false));
+  yes.addEventListener('click', () => onAnswer(true));
+  return dialog('confirm', title, body.map((line) => h('p', { class: 'note', style: 'color:var(--text)' }, line)), [no, yes]);
+}
+
 // ───────── 튜토리얼: 이야기(김역전) → 게임 방법 → 방 꾸미기와 작업 ─────────
 
 export const TUTORIAL_PAGES = [
   { title: 'tutorial.storyTitle', lines: ['tutorial.story1', 'tutorial.story2', 'tutorial.story3', 'tutorial.story4'] },
-  { title: 'tutorial.howTitle', lines: ['tutorial.how1', 'tutorial.how2', 'tutorial.how3', 'tutorial.how4'] },
+  { title: 'tutorial.howTitle', lines: ['tutorial.how1', 'tutorial.how2', 'tutorial.how3', 'tutorial.how4', 'tutorial.how5'] },
   { title: 'tutorial.roomTitle', lines: ['tutorial.room1', 'tutorial.room2', 'tutorial.room3'] },
+  { title: 'tutorial.goalTitle', lines: ['tutorial.goal1', 'tutorial.goal2', 'tutorial.goal3'] },
 ] as const;
 
 export function tutorialOverlay(locale: Locale, onDone: () => void): HTMLElement {

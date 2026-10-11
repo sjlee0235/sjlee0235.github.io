@@ -40,5 +40,14 @@ describe('튜토리얼: 시대 진행', () => {
     const how = TUTORIAL_PAGES[1]!.lines.map((k) => t('ko', k)).join(' ');
     expect(how).toContain('다음 시대로 넘어가요');
     expect(how).toContain('처음 3분');
+    expect(how).toContain('2000년대 → 2010년대 → 2020년대');
+    expect(how).toContain('시대 배경 지식'); // 그 시대 사건을 떠올려 투자에 활용
+  });
+
+  it('마지막 장: 목표(마지막 시대 전에 인생 업그레이드 완성)와 엔딩 세 가지', () => {
+    const goal = TUTORIAL_PAGES.at(-1)!.lines.map((k) => t('ko', k)).join(' ');
+    expect(goal).toContain('마지막 시대');
+    expect(goal).toContain('인생 업그레이드 7단계');
+    for (const w of ['새드 엔딩', '중립 엔딩', '해피 엔딩']) expect(goal).toContain(w);
   });
 });

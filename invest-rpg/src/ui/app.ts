@@ -35,7 +35,7 @@ import { hourglassIcon, ico, inner, pbtn, playIcon, pnl } from './kit.ts';
 import type { IconName } from './icons.ts';
 import { GameLoop, type Clock } from './loop.ts';
 import {
-  confirmNewOverlay, consentOverlay, finalOverlay, settingsOverlay, settlementOverlay, titleScreen, tutorialOverlay,
+  confirmNewOverlay, confirmOverlay, consentOverlay, finalOverlay, settingsOverlay, settlementOverlay, titleScreen, tutorialOverlay,
 } from './overlays.ts';
 import { SceneLayer } from './scene.ts';
 import { LivingRoomScreen } from './screens/livingRoom.ts';
@@ -344,6 +344,13 @@ export class App {
       assetBase: this.opts.assetBase,
       now: this.opts.now,
       toast: (text, kind) => this.toast(text, kind),
+      confirm: (o) => {
+        const ask = confirmOverlay(o.title, o.body, tr(this.settings.locale, 'common.cancel'), o.yes, (ok) => {
+          ask.remove();
+          if (ok) o.onYes();
+        });
+        this.overlays.append(ask);
+      },
       persist: () => this.persist(),
       onSpeedChanged: () => {
         this.loop.reschedule();
@@ -582,11 +589,18 @@ export class App {
     const names: Record<string, string> = {};
     for (const e of this.opts.eras) names[e.id] = localize(e.displayName, this.settings.locale);
     this.overlays.append(
-      finalOverlay(summary, names, this.settings.locale, () => {
-        this.opts.storage.remove?.(SAVE_KEY);
-        this.saveLocked = true; // 새로 고침 전에 끝난 판이 다시 저장되지 않게
-        window.location.reload();
-      }),
+      finalOverlay(
+        summary,
+        names,
+        this.settings.locale,
+        () => {
+          this.opts.storage.remove?.(SAVE_KEY);
+          this.saveLocked = true; // 새로 고침 전에 끝난 판이 다시 저장되지 않게
+          window.location.reload();
+        },
+        // 엔딩 칸 배경: 마지막 단계의 거실 (지금 시대 그림·밤낮)
+        this.opts.assetBase + sceneFile('living', artEraFor(this.game.eraId), this.tod, summary.interiorLevel),
+      ),
     );
   }
 

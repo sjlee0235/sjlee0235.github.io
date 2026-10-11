@@ -107,8 +107,9 @@ async function run(): Promise<void> {
     // 현금이 모자랄 때 인테리어 안내
     await dbg(page, 'tab', 'trading');
     await dbg(page, 'openStock', 0);
-    await page.locator('.qty-row .max').click();
     await page.locator('.trade-row .buy').click();
+    await page.locator('.qty-row .max').click();
+    await page.locator('.pbtn.go').click();
     await dbg(page, 'tab', 'living_room');
     await page.waitForTimeout(2500);
     await dbg(page, 'tod', 'day');
@@ -144,6 +145,8 @@ async function run(): Promise<void> {
     await dbg(page, 'advanceSeconds', 125);
     await shot(page, 'trading_night_list');
     await dbg(page, 'openStock', 2);
+    await shot(page, 'trading_night_pick_side');
+    await page.locator('.trade-row .buy').click();
     await page.locator('.qty-row .max').click();
     await shot(page, 'trading_night_order');
     await dbg(page, 'tod', 'day');
@@ -151,6 +154,9 @@ async function run(): Promise<void> {
     await shot(page, 'trading_day_order');
     await page.locator('.list-tab').nth(1).click();
     await shot(page, 'trading_day_my_account');
+    await page.locator('.pbtn.sell-all').click();
+    await shot(page, 'trading_day_sell_all_confirm');
+    await page.locator('.overlay.confirm .foot .pbtn').first().click();
     await page.locator('.list-tab').first().click();
 
     // 2배속 → 다른 탭 코인 칩에 ▶▶
@@ -167,7 +173,29 @@ async function run(): Promise<void> {
     await dbg(page, 'endEra');
     await page.waitForSelector('.overlay.settlement');
     await shot(page, 'settlement');
+    // 마지막 시대까지 정산 → 최종 요약 + 엔딩 (Lv7 = 해피)
+    while (!(await page.locator('.overlay.final').isVisible())) {
+      await page.locator('.overlay.settlement .foot .pbtn').last().click();
+      await page.waitForTimeout(300);
+      if (await page.locator('.overlay.final').isVisible()) break;
+      await dbg(page, 'endEra');
+      await page.waitForSelector('.overlay.settlement');
+    }
+    await shot(page, 'final_happy_ending');
     await ctx.close();
+    // 새드 엔딩 (Lv0)
+    {
+      const { ctx: c4, page: p4 } = await open(390, 844, '&nointro=1');
+      await dbg(p4, 'tod', 'night');
+      while (!(await p4.locator('.overlay.final').isVisible())) {
+        await dbg(p4, 'endEra');
+        await p4.waitForSelector('.overlay.settlement');
+        await p4.locator('.overlay.settlement .foot .pbtn').last().click();
+        await p4.waitForTimeout(300);
+      }
+      await shot(p4, 'final_sad_ending');
+      await c4.close();
+    }
 
     // 작업실 낮 Lv0 (시안과 같은 단계), 작은 화면 주식창
     {

@@ -23,7 +23,7 @@ import {
   type TradeError, type TradeRecord,
 } from './account.ts';
 import { changeColor, DEFAULT_COLOR_SCHEME, type ChangeColor, type ColorScheme } from './colors.ts';
-import { getTickRules, makeConfig, type GameConfig, type TickRules } from './config.ts';
+import { endingFor, getTickRules, makeConfig, type Ending, type GameConfig, type TickRules } from './config.ts';
 import type { ActiveEra, EraDraw } from './eraDraw.ts';
 import { settleEra, sortEras, startEraSession, type EraSession, type EraSettlement } from './eraManager.ts';
 import type { NewsTag, ScheduledKind, ScheduledNews } from './newsEngine.ts';
@@ -108,6 +108,8 @@ export interface FinalSummary {
   unpaidWork: number;
   /** 마지막 인테리어 단계 */
   interiorLevel: number;
+  /** 엔딩: 마지막 인테리어 단계로 정한다 (0~2 새드 / 3~6 중립 / 7 해피) */
+  ending: Ending;
 }
 
 /** 작업실 화면용 상태 */
@@ -498,6 +500,7 @@ export class Game {
       cumulativeReturnPct: cumulativeReturnPct(eras.map((e) => e.returnPct)),
       unpaidWork: this.work.pending,
       interiorLevel: this._interior,
+      ending: endingFor(this._interior),
     };
   }
   /** 저장이 필요한 이유들 (비어 있으면 저장 불필요). saveGame()이 비운다 */

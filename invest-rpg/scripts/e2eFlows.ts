@@ -59,8 +59,9 @@ try {
     check(!(await page.locator('.overlay.confirm-new').isVisible()), '저장이 없으면 확인 창 없이 바로');
     check(((await page.locator('.overlay.tutorial .hd').textContent()) ?? '') === '김역전의 이야기', '튜토리얼 첫 장은 김역전의 이야기');
     check(((await page.locator('.overlay.tutorial .body').textContent()) ?? '').includes('인생역전'), '이야기: 인생역전');
-    await page.locator('.overlay.tutorial .foot .pbtn').nth(1).click();
-    await page.locator('.overlay.tutorial .foot .pbtn').nth(1).click();
+    for (let i = 0; i < 3; i++) await page.locator('.overlay.tutorial .foot .pbtn').nth(1).click();
+    check(((await page.locator('.overlay.tutorial .hd').textContent()) ?? '') === '목표와 엔딩', '튜토리얼 마지막 장: 목표와 엔딩');
+    check(((await page.locator('.overlay.tutorial .body').textContent()) ?? '').includes('해피 엔딩'), '엔딩 세 가지 안내');
     await page.locator('.overlay.tutorial .foot .pbtn').nth(1).click(); // 시작하기
     check(await page.locator('.overlay.consent').isVisible(), '튜토리얼 다음에 플레이 기록 동의 창 (처음 한 번)');
     await page.locator('.overlay.consent .foot .pbtn').first().click(); // 동의하지 않음
@@ -165,12 +166,22 @@ try {
     check(!name.includes(' ') && !name.endsWith('주'), `종목명 붙여쓰기·'주' 없음 ("${name}")`);
     await page.locator('.stock-scroll .row').nth(3).click();
     check(await page.locator('.order-pnl').isVisible(), '종목을 누르면 주문 패널이 열린다');
+    check(await page.locator('.pick-hint').isVisible() && !(await page.locator('.qty-box').isVisible()), '처음엔 수량 칸 대신 "먼저 매수·매도를 고르세요"');
+    await page.locator('.trade-row .sell').click();
+    await page.waitForTimeout(100);
+    check(((await page.locator('.toast').last().textContent()) ?? '') === '보유한 주식이 없어요.' && !(await page.locator('.qty-box').isVisible()), '보유 없이 [매도]를 고르면 안내만');
+    await page.locator('.trade-row .buy').click();
+    check(await page.locator('.qty-box').isVisible() && ((await page.locator('.pbtn.go').textContent()) ?? '') === '매수하기', '[매수]를 고르면 수량 칸과 [매수하기]');
+    const rowId = (await page.locator('.stock-scroll .row').nth(3).getAttribute('data-id'))!;
+    const expectMax = await game<number>(page, `g.maxQty('buy', '${rowId}')`);
     await page.locator('.qty-row .max').click();
     const qty = Number(await page.locator('.qty-box input').inputValue());
-    await page.locator('.trade-row .buy').click();
+    check(qty > 0 && qty === expectMax, `매수 최대 = 현금 기준 (${qty}주)`);
+    await page.locator('.pbtn.go').click();
     await page.waitForTimeout(150);
     const toast = (await page.locator('.toast').last().textContent()) ?? '';
-    check(toast.includes(`${qty}주 매수`), `최대(${qty}주) [매수] 바로 체결 안내: "${toast}"`);
+    check(toast.includes(`${qty}주 매수`), `최대(${qty}주) [매수하기] 체결 안내: "${toast}"`);
+    check(await page.locator('.pick-hint').isVisible(), '체결 뒤에는 다시 매수·매도 고르기부터');
     const firstRow = (await page.locator('.stock-scroll .row .nm').first().textContent())!;
     check(firstRow === name, '산 종목은 즐겨찾기로 맨 위에');
     const cash = await game<number>(page, 'g.cash');
@@ -190,14 +201,35 @@ try {
     check((await page.locator('.stock-scroll.mine .row.hold[data-id]').count()) === 1, '내 계좌에 산 종목 한 줄');
     check(((await page.locator('.stock-scroll.mine .row.hold[data-id] .q').textContent()) ?? '') === `${qty}주`, '보유 수량');
     check(/^[+-]?\d+\.\d%$/.test((await page.locator('.stock-scroll.mine .row.hold[data-id] .p').textContent()) ?? ''), '산 뒤 손익률');
+    check(/^\d{1,3}(,\d{3})*$/.test((await page.locator('.stock-scroll.mine .row.hold[data-id] .a').textContent()) ?? ''), `평단가 (${await page.locator('.stock-scroll.mine .row.hold[data-id] .a').textContent()})`);
+    check(((await page.locator('.list-pnl .row.hold.head span').nth(3).textContent()) ?? '') === '평단가', '손익률 왼쪽 열이 평단가');
+    check(((await page.locator('.acct-col.r .lbl').textContent()) ?? '') === '2000년대 남은 시간', '계좌 바: "2000년대 남은 시간"');
     await page.locator('.stock-scroll.mine .row.hold[data-id]').click(); // 같은 종목이 열려 있으면 닫힘
     await page.locator('.stock-scroll.mine .row.hold[data-id]').click();
     check(await page.locator('.order-pnl').isVisible() && ((await page.locator('.order-head .nm').textContent()) ?? '') === name, '내 계좌에서 종목을 누르면 주문 패널');
-    await page.locator('.qty-row .max').click(); // 더 살 수 없으면 '최대' = 보유 수량
-    check(Number(await page.locator('.qty-box input').inputValue()) === qty, '살 수 없을 때 최대 = 보유 수량 전부');
+    const buyMax = await game<number>(page, `g.maxQty('buy', g.getPortfolio().holdings[0].id)`);
+    await page.locator('.trade-row .buy').click();
+    await page.locator('.qty-row .max').click();
+    check(Number(await page.locator('.qty-box input').inputValue()) === buyMax, `[매수] 최대 = 현금으로 살 수 있는 수 (${buyMax}주)`);
+    await page.locator('.trade-row .pbtn.back').click();
     await page.locator('.trade-row .sell').click();
+    await page.locator('.qty-row .max').click();
+    check(Number(await page.locator('.qty-box input').inputValue()) === qty && ((await page.locator('.pbtn.go').textContent()) ?? '') === '매도하기', `[매도] 최대 = 보유 수량 전부 (${qty}주)`);
+    await page.locator('.qty-box input').fill('1');
+    await page.locator('.pbtn.go').click();
     await page.waitForTimeout(150);
-    check((await game<number>(page, 'g.getPortfolio().holdings.length')) === 0, '[매도]로 전량 매도 뒤 보유 종목 없음');
+    check((await game<number>(page, 'g.getPortfolio().holdings[0].quantity')) === qty - 1, '[매도하기] 1주 매도');
+    // 일괄매도: 확인 창에서 [취소]면 그대로, [확인]이면 전부 매도
+    await page.locator('.pbtn.sell-all').click();
+    check(await page.locator('.overlay.confirm').isVisible(), '[일괄매도]를 누르면 확인 창');
+    check(((await page.locator('.overlay.confirm .body').textContent()) ?? '').includes('전부 매도할까요?'), '"보유한 주식 … 전부 매도할까요?"');
+    await page.locator('.overlay.confirm .foot .pbtn').first().click();
+    check(!(await page.locator('.overlay.confirm').isVisible()) && (await game<number>(page, 'g.getPortfolio().holdings.length')) === 1, '[취소]면 매도하지 않는다');
+    await page.locator('.pbtn.sell-all').click();
+    await page.locator('.overlay.confirm .foot .pbtn').last().click();
+    await page.waitForTimeout(150);
+    check((await game<number>(page, 'g.getPortfolio().holdings.length')) === 0, '[확인]을 누르면 보유 주식 전부 매도');
+    check(((await page.locator('.toast').last().textContent()) ?? '').includes('모두 매도했어요'), '일괄매도 안내');
     check(await page.locator('.mine-empty').isVisible(), '다 팔면 내 계좌에 "아직 보유한 종목이 없어요"');
     await page.locator('.list-tab').first().click();
     await dbg(page, 'tab', 'living_room');
@@ -207,6 +239,14 @@ try {
     await page.locator('.news-chip').click();
     check((await page.getAttribute('.stage', 'data-tab')) === 'trading', 'NEWS!를 누르면 주식창으로');
     check((await page.locator('.news-win .ni').count()) >= 1, '주식창 뉴스 창에 뉴스가 있다');
+    await dbg(page, 'advanceSeconds', 125);
+    await page.waitForTimeout(200);
+    const repItems = await game<number>(page, 'g.getFeed().at(-1).report.items.length');
+    const repLines = await page.locator('.news-win .ni').last().locator('.rep-i').count();
+    check(repItems >= 3 && repLines === repItems, `주가 리포트에 영향받은 종목 모두 (${repLines}/${repItems}줄)`);
+    const lastLine = page.locator('.news-win .ni').last().locator('.rep-i').last();
+    await lastLine.scrollIntoViewIfNeeded();
+    check(await lastLine.isVisible(), '리포트 마지막 줄까지 스크롤해서 볼 수 있다');
     check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
   }
