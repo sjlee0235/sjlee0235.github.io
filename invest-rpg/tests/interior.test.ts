@@ -1,4 +1,4 @@
-// 인테리어 업그레이드: 0~7단계, 단계당 2,000코인(보유 현금에서), 출금 처리(손실 아님), 시대를 넘어 이월, 세이브·리플레이
+// 인테리어 업그레이드: 0~7단계, 단계별 2,000·4,000·…·14,000코인(보유 현금에서, 11차), 출금 처리(손실 아님), 시대를 넘어 이월, 세이브·리플레이
 
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_CONFIG } from '../src/engine/config.ts';
@@ -21,8 +21,19 @@ const threeEras = () => [
 ];
 
 describe('인테리어 업그레이드 규칙', () => {
-  it('기본값: 최고 7단계, 단계당 2,000코인', () => {
-    expect(DEFAULT_CONFIG.interior).toEqual({ maxLevel: 7, costPerLevel: 2000 });
+  it('기본값: 최고 7단계, 단계마다 2,000씩 올라 2,000~14,000코인 (합계 56,000, 11차)', () => {
+    expect(DEFAULT_CONFIG.interior).toEqual({ maxLevel: 7, costs: [2000, 4000, 6000, 8000, 10000, 12000, 14000] });
+  });
+
+  it('다음 단계 값은 지금 단계에 따라 오른다', () => {
+    const g = new Game({ eras: [era], seed: 1, startCash: 60_000 });
+    const seen: (number | null)[] = [];
+    for (let i = 0; i < 7; i++) {
+      seen.push(g.interiorNextCost);
+      expect(g.upgradeInterior()).toMatchObject({ ok: true, level: i + 1, cost: seen[i] });
+    }
+    expect(seen).toEqual([2000, 4000, 6000, 8000, 10000, 12000, 14000]);
+    expect(g.account.cash).toBe(60_000 - 56_000);
   });
 
   it('누르면 보유 현금에서 2,000코인을 내고 한 단계 오른다', () => {
@@ -46,11 +57,11 @@ describe('인테리어 업그레이드 규칙', () => {
   });
 
   it('7단계가 끝이고, 그 뒤로는 max-level', () => {
-    const g = new Game({ eras: [era], seed: 3, startCash: 20_000 });
+    const g = new Game({ eras: [era], seed: 3, startCash: 60_000 });
     for (let i = 1; i <= 7; i++) expect(g.upgradeInterior()).toMatchObject({ ok: true, level: i });
     expect(g.interiorNextCost).toBeNull();
     expect(g.upgradeInterior()).toEqual({ ok: false, error: 'max-level' });
-    expect(g.account.cash).toBe(20_000 - 14_000);
+    expect(g.account.cash).toBe(60_000 - 56_000);
   });
 
   it('앱이 백그라운드이거나 시대가 끝났으면 살 수 없다', () => {
@@ -93,13 +104,13 @@ describe('인테리어 업그레이드 규칙', () => {
 
 describe('시대를 넘어 이월', () => {
   it('다음 시대에도 단계가 그대로이고, 시작 자금은 쓴 만큼 줄어 있다', () => {
-    const g = new Game({ eras: threeEras(), seed: 6 });
+    const g = new Game({ eras: threeEras(), seed: 6, startCash: 20_000 });
     g.upgradeInterior();
     g.upgradeInterior();
     runEra(g);
     g.startNextEra();
     expect(g.interiorLevel).toBe(2);
-    expect(g.eraStartCash).toBe(6000);
+    expect(g.eraStartCash).toBe(20_000 - 2000 - 4000);
     g.upgradeInterior();
     runEra(g);
     g.startNextEra();

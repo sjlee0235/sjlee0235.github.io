@@ -110,6 +110,8 @@ export class LivingRoomScreen implements Screen {
       ctx.onInteriorChanged();
       this.update();
       flash(face(this.upBtn), 'bump', 350);
+      // 11차: 단계가 오르면 작업 보상도 오른다는 것을 알려 준다
+      ctx.toast(ctx.t('living.upgraded', { level: r.level, coins: g.getWorkStatus().coinsPerDoll }));
       return;
     }
     if (r.error === 'insufficient-cash') {
