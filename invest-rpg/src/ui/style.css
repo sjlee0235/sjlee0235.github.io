@@ -204,6 +204,9 @@ button { cursor: pointer; }
 
 /* ───────── 작업실 ───────── */
 .doll-hit { position: absolute; z-index: 3; }
+/* 2010·2020년대 작업물 그림 (배경 위, 터치 범위 아래). 도트를 흐리지 않고 3배 */
+.work-sprite { position: absolute; z-index: 2; pointer-events: none; background-size: 100% 100%; background-repeat: no-repeat; image-rendering: pixelated; }
+.work-sprite[hidden] { display: none; }
 .workshop .toast-pnl, .workshop .work-guide { pointer-events: none; }
 .fly { position: absolute; z-index: 40; font-size: 18px; font-weight: 700; color: var(--accent); text-shadow: 0 2px 0 var(--bd); pointer-events: none; transition: transform .6s cubic-bezier(.4, 0, .6, 1), opacity .6s; }
 

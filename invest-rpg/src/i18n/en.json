@@ -68,7 +68,7 @@
     "workPaid": "Work income paid this era",
     "interiorSpent": "Spent on interior",
     "nextStart": "Next era starting coins",
-    "pendingWork": "{coins} coins of pending work income will be paid after {dolls} more dolls. It carries over to the next era."
+    "pendingWork": "{coins} coins of pending work income will be paid after {dolls} more items. It carries over to the next era."
   },
   "news": {
     "type": {
@@ -116,7 +116,7 @@
     "how2": "When news breaks, related prices move at once. Tap a stock, choose [Buy] or [Sell] first, set a quantity or tap [Max], then tap [Buy now]/[Sell now].",
     "how3": "When time runs out, the era ends. All your shares are sold automatically, and after the settlement you move on to the next era.",
     "roomTitle": "Your Room and Work",
-    "room1": "Attach eyes to dolls in the workshop to earn coins. You get paid every time you finish 100 dolls. Each Life Upgrade level adds 1 coin per touch.",
+    "room1": "Attach eyes to dolls in the workshop to earn coins. You get paid every time you finish 100. The job changes with the era (decorating phone cases, then writing blog posts). Each Life Upgrade level adds 1 coin per touch.",
     "room2": "In the living room, [Life Upgrade] spends cash to improve the room one level at a time (7 levels). The first level costs 2,000 coins and each level costs 2,000 more than the last. You need cash, not stocks.",
     "room3": "Fictional scenarios inspired by real events. In-game numbers are not investment advice.",
     "skip": "Skip",
@@ -194,7 +194,23 @@
     "done": "Done: {count}",
     "pendingShort": "Pending",
     "paid": "100 dolls done! {coins} coins of work income paid.",
-    "dollLabel": "Doll (tap to attach eyes)"
+    "dollLabel": "Doll (tap to attach eyes)",
+    "kinds": {
+      "phone_case": {
+        "payoutNote": "You get paid every time you finish 100 cases.",
+        "eyes": "Gems {count} rows",
+        "done": "Done {count}",
+        "paid": "100 cases done! {coins} coins of work income arrived.",
+        "dollLabel": "Phone case (tap to add gems)"
+      },
+      "blog_post": {
+        "payoutNote": "You get paid every time you publish 100 posts.",
+        "eyes": "Writing {count}/3",
+        "done": "Published {count}",
+        "paid": "100 posts published! {coins} coins of work income arrived.",
+        "dollLabel": "Blog post (tap to write)"
+      }
+    }
   },
   "music": {
     "genre": {

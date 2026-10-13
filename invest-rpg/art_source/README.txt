@@ -15,3 +15,7 @@ workshop_out.py  작업실 배경: 인형 가슴 무늬(빨간 사각형+노란 
 tv_out.py        TV 홈쇼핑 배경: 지지직 노이즈 4프레임을 세로로 이어 붙인 시트 (프레임 0 = 받은 그림과 같음, 130x1124)
 verify.py        다시 그린 장면이 받은 PNG와 같은지 확인 (작업실·TV는 픽셀까지 같음. 거실은 그대로 받은 PNG를 씀)
 게임은 assets/art/scene/, assets/art/dog/ 의 PNG만 읽는다. 이 폴더의 코드는 그림을 다시 만들 때만 쓴다.
+
+---- 13차 (2026-10-13) ----
+2010·2020년대 작업실 배경(workshop_2010s_*, workshop_2020s_*)과 작업물 그림(assets/art/work/)은 디자이너가 따로 그려 전달한 PNG다
+(docs/WORK_ART_DELIVERY.md). 작업물 자리를 비운 130x281 한 칸이라, workshop_out.py로 다시 굽지 않는다 (2000년대만 이 코드로 굽는다).

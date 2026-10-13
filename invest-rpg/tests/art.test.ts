@@ -2,7 +2,8 @@
 
 import { describe, expect, it } from 'vitest';
 import {
-  allArtFiles, artEraFor, DOG_H, DOG_W, dogStageFor, HEART_W, SCENE_FRAMES, SCENE_H, SCENE_W, timeOfDayAt,
+  allArtFiles, artEraFor, DOG_H, DOG_W, dogStageFor, HEART_W, SCENE_H, SCENE_W, sceneFrames, timeOfDayAt, WORK_KIND_BY_ERA, WORK_SPRITE_H,
+  WORK_SPRITE_W, workSpriteFile, type ArtEra, type SceneKind,
 } from '../src/ui/art.ts';
 
 declare const process: {
@@ -21,19 +22,29 @@ describe('그림 파일', () => {
   const files = allArtFiles();
 
   it('목록의 파일이 모두 있고, 폴더에 목록 밖 파일이 없다', () => {
-    expect(files.length).toBe(144 + 24 + 3);
+    expect(files.length).toBe(144 + 12 + 24 + 3);
     const onDisk = [
       ...fs.readdirSync('assets/art/scene').map((f) => `art/scene/${f}`),
+      ...fs.readdirSync('assets/art/work').map((f) => `art/work/${f}`),
       ...fs.readdirSync('assets/art/dog').map((f) => `art/dog/${f}`),
     ].sort();
     expect(onDisk).toEqual([...files].sort());
   });
 
-  it('장면은 130 폭, 높이 = 281 × 시트 프레임 수', () => {
+  it('장면은 130 폭, 높이 = 281 × 시트 프레임 수 (작업실: 2000년대 인형 시트 3칸, 2010·2020년대 1칸)', () => {
     for (const f of files.filter((x) => x.startsWith('art/scene/'))) {
-      const kind = f.slice('art/scene/'.length).split('_')[0] as keyof typeof SCENE_FRAMES;
-      expect(pngSize(`assets/${f}`), f).toEqual({ w: SCENE_W, h: SCENE_H * SCENE_FRAMES[kind] });
+      const [kind, era] = f.slice('art/scene/'.length).split('_') as [SceneKind, ArtEra];
+      expect(pngSize(`assets/${f}`), f).toEqual({ w: SCENE_W, h: SCENE_H * sceneFrames(kind, era) });
     }
+    expect([sceneFrames('workshop', '2000s'), sceneFrames('workshop', '2010s'), sceneFrames('workshop', '2020s'), sceneFrames('tv', '2020s')]).toEqual([3, 1, 1, 4]);
+  });
+
+  it('작업물 그림(13차): 2010년대 폰 케이스·2020년대 블로그, 진행 0·1·2 × 밤낮, 26×41', () => {
+    const work = files.filter((x) => x.startsWith('art/work/'));
+    expect(work).toHaveLength(12);
+    expect(WORK_KIND_BY_ERA).toEqual({ '2000s': 'doll_eyes', '2010s': 'phone_case', '2020s': 'blog_post' });
+    expect(workSpriteFile('blog_post', 2, 'night')).toBe('art/work/blog_post_2_night.png');
+    for (const f of work) expect(pngSize(`assets/${f}`), f).toEqual({ w: WORK_SPRITE_W, h: WORK_SPRITE_H });
   });
 
   it('강아지 42×40, 하트 48×40', () => {

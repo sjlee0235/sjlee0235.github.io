@@ -3,7 +3,9 @@
 //
 // - 장면: art/scene/{living|workshop|tv}_{era}_{night|day}_lv{0..7}.png
 //   · 거실: 1장
-//   · 작업실: 눈 0·1·2개 세 장을 세로로 이어 붙인 시트 (130×843)
+//   · 작업실: 2000년대는 인형 눈 0·1·2개 세 장을 세로로 이어 붙인 시트 (130×843, 인형이 배경에 그려져 있음)
+//            2010·2020년대는 작업물 자리를 비운 배경 1장 (130×281) + 작업물 그림 (13차, 디자이너 전달)
+// - 작업물: art/work/{phone_case|blog_post}_{0|1|2}[_night].png (26×41). 왼쪽 위를 (자리 x, 자리 y − 3)에 놓는다
 //   · TV: 지지직 노이즈 4프레임을 세로로 이어 붙인 시트 (130×1124)
 // - 강아지: art/dog/{pup|adult|old}_{lie|sit|walk0|walk1|happy0|happy1|belly0|belly1}.png (42×40, 오른쪽을 봄)
 //   하트: art/dog/hearts_{0|1|2}.png (48×40, 강아지와 같은 기준점)
@@ -27,8 +29,35 @@ export const DOG_STAGES: readonly DogArtStage[] = ['pup', 'adult', 'old'];
 export const DOG_POSES: readonly DogPose[] = ['lie', 'sit', 'walk0', 'walk1', 'happy0', 'happy1', 'belly0', 'belly1'];
 export const INTERIOR_LEVELS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
 
-/** 장면 시트의 세로 프레임 수 */
+/** 장면 시트의 세로 프레임 수 (작업실은 시대마다 다르다 → sceneFrames) */
 export const SCENE_FRAMES: Readonly<Record<SceneKind, number>> = { living: 1, workshop: 3, tv: 4 };
+
+/**
+ * 시대별 작업 (13차): 2000년대 인형 눈 붙이기 / 2010년대 스마트폰 케이스 큐빅 붙이기 / 2020년대 블로그 글쓰기.
+ * 3번 터치 = 1개 완성은 모두 같다. 인형은 배경 시트에 그려져 있고, 케이스·블로그는 작업물 그림을 배경 위에 얹는다
+ */
+export type WorkKind = 'doll_eyes' | 'phone_case' | 'blog_post';
+export const WORK_KIND_BY_ERA: Readonly<Record<ArtEra, WorkKind>> = { '2000s': 'doll_eyes', '2010s': 'phone_case', '2020s': 'blog_post' };
+/** 작업물 그림 크기 (도트). 그림 위쪽 3줄은 여유분이라 자리보다 3줄 위에 놓는다 */
+export const WORK_SPRITE_W = 26;
+export const WORK_SPRITE_H = 41;
+export const WORK_SPRITE_TOP_PAD = 3;
+
+/** 작업물을 따로 얹는 작업인가 (인형은 배경 시트에 그려져 있어 따로 얹지 않는다) */
+export function hasWorkSprite(kind: WorkKind): boolean {
+  return kind !== 'doll_eyes';
+}
+
+/** 장면의 세로 프레임 수: 작업실은 인형 시트(2000년대)만 3칸, 나머지 시대는 1칸 */
+export function sceneFrames(kind: SceneKind, era: ArtEra): number {
+  if (kind === 'workshop') return hasWorkSprite(WORK_KIND_BY_ERA[era]) ? 1 : SCENE_FRAMES.workshop;
+  return SCENE_FRAMES[kind];
+}
+
+/** 작업물 그림: step = 지금까지 한 터치 수 (0·1·2), 밤에는 _night */
+export function workSpriteFile(kind: WorkKind, step: number, tod: TimeOfDay): string {
+  return `art/work/${kind}_${step}${tod === 'night' ? '_night' : ''}.png`;
+}
 
 export const DOG_W = 42;
 export const DOG_H = 40;
@@ -72,6 +101,11 @@ export function allArtFiles(): string[] {
     for (const era of ART_ERAS) {
       for (const tod of TIMES_OF_DAY) for (const lv of INTERIOR_LEVELS) out.push(sceneFile(kind, era, tod, lv));
     }
+  }
+  for (const era of ART_ERAS) {
+    const kind = WORK_KIND_BY_ERA[era];
+    if (!hasWorkSprite(kind)) continue;
+    for (const tod of TIMES_OF_DAY) for (let step = 0; step < 3; step++) out.push(workSpriteFile(kind, step, tod));
   }
   for (const s of DOG_STAGES) for (const p of DOG_POSES) out.push(dogFile(s, p));
   for (let f = 0; f < 3; f++) out.push(heartsFile(f));
