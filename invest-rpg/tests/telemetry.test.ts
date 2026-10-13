@@ -83,7 +83,7 @@ describe('플레이 기록 (텔레메트리)', () => {
     expect(trades.some((t) => t.data.auto)).toBe(true); // 시대 종료 자동 청산
   });
 
-  it('정산: era_end 수익률 = 정산 결과, 1분마다 asset_snapshot (2시간 = 120개)', () => {
+  it('정산: era_end 수익률 = 정산 결과, 1분마다 asset_snapshot (90분 = 90개)', () => {
     const buf = new TelemetryBuffer();
     const game = playWithBot(10, buf);
     const events = buf.peek();
@@ -91,7 +91,7 @@ describe('플레이 기록 (텔레메트리)', () => {
     expect(end.data.returnPct).toBe(game.settlements[0]!.returnPct);
     expect(end.data.peakAssets).toBeGreaterThanOrEqual(end.data.troughAssets);
     expect(end.data.investedShare).toBeGreaterThan(0);
-    expect(ofType(events, 'asset_snapshot')).toHaveLength(120);
+    expect(ofType(events, 'asset_snapshot')).toHaveLength(90);
   });
 
   it('리플레이: 기록의 매매만으로 똑같은 결과를 다시 만든다', () => {

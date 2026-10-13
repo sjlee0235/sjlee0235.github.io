@@ -4,7 +4,7 @@
 // 3) 마지막 시대까지 끝낸 판을 다시 열면 최종 요약이 보이고, 새 판이 저장되지 않는다
 // 4) 숨긴 탭에서 열면 처음부터 일시정지
 // 5) 매매: 종목 누르기 → 최대 → [매수] 바로 체결 → 즐겨찾기 맨 위 → [매도]로 전량 매도, NEWS! → 주식창
-// 6) 인테리어: 현금 2,000코인 내고 한 단계(다음은 4,000, 작업 보상 상승 안내), 배경 그림이 바뀌고 다시 열어도 그대로, 현금이 모자라면 매도 안내
+// 6) 인테리어: 현금 2,500코인 내고 한 단계(다음은 3,750, 작업 보상 상승 안내), 배경 그림이 바뀌고 다시 열어도 그대로, 현금이 모자라면 매도 안내
 // 7) 작업실: 인형 100개째에 바로 지급 → 지급 예정 +0, 완성 0개
 // 8) 강아지 5번 연속 터치 → 배 까기 + 하트, 밤/낮 바꾸기
 // 9) 삼성 인터넷이면 첫 화면에 다크 모드 안내 한 번 (다른 브라우저에서는 없음)
@@ -78,7 +78,7 @@ try {
     await dbg(page, 'setTimeScale', 10);
     await page.waitForTimeout(1500);
     const left = await game<number>(page, 'g.remainingSeconds');
-    check(left < 7200, '시작하면 시간이 흐른다');
+    check(left < 5400, '시작하면 시간이 흐른다');
     await page.evaluate(() => (window as unknown as { __debug: { app: { persist(f: boolean): void } } }).__debug.app.persist(true));
 
     await page.goto(`${url}?debug=1&seed=3`);
@@ -99,7 +99,7 @@ try {
     await page.locator('.overlay.tutorial .foot .pbtn').first().click(); // 건너뛰기
     await page.locator('.era-intro .pbtn').click();
     check(!(await page.locator('.overlay.tutorial').isVisible()) && !(await page.locator('.overlay.consent').isVisible()), '동의는 처음 한 번만 묻는다 (두 번째 튜토리얼은 동의 장 없이 끝남)');
-    check((await game<number>(page, 'g.remainingSeconds')) === 7200 && (await game<number>(page, 'g.cash')) === 10_000, '새로하기: 처음부터 (2:00:00, 10,000코인)');
+    check((await game<number>(page, 'g.remainingSeconds')) === 5400 && (await game<number>(page, 'g.cash')) === 10_000, '새로하기: 처음부터 (1:30:00, 10,000코인)');
     // 설정 → 저장하고 나가기 → 첫 화면, 이어하기로 그 시점부터
     await dbg(page, 'advanceSeconds', 600);
     const atExit = await game<number>(page, 'g.remainingSeconds');
@@ -294,14 +294,14 @@ try {
     check(((await sceneFile(page)) ?? '').includes('living_2000s_') && (await sceneFile(page))!.endsWith('_lv0.png'), `거실 그림 Lv0 (${await sceneFile(page)})`);
     await page.locator('.upgrade .pbtn').click();
     await page.waitForTimeout(600);
-    check((await game<number>(page, 'g.interiorLevel')) === 1 && (await game<number>(page, 'g.cash')) === 8000, '업그레이드: 2,000코인 내고 Lv1');
+    check((await game<number>(page, 'g.interiorLevel')) === 1 && (await game<number>(page, 'g.cash')) === 7500, '업그레이드: 2,500코인 내고 Lv1');
     check((await sceneFile(page))!.endsWith('_lv1.png'), '배경 그림이 Lv1로 바뀐다');
     check((await page.locator('.pip.on').count()) === 1, '단계 점 1개 채움');
     check(((await page.locator('.toast').last().textContent()) ?? '').includes('인형 하나에 6코인'), '업그레이드하면 작업 보상이 오른다는 안내 (인형 하나 6코인)');
-    check(((await page.locator('.upgrade .pbtn').textContent()) ?? '').includes('4,000'), '다음 단계 값은 4,000코인');
-    await page.locator('.upgrade .pbtn').click(); // 4,000코인 → 2단계, 현금 4,000 (다음 6,000은 모자람)
+    check(((await page.locator('.upgrade .pbtn').textContent()) ?? '').includes('3,750'), '다음 단계 값은 3,750코인');
+    await page.locator('.upgrade .pbtn').click(); // 3,750코인 → 2단계, 현금 3,750 (다음 5,000은 모자람)
     await page.waitForTimeout(150);
-    check((await game<number>(page, 'g.interiorLevel')) === 2 && (await game<number>(page, 'g.cash')) === 4000, `현금만큼만 올라간다 (Lv${await game<number>(page, 'g.interiorLevel')})`);
+    check((await game<number>(page, 'g.interiorLevel')) === 2 && (await game<number>(page, 'g.cash')) === 3750, `현금만큼만 올라간다 (Lv${await game<number>(page, 'g.interiorLevel')})`);
     await page.locator('.upgrade .pbtn').click();
     await page.waitForTimeout(150);
     check(((await page.locator('.toast').last().textContent()) ?? '') === '현금이 부족합니다. 주식을 매도해 현금을 확보하세요.', '현금이 모자라면 매도 안내');
@@ -365,7 +365,7 @@ try {
     await dbg(page, 'tab', 'trading');
     check(!(await page.locator('.time-chip').isVisible()) && ((await page.locator('.acct-time').textContent()) ?? '') !== '', '주식창에서는 계좌 바에 남은 시간');
     await dbg(page, 'nextNews');
-    check((await game<number>(page, '7200 - g.remainingSeconds')) === 180, '첫 뉴스는 3분(180초)');
+    check((await game<number>(page, '5400 - g.remainingSeconds')) === 180, '첫 뉴스는 3분(180초)');
     check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
   }

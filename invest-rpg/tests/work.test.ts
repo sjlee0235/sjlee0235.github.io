@@ -213,8 +213,8 @@ describe('세이브와 기록', () => {
       expect(r.status).toBe('resumed');
       const b = r.game!;
       expect(stateHash(b)).toBe(stateHash(a));
-      run(a, 2400);
-      run(b, 2400);
+      run(a, 1800);
+      run(b, 1800);
       expect(stateHash(b)).toBe(stateHash(a));
       expect(b.settlements[0]!.finalTotal).toBe(a.settlements[0]!.finalTotal);
     }
@@ -254,7 +254,7 @@ describe('세이브와 기록', () => {
     }
     const end = buf.peek().find((e) => e.type === 'era_end')!.data as { workIncome: number; workTouches: number; brokeTimeSec: number };
     expect(end.workIncome).toBe(g.settlements[0]!.workIncome);
-    expect(end.workTouches).toBe(230);
+    expect(end.workTouches).toBe(170);
     const rp = replay(buf.peek(), [era]);
     expect(rp.failedActions).toBe(0);
     expect(rp.game.settlements[0]!.finalTotal).toBe(g.settlements[0]!.finalTotal);

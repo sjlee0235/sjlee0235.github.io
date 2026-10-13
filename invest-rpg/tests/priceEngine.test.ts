@@ -36,7 +36,7 @@ describe('상수', () => {
     expect([TICK_SECONDS, MAX_TICK_MOVE, WINDOW_TICKS, WINDOW_CAP]).toEqual([3, 1.5, 20, 3.0]);
     expect([NEWS_REACTION_TICKS, INERTIA_TICKS, NEWS_BAND_PCT]).toEqual([1, 2, 30]);
     expect(INERTIA_PROBS).toEqual({ same: 50, opposite: 25, flat: 25 });
-    expect(rules.ticksPerEra).toBe(2400);
+    expect(rules.ticksPerEra).toBe(1800);
     expect(rules.chartHistoryLength).toBe(400);
     expect(rules.reportDelayTicks).toBe(40);
   });

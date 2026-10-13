@@ -282,7 +282,7 @@ describe('뉴스 창 (한 건씩, 스크롤하면 이전 뉴스)', () => {
 
 describe('거실: 인생 업그레이드 버튼', () => {
   it('"인생 업그레이드 - 2,000", 코인이 모자라면 흐리게(누를 수는 있음), Lv7이면 "인생 업그레이드 완성"', () => {
-    expect(upgradeView(0, 7, 2000, 10_000, 'ko')).toMatchObject({ label: '인생 업그레이드 - 2,000', state: 'ok', filled: 0 });
+    expect(upgradeView(0, 7, 2500, 10_000, 'ko')).toMatchObject({ label: '인생 업그레이드 - 2,500', state: 'ok', filled: 0 });
     expect(upgradeView(3, 7, 2000, 1999, 'ko')).toMatchObject({ state: 'poor', filled: 3 });
     expect(upgradeView(7, 7, null, 50_000, 'ko')).toMatchObject({ label: '인생 업그레이드 완성', state: 'done', filled: 7 });
   });
@@ -411,7 +411,7 @@ describe('정산 창·최종 요약', () => {
     const v = settlementView(settlement!, g.getWorkStatus(), 'ko');
     expect(v.sumOk).toBe(true);
     expect(v.workIncome).toBe('0');
-    expect(v.interior).toBe('2,000');
+    expect(v.interior).toBe('2,500');
     expect(v.total).toBe(fmtNum(settlement!.investmentResult.coins));
     expect(v.pendingNote).toBe('지급 예정 작업 수입 9코인은 작업 97개를 더 완성하면 지급돼요. 다음 시대로 이어져요.');
   });

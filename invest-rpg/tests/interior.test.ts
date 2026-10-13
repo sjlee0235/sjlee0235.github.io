@@ -1,4 +1,4 @@
-// 인테리어 업그레이드: 0~7단계, 단계별 2,000·4,000·…·14,000코인(보유 현금에서, 11차), 출금 처리(손실 아님), 시대를 넘어 이월, 세이브·리플레이
+// 인테리어 업그레이드: 0~7단계, 단계별 2,500·3,750·…·10,000코인(보유 현금에서, 14차), 출금 처리(손실 아님), 시대를 넘어 이월, 세이브·리플레이
 
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_CONFIG } from '../src/engine/config.ts';
@@ -21,8 +21,8 @@ const threeEras = () => [
 ];
 
 describe('인테리어 업그레이드 규칙', () => {
-  it('기본값: 최고 7단계, 단계마다 2,000씩 올라 2,000~14,000코인 (합계 56,000, 11차)', () => {
-    expect(DEFAULT_CONFIG.interior).toEqual({ maxLevel: 7, costs: [2000, 4000, 6000, 8000, 10000, 12000, 14000] });
+  it('기본값: 최고 7단계, 단계마다 1,250씩 올라 2,500~10,000코인 (합계 43,750, 14차)', () => {
+    expect(DEFAULT_CONFIG.interior).toEqual({ maxLevel: 7, costs: [2500, 3750, 5000, 6250, 7500, 8750, 10000] });
   });
 
   it('다음 단계 값은 지금 단계에 따라 오른다', () => {
@@ -32,15 +32,15 @@ describe('인테리어 업그레이드 규칙', () => {
       seen.push(g.interiorNextCost);
       expect(g.upgradeInterior()).toMatchObject({ ok: true, level: i + 1, cost: seen[i] });
     }
-    expect(seen).toEqual([2000, 4000, 6000, 8000, 10000, 12000, 14000]);
-    expect(g.account.cash).toBe(60_000 - 56_000);
+    expect(seen).toEqual([2500, 3750, 5000, 6250, 7500, 8750, 10000]);
+    expect(g.account.cash).toBe(60_000 - 43_750);
   });
 
-  it('누르면 보유 현금에서 2,000코인을 내고 한 단계 오른다', () => {
+  it('누르면 보유 현금에서 첫 단계 값 2,500코인을 내고 한 단계 오른다', () => {
     const g = new Game({ eras: [era], seed: 1 });
     expect(g.interiorLevel).toBe(0);
-    expect(g.upgradeInterior()).toEqual({ ok: true, level: 1, cost: 2000 });
-    expect(g.account.cash).toBe(8000);
+    expect(g.upgradeInterior()).toEqual({ ok: true, level: 1, cost: 2500 });
+    expect(g.account.cash).toBe(7500);
     expect(g.interiorLevel).toBe(1);
     expect(g.pendingSaveReasons).toContain('interior');
   });
@@ -48,8 +48,8 @@ describe('인테리어 업그레이드 규칙', () => {
   it('현금이 모자라면 실패하고 아무것도 바뀌지 않는다 (평가금액이 아니라 현금 기준)', () => {
     const g = new Game({ eras: [era], seed: 2 });
     const id = g.activeStocks[0]!.id;
-    g.buy(id, g.maxBuyQuantity(id) - 1); // 현금 2,000 미만, 총자산은 그대로
-    expect(g.account.cash).toBeLessThan(2000);
+    g.buy(id, g.maxBuyQuantity(id) - 1); // 현금 2,500 미만, 총자산은 그대로
+    expect(g.account.cash).toBeLessThan(2500);
     const cash = g.account.cash;
     expect(g.upgradeInterior()).toEqual({ ok: false, error: 'insufficient-cash' });
     expect(g.account.cash).toBe(cash);
@@ -61,7 +61,7 @@ describe('인테리어 업그레이드 규칙', () => {
     for (let i = 1; i <= 7; i++) expect(g.upgradeInterior()).toMatchObject({ ok: true, level: i });
     expect(g.interiorNextCost).toBeNull();
     expect(g.upgradeInterior()).toEqual({ ok: false, error: 'max-level' });
-    expect(g.account.cash).toBe(60_000 - 56_000);
+    expect(g.account.cash).toBe(60_000 - 43_750);
   });
 
   it('앱이 백그라운드이거나 시대가 끝났으면 살 수 없다', () => {
@@ -91,7 +91,7 @@ describe('인테리어 업그레이드 규칙', () => {
     // 산 뒤로는 자산 구성(현금 비중)이 달라져 수익률 %가 갈라질 수 있지만, 번 코인(순손익)은 같다
     const s = buyer.settlements[0]!;
     const p = plain.settlements[0]!;
-    expect(s.endAssets).toBe(p.endAssets - 2000);
+    expect(s.endAssets).toBe(p.endAssets - 2500);
     expect(s.profitAmount).toBe(p.profitAmount);
     // 매매 없이 사기만 하면 수익률 0%
     const only = new Game({ eras: [era], seed: 5 });
@@ -110,7 +110,7 @@ describe('시대를 넘어 이월', () => {
     runEra(g);
     g.startNextEra();
     expect(g.interiorLevel).toBe(2);
-    expect(g.eraStartCash).toBe(20_000 - 2000 - 4000);
+    expect(g.eraStartCash).toBe(20_000 - 2500 - 3750);
     g.upgradeInterior();
     runEra(g);
     g.startNextEra();
@@ -120,9 +120,9 @@ describe('시대를 넘어 이월', () => {
 
   it('공개용 뷰: 단계·다음 값·업그레이드', () => {
     const g = PublicGame.create({ eras: [era], seed: 7 });
-    expect([g.interiorLevel, g.interiorMaxLevel, g.interiorNextCost]).toEqual([0, 7, 2000]);
+    expect([g.interiorLevel, g.interiorMaxLevel, g.interiorNextCost]).toEqual([0, 7, 2500]);
     expect(g.upgradeInterior().ok).toBe(true);
-    expect(g.cash).toBe(8000);
+    expect(g.cash).toBe(7500);
   });
 });
 
