@@ -24,6 +24,6 @@ verify.py        다시 그린 장면이 받은 PNG와 같은지 확인 (작업�
 living_nolp_out.py  거실 배경에서 옛 LP 플레이어만 지운다 (LP는 이제 따로 얹는 그림 assets/art/lp/, docs/LP_HANDOFF.md).
                     python3 living_nolp_out.py ../assets/art/scene  (이미 지운 그림에는 아무것도 하지 않음)
 강아지 그림(assets/art/dog/)은 디자이너가 새로 그린 PNG(docs/DOG_HANDOFF.md)라 pdog2.py로 다시 굽지 않는다.
-dog_lie_out.py      엎드린 강아지(*_lie.png)만 디자이너 그림에 꼬리·앞발·뒷발을 덧붙인 것이다 (원본 엎드린 그림은 몸통만 보인다는 의견).
-                    꼬리는 같은 나이 stand 그림의 말린 꼬리를 옮기고, 발은 그 나이 발 색으로 앞으로 뻗게 그렸다. 디자이너가 다시 그리면 교체한다.
-                    python3 dog_lie_out.py <받은 dog 폴더> ../assets/art/dog
+dog_pose_out.py     디자이너 강아지 그림 중 엎드리기(*_lie)·앉기(*_sit)에 꼬리·발을 덧붙인 것이다 (엎드리기는 몸통만 보이고, 앉기는 꼬리가 없다는 의견).
+                    꼬리는 같은 나이 stand 그림의 말린 꼬리를 옮기고, 엎드리기 발은 그 나이 발 색으로 앞으로 뻗게 그렸다. 디자이너가 다시 그리면 교체한다.
+                    python3 dog_pose_out.py <받은 dog 폴더> ../assets/art/dog
