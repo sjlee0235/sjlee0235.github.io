@@ -6,8 +6,8 @@
 // 전략 (모두 뉴스의 "방향"만 쓴다. 영향 크기·배율은 모른다고 가정)
 //   random       : 1분마다 무작위로 사거나 판다
 //   hold         : 시작할 때 활성 종목을 고르게 사서 끝까지 보유
-//   delayedFollow: 지연 추종. 뉴스가 반영된 뒤(틱 k+1) 호재 종목을 사고, 다음 뉴스 발표 때 판다 (사람이 할 수 있는 추종)
-//   fastFollow   : 초고속 추종. 발표 틱(k) 가격에 바로 산다 (사람이 따라 할 수 없는 이론상 상한)
+//   delayedFollow: 지연 추종. 발표 1틱(3초) 뒤(틱 k+1, 60% 반영 직후) 호재 종목을 사고, 다음 뉴스 발표 때 판다 (사람이 할 수 있는 추종)
+//   fastFollow   : 초고속 추종. 발표 틱(k) 가격(즉시 몫 반영 뒤)에 바로 산다 (3초 안에 읽고 사야 하는 이론상 상한)
 //   sentiment    : 긍정 분위기 테마만 사서 보유
 //   antiSentiment: 부정 분위기 테마만 사서 보유
 //   leanForward  : 잠정 뉴스가 뜨면 단서(leansTo) 쪽 결과의 호재 종목을 미리 사고, 결과 반영 직후 판다
@@ -16,7 +16,8 @@
 //   leanSpread   : 잠정 분산. 잠정 뉴스마다 가용 자금의 20~30%를 단서 쪽 결과의 호재 상위 3종목에 나눠서
 // (참고용, 목표 없음) 사람이 실제로 할 법한 "몰빵" 변형
 //   fastTop      : 발표 즉시 가장 큰 호재 테마 1개에 전액
-//   delayedTop   : 반영 뒤(5초 뒤) 가장 큰 호재 테마 1개에 전액
+//   delayedTop   : 1틱(3초) 뒤 가장 큰 호재 테마 1개에 전액
+//   holdStopLoss : 균등 매수 후 보유하다가, 악재가 뜨면 그 틱(k)에 맞은 종목만 팔고(손절) 반영이 끝나면 다시 산다
 
 import type { Era, News } from '../src/data/schema.ts';
 import type { GameConfig } from '../src/engine/config.ts';
@@ -27,7 +28,7 @@ import type { TelemetrySink } from '../src/engine/telemetry.ts';
 
 export type Strategy =
   | 'random' | 'hold' | 'delayedFollow' | 'fastFollow' | 'sentiment' | 'antiSentiment' | 'leanForward' | 'leanReverse'
-  | 'leanAllIn' | 'leanSpread' | 'fastTop' | 'delayedTop';
+  | 'leanAllIn' | 'leanSpread' | 'fastTop' | 'delayedTop' | 'holdStopLoss';
 
 export const STRATEGIES: Strategy[] = [
   'random', 'hold', 'delayedFollow', 'fastFollow', 'sentiment', 'antiSentiment', 'leanForward', 'leanReverse',
@@ -37,7 +38,7 @@ export const STRATEGIES: Strategy[] = [
 /** 방향(정답)을 아는 전략 = 사람이 본문을 읽고 해석해서 얻을 수 있는 이득의 이론상 상한 */
 export const KNOWS_DIRECTION: ReadonlySet<Strategy> = new Set<Strategy>([
   'delayedFollow', 'fastFollow', 'sentiment', 'antiSentiment', 'leanForward', 'leanReverse',
-  'leanAllIn', 'leanSpread', 'fastTop', 'delayedTop',
+  'leanAllIn', 'leanSpread', 'fastTop', 'delayedTop', 'holdStopLoss',
 ]);
 
 /** 표에 쓰는 이름 (방향을 아는 전략은 † 표시) */
@@ -59,6 +60,7 @@ export const STRATEGY_LABEL: Record<Strategy, string> = {
   leanSpread: '잠정 분산',
   fastTop: '초고속 몰빵',
   delayedTop: '지연 몰빵',
+  holdStopLoss: '보유 + 즉시 손절',
 };
 
 interface Trader {
@@ -121,7 +123,7 @@ export function makeTrader(strategy: Strategy, seed: number): Trader {
         onStart: noop,
         onNews: noop,
         onTick(game, tick) {
-          if (tick % 12 !== 0) return;
+          if (tick % (60 / game.config.tickSeconds) !== 0) return;
           const holdings = game.account.getHoldings();
           if (holdings.length > 0 && rng.next() < 0.5) {
             const h = holdings[rng.int(0, holdings.length - 1)]!;
@@ -155,6 +157,32 @@ export function makeTrader(strategy: Strategy, seed: number): Trader {
           buyEvenly(game, strategy === 'fastTop' ? topPositive(s.news) : positives(s.news));
         },
       };
+    case 'holdStopLoss': {
+      let rebuyAt = -1;
+      let sold: string[] = [];
+      return {
+        onStart(game) {
+          buyEvenly(game, game.activeThemes.map((t) => t.id));
+        },
+        onNews(game, s) {
+          const hit = new Set(s.news.effects.filter((e) => e.impact < 0).map((e) => e.themeId));
+          for (const h of game.account.getHoldings()) {
+            const themeId = game.activeStocks.find((x) => x.id === h.stockId)!.themeId;
+            if (hit.has(themeId)) {
+              game.sell(h.stockId, h.quantity);
+              sold.push(themeId);
+            }
+          }
+          if (sold.length > 0) rebuyAt = s.tick + game.rules.reactionTicks + game.rules.reactionStages - 1;
+        },
+        onTick(game, tick) {
+          if (tick !== rebuyAt) return;
+          buyEvenly(game, sold);
+          sold = [];
+          rebuyAt = -1;
+        },
+      };
+    }
     case 'delayedFollow':
     case 'delayedTop': {
       let pending: ScheduledNews | null = null;
@@ -182,7 +210,7 @@ export function makeTrader(strategy: Strategy, seed: number): Trader {
             const target = leanNews(game, s.storyId!, strategy === 'leanForward');
             if (target) buyEvenly(game, positives(target));
           } else if (s.kind === 'outcome') {
-            releaseAt = s.tick + game.config.newsReactionTicks;
+            releaseAt = s.tick + game.rules.reactionTicks + game.rules.reactionStages - 1;
           }
         },
         onTick(game, tick) {
@@ -206,7 +234,7 @@ export function makeTrader(strategy: Strategy, seed: number): Trader {
             if (strategy === 'leanAllIn') buyEvenly(game, topPositives(target, 1));
             else buyEvenly(game, topPositives(target, 3), Math.floor(game.account.cash * (0.2 + rng.next() * 0.1)));
           } else if (s.kind === 'outcome') {
-            releaseAt = s.tick + game.config.newsReactionTicks;
+            releaseAt = s.tick + game.rules.reactionTicks + game.rules.reactionStages - 1;
           }
         },
         onTick(game, tick) {

@@ -11,7 +11,7 @@
 //   담지 않는 것: effects, impact, magnitude, link, sentiment, relevance, leansTo, outcomes, weight, isHistorical, themeId
 // - 종목: id(판마다 바뀌는 무작위 문자열), 이름, 설명, 가격, 즐겨찾기 여부. 테마 id·분위기·비중은 담지 않는다.
 // - 종목 목록: 즐겨찾기 먼저, 그 안팎은 이름 가나다순. 데이터에 저장된 순서(분위기별로 묶여 있을 수 있음)는 드러나지 않는다.
-// - 주가 리포트(발표 120초 뒤): 반영이 끝난 사실이라 방향과 %를 보여준다 (발표 즉시분 / 5초 뒤분 / 합계).
+// - 주가 리포트(발표 120초 뒤): 반영이 끝난 사실이라 방향과 %를 보여준다 (발표 즉시분 / 3초 뒤분 / 6초 뒤분(악재만) / 합계).
 // - 시대가 끝난 뒤에만 getEraDebrief()로 분위기·비중, 스토리 단서와 실제 결과, 실제 역사 여부, 해설 전체를 공개한다.
 
 import type { LocalizedText, Locale } from '../data/schema.ts';
@@ -81,8 +81,10 @@ export interface PublicStockReportItem {
   appliedPct: number;
   /** 발표 즉시 반영분 */
   instantPct: number;
-  /** 5초 뒤 반영분 */
+  /** 발표 뒤 반영분 합계 */
   delayedPct: number;
+  /** 발표 뒤 반영분을 틱별로: 몇 초 뒤에 몇 % (예: 3초 뒤, 6초 뒤) */
+  stages: { afterSec: number; pct: number }[];
   reason: Partial<LocalizedText> | null;
   /** reason이 없을 때 자동 문구 재료 */
   auto: { newsTerm: string; industry: LocalizedText; positive: boolean };
@@ -368,6 +370,15 @@ export class PublicGame {
     return this.g.getChart(this.internal(stockId));
   }
 
+  /** 보유 종목 차트 표시: 평단가와 산 시점(틱)들. 보유하지 않으면 null */
+  getHoldingMarks(stockId: string): { avgPrice: number; buyTicks: number[] } | null {
+    const id = this.internalOrNull(stockId);
+    if (!id) return null;
+    const h = this.g.getPortfolio().holdings.find((x) => x.stockId === id);
+    if (!h) return null;
+    return { avgPrice: h.avgPrice, buyTicks: this.g.getPositionBuys(id).map((b) => b.tick) };
+  }
+
   getPortfolio(): PublicPortfolio {
     const p = this.g.getPortfolio();
     return {
@@ -600,6 +611,7 @@ export class PublicGame {
         appliedPct: it.appliedPct,
         instantPct: it.instantPct,
         delayedPct: it.delayedPct,
+        stages: it.stagePcts.map((pct, i) => ({ afterSec: (this.g.config.newsReactionTicks + i) * this.g.config.tickSeconds, pct })),
         reason: it.reason,
         auto: { newsTerm: it.auto.newsTerm, industry: it.auto.themeName, positive: it.auto.positive },
       })),

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getTickRules, makeConfig } from '../src/engine/config.ts';
 import { applyDraw, drawEra } from '../src/engine/eraDraw.ts';
-import { NewsEngine, buildNewsSchedule, makeNewsSlots, newsToRates, outcomeWeights } from '../src/engine/newsEngine.ts';
+import { NewsEngine, buildNewsSchedule, makeNewsSlots, newsToRates, outcomeWeights, splitRates } from '../src/engine/newsEngine.ts';
 import { createRng } from '../src/engine/rng.ts';
 import { effect, makeNews, makeSpecEra } from './fixtures/makeEra.ts';
 
@@ -14,14 +14,14 @@ const activeFor = (seed: number) => applyDraw(era, drawEra(era, seed, config), c
 const scheduleFor = (seed: number, cfg = config) => buildNewsSchedule(activeFor(seed), createRng(seed), cfg);
 
 describe('뉴스 슬롯', () => {
-  it('[시드 200개] 첫 뉴스는 정확히 3분(36틱), 간격 3~4분, 평균 약 34개 (9차)', () => {
+  it('[시드 200개] 첫 뉴스는 정확히 3분(60틱), 간격 3~4분, 평균 약 34개 (9차)', () => {
     let total = 0;
     for (const seed of SEEDS) {
       const slots = makeNewsSlots(rules, createRng(seed));
-      expect(slots[0]).toBe(36);
+      expect(slots[0]).toBe(60);
       for (let i = 1; i < slots.length; i++) {
         const gap = slots[i]! - slots[i - 1]!;
-        if (gap < 36 || gap > 48) throw new Error(`seed ${seed}: ${gap}`);
+        if (gap < 60 || gap > 80) throw new Error(`seed ${seed}: ${gap}`);
       }
       expect(slots.length).toBeLessThanOrEqual(40);
       total += slots.length;
@@ -36,7 +36,7 @@ describe('시대 시작 3분 유예와 첫 잠정 뉴스', () => {
     expect(config.gracePeriodSeconds).toBe(180);
     expect(config.firstNewsAtSeconds).toBe(180);
     expect(config.firstNewsType).toBe('tentative');
-    expect(rules.gracePeriodTicks).toBe(36);
+    expect(rules.gracePeriodTicks).toBe(60);
   });
 
   it('[시드 200개] 180초 전 뉴스 0개, 첫 뉴스는 정확히 180초·잠정·opener, 그 결과 뉴스는 15분 안', () => {
@@ -44,14 +44,14 @@ describe('시대 시작 3분 유예와 첫 잠정 뉴스', () => {
     const usedOpeners = new Set<string>();
     for (const seed of SEEDS) {
       const s = scheduleFor(seed);
-      expect(s.filter((n) => n.tick < 36)).toEqual([]);
+      expect(s.filter((n) => n.tick < 60)).toEqual([]);
       const first = s[0]!;
-      expect(first.tick).toBe(36);
+      expect(first.tick).toBe(60);
       expect(first.kind).toBe('tentative');
       expect(openerIds.has(first.storyId!)).toBe(true);
       usedOpeners.add(first.storyId!);
       const outcome = s.find((n) => n.kind === 'outcome' && n.storyId === first.storyId)!;
-      expect(outcome.tick - first.tick).toBeLessThanOrEqual(180);
+      expect(outcome.tick - first.tick).toBeLessThanOrEqual(300);
     }
     // opener 여러 개 중 시드에 따라 다르게 고른다
     expect(usedOpeners.size).toBeGreaterThan(1);
@@ -80,18 +80,18 @@ describe('스토리 규칙', () => {
         if (i > 0) {
           const gap = n.tick - s[i - 1]!.tick;
           // 9차: 슬롯이 늘어 쓸 수 있는 뉴스가 떨어지면 빈 슬롯이 생길 수 있다 (간격 = 슬롯 간격의 합)
-          if (gap < 36 || gap > 48 * 3) throw new Error(`seed ${seed}: 간격 ${gap}`);
-          if (gap <= 48) inSlot++;
+          if (gap < 60 || gap > 80 * 3) throw new Error(`seed ${seed}: 간격 ${gap}`);
+          if (gap <= 80) inSlot++;
           gaps++;
         }
         if (n.kind === 'tentative') {
           expect(open, `seed ${seed}`).toBeNull();
-          expect(n.tick).toBeLessThanOrEqual(rules.ticksPerEra - 180);
+          expect(n.tick).toBeLessThanOrEqual(rules.ticksPerEra - 300);
           open = n.storyId!;
           openTick = n.tick;
         } else if (n.kind === 'outcome') {
           expect(n.storyId).toBe(open);
-          expect(n.tick - openTick).toBeLessThanOrEqual(180);
+          expect(n.tick - openTick).toBeLessThanOrEqual(300);
           expect(n.relatedTentativeId).toBeDefined();
           open = null;
         }
@@ -211,5 +211,24 @@ describe('NewsEngine 반영 시점', () => {
     const strongThemes = first.news.effects.filter((e) => e.link.strength === 3).map((e) => e.themeId);
     expect([...now.rates.keys()].every((k) => strongThemes.includes(k))).toBe(true);
     expect([...later.rates.keys()].every((k) => !strongThemes.includes(k))).toBe(true);
+  });
+});
+
+describe('반영 몫 나누기 (10차)', () => {
+  it('호재 75/25, 악재 25/60/15. 단계 합 = 원래 변동률, 발표 뒤 몫이 0이 되지 않게', () => {
+    const [i, a, b] = splitRates(new Map([['up', 100], ['dn', -100], ['tiny', -1]]), [0.75, 0.25], [0.25, 0.6, 0.15]);
+    expect([i!.get('up'), a!.get('up'), b!.get('up')]).toEqual([75, 25, undefined]);
+    expect([i!.get('dn'), a!.get('dn'), b!.get('dn')]).toEqual([-25, -60, -15]);
+    expect((i!.get('tiny') ?? 0) + (a!.get('tiny') ?? 0) + (b!.get('tiny') ?? 0)).toBe(-1);
+    for (const r of [12, -12, 37, -37, 299, -299]) {
+      const parts = splitRates(new Map([['x', r]]), [0.75, 0.25], [0.25, 0.6, 0.15]).map((m) => m.get('x') ?? 0);
+      expect(parts.reduce((p, q) => p + q, 0)).toBe(r);
+      expect(parts.slice(1).some((x) => x !== 0)).toBe(true);
+    }
+  });
+
+  it('설정 점검: 몫의 합이 1이 아니면 오류', () => {
+    expect(() => getTickRules(makeConfig({ reactionSharesDown: [0.5, 0.4] }))).toThrow();
+    expect(() => getTickRules(makeConfig({ reactionShares: [1] }))).toThrow();
   });
 });

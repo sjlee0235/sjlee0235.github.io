@@ -6,17 +6,17 @@
 // - 변동률은 소수점 실수 오차를 피하려고 "0.1% 단위 정수"로 다룬다.
 //   예) 1 = 0.1%,  15 = 1.5%,  -300 = -30.0%
 
-/** 1틱 길이(초) */
-export const TICK_SECONDS = 5;
+/** 1틱 길이(초). 5초 → 3초: 10차 사용자 결정 (뉴스 뒤 대응을 더 촘촘하게) */
+export const TICK_SECONDS = 3;
 /** 평소 한 틱 최대 변동폭(%) */
 export const MAX_TICK_MOVE = 1.5;
-/** 누적 한도 윈도우 길이(틱). 12틱 × 5초 = 1분 */
-export const WINDOW_TICKS = 12;
+/** 누적 한도 윈도우 길이(틱). 20틱 × 3초 = 1분 (5초 틱 때는 12틱) */
+export const WINDOW_TICKS = 20;
 /** 윈도우 안 누적 변동률 합의 한도(%) */
 export const WINDOW_CAP = 3.0;
-/** 뉴스 발표 후 몇 틱 뒤에 반영하는가. 1틱 = 5초 */
+/** 뉴스 발표 후 몇 틱 뒤에 (즉시 몫을 뺀) 첫 반영을 하는가. 1틱 = 3초 */
 export const NEWS_REACTION_TICKS = 1;
-/** 반영 뒤 관성 틱 수. 2틱 = 10초 */
+/** 반영 뒤 관성 틱 수. 2틱 = 6초 */
 export const INERTIA_TICKS = 2;
 /** 관성 틱의 방향 확률(%): 반영과 같은 방향 / 반대 방향 / 변동 없음 */
 export const INERTIA_PROBS = { same: 50, opposite: 25, flat: 25 } as const;
@@ -44,12 +44,14 @@ export const P_START_STORY = 0.85;
  */
 export const LEAN_PROB = 0.65;
 /**
- * 뉴스 영향 중 발표 순간 바로 반영되는 몫 (나머지는 5초 뒤).
- * 0이면 전부 5초 뒤 반영(이전 규칙). 시뮬레이션에서 0일 때 "발표 즉시 사는" 전략이 시대당 +500%를 넘어
- * 사실상 무조건 이기는 방법이 되어, 목표(+30~80%)에 맞게 75%로 정했다 (README 6장).
- * 사람처럼 가장 큰 호재 1종목에 몰빵해도 +80% 안팎이 되는 값이다.
+ * 뉴스 영향이 나뉘어 반영되는 몫: [발표 즉시, 1틱(3초) 뒤, 2틱(6초) 뒤 …]. 합은 1.
+ * 즉시 몫이 작으면 "발표 즉시 사는" 전략이 지나치게 유리해진다 (즉시 0%일 때 시대당 +500% 초과, README 6장).
+ * 10차 사용자 결정 (절충안): 오르는 영향(호재)은 이전처럼 즉시 75% → 3초 뒤 25%,
+ * 내리는 영향(악재)만 즉시 25% → 3초 뒤 60% → 6초 뒤 15%. 악재가 뜨면 바로 팔아(손절) 손실을 줄일 수 있게.
+ * (호재까지 25/60/15로 하면 발표 즉시 사는 전략이 시대당 +300~400%가 되어 채택하지 않음)
  */
-export const INSTANT_REACTION_SHARE = 0.75;
+export const REACTION_SHARES_UP: readonly number[] = [0.75, 0.25];
+export const REACTION_SHARES_DOWN: readonly number[] = [0.25, 0.6, 0.15];
 /** 자동 저장 간격(초). 이 시간이 지나면 저장이 필요하다고 알린다 (game.pendingSaveReasons) */
 export const AUTOSAVE_SECONDS = 30;
 /** 뉴스 발표 몇 초 뒤에 주가 리포트를 만드는가 */
@@ -64,7 +66,7 @@ export const INDIRECT_EXTRA_DELAY_TICKS = 0;
 /** 연결 강도별 영향도 계수: |영향도| = max(1, round(magnitude × 계수)) */
 export const STRENGTH_COEF = { 3: 1.0, 2: 0.6, 1: 0.3 } as const;
 
-/** 배속별 실제 틱 간격(ms). 게임 시간 1틱(5초)은 그대로이고 실제 시간만 줄어든다. 1배 5000ms, 2배 2500ms */
+/** 배속별 실제 틱 간격(ms). 게임 시간 1틱(3초)은 그대로이고 실제 시간만 줄어든다. 1배 3000ms, 2배 1500ms */
 export function tickIntervalMs(speed: 1 | 2, tickSeconds: number = TICK_SECONDS): number {
   return (tickSeconds * 1000) / speed;
 }
@@ -171,10 +173,15 @@ export interface GameConfig {
   /** 뉴스와 뉴스 사이 간격 범위(초) */
   newsGapMinSeconds: number;
   newsGapMaxSeconds: number;
-  /** 발표 후 반영까지 틱 수 */
+  /** 발표 후 (즉시 몫을 뺀) 첫 반영까지 틱 수 */
   newsReactionTicks: number;
-  /** 뉴스 영향 중 발표 순간 바로 반영되는 몫 (0 이상 1 미만). 나머지는 newsReactionTicks 뒤 */
-  instantReactionShare: number;
+  /**
+   * 뉴스 영향을 나눠 반영하는 몫 (오르는 영향). [0] = 발표 순간, [1] = newsReactionTicks 뒤, [2] = 그다음 틱 …
+   * 각 몫 0 이상, 합 1, [0]은 1 미만 (발표 뒤에도 반영이 남아야 관성이 생긴다)
+   */
+  reactionShares: readonly number[];
+  /** 내리는 영향(악재)에 쓰는 몫. null이면 reactionShares를 그대로 쓴다 */
+  reactionSharesDown: readonly number[] | null;
   /** 반영 후 관성 틱 수 */
   inertiaTicks: number;
   /** 관성 틱 확률 (0~1): 같은 방향 / 반대 방향. 나머지는 변동 없음 */
@@ -244,7 +251,8 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
   newsGapMinSeconds: NEWS_GAP_MIN_SECONDS,
   newsGapMaxSeconds: NEWS_GAP_MAX_SECONDS,
   newsReactionTicks: NEWS_REACTION_TICKS,
-  instantReactionShare: INSTANT_REACTION_SHARE,
+  reactionShares: REACTION_SHARES_UP,
+  reactionSharesDown: REACTION_SHARES_DOWN,
   inertiaTicks: INERTIA_TICKS,
   inertiaSameChance: INERTIA_PROBS.same / 100,
   inertiaOppositeChance: INERTIA_PROBS.opposite / 100,
@@ -305,6 +313,8 @@ export interface TickRules {
   newsGapMinTicks: number;
   newsGapMaxTicks: number;
   reactionTicks: number;
+  /** 즉시 몫 다음에 이어지는 반영 틱 수 (reactionShares.length - 1) */
+  reactionStages: number;
   inertiaTicks: number;
   storyOutcomeWithinTicks: number;
   noNewTentativeLastTicks: number;
@@ -330,6 +340,7 @@ export function getTickRules(config: GameConfig): TickRules {
     newsGapMinTicks: toTicks(config, config.newsGapMinSeconds, 'newsGapMinSeconds'),
     newsGapMaxTicks: toTicks(config, config.newsGapMaxSeconds, 'newsGapMaxSeconds'),
     reactionTicks: config.newsReactionTicks,
+    reactionStages: Math.max(config.reactionShares.length, config.reactionSharesDown?.length ?? 0) - 1,
     inertiaTicks: config.inertiaTicks,
     storyOutcomeWithinTicks: toTicks(config, config.storyOutcomeWithinSeconds, 'storyOutcomeWithinSeconds'),
     noNewTentativeLastTicks: toTicks(config, config.noNewTentativeLastSeconds, 'noNewTentativeLastSeconds'),
@@ -341,12 +352,15 @@ export function getTickRules(config: GameConfig): TickRules {
   if (r.newsGapMinTicks > r.newsGapMaxTicks) throw new Error('설정 오류: 뉴스 간격의 최소가 최대보다 큼');
   if (r.firstNewsTick < r.gracePeriodTicks) throw new Error('설정 오류: 첫 뉴스가 유예 시간 안에 있음');
   if (r.firstNewsTick < 1) throw new Error('설정 오류: 첫 뉴스는 1틱 이후여야 함');
-  const lastEffectTick = r.reactionTicks + config.indirectExtraDelayTicks + r.inertiaTicks;
+  const lastEffectTick = r.reactionTicks + r.reactionStages - 1 + config.indirectExtraDelayTicks + r.inertiaTicks;
   if (r.newsGapMinTicks <= lastEffectTick) {
     throw new Error('설정 오류: 뉴스 간격이 반영+관성 시간보다 짧으면 뉴스 효과가 겹침');
   }
-  if (!(config.instantReactionShare >= 0 && config.instantReactionShare < 1)) {
-    throw new Error('설정 오류: 즉시 반영 몫은 0 이상 1 미만이어야 함');
+  for (const shares of [config.reactionShares, config.reactionSharesDown ?? config.reactionShares]) {
+    const total = shares.reduce((a, b) => a + b, 0);
+    if (shares.length < 2 || shares.some((x) => !(x >= 0)) || Math.abs(total - 1) > 1e-9 || !(shares[0]! < 1)) {
+      throw new Error('설정 오류: 반영 몫은 2개 이상, 각각 0 이상, 합 1, 즉시 몫은 1 미만이어야 함');
+    }
   }
   const [mMin, mMax] = config.inertiaRate;
   if (mMin < 1 || mMax > config.tickMaxRate || mMin > mMax) {

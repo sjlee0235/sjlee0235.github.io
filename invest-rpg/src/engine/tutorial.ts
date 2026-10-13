@@ -15,8 +15,8 @@ import type { TelemetrySink } from './telemetry.ts';
 
 export const TUTORIAL_SEED = 20_000_101;
 export const TUTORIAL_ERA = tutorialEra as Era;
-/** 튜토리얼 뉴스가 뜨는 틱 (30초) */
-export const TUTORIAL_NEWS_TICK = 6;
+/** 튜토리얼 뉴스가 뜨는 틱 (30초 = 3초 × 10) */
+export const TUTORIAL_NEWS_TICK = 10;
 
 /**
  * 튜토리얼 단계

@@ -1,7 +1,7 @@
 // 뉴스 엔진: 언제 어떤 뉴스가 뜨는지, 반영 시점과 크기를 관리한다.
 //
 // 일정 만들기 (판 시작 때 시드로 한 번에 정함)
-//   1) 뉴스 자리(슬롯): 시대 시작 3분은 뉴스 없음(유예). 첫 뉴스는 정확히 3분, 그 뒤로는 4~7분 간격 (무작위)
+//   1) 뉴스 자리(슬롯): 시대 시작 3분은 뉴스 없음(유예). 첫 뉴스는 정확히 3분, 그 뒤로는 3~4분 간격 (무작위)
 //   1-1) 첫 슬롯은 항상 잠정 뉴스: 사용 가능한 opener 스토리 중 시드 기반 무작위로 고른다 (P_START_STORY 무시)
 //   2) 그 밖의 빈 슬롯마다: 진행 중인 스토리가 없으면 P_START_STORY(85%) 확률로 새 스토리(잠정 뉴스)를 시작,
 //      아니면 속보를 넣는다. → 슬롯 기준 속보 약 1/3, 잠정 약 1/3, 결과 약 1/3
@@ -11,9 +11,10 @@
 //   4) 같은 뉴스는 다시 나오지 않고, 풀이 바닥나면 더 내보내지 않는다.
 //
 // 반영
-//   실제 변동률 = 영향도 × 3% × 배율. 이 중 instantReactionShare(기본 75%)는 발표 순간 바로(갭),
-//   나머지는 발표 1틱(5초) 뒤 틱 k+1에 한 번에 반영한다.
-//   → 뉴스를 보고 5초 안에 사도 나머지 몫만 얻는다 (실제 시장도 뉴스가 뜨는 순간 가격이 먼저 뛴다)
+//   실제 변동률 = 영향도 × 3% × 배율. 이를 몫대로 나눠 반영한다 (테마마다 오르는지 내리는지로 고름)
+//   - 오르는 영향(reactionShares): 발표 순간 바로(갭) 75%, 1틱(3초) 뒤 틱 k+1에 25%
+//   - 내리는 영향(reactionSharesDown): 발표 순간 25%, 틱 k+1에 60%, 틱 k+2에 15%
+//   → 악재가 뜨자마자 팔면 손실의 75%를 피할 수 있다 (10차 결정. 이전에는 둘 다 즉시 75% + 5초 뒤 25%)
 //   배율: 강도 3은 0.6~1.4, 강도 2·1은 0.4~1.6 (영향마다 따로 뽑음), 결과는 ±30%로 자름
 //   (기본 OFF) 간접 영향(강도 2·1)을 N틱 더 늦게 반영하는 옵션
 
@@ -49,7 +50,7 @@ export function tagOf(kind: ScheduledKind): NewsTag {
 /** 시대 안에서 뉴스가 뜰 수 있는 슬롯(틱)들 */
 export function makeNewsSlots(rules: TickRules, rng: Rng, extraDelay = 0): number[] {
   // 마지막 뉴스도 반영과 관성이 시대 안에서 끝나도록 한다
-  const last = rules.ticksPerEra - rules.reactionTicks - extraDelay - rules.inertiaTicks;
+  const last = rules.ticksPerEra - rules.reactionTicks - (rules.reactionStages - 1) - extraDelay - rules.inertiaTicks;
   const slots: number[] = [];
   let t = rules.firstNewsTick;
   while (t <= last) {
@@ -176,22 +177,39 @@ export function newsToRates(news: News, config: GameConfig, rng: Rng): NewsRates
 export interface DueRates {
   newsId: string;
   rates: Map<string, number>;
+  /** 몇 번째 몫인가 (0 = 발표 즉시, 1 = 1틱 뒤, 2 = 2틱 뒤 …) */
+  stage: number;
 }
 
 /**
- * 변동률을 "발표 즉시 몫"과 "5초 뒤 몫"으로 나눈다 (0.1% 단위 정수).
- * 5초 뒤 몫이 0이 되면 관성이 생기지 않으므로 최소 ±0.1%는 남긴다.
+ * 변동률을 몫(shares)대로 나눈다 (0.1% 단위 정수). [0] = 발표 즉시, [1..] = 그 뒤 틱마다.
+ * 누적 몫을 정수로 잘라 차이를 각 단계에 주므로 단계 합은 원래 변동률과 같다.
+ * 발표 뒤 몫이 모두 0이 되면 관성이 생기지 않으므로 첫 뒤 단계에 최소 ±0.1%는 남긴다.
  */
-export function splitRates(rates: ReadonlyMap<string, number>, share: number): { instant: Map<string, number>; later: Map<string, number> } {
-  const instant = new Map<string, number>();
-  const later = new Map<string, number>();
+export function splitRates(
+  rates: ReadonlyMap<string, number>, sharesUp: readonly number[], sharesDown: readonly number[] = sharesUp,
+): Map<string, number>[] {
+  const out = Array.from({ length: Math.max(sharesUp.length, sharesDown.length) }, () => new Map<string, number>());
   for (const [themeId, rate] of rates) {
-    let now = Math.trunc(rate * share);
-    if (rate - now === 0) now = rate - Math.sign(rate);
-    if (now !== 0) instant.set(themeId, now);
-    later.set(themeId, rate - now);
+    const shares = rate < 0 ? sharesDown : sharesUp;
+    const parts: number[] = [];
+    let cum = 0;
+    let prev = 0;
+    for (let i = 0; i < shares.length; i++) {
+      cum += shares[i]!;
+      const upTo = i === shares.length - 1 ? rate : Math.trunc(rate * cum + 1e-9 * Math.sign(rate));
+      parts.push(upTo - prev);
+      prev = upTo;
+    }
+    if (parts.slice(1).every((x) => x === 0)) {
+      parts[0]! -= Math.sign(rate);
+      parts[1]! += Math.sign(rate);
+    }
+    parts.forEach((x, i) => {
+      if (x !== 0) out[i]!.set(themeId, x);
+    });
   }
-  return { instant, later };
+  return out;
 }
 
 export class NewsEngine {
@@ -199,11 +217,11 @@ export class NewsEngine {
   readonly schedule: readonly ScheduledNews[];
   private nextIndex = 0;
   private pending: ScheduledNews | null = null;
-  /** (튜토리얼) 팝업 확인 뒤 예약할 5초 뒤 몫 */
-  private pendingLater: NewsRates | null = null;
+  /** (튜토리얼) 팝업 확인 뒤 예약할 발표 뒤 몫들 */
+  private pendingLater: NewsRates[] | null = null;
   /** 방금 발표된 뉴스의 즉시 반영 몫 (Game이 바로 꺼내 간다) */
   private instant: DueRates | null = null;
-  private readonly queued: Array<{ applyTick: number } & DueRates> = [];
+  private readonly queued: Array<{ applyTick: number; stage: number } & DueRates> = [];
   private readonly rules: TickRules;
   private readonly config: GameConfig;
   private readonly impactRng: Rng;
@@ -230,12 +248,13 @@ export class NewsEngine {
     if (!next || next.tick !== tick) return null;
     this.nextIndex++;
     const { strong, weak } = newsToRates(next.news, this.config, this.impactRng);
-    const share = this.config.instantReactionShare;
-    const s = splitRates(strong, share);
-    const w = splitRates(weak, share);
-    const instant = new Map([...s.instant, ...w.instant]);
-    this.instant = instant.size > 0 ? { newsId: next.news.id, rates: instant } : null;
-    const later: NewsRates = { strong: s.later, weak: w.later };
+    const up = this.config.reactionShares;
+    const down = this.config.reactionSharesDown ?? up;
+    const s = splitRates(strong, up, down);
+    const w = splitRates(weak, up, down);
+    const instant = new Map([...s[0]!, ...w[0]!]);
+    this.instant = instant.size > 0 ? { newsId: next.news.id, rates: instant, stage: 0 } : null;
+    const later: NewsRates[] = s.slice(1).map((m, i) => ({ strong: m, weak: w[i + 1]! }));
     if (this.pauseOnNews) {
       this.pending = next;
       this.pendingLater = later;
@@ -275,7 +294,7 @@ export class NewsEngine {
   consumeRatesFor(tick: number): DueRates[] {
     const due = this.queued.filter((q) => q.applyTick === tick);
     for (const d of due) this.queued.splice(this.queued.indexOf(d), 1);
-    return due.map(({ newsId, rates }) => ({ newsId, rates }));
+    return due.map(({ newsId, rates, stage }) => ({ newsId, rates, stage }));
   }
 
   /** 지금까지 뜬 뉴스들 (순서대로) */
@@ -283,14 +302,20 @@ export class NewsEngine {
     return this.schedule.slice(0, this.nextIndex);
   }
 
-  private enqueue(s: ScheduledNews, { strong, weak }: NewsRates, fromTick: number): void {
-    const base = fromTick + this.rules.reactionTicks;
+  private enqueue(s: ScheduledNews, stages: readonly NewsRates[], fromTick: number): void {
     const extra = this.config.indirectExtraDelayTicks;
-    if (extra > 0) {
-      this.queued.push({ applyTick: base, newsId: s.news.id, rates: strong });
-      this.queued.push({ applyTick: base + extra, newsId: s.news.id, rates: weak });
-    } else {
-      this.queued.push({ applyTick: base, newsId: s.news.id, rates: new Map([...strong, ...weak]) });
-    }
+    stages.forEach(({ strong, weak }, i) => {
+      const base = fromTick + this.rules.reactionTicks + i;
+      const stage = i + 1;
+      const push = (applyTick: number, rates: Map<string, number>) => {
+        if (rates.size > 0) this.queued.push({ applyTick, stage, newsId: s.news.id, rates });
+      };
+      if (extra > 0) {
+        push(base, strong);
+        push(base + extra, weak);
+      } else {
+        push(base, new Map([...strong, ...weak]));
+      }
+    });
   }
 }

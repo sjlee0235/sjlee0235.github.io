@@ -163,7 +163,7 @@ export class App {
     window.addEventListener('resize', () => this.fitStage());
     document.addEventListener('visibilitychange', () => this.onVisibility(document.hidden));
     window.setInterval(() => this.applyTod(true), 30_000);
-    // 남은 시간은 5초 틱 사이에도 1초씩 줄어들게 (0.25초마다 다시 그림)
+    // 남은 시간은 3초 틱 사이에도 1초씩 줄어들게 (0.25초마다 다시 그림)
     window.setInterval(() => this.renderClock(), 250);
     if (this.opts.skipIntro) {
       this.begin(this.opts.fresh ?? false, false);

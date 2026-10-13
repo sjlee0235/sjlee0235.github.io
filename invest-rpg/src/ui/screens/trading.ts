@@ -7,6 +7,7 @@
 // - 주문: [매수]/[매도]를 먼저 고르고 → 수량 입력·최대(고른 방향 기준) → [매수하기]/[매도하기]로 현재가 체결, 짧은 안내만
 // - 내 계좌: [일괄매도] → 확인 창에서 [확인]을 눌러야 보유 종목 전부 매도
 
+import { TICK_SECONDS } from '../../engine/config.ts';
 import type { PublicAdvanceResult } from '../../engine/publicView.ts';
 import { localize } from '../../i18n/index.ts';
 import type { Screen, UiContext } from '../context.ts';
@@ -14,14 +15,14 @@ import { clear, h, setText } from '../dom.ts';
 import { fmtNum, fmtPct } from '../format.ts';
 import { face, ico, inner, playIcon, pbtn, pnl } from '../kit.ts';
 import {
-  chooseSide, clearSide, dirClass, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, setMax, setQuantity, sparkPoints,
+  chartView, chooseSide, clearSide, dirClass, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, setMax, setQuantity, sparkPoints,
   stepQuantity, type OrderSide, stockRows, accountSummary, holdingRows, type NewsItemView, type OrderState, type StockRowView,
 } from '../viewModels.ts';
 
 const SVG = 'http://www.w3.org/2000/svg';
 const CHART_W = 362;
 const CHART_H = 62;
-const CHART_SLOTS = 240; // 20분 = 5초 × 240
+const CHART_SLOTS = 1200 / TICK_SECONDS; // 20분 = 3초 × 400
 const REPORT_NOTICE_KEY = 'invest-rpg.reportNoticeSeen';
 
 function svgEl<K extends keyof SVGElementTagNameMap>(tag: K, attrs: Record<string, string | number>): SVGElementTagNameMap[K] {
@@ -63,6 +64,7 @@ export class TradingScreen implements Screen {
   private orderDone = false;
   private orderEls: {
     name: HTMLElement; price: HTMLElement; pct: HTMLElement; line: SVGPolylineElement; area: SVGPolygonElement; cur: HTMLElement;
+    avgLine: SVGLineElement; buyMarks: SVGGElement; avgTag: HTMLElement;
     desc: HTMLElement; qty: HTMLInputElement; needL: HTMLElement; needV: HTMLElement; need: HTMLElement;
     qtyRow: HTMLElement; pickHint: HTMLElement; pickRow: HTMLElement; goRow: HTMLElement; go: HTMLButtonElement;
   } | null = null;
@@ -111,7 +113,7 @@ export class TradingScreen implements Screen {
           h('div', { class: 'acct-ret' }, h('span', { class: 'lbl' }, t('trading.return')), this.retV),
           h('div', { class: 'acct-ret acct-cash' }, h('span', { class: 'lbl' }, t('portfolio.cash')), ico('coin', 14), this.cashV),
         ),
-        h('div', { class: 'speeds' }, this.speedBtns[1], this.speedBtns[2]),
+        h('div', { class: 'speeds' }, h('span', { class: 'lbl speed-lbl' }, t('speed.label')), this.speedBtns[1], this.speedBtns[2]),
       ),
     );
 
@@ -438,9 +440,13 @@ export class TradingScreen implements Screen {
     }
     const area = svgEl('polygon', { fill: 'currentColor', 'fill-opacity': 0.22, stroke: 'none' });
     const line = svgEl('polyline', { fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linejoin': 'round' });
-    chartSvg.append(area, line);
+    // 보유 종목: 산 시점(세로 점선)과 평단가(가로 점선)
+    const buyMarks = svgEl('g', { class: 'buy-marks' });
+    const avgLine = svgEl('line', { class: 'avg-line', x1: 0, x2: CHART_W, 'stroke-width': 1.5, 'stroke-dasharray': '5 3' });
+    chartSvg.append(area, buyMarks, avgLine, line);
     const cur = h('span', { class: 'cur' });
-    const chart = h('div', { class: 'chart' }, chartSvg as unknown as HTMLElement, cur);
+    const avgTag = h('span', { class: 'avg-tag' });
+    const chart = h('div', { class: 'chart' }, chartSvg as unknown as HTMLElement, avgTag, cur);
 
     const desc = h('div', { class: 'desc' });
     const qty = h('input', { inputmode: 'numeric', 'aria-label': t('order.quantity'), value: String(o.quantity), maxlength: 3 });
@@ -506,7 +512,7 @@ export class TradingScreen implements Screen {
         goRow,
       ),
     );
-    this.orderEls = { name, price, pct, line, area, cur, desc, qty, needL, needV, need, qtyRow, pickHint, pickRow, goRow, go };
+    this.orderEls = { name, price, pct, line, area, cur, avgLine, buyMarks, avgTag, desc, qty, needL, needV, need, qtyRow, pickHint, pickRow, goRow, go };
   }
 
   /** (화면·디버그) 매수·매도 고르기. 팔 주식이 없으면 안내만 */
@@ -536,8 +542,26 @@ export class TradingScreen implements Screen {
     setText(els.pct, fmtPct(stock.changePct));
     els.price.className = `pr ${dir}`;
     els.pct.className = `pc ${dir}`;
-    // 차트: 최근 20분, 선 2도트 + 같은 색 22% 면 + 지금 위치 사각형
-    const pts = linePoints(ctx.game.getChart(o.stockId).slice(-CHART_SLOTS).map((p) => p.price), CHART_W, CHART_H, 6, CHART_SLOTS);
+    // 차트: 최근 20분, 선 2도트 + 같은 색 22% 면 + 지금 위치 사각형 (+ 보유 중이면 산 시점·평단가 점선)
+    const marks = ctx.game.getHoldingMarks(o.stockId);
+    const cv = chartView(ctx.game.getChart(o.stockId), CHART_W, CHART_H, 6, CHART_SLOTS, marks);
+    const pts = cv.points;
+    els.avgLine.style.display = cv.avgY === null ? 'none' : '';
+    els.avgTag.hidden = cv.avgY === null;
+    if (cv.avgY !== null && marks) {
+      els.avgLine.setAttribute('y1', String(cv.avgY));
+      els.avgLine.setAttribute('y2', String(cv.avgY));
+      setText(els.avgTag, t('trading.avgMark', { price: fmtNum(Math.round(marks.avgPrice), locale) }));
+      // 글자는 점선 바로 위 (위쪽이 모자라면 아래)
+      els.avgTag.style.top = `${cv.avgY >= 14 ? cv.avgY - 13 : cv.avgY + 2}px`;
+    }
+    const buySig = cv.buyXs.join(',');
+    if (els.buyMarks.dataset.sig !== buySig) {
+      els.buyMarks.dataset.sig = buySig;
+      els.buyMarks.replaceChildren(
+        ...cv.buyXs.map((x) => svgEl('line', { x1: x, x2: x, y1: 0, y2: CHART_H, 'stroke-width': 1.5, 'stroke-dasharray': '3 3' })),
+      );
+    }
     const chartBox = els.line.ownerSVGElement?.parentElement;
     if (chartBox) chartBox.className = `chart ${dir}`;
     els.line.setAttribute('points', pts.map((p) => `${p.x},${p.y}`).join(' '));

@@ -103,17 +103,52 @@ export function sparkPoints(history: readonly PricePoint[], n = 10): number[] {
  * 가격 목록 → SVG 꺾은선 좌표 (w×h 상자, 위아래 pad 여백). 가격이 모두 같으면 가운데 수평선.
  * slots를 주면 그 칸 수 기준으로 오른쪽에 붙인다 (시대 초반 차트가 짧을 때)
  */
-export function linePoints(prices: readonly number[], w: number, h: number, pad = 2, slots = prices.length): { x: number; y: number }[] {
+export function linePoints(
+  prices: readonly number[], w: number, h: number, pad = 2, slots = prices.length, alsoFit: readonly number[] = [],
+): { x: number; y: number }[] {
   if (prices.length === 0) return [];
-  const lo = Math.min(...prices);
-  const hi = Math.max(...prices);
-  const span = hi - lo;
+  const y = chartScaleY([...prices, ...alsoFit], h, pad);
   const n = Math.max(2, slots);
   const offset = n - prices.length;
   return prices.map((p, i) => ({
     x: Number((((offset + i) / (n - 1)) * w).toFixed(2)),
-    y: Number((span === 0 ? h / 2 : pad + (1 - (p - lo) / span) * (h - pad * 2)).toFixed(2)),
+    y: y(p),
   }));
+}
+
+/** 값들의 최저~최고를 h 높이(위아래 pad 여백)에 맞추는 y 좌표 함수. 값이 모두 같으면 가운데 */
+function chartScaleY(values: readonly number[], h: number, pad: number): (v: number) => number {
+  const lo = Math.min(...values);
+  const hi = Math.max(...values);
+  const span = hi - lo;
+  return (v) => Number((span === 0 ? h / 2 : pad + (1 - (v - lo) / span) * (h - pad * 2)).toFixed(2));
+}
+
+export interface ChartView {
+  points: { x: number; y: number }[];
+  /** 평단가 가로 점선의 y (보유하지 않으면 null) */
+  avgY: number | null;
+  /** 산 시점 세로 점선의 x들 (차트에 보이는 20분 안의 매수만) */
+  buyXs: number[];
+}
+
+/**
+ * 주문 패널 차트: 최근 slots칸 가격 + (보유 종목이면) 평단가 가로 점선, 산 시점 세로 점선.
+ * 평단가가 차트 범위 밖이어도 보이도록 세로 범위에 평단가를 함께 넣는다.
+ */
+export function chartView(
+  history: readonly PricePoint[], w: number, h: number, pad: number, slots: number,
+  holding: { avgPrice: number; buyTicks: readonly number[] } | null,
+): ChartView {
+  const shown = history.slice(-slots);
+  const prices = shown.map((p) => p.price);
+  const fit = holding ? [holding.avgPrice] : [];
+  const points = linePoints(prices, w, h, pad, slots, fit);
+  if (!holding || prices.length === 0) return { points, avgY: null, buyXs: [] };
+  const avgY = chartScaleY([...prices, ...fit], h, pad)(holding.avgPrice);
+  const xByTick = new Map(shown.map((p, i) => [p.tick, points[i]!.x]));
+  const buyXs = [...new Set(holding.buyTicks.map((t) => xByTick.get(t)).filter((x): x is number => x !== undefined))];
+  return { points, avgY, buyXs };
 }
 
 // ───────── 주문 패널 (매수·매도를 먼저 고르고 → 수량·최대 → 매수하기/매도하기) ─────────
@@ -218,7 +253,10 @@ export function reportView(r: PublicStockReport, locale: Locale): ReportView {
       head: `${localize(it.stockName, locale)} ${fmtPct(it.appliedPct)}`,
       dir: dirClass(it.appliedPct),
       reason: reportReason(it, locale),
-      split: t(locale, 'report.split', { instant: fmtPct(it.instantPct), delayed: fmtPct(it.delayedPct) }),
+      split: [
+        t(locale, 'report.split', { instant: fmtPct(it.instantPct) }),
+        ...it.stages.filter((st) => st.pct !== 0).map((st) => t(locale, 'report.splitAfter', { sec: st.afterSec, pct: fmtPct(st.pct) })),
+      ].join(' · '),
     })),
     more: r.moreCount > 0 ? t(locale, 'report.more', { count: r.moreCount }) : null,
     notes,

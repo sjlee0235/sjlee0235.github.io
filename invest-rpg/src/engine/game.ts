@@ -2,11 +2,12 @@
 // ★ 화면 코드는 이 클래스를 직접 쓰지 않고 publicView.ts의 PublicGame만 쓴다.
 //   Game은 뉴스의 영향 테마·방향, 테마 분위기 등 플레이 중 숨겨야 할 정보를 그대로 들고 있기 때문이다.
 //
-// 엔진은 실제 시계를 쓰지 않는다. 화면 쪽 타이머가 5초마다 advanceTick()을 부른다.
+// 엔진은 실제 시계를 쓰지 않는다. 화면 쪽 타이머가 3초마다 advanceTick()을 부른다.
 // - 뉴스가 떠도, 주가 리포트가 붙어도 시간은 멈추지 않는다.
 // - 시간이 멈추는 경우는 일시정지 사유가 하나라도 있을 때뿐: 'tutorial'(튜토리얼 뉴스 확인 대기), 'background'(앱이 백그라운드)
-// - 배속(1배/2배)은 실제 시간만 바꾼다. 게임 시간 단위(5초 틱, 3분 유예, 120초 리포트)와 결과는 그대로
-// - 뉴스 발표(틱 k): 영향의 75%가 그 순간 바로 반영(instantChanges) → 틱 k+1에 나머지 반영 → 틱 k+2, k+3 관성 → 일반 움직임
+// - 배속(1배/2배)은 실제 시간만 바꾼다. 게임 시간 단위(3초 틱, 3분 유예, 120초 리포트)와 결과는 그대로
+// - 뉴스 발표(틱 k): 오르는 영향은 75%가 그 순간 바로(instantChanges) → 틱 k+1에 25%,
+//   내리는 영향은 25% 바로 → 틱 k+1에 60% → 틱 k+2에 15%. 마지막 반영 다음 2틱은 관성 → 일반 움직임
 // - 뉴스 발표 120초 뒤 주가 리포트(report)이 AdvanceResult.reports로 나온다
 //
 // 상태(phase)
@@ -297,7 +298,7 @@ export class Game {
   private readReports = new Set<string>();
   private readonly _settlements: EraSettlement[] = [];
   private readonly options: GameOptions;
-  /** 뉴스 id → (종목 id → 실제 적용된 변동률: 즉시 / 5초 뒤) */
+  /** 뉴스 id → (종목 id → 실제 적용된 변동률: 즉시 / 그 뒤 틱별) */
   private applied = new Map<string, Map<string, AppliedRate>>();
   private pendingReports: { tick: number; scheduled: ScheduledNews }[] = [];
   private reports = new Map<string, StockReport>();
@@ -534,7 +535,7 @@ export class Game {
     const { tick, changes } = this.session.prices.step(merged.size > 0 ? merged : undefined);
 
     for (const d of due) {
-      this.recordApplied(d.newsId, d.rates, changes, 'delayed');
+      this.recordApplied(d.newsId, d.rates, changes, d.stage);
       if (this.isRecording) this.emit('news_reacted', { newsId: d.newsId, applied: this.stockRates(d.rates, changes) });
     }
 
@@ -549,7 +550,7 @@ export class Game {
         const instant = this.session.news.consumeInstant();
         if (instant) {
           instantChanges = this.session.prices.applyInstant(instant.rates);
-          this.recordApplied(instant.newsId, instant.rates, instantChanges, 'instant');
+          this.recordApplied(instant.newsId, instant.rates, instantChanges, 0);
         }
         this.saveReasons.add('news');
         if (this.isRecording) {
@@ -880,7 +881,7 @@ export class Game {
     this.emitRaw(type, this.session.era.id, this.session.index, this.tick, data, clientMs);
   }
 
-  /** (튜토리얼) 뉴스 팝업 '확인'. 1틱(5초) 뒤 반영 */
+  /** (튜토리얼) 뉴스 팝업 '확인'. 1틱(3초) 뒤부터 반영 */
   confirmNews(): ScheduledNews {
     if (!this.session.news.pendingNews) throw new Error('확인할 튜토리얼 뉴스가 없음');
     const s = this.session.news.confirm(this.tick);
@@ -1062,6 +1063,27 @@ export class Game {
     return this.session.prices.getHistory(stockId);
   }
 
+  /**
+   * 지금 들고 있는 종목을 산 시점들 (차트 표시용). 보유 수량이 0에서 다시 생긴 뒤의 매수만 (오래된 것부터).
+   * 보유하지 않으면 빈 배열
+   */
+  getPositionBuys(stockId: string): { tick: number; price: number; quantity: number }[] {
+    let q = this.account.getQuantity(stockId);
+    const out: { tick: number; price: number; quantity: number }[] = [];
+    const trades = this.account.getTrades();
+    for (let i = trades.length - 1; i >= 0 && q > 0; i--) {
+      const t = trades[i]!;
+      if (t.stockId !== stockId) continue;
+      if (t.side === 'buy') {
+        q -= t.quantity;
+        out.push({ tick: t.tick ?? 0, price: t.price, quantity: t.quantity });
+      } else {
+        q += t.quantity;
+      }
+    }
+    return out.reverse();
+  }
+
   getPrice(stockId: string): number {
     return this.session.prices.getPrice(stockId);
   }
@@ -1070,14 +1092,16 @@ export class Game {
 
   /** 뉴스별로 실제 적용된 변동률 기록 (주가 리포트용) */
   private recordApplied(
-    newsId: string, rates: ReadonlyMap<string, number>, changes: readonly StockTickChange[], part: 'instant' | 'delayed',
+    newsId: string, rates: ReadonlyMap<string, number>, changes: readonly StockTickChange[], stage: number,
   ): void {
     const map = this.applied.get(newsId) ?? new Map<string, AppliedRate>();
+    const stages = this.rules.reactionStages;
     for (const ch of changes) {
       if (ch.cause !== 'news' && ch.cause !== 'instant') continue;
       if (!rates.has(this.themeOf(ch.stockId))) continue;
-      const a = map.get(ch.stockId) ?? { instant: 0, delayed: 0 };
-      a[part] += ch.rate;
+      const a = map.get(ch.stockId) ?? { instant: 0, delayed: new Array<number>(stages).fill(0) };
+      if (stage === 0) a.instant += ch.rate;
+      else a.delayed[stage - 1] = (a.delayed[stage - 1] ?? 0) + ch.rate;
       map.set(ch.stockId, a);
     }
     this.applied.set(newsId, map);
