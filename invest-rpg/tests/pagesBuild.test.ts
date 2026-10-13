@@ -34,4 +34,9 @@ describe('GitHub Pages 배포가 멈추지 않게', () => {
     }
     expect(bad).toEqual([]);
   });
+
+  it('휴대폰 브라우저의 강제 어두운 테마가 게임 색을 뒤집지 않게 color-scheme을 "only light"로 정한다', () => {
+    expect(fs.readFileSync('index.html', 'utf8')).toContain('<meta name="color-scheme" content="only light" />');
+    expect(fs.readFileSync('src/ui/style.css', 'utf8')).toContain(':root { color-scheme: only light; }');
+  });
 });

@@ -423,6 +423,10 @@ const music = new MusicPlayer(tracks, backend, createPresentationRng(seed, 'musi
 111. 🆕 **거실 시대 달력 삭제** (사용자 요청, 9차 104번의 ③). 시대 색 테마와 시대 시작 카드는 그대로.
 112. 🆕 규칙이 바뀌어 엔진 버전을 0.7.0으로 올렸다. 9차에 저장한 게임을 불러오면 그 시대는 저장 당시 가격으로 자동 정산되고 다음 시대부터 새 규칙으로 이어진다(원래 있던 버전 변경 처리).
 
+### 11차 (2026-10-13, GitHub Pages 배포)
+113. 🆕 **강제 어두운 테마 막기**: 휴대폰 크롬의 "사이트에 어두운 테마 적용"(또는 삼성 인터넷 다크 모드)이 켜져 있으면 브라우저가 페이지 색을 자동으로 뒤집어, 버튼이 갈색이 되고 제목·그림 색이 달라졌다. 게임은 밤/낮 색을 직접 정하므로 `<meta name="color-scheme" content="only light">`와 CSS `:root { color-scheme: only light; }`로 브라우저가 색을 바꾸지 않게 했다.
+114. 🆕 GitHub Pages 배포가 PR #2부터 실패하던 원인(기획서 문서 속 Liquid 틀 문법 글자)을 고치고, 문서 검사 테스트를 넣었다 (`tests/pagesBuild.test.ts`).
+
 ---
 
 ## 6. 밸런스 시뮬레이션
