@@ -129,6 +129,18 @@ export function titleScreen(locale: Locale, hasSave: boolean, handlers: { contin
   return h('div', { class: 'title-screen' }, logo, h('div', { class: 'title-buttons' }, cont, fresh));
 }
 
+/**
+ * 삼성 인터넷으로 열었을 때 첫 화면에서 한 번 보여 주는 안내 (11차).
+ * 삼성 인터넷의 다크 모드는 페이지 쪽에서 막거나 켜졌는지 알아낼 방법이 없어서, 삼성 인터넷 사용자 모두에게 한 번 알린다.
+ */
+export function samsungDarkNoticeOverlay(locale: Locale, onClose: () => void): HTMLElement {
+  const t = (k: string) => tr(locale, k);
+  const ok = pbtn('accent', t('common.confirm'));
+  ok.addEventListener('click', onClose);
+  const lines = ['samsungDark.body1', 'samsungDark.body2', 'samsungDark.body3'].map((k) => h('p', { class: 'note', style: 'color:var(--text)' }, t(k)));
+  return dialog('samsung-dark', t('samsungDark.title'), lines, [ok]);
+}
+
 /** 저장된 진행이 있는데 '새로하기'를 누르면 */
 export function confirmNewOverlay(locale: Locale, onAnswer: (ok: boolean) => void): HTMLElement {
   const t = (k: string) => tr(locale, k);

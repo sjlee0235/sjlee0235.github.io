@@ -35,7 +35,8 @@ import { hourglassIcon, ico, inner, pbtn, playIcon, pnl } from './kit.ts';
 import type { IconName } from './icons.ts';
 import { GameLoop, type Clock } from './loop.ts';
 import {
-  confirmNewOverlay, confirmOverlay, consentOverlay, eraIntroOverlay, finalOverlay, settingsOverlay, settlementOverlay, titleScreen, tutorialOverlay,
+  confirmNewOverlay, confirmOverlay, consentOverlay, eraIntroOverlay, finalOverlay, samsungDarkNoticeOverlay, settingsOverlay, settlementOverlay, titleScreen,
+  tutorialOverlay,
 } from './overlays.ts';
 import { SceneLayer } from './scene.ts';
 import { LivingRoomScreen } from './screens/livingRoom.ts';
@@ -43,11 +44,14 @@ import { TradingScreen } from './screens/trading.ts';
 import { TvShoppingScreen } from './screens/tvShopping.ts';
 import { WorkshopScreen } from './screens/workshop.ts';
 import { loadSave, SAVE_KEY, writeSave } from './storage.ts';
+import { isSamsungInternet } from './viewModels.ts';
 
 export const STAGE_W = 390;
 export const STAGE_H = 844;
 /** 플레이 기록 동의를 물은 적이 있는가 (게임 세이브와 따로) */
 export const FIRST_RUN_KEY = 'invest-rpg.introSeen';
+/** 삼성 인터넷 다크 모드 안내를 보여 줬는가 (11차) */
+export const SAMSUNG_NOTICE_KEY = 'invest-rpg.samsungDarkNoticeSeen';
 
 const TAB_ICON: Record<TabId, IconName> = { living_room: 'sofa', trading: 'monitor', workshop: 'doll', tv_shopping: 'tv' };
 const TAB_SCENE: Record<TabId, SceneKind> = { living_room: 'living', trading: 'living', workshop: 'workshop', tv_shopping: 'tv' };
@@ -204,6 +208,17 @@ export class App {
     });
     this.overlays.append(el);
     this.refreshScene(0);
+    this.maybeSamsungNotice();
+  }
+
+  /** 삼성 인터넷이면 다크 모드 안내를 한 번 (첫 화면 위에) */
+  private maybeSamsungNotice(): void {
+    if (!isSamsungInternet(navigator.userAgent) || this.opts.storage.get(SAMSUNG_NOTICE_KEY) === '1') return;
+    const note = samsungDarkNoticeOverlay(this.settings.locale, () => {
+      note.remove();
+      this.opts.storage.set(SAMSUNG_NOTICE_KEY, '1');
+    });
+    this.overlays.append(note);
   }
 
   /**

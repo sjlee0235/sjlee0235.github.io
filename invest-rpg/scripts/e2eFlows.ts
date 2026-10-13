@@ -7,6 +7,7 @@
 // 6) 인테리어: 현금 2,000코인 내고 한 단계, 배경 그림이 바뀌고 다시 열어도 그대로, 현금이 모자라면 매도 안내
 // 7) 작업실: 인형 100개째에 바로 지급 → 지급 예정 +0, 완성 0개
 // 8) 강아지 5번 연속 터치 → 배 까기 + 하트, 밤/낮 바꾸기
+// 9) 삼성 인터넷이면 첫 화면에 다크 모드 안내 한 번 (다른 브라우저에서는 없음)
 // 시간을 기다리지 않도록 디버그 기능(window.__debug)을 쓴다.
 
 import { chromium, type Page } from 'playwright';
@@ -391,6 +392,32 @@ try {
     check((await sceneFile(page))!.includes('_night_'), '밤 그림');
     check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
+  }
+
+  // ── 9) 삼성 인터넷: 첫 화면에 다크 모드 안내 한 번 (11차) ──
+  {
+    const samsungUa = 'Mozilla/5.0 (Linux; Android 14; SM-S921N) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/27.0 Chrome/125.0.0.0 Mobile Safari/537.36';
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, userAgent: samsungUa });
+    const page = await ctx.newPage();
+    const errors = watchErrors(page);
+    await page.goto(`${url}?debug=1&seed=3`);
+    await page.waitForFunction(() => '__debug' in window);
+    await page.addStyleTag({ content: '.debug{display:none!important}' });
+    check(await page.locator('.overlay.samsung-dark').isVisible(), '삼성 인터넷이면 첫 화면에 다크 모드 안내');
+    check(((await page.locator('.overlay.samsung-dark .body').textContent()) ?? '').includes('다크 모드'), '안내: 다크 모드를 끄거나 다른 브라우저로');
+    await page.locator('.overlay.samsung-dark .foot .pbtn').click();
+    check(!(await page.locator('.overlay.samsung-dark').isVisible()) && (await page.locator('.title-screen').isVisible()), '[확인]을 누르면 닫히고 첫 화면');
+    await page.reload();
+    await page.waitForFunction(() => '__debug' in window);
+    check(!(await page.locator('.overlay.samsung-dark').isVisible()), '안내는 한 번만');
+    check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
+    await ctx.close();
+    const chrome = await newCtx();
+    const p2 = await chrome.newPage();
+    await p2.goto(`${url}?debug=1&seed=3`);
+    await p2.waitForFunction(() => '__debug' in window);
+    check(!(await p2.locator('.overlay.samsung-dark').isVisible()), '다른 브라우저에서는 안내 없음');
+    await chrome.close();
   }
 } finally {
   await browser.close();

@@ -6,19 +6,19 @@
 ## 1. 지켜야 할 규칙 (사용자 지시)
 - 결제·광고 SDK, 서버/DB, 걷는 맵·캐릭터는 만들지 않는다.
 - 음악 파일을 **만들지(생성하지) 않는다.** 9차에서 "저작권 문제없는 곡을 찾아 넣어 달라"는 요청이 있었으므로 **찾아서 받는 것은 허용** (라이선스·출처 기록 필수, `docs/audio_sourcing.md`).
-- 기획에 없는 규칙을 임의로 추가하거나 기본값을 바꾸지 않는다. 정하지 않은 세부는 합리적인 기본값으로 하고 **README "5. 가정한 규칙"에 번호를 이어 기록**한다 (지금 114번까지, 다음은 115번, 차수별 소제목 "### 12차 (날짜, …)").
+- 기획에 없는 규칙을 임의로 추가하거나 기본값을 바꾸지 않는다. 정하지 않은 세부는 합리적인 기본값으로 하고 **README "5. 가정한 규칙"에 번호를 이어 기록**한다 (지금 115번까지, 다음은 116번, 차수별 소제목 "### 12차 (날짜, …)").
 - **테스트가 통과하지 않은 채로 "완료"라고 하지 않는다.**
 - 게임 데이터에 실존 기업·상표·인물 이름 금지 (팩트체크 문서에만 실명). 대규모 인명 피해 참사, 국내 정치(탄핵·계엄 등)는 시장 뉴스로 쓰지 않는다.
 - 플레이 기록(텔레메트리)은 기본 꺼짐, 개인 식별 정보 없음.
 - 코드로 그린 임시 그림은 채택하지 않는다(그림은 기획자 디자인). UI(HTML/CSS) 요소는 괜찮다.
 - 커밋·PR에 모델 이름을 넣지 않는다. 커밋 끝에는 세션이 알려주는 Co-Authored-By/세션 줄을 붙인다.
 - **수정할 때마다 웹 버전(아티팩트)에 바로 반영**한다 (아래 4장).
-- `index.html`의 `color-scheme: light dark` 메타와 `style.css`의 color-scheme 줄은 지우지 않는다 (없으면 휴대폰 브라우저의 강제 어두운 테마가 게임 색을 뒤집는다. `only light`는 삼성 인터넷이 무시해서 안 된다, 11차).
+- `index.html`의 `color-scheme: light dark` 메타와 `style.css`의 color-scheme 줄은 지우지 않는다 (없으면 휴대폰 브라우저의 강제 어두운 테마가 게임 색을 뒤집는다. `only light`는 삼성 인터넷이 무시해서 안 된다, 11차). 삼성 인터넷 다크 모드는 어떤 표시로도 막을 수 없어서, 삼성 인터넷으로 열면 첫 화면에 안내 창을 한 번 띄운다.
 - **.md 문서에 "여는 중괄호 + 퍼센트"나 "여는 중괄호 두 개"를 붙여 쓰지 않는다** (예: 수익률 칸은 `{수익률}%`처럼). GitHub Pages(Jekyll)가 이를 틀 문법(Liquid)으로 읽어 사이트 전체 배포가 실패한다 (PR #2~#4가 이것 때문에 배포되지 않았다, 10차에 발견). `tests/pagesBuild.test.ts`가 검사한다.
 
 ## 2. 기술·명령 (작업 폴더: `invest-rpg/`)
 - TypeScript 7, Vite 8(`base './'`, publicDir `assets`), Vitest 5, Node 22(.ts 직접 실행), Playwright(크로미움 `/opt/pw-browsers`), 화면은 바닐라 TS (프레임워크 없음).
-- `npm run check` (타입 검사 + 테스트 342개) · `npm run e2e` (브라우저 흐름 점검 114개) · `npm run shots` (스크린샷 → `shots/`, git 제외)
+- `npm run check` (타입 검사 + 테스트 343개) · `npm run e2e` (브라우저 흐름 점검 120개) · `npm run shots` (스크린샷 → `shots/`, git 제외)
 - `npm run lint:content` (시대 데이터 점검) · `node scripts/checkEra.ts src/data/eras/2010s.json 200` (시대 파일 하나: 구조·가이드·전략별 밸런스) · `node scripts/newsCount.ts` (시대당 뉴스 수) · `npm run sim:carry` (3시대 이월)
 - `node scripts/peek.ts "&era=1" "tod:day;tab:trading;shot:a"` (화면 몇 장 빨리 → `shots/peek_a.png`)
 - `npm run build:play` → `play/` (GitHub Pages용 웹 시험판, 디버그 패널 포함: 주소에 `?debug=1` 또는 `#debug`, `&seed=7&fresh=1&nointro=1&era=1`)
