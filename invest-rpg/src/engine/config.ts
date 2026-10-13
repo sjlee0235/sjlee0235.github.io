@@ -76,8 +76,13 @@ export function tickIntervalMs(speed: 1 | 2, tickSeconds: number = TICK_SECONDS)
 export const WORK_TYPE = 'doll_eyes' as const;
 /** 인형 하나를 완성하는 터치 수 (눈 하나, 눈 둘, 완성) */
 export const TOUCHES_PER_DOLL = 3;
-/** 인형 하나 완성 보상(코인). TV홈쇼핑을 도입하면 줄일 예정 */
+/** 인형 하나 완성 보상(코인), 인생 업그레이드 0단계 기준. TV홈쇼핑을 도입하면 줄일 예정 */
 export const COINS_PER_DOLL = 3;
+/**
+ * 인생 업그레이드 1단계마다 늘어나는 터치 1번당 보상(코인). 11차 사용자 결정.
+ * 터치 1번 = 1 + 단계 코인 → 인형 하나 = 3 × (1 + 단계): 0단계 3코인, 3단계 12코인, 7단계 24코인
+ */
+export const WORK_COINS_PER_TOUCH_PER_LEVEL = 1;
 /** 초당 터치 상한: 자동 클릭·과도한 연타 방지. 넘는 터치는 무시 (가정값) */
 export const MAX_TOUCHES_PER_SEC = 6;
 /**
@@ -94,8 +99,13 @@ export const WORK_BATCH_DOLLS = 100;
 // ───────── 인테리어 업그레이드 (거실·작업실·TV 공통 단계) ─────────
 /** 최고 단계. Lv0(처음 상태) → Lv7(완성), 7번 구입 */
 export const INTERIOR_MAX_LEVEL = 7;
-/** 한 단계 올리는 값(코인). 2026-10-10 결정: 1,000 → 2,000 (7단계 합계 14,000) */
-export const INTERIOR_COST = 2000;
+/**
+ * 단계별 값(코인): [0→1단계, 1→2단계, …, 6→7단계].
+ * 2,000 고정(합계 14,000, 5차 결정) → 11차: 단계마다 2,000씩 올라 2,000·4,000·…·14,000 (합계 56,000).
+ * 업그레이드할수록 작업 보상이 늘어나므로(WORK_COINS_PER_TOUCH_PER_LEVEL), 터치만으로 해피 엔딩에 너무 빨리 닿지 않게
+ * (2,000 고정이면 시작 자금 + 약 5분 터치로 7단계 → 이 값이면 약 50분, README 6장)
+ */
+export const INTERIOR_COSTS: readonly number[] = [2000, 4000, 6000, 8000, 10000, 12000, 14000];
 
 /**
  * 엔딩 (8차 결정): 마지막 시대가 끝났을 때의 인테리어(인생 업그레이드) 단계로 정한다.
@@ -116,7 +126,10 @@ export const WORK_INCOME_CAP_PER_ERA: number | null = null;
 export interface WorkRules {
   type: typeof WORK_TYPE;
   touchesPerDoll: number;
+  /** 인형 하나 완성 보상 (인생 업그레이드 0단계) */
   coinsPerDoll: number;
+  /** 인생 업그레이드 1단계마다 터치 1번당 더 받는 코인 */
+  coinsPerTouchPerLevel: number;
   maxTouchesPerSec: number;
   payoutMode: WorkPayoutMode;
   /** 'batch' 지급의 묶음 크기 (인형 수) */
@@ -126,8 +139,8 @@ export interface WorkRules {
 
 export interface InteriorRules {
   maxLevel: number;
-  /** 한 단계 값(코인). 보유 현금에서 낸다 */
-  costPerLevel: number;
+  /** 단계별 값(코인): costs[n] = n단계 → n+1단계. 길이 = maxLevel. 보유 현금에서 낸다 */
+  costs: readonly number[];
 }
 
 /** % 값을 0.1% 단위 정수로. 1.5 → 15 */
@@ -286,12 +299,13 @@ export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
     type: WORK_TYPE,
     touchesPerDoll: TOUCHES_PER_DOLL,
     coinsPerDoll: COINS_PER_DOLL,
+    coinsPerTouchPerLevel: WORK_COINS_PER_TOUCH_PER_LEVEL,
     maxTouchesPerSec: MAX_TOUCHES_PER_SEC,
     payoutMode: WORK_PAYOUT_MODE,
     batchDolls: WORK_BATCH_DOLLS,
     incomeCapPerEra: WORK_INCOME_CAP_PER_ERA,
   }),
-  interior: Object.freeze({ maxLevel: INTERIOR_MAX_LEVEL, costPerLevel: INTERIOR_COST }),
+  interior: Object.freeze({ maxLevel: INTERIOR_MAX_LEVEL, costs: INTERIOR_COSTS }),
   orderDelayTicks: ORDER_DELAY_TICKS,
   indirectExtraDelayTicks: INDIRECT_EXTRA_DELAY_TICKS,
 });
@@ -365,6 +379,9 @@ export function getTickRules(config: GameConfig): TickRules {
   const [mMin, mMax] = config.inertiaRate;
   if (mMin < 1 || mMax > config.tickMaxRate || mMin > mMax) {
     throw new Error('설정 오류: 관성 크기는 일반 틱 범위(0.1%~최대) 안이어야 함');
+  }
+  if (config.interior.costs.length !== config.interior.maxLevel || config.interior.costs.some((c) => !(Number.isInteger(c) && c > 0))) {
+    throw new Error('설정 오류: 인테리어 단계별 값은 최고 단계 수만큼, 양의 정수여야 함');
   }
   return r;
 }

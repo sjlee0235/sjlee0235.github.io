@@ -31,7 +31,7 @@ import type { NewsTag, ScheduledKind, ScheduledNews } from './newsEngine.ts';
 import type { PricePoint, StockTickChange } from './priceEngine.ts';
 import { buildReport, type AppliedRate, type StockReport } from './report.ts';
 import { applyDeposit, applyWithdrawal, cumulativeReturnPct, startTwr, twrPct, type TwrState } from './returns.ts';
-import { applyTouch, creditFor, newWorkState, TouchLimiter, type TouchResult, type WorkCarry, type WorkState } from './work.ts';
+import { applyTouch, coinsPerDollAt, creditFor, newWorkState, TouchLimiter, type TouchResult, type WorkCarry, type WorkState } from './work.ts';
 import {
   balanceHash, ENGINE_VERSION, TELEMETRY_SCHEMA_VERSION,
   type AppEventMap, type AppEventType, type DecisionContext, type EngineEventMap, type SavedActionData,
@@ -686,7 +686,7 @@ export class Game {
     let total = 0;
     // 묶음 경계를 넘을 수 있으므로 인형 하나씩 처리한다 (n은 보통 1)
     for (let i = 0; i < dolls; i++) {
-      const coins = creditFor(this.work, 1, rules);
+      const coins = creditFor(this.work, 1, rules, this._interior);
       total += coins;
       this.work = { ...this.work, dollsCompleted: this.work.dollsCompleted + 1, earned: this.work.earned + coins };
       if (mode === 'immediate') {
@@ -741,7 +741,7 @@ export class Game {
       earned: this.work.earned,
       dollsCompleted: this.work.dollsCompleted,
       touchesPerDoll: w.touchesPerDoll,
-      coinsPerDoll: w.coinsPerDoll,
+      coinsPerDoll: coinsPerDollAt(w, this._interior),
       payoutMode: w.payoutMode,
     };
   }
@@ -768,11 +768,12 @@ export class Game {
 
   /** 다음 단계 값 (최고 단계면 null) */
   get interiorNextCost(): number | null {
-    return this._interior >= this.config.interior.maxLevel ? null : this.config.interior.costPerLevel;
+    return this._interior >= this.config.interior.maxLevel ? null : this.config.interior.costs[this._interior]!;
   }
 
   /**
-   * 인테리어 한 단계 올리기. 보유 현금에서 2,000코인 (평가금액 아님). 확인 창·되돌리기 없음.
+   * 인테리어 한 단계 올리기. 보유 현금에서 그 단계 값(2,000·4,000·…·14,000코인, 평가금액 아님). 확인 창·되돌리기 없음.
+   * 단계가 오르면 작업 보상도 터치 1번당 +1코인.
    * 수익률에서는 출금으로 처리한다 (시간가중수익률 구간을 나누고 손실로 세지 않음).
    */
   upgradeInterior(): InteriorResult {

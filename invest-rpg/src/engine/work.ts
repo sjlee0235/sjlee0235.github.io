@@ -1,4 +1,5 @@
 // 작업(인형 눈 붙이기): 터치 규칙과 초당 터치 상한. 순수 함수.
+// 보상은 인생 업그레이드 단계마다 터치 1번당 +1코인 (11차): 인형 하나 = 3 × (1 + 단계)
 //
 // - 1번째 터치: 눈 하나 / 2번째 터치: 눈 두 개 / 3번째 터치: 완성 → 코인 적립, 다음 인형(눈 없음)으로
 // - 2터치까지만 하면 0코인 (부분 적립 없음). 진행 중인 인형 상태(0~2터치)는 탭을 옮겨도, 저장해도 유지
@@ -76,9 +77,14 @@ export function applyTouch(state: WorkState, rules: WorkRules): { state: WorkSta
   };
 }
 
-/** 완성한 인형 n개의 코인 (시대당 상한이 있으면 남은 만큼만) */
-export function creditFor(state: WorkState, dolls: number, rules: WorkRules): number {
-  const coins = dolls * rules.coinsPerDoll;
+/** 인생 업그레이드 단계별 인형 하나 보상: 0단계 보상 + 터치 수 × 단계 × 단계당 터치 보상 (3 × (1 + 단계)) */
+export function coinsPerDollAt(rules: WorkRules, interiorLevel: number): number {
+  return rules.coinsPerDoll + rules.touchesPerDoll * rules.coinsPerTouchPerLevel * interiorLevel;
+}
+
+/** 완성한 인형 n개의 코인 (인생 업그레이드 단계 반영, 시대당 상한이 있으면 남은 만큼만) */
+export function creditFor(state: WorkState, dolls: number, rules: WorkRules, interiorLevel = 0): number {
+  const coins = dolls * coinsPerDollAt(rules, interiorLevel);
   if (rules.incomeCapPerEra === null) return coins;
   return Math.max(0, Math.min(coins, rules.incomeCapPerEra - state.earned));
 }

@@ -25,10 +25,25 @@ function touch(g: Game | PublicGame, n: number, startMs = 0) {
 }
 
 describe('작업 터치 규칙', () => {
-  it('기본값: 3터치에 인형 완성, 3코인, 초당 6터치, 100개 묶음 지급, 상한 없음, 작업 종류 doll_eyes', () => {
+  it('기본값: 3터치에 인형 완성, 3코인(+단계당 터치 1번에 1코인), 초당 6터치, 100개 묶음 지급, 상한 없음, 작업 종류 doll_eyes', () => {
     expect(DEFAULT_CONFIG.work).toEqual({
-      type: 'doll_eyes', touchesPerDoll: 3, coinsPerDoll: 3, maxTouchesPerSec: 6, payoutMode: 'batch', batchDolls: 100, incomeCapPerEra: null,
+      type: 'doll_eyes', touchesPerDoll: 3, coinsPerDoll: 3, coinsPerTouchPerLevel: 1, maxTouchesPerSec: 6, payoutMode: 'batch', batchDolls: 100,
+      incomeCapPerEra: null,
     });
+  });
+
+  it('인생 업그레이드 1단계마다 터치 1번당 +1코인: 인형 하나 = 3 × (1 + 단계), 완성한 순간의 단계로 적립', () => {
+    const g = new Game({ eras: [era], seed: 1, startCash: 60_000 });
+    touch(g, 3);
+    expect(g.getWorkStatus()).toMatchObject({ pending: 3, coinsPerDoll: 3 });
+    g.upgradeInterior();
+    expect(g.getWorkStatus().coinsPerDoll).toBe(6);
+    touch(g, 2, 10_000);
+    g.upgradeInterior(); // 인형을 완성하기 전에 단계가 올라도, 완성한 순간의 단계(2단계 = 9코인)로
+    touch(g, 1, 20_000);
+    expect(g.getWorkStatus()).toMatchObject({ pending: 3 + 9, coinsPerDoll: 9 });
+    for (let i = 0; i < 5; i++) g.upgradeInterior();
+    expect(g.getWorkStatus().coinsPerDoll).toBe(24);
   });
 
   it('눈 하나 → 눈 둘 → 완성(다음 인형은 눈 없음)', () => {

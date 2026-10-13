@@ -116,8 +116,8 @@
     "how2": "When news breaks, related prices move at once. Tap a stock, choose [Buy] or [Sell] first, set a quantity or tap [Max], then tap [Buy now]/[Sell now].",
     "how3": "When time runs out, the era ends. All your shares are sold automatically, and after the settlement you move on to the next era.",
     "roomTitle": "Your Room and Work",
-    "room1": "Attach eyes to dolls in the workshop to earn coins. You get paid every time you finish 100 dolls.",
-    "room2": "In the living room, [Life Upgrade] improves the room one level per 2,000 cash coins (7 levels). You need cash, not stocks.",
+    "room1": "Attach eyes to dolls in the workshop to earn coins. You get paid every time you finish 100 dolls. Each Life Upgrade level adds 1 coin per touch.",
+    "room2": "In the living room, [Life Upgrade] spends cash to improve the room one level at a time (7 levels). The first level costs 2,000 coins and each level costs 2,000 more than the last. You need cash, not stocks.",
     "room3": "Fictional scenarios inspired by real events. In-game numbers are not investment advice.",
     "skip": "Skip",
     "next": "Next",
@@ -279,7 +279,8 @@
     "upgradeAria": "Life upgrade, {cost} coins (now {level}/{max})",
     "upgradeDone": "Life upgrade complete",
     "notEnough": "Not enough cash. Sell some stocks to raise cash.",
-    "dog": "Dog"
+    "dog": "Dog",
+    "upgraded": "Life Upgrade level {level}! You now earn {coins} coins per doll."
   },
   "title": {
     "name": "역전의 방",
