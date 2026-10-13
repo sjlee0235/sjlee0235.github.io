@@ -13,10 +13,11 @@
 - 코드로 그린 임시 그림은 채택하지 않는다(그림은 기획자 디자인). UI(HTML/CSS) 요소는 괜찮다.
 - 커밋·PR에 모델 이름을 넣지 않는다. 커밋 끝에는 세션이 알려주는 Co-Authored-By/세션 줄을 붙인다.
 - **수정할 때마다 웹 버전(아티팩트)에 바로 반영**한다 (아래 4장).
+- **.md 문서에 "여는 중괄호 + 퍼센트"나 "여는 중괄호 두 개"를 붙여 쓰지 않는다** (예: 수익률 칸은 `{수익률}%`처럼). GitHub Pages(Jekyll)가 이를 틀 문법(Liquid)으로 읽어 사이트 전체 배포가 실패한다 (PR #2~#4가 이것 때문에 배포되지 않았다, 10차에 발견). `tests/pagesBuild.test.ts`가 검사한다.
 
 ## 2. 기술·명령 (작업 폴더: `invest-rpg/`)
 - TypeScript 7, Vite 8(`base './'`, publicDir `assets`), Vitest 5, Node 22(.ts 직접 실행), Playwright(크로미움 `/opt/pw-browsers`), 화면은 바닐라 TS (프레임워크 없음).
-- `npm run check` (타입 검사 + 테스트 340개) · `npm run e2e` (브라우저 흐름 점검 114개) · `npm run shots` (스크린샷 → `shots/`, git 제외)
+- `npm run check` (타입 검사 + 테스트 341개) · `npm run e2e` (브라우저 흐름 점검 114개) · `npm run shots` (스크린샷 → `shots/`, git 제외)
 - `npm run lint:content` (시대 데이터 점검) · `node scripts/checkEra.ts src/data/eras/2010s.json 200` (시대 파일 하나: 구조·가이드·전략별 밸런스) · `node scripts/newsCount.ts` (시대당 뉴스 수) · `npm run sim:carry` (3시대 이월)
 - `node scripts/peek.ts "&era=1" "tod:day;tab:trading;shot:a"` (화면 몇 장 빨리 → `shots/peek_a.png`)
 - `npm run build:play` → `play/` (GitHub Pages용 웹 시험판, 디버그 패널 포함: 주소에 `?debug=1` 또는 `#debug`, `&seed=7&fresh=1&nointro=1&era=1`)
@@ -31,7 +32,7 @@
 ## 4. 웹 버전 반영 (매번)
 1. `npm run check` · `npm run e2e` 통과 → `npm run build:play`
 2. 아티팩트 **https://claude.ai/artifact/Xf4UPG8WthJAboRJehZNat** 갱신: 새 대화에서는 먼저 Artifact `read`(url)로 읽고, 그 페이지 내용(html/head 없이 title·meta·폰트 link·css link·`<div id="app">`·module script)을 `play/index.html`의 새 파일명으로 바꿔 publish. 그림 등 다른 파일은 이미 올라가 있으므로 `files`에는 **바뀐 `assets/index-*.js`, `assets/index-*.css`, `assets/debug-*.js`만 추가하고 옛 이름은 `null`**. (`root`는 작업 폴더 기준: 저장소 최상위면 `invest-rpg/play`, `invest-rpg/` 안이면 `play`. 페이지 파일은 scratchpad에 써도 된다.)
-3. 커밋·푸시 (지정된 브랜치). GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)는 **main에 합쳐야** 반영된다 — 합치기는 사용자가 원할 때만.
+3. 커밋·푸시 (지정된 브랜치). GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)는 **main에 합쳐야** 반영된다 — 합치기는 사용자가 원할 때만. 합친 뒤 GitHub Actions의 "pages build and deployment"가 성공했는지 확인한다(이 작업 환경에서는 github.io 주소에 직접 접속이 막혀 있다).
 
 ## 5. 지금 상태 (2026-10-11, 10차까지)
 - PR #2·#3(9차)·10차 모두 main에 합침 → GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)에 반영. 다음 작업도 지정 브랜치에 푸시하고, main 합치기는 사용자가 원할 때.
