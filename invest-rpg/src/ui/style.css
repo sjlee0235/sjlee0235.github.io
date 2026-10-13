@@ -48,6 +48,8 @@
 .stage[data-scheme='western'][data-tod='day'] { --dn: #d4302a; }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* 브라우저가 강제로 어둡게 바꾸지 않게 (index.html의 color-scheme 메타와 같은 뜻) */
+:root { color-scheme: only light; }
 html, body { margin: 0; height: 100%; background: #0c0818; overflow: hidden; overscroll-behavior: none; }
 body { font-family: 'IBM Plex Sans KR', system-ui, sans-serif; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
 button, input { font-family: inherit; }
