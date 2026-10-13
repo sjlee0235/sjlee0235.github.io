@@ -26,7 +26,7 @@ import { setTelemetryConsent, type SaveData } from '../engine/save.ts';
 import type { AppEventMap, AppEventType } from '../engine/telemetry.ts';
 import { localize, t as tr } from '../i18n/index.ts';
 import { effectiveColorScheme, loadSettings, saveSettings, type AppSettings, type SettingsStorage } from '../settings/settings.ts';
-import { artEraFor, sceneFile, sceneFrames, timeOfDayAt, type SceneKind, type TimeOfDay } from './art.ts';
+import { artEraFor, LP_FRAMES, LP_H, LP_W, lpFile, lpPos, lpTier, sceneFile, sceneFrames, timeOfDayAt, type ArtEra, type SceneKind, type TimeOfDay } from './art.ts';
 import { HtmlAudioBackend } from './audioBackend.ts';
 import type { Screen, UiContext } from './context.ts';
 import { clear, flash, h, setText } from './dom.ts';
@@ -110,6 +110,9 @@ export class App {
   saveLocked = false;
   private tod: TimeOfDay = 'night';
   private forcedTod: TimeOfDay | null = null;
+  /** 지금 거실 배경이면 LP를 얹을 시대·단계 (아니면 null) */
+  private lpScene: { era: ArtEra; level: number } | null = null;
+  private lpTick = 0;
 
   constructor(opts: AppOptions) {
     this.opts = opts;
@@ -169,6 +172,11 @@ export class App {
     window.setInterval(() => this.applyTod(true), 30_000);
     // 남은 시간은 3초 틱 사이에도 1초씩 줄어들게 (0.25초마다 다시 그림)
     window.setInterval(() => this.renderClock(), 250);
+    // LP 재생 애니메이션 (4프레임, 약 8fps). 거실 배경이 보일 때만 그림을 바꾼다
+    window.setInterval(() => {
+      this.lpTick++;
+      this.renderLp();
+    }, 125);
     if (this.opts.skipIntro) {
       this.begin(this.opts.fresh ?? false, false);
       return;
@@ -342,6 +350,8 @@ export class App {
     if (!this.game) {
       this.scene.show(sceneFile('living', '2000s', this.tod, 0), 1, 0, fadeMs);
       this.scene.setDim(false);
+      this.lpScene = { era: '2000s', level: 0 };
+      this.renderLp();
       return;
     }
     const tab = this.tabs.current;
@@ -350,8 +360,24 @@ export class App {
     const file = sceneFile(kind, era, this.tod, this.game.interiorLevel);
     this.scene.show(file, sceneFrames(kind, era), this.screens[tab].frame?.() ?? 0, fadeMs);
     this.scene.setDim(tab === 'trading');
+    // 거실 배경(거실 탭·주식창)에는 LP 그림을 얹는다 (15차: 배경에서는 옛 LP를 지웠다)
+    this.lpScene = kind === 'living' ? { era, level: this.game.interiorLevel } : null;
+    this.renderLp();
     // 작업실 작업물 그림(2010·2020년대)도 시대·밤낮·단계에 맞춘다
     this.screens[tab].onSceneChanged?.();
+  }
+
+  /** LP 그림: 방 단계별 종류(낡은 가방형 / 깨끗한 가방형 / 월넛), 음악이 들리면 재생 4프레임, 아니면 정지 */
+  private renderLp(): void {
+    const s = this.lpScene;
+    if (!s) {
+      this.scene.setOverlay(null);
+      return;
+    }
+    const np = this.music.getNowPlaying();
+    const playing = np.unlocked && !np.background && np.track !== null && this.music.effectiveGain > 0;
+    const frame = playing ? LP_FRAMES[1 + (this.lpTick % 4)]! : 'idle';
+    this.scene.setOverlay({ file: lpFile(lpTier(s.level), s.era, this.tod, frame), ...lpPos(s.level), w: LP_W, h: LP_H });
   }
 
   // ───────── 공통 ─────────

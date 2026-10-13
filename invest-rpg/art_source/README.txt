@@ -19,3 +19,11 @@ verify.py        다시 그린 장면이 받은 PNG와 같은지 확인 (작업�
 ---- 13차 (2026-10-13) ----
 2010·2020년대 작업실 배경(workshop_2010s_*, workshop_2020s_*)과 작업물 그림(assets/art/work/)은 디자이너가 따로 그려 전달한 PNG다
 (docs/WORK_ART_DELIVERY.md). 작업물 자리를 비운 130x281 한 칸이라, workshop_out.py로 다시 굽지 않는다 (2000년대만 이 코드로 굽는다).
+
+---- 15차 (2026-10-13) ----
+living_nolp_out.py  거실 배경에서 옛 LP 플레이어만 지운다 (LP는 이제 따로 얹는 그림 assets/art/lp/, docs/LP_HANDOFF.md).
+                    python3 living_nolp_out.py ../assets/art/scene  (이미 지운 그림에는 아무것도 하지 않음)
+강아지 그림(assets/art/dog/)은 디자이너가 새로 그린 PNG(docs/DOG_HANDOFF.md)라 pdog2.py로 다시 굽지 않는다.
+dog_lie_out.py      엎드린 강아지(*_lie.png)만 디자이너 그림에 꼬리·앞발·뒷발을 덧붙인 것이다 (원본 엎드린 그림은 몸통만 보인다는 의견).
+                    꼬리는 같은 나이 stand 그림의 말린 꼬리를 옮기고, 발은 그 나이 발 색으로 앞으로 뻗게 그렸다. 디자이너가 다시 그리면 교체한다.
+                    python3 dog_lie_out.py <받은 dog 폴더> ../assets/art/dog

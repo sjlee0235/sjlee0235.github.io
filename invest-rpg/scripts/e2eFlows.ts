@@ -296,6 +296,8 @@ try {
     await page.waitForTimeout(600);
     check((await game<number>(page, 'g.interiorLevel')) === 1 && (await game<number>(page, 'g.cash')) === 7500, '업그레이드: 2,500코인 내고 Lv1');
     check((await sceneFile(page))!.endsWith('_lv1.png'), '배경 그림이 Lv1로 바뀐다');
+    const lpBg = () => page.evaluate(() => (document.querySelector('.scene-ovl') as HTMLElement | null)?.style.backgroundImage ?? '');
+    check(await page.locator('.scene-ovl').isVisible() && (await lpBg()).includes('art/lp/worn_2000s_'), '거실 LP(15차 그림): 0~2단계는 낡은 가방형');
     check((await page.locator('.pip.on').count()) === 1, '단계 점 1개 채움');
     check(((await page.locator('.toast').last().textContent()) ?? '').includes('인형 하나에 6코인'), '업그레이드하면 작업 보상이 오른다는 안내 (인형 하나 6코인)');
     check(((await page.locator('.upgrade .pbtn').textContent()) ?? '').includes('3,750'), '다음 단계 값은 3,750코인');
@@ -311,6 +313,11 @@ try {
     await dbg(page, 'tab', 'workshop');
     await page.waitForTimeout(300);
     check((await sceneFile(page))!.includes('workshop_2000s_') && (await sceneFile(page))!.endsWith('_lv2.png'), '작업실 그림도 같은 단계');
+    check(!(await page.locator('.scene-ovl').isVisible()), '작업실에는 LP 그림이 없다');
+    await dbg(page, 'tab', 'living_room');
+    await dbg(page, 'interior', 4);
+    await page.waitForTimeout(200);
+    check((await page.evaluate(() => (document.querySelector('.scene-ovl') as HTMLElement).style.backgroundImage)).includes('art/lp/walnut_2000s_'), 'LP: 6단계부터 월넛 턴테이블');
     check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
   }
