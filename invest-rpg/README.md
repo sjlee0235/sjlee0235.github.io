@@ -424,7 +424,7 @@ const music = new MusicPlayer(tracks, backend, createPresentationRng(seed, 'musi
 112. 🆕 규칙이 바뀌어 엔진 버전을 0.7.0으로 올렸다. 9차에 저장한 게임을 불러오면 그 시대는 저장 당시 가격으로 자동 정산되고 다음 시대부터 새 규칙으로 이어진다(원래 있던 버전 변경 처리).
 
 ### 11차 (2026-10-13, GitHub Pages 배포)
-113. 🆕 **강제 어두운 테마 막기**: 휴대폰 크롬의 "사이트에 어두운 테마 적용"(또는 삼성 인터넷 다크 모드)이 켜져 있으면 브라우저가 페이지 색을 자동으로 뒤집어, 버튼이 갈색이 되고 제목·그림 색이 달라졌다. 게임은 밤/낮 색을 직접 정하므로 `<meta name="color-scheme" content="only light">`와 CSS `:root { color-scheme: only light; }`로 브라우저가 색을 바꾸지 않게 했다.
+113. 🆕 **강제 어두운 테마 막기**: 휴대폰 크롬의 "사이트에 어두운 테마 적용"(또는 삼성 인터넷 다크 모드)이 켜져 있으면 브라우저가 페이지 색을 자동으로 뒤집어, 버튼이 갈색이 되고 제목·그림 색이 달라졌다. 게임은 밤/낮 색을 직접 정하므로 브라우저에 "이 페이지는 어두운 테마도 스스로 지원한다"고 알려 색을 바꾸지 않게 했다: `<meta name="color-scheme" content="light dark">`, CSS `:root { color-scheme: light dark; }` + `@media (prefers-color-scheme: dark)`. 처음에 쓴 `only light`는 크롬은 따랐지만 삼성 인터넷은 무시했다. 게임 색은 모두 직접 정해서 시스템이 다크 모드여도 화면은 같다(기본 모양을 쓰는 체크박스·슬라이더·고르기 칸은 `color-scheme: light`로 밝은 모양 고정).
 114. 🆕 GitHub Pages 배포가 PR #2부터 실패하던 원인(기획서 문서 속 Liquid 틀 문법 글자)을 고치고, 문서 검사 테스트를 넣었다 (`tests/pagesBuild.test.ts`).
 
 ---

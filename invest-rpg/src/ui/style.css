@@ -48,8 +48,12 @@
 .stage[data-scheme='western'][data-tod='day'] { --dn: #d4302a; }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-/* 브라우저가 강제로 어둡게 바꾸지 않게 (index.html의 color-scheme 메타와 같은 뜻) */
-:root { color-scheme: only light; }
+/* 브라우저가 강제로 어둡게 바꾸지 않게: 어두운 테마도 스스로 지원한다고 알린다 (index.html의 color-scheme 메타와 같은 뜻).
+   게임 색은 모두 직접 정하므로 시스템이 다크 모드여도 화면은 같다 */
+:root { color-scheme: light dark; }
+@media (prefers-color-scheme: dark) { :root { color-scheme: dark; } }
+/* 기본 모양을 쓰는 입력 칸(체크박스·슬라이더·고르기)은 시스템이 다크 모드여도 밝은 모양 그대로 */
+input, select, textarea { color-scheme: light; }
 html, body { margin: 0; height: 100%; background: #0c0818; overflow: hidden; overscroll-behavior: none; }
 body { font-family: 'IBM Plex Sans KR', system-ui, sans-serif; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
 button, input { font-family: inherit; }
