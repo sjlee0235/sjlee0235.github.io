@@ -1012,8 +1012,8 @@
       "id": "2020s-power_equip",
       "themeId": "power_equip",
       "name": {
-        "ko": "물레전력기기",
-        "en": "Mulle Power Equipment"
+        "ko": "온힘전력기기",
+        "en": "Onhim Power Equipment"
       },
       "description": {
         "ko": "초고압 변압기와 차단기 같은 송배전 설비를 만들어 국내외 전력회사에 공급한다.",
@@ -1036,8 +1036,8 @@
       "id": "2020s-defense",
       "themeId": "defense",
       "name": {
-        "ko": "송골매방산",
-        "en": "Songgolmae Defense"
+        "ko": "참매방산",
+        "en": "Chammae Defense"
       },
       "description": {
         "ko": "전차와 자주포, 지대공 미사일을 만들어 국내외 군에 납품한다.",
@@ -1048,8 +1048,8 @@
       "id": "2020s-nuclear",
       "themeId": "nuclear",
       "name": {
-        "ko": "알불원전",
-        "en": "Albul Nuclear"
+        "ko": "해담원전",
+        "en": "Haedam Nuclear"
       },
       "description": {
         "ko": "원자로와 증기발생기 같은 원전 주요 기기를 만들고 원전 설계를 맡는다.",
@@ -1060,8 +1060,8 @@
       "id": "2020s-kpop",
       "themeId": "kpop",
       "name": {
-        "ko": "노랫말엔터",
-        "en": "Noraenmal Entertainment"
+        "ko": "잔별엔터",
+        "en": "Janbyeol Entertainment"
       },
       "description": {
         "ko": "아이돌 그룹을 길러 음반과 음원, 공연, 팬 상품 사업을 한다.",
@@ -1072,8 +1072,8 @@
       "id": "2020s-kcontent",
       "themeId": "kcontent",
       "name": {
-        "ko": "이야기콘텐츠",
-        "en": "Iyagi Content"
+        "ko": "모꼬지콘텐츠",
+        "en": "Mokkoji Content"
       },
       "description": {
         "ko": "드라마와 예능을 제작해 방송사와 글로벌 스트리밍 서비스에 판매한다.",
@@ -1084,8 +1084,8 @@
       "id": "2020s-kfood",
       "themeId": "kfood",
       "name": {
-        "ko": "꼬불라면",
-        "en": "Kkobul Ramen"
+        "ko": "보글라면",
+        "en": "Bogeul Ramen"
       },
       "description": {
         "ko": "매운 볶음면과 봉지 라면을 만들어 국내외에 판다.",
@@ -1096,8 +1096,8 @@
       "id": "2020s-bio",
       "themeId": "bio",
       "name": {
-        "ko": "새살바이오",
-        "en": "Saesal Bio"
+        "ko": "이든바이오",
+        "en": "Ideun Bio"
       },
       "description": {
         "ko": "항암 신약을 개발하고 다른 제약사의 바이오의약품을 위탁생산한다.",
@@ -1108,8 +1108,8 @@
       "id": "2020s-robot",
       "themeId": "robot",
       "name": {
-        "ko": "꼭두로봇",
-        "en": "Kkokdu Robotics"
+        "ko": "재주로봇",
+        "en": "Jaeju Robotics"
       },
       "description": {
         "ko": "공장용 협동로봇과 두 발로 걷는 휴머노이드 로봇을 개발한다.",
@@ -1120,8 +1120,8 @@
       "id": "2020s-space",
       "themeId": "space",
       "name": {
-        "ko": "샛별우주항공",
-        "en": "Saetbyeol Aerospace"
+        "ko": "별찌우주항공",
+        "en": "Byeoljji Aerospace"
       },
       "description": {
         "ko": "소형 위성과 발사체 부품, 경공격기 동체를 만든다.",
@@ -1144,8 +1144,8 @@
       "id": "2020s-cable",
       "themeId": "cable",
       "name": {
-        "ko": "줄기전선",
-        "en": "Julgi Cable"
+        "ko": "타래전선",
+        "en": "Tarae Cable"
       },
       "description": {
         "ko": "초고압 전력 케이블과 해저 케이블, 통신선을 만든다.",
@@ -1156,8 +1156,8 @@
       "id": "2020s-airline",
       "themeId": "airline",
       "name": {
-        "ko": "두루미항공",
-        "en": "Durumi Airlines"
+        "ko": "하늘결항공",
+        "en": "Haneulgyeol Airlines"
       },
       "description": {
         "ko": "국내선과 국제선 여객기, 화물기를 운항한다.",
@@ -1180,8 +1180,8 @@
       "id": "2020s-duty_free",
       "themeId": "duty_free",
       "name": {
-        "ko": "바닷가면세점",
-        "en": "Badatga Duty Free"
+        "ko": "물빛면세점",
+        "en": "Mulbit Duty Free"
       },
       "description": {
         "ko": "공항과 시내에서 면세점을 운영하며 화장품과 명품을 판다.",
@@ -1192,8 +1192,8 @@
       "id": "2020s-construction",
       "themeId": "construction",
       "name": {
-        "ko": "주춧돌건설",
-        "en": "Juchutdol Construction"
+        "ko": "디딤건설",
+        "en": "Didim Construction"
       },
       "description": {
         "ko": "아파트를 지어 분양하고 도로와 발전소 공사를 맡는다.",
@@ -1216,8 +1216,8 @@
       "id": "2020s-petrochem",
       "themeId": "petrochem",
       "name": {
-        "ko": "버무림화학",
-        "en": "Beomurim Chemical"
+        "ko": "빚음화학",
+        "en": "Bijeum Chemical"
       },
       "description": {
         "ko": "나프타를 분해해 에틸렌과 플라스틱 원료를 만든다.",
@@ -1228,8 +1228,8 @@
       "id": "2020s-game",
       "themeId": "game",
       "name": {
-        "ko": "딱지게임",
-        "en": "Ttakji Games"
+        "ko": "놀터게임",
+        "en": "Nolteo Games"
       },
       "description": {
         "ko": "PC와 모바일로 즐기는 온라인 롤플레잉 게임을 개발해 서비스한다.",
@@ -1240,8 +1240,8 @@
       "id": "2020s-cinema",
       "themeId": "cinema",
       "name": {
-        "ko": "그림자영화관",
-        "en": "Geurimja Cinemas"
+        "ko": "별밤영화관",
+        "en": "Byeolbam Cinemas"
       },
       "description": {
         "ko": "전국에서 멀티플렉스 영화관을 운영하며 영화 배급도 한다.",
@@ -1252,8 +1252,8 @@
       "id": "2020s-savings_bank",
       "themeId": "savings_bank",
       "name": {
-        "ko": "항아리저축은행",
-        "en": "Hangari Savings Bank"
+        "ko": "차곡저축은행",
+        "en": "Chagok Savings Bank"
       },
       "description": {
         "ko": "서민 대출과 부동산 개발 사업 대출을 하는 저축은행이다.",
@@ -1264,8 +1264,8 @@
       "id": "2020s-solar",
       "themeId": "solar",
       "name": {
-        "ko": "한낮태양광",
-        "en": "Hannat Solar"
+        "ko": "온볕태양광",
+        "en": "Onbyeot Solar"
       },
       "description": {
         "ko": "태양광 셀과 모듈을 만들고 태양광 발전소를 지어 운영한다.",
@@ -1276,8 +1276,8 @@
       "id": "2020s-department_store",
       "themeId": "department_store",
       "name": {
-        "ko": "골고루백화점",
-        "en": "Golgoru Department Store"
+        "ko": "아름드리백화점",
+        "en": "Areumdeuri Department Store"
       },
       "description": {
         "ko": "도심과 교외에서 백화점과 아울렛을 운영한다.",
@@ -1288,8 +1288,8 @@
       "id": "2020s-delivery",
       "themeId": "delivery",
       "name": {
-        "ko": "심부름배달",
-        "en": "Simbureum Delivery"
+        "ko": "총총배달",
+        "en": "Chongchong Delivery"
       },
       "description": {
         "ko": "음식점과 손님을 잇는 배달 주문 앱과 배달 대행 서비스를 운영한다.",
@@ -1300,8 +1300,8 @@
       "id": "2020s-display",
       "themeId": "display",
       "name": {
-        "ko": "거울디스플레이",
-        "en": "Geoul Display"
+        "ko": "또렷디스플레이",
+        "en": "Ttoryeot Display"
       },
       "description": {
         "ko": "TV와 노트북, 스마트폰에 들어가는 LCD·OLED 패널을 만든다.",
@@ -1312,8 +1312,8 @@
       "id": "2020s-battery",
       "themeId": "battery",
       "name": {
-        "ko": "옹달샘전지",
-        "en": "Ongdalsaem Battery"
+        "ko": "담뿍전지",
+        "en": "Damppuk Battery"
       },
       "description": {
         "ko": "전기차용 배터리 셀과 양극재를 만들어 완성차 업체에 공급한다.",
@@ -1324,8 +1324,8 @@
       "id": "2020s-auto",
       "themeId": "auto",
       "name": {
-        "ko": "다람쥐전기차",
-        "en": "Daramjwi EV"
+        "ko": "사뿐전기차",
+        "en": "Sappun EV"
       },
       "description": {
         "ko": "승용차와 전기차를 만들어 국내외에 판다.",
@@ -1360,8 +1360,8 @@
       "id": "2020s-platform",
       "themeId": "platform",
       "name": {
-        "ko": "장터플랫폼",
-        "en": "Jangteo Platform"
+        "ko": "어울터플랫폼",
+        "en": "Eoulteo Platform"
       },
       "description": {
         "ko": "검색과 메신저, 간편결제 서비스를 운영하는 인터넷 회사다.",
@@ -1372,8 +1372,8 @@
       "id": "2020s-refining",
       "themeId": "refining",
       "name": {
-        "ko": "두레박정유",
-        "en": "Durebak Refining"
+        "ko": "깊은샘정유",
+        "en": "Gipeunsaem Refining"
       },
       "description": {
         "ko": "수입한 원유로 휘발유와 경유, 항공유를 만든다.",
@@ -1420,8 +1420,8 @@
       "id": "2020s-food",
       "themeId": "food",
       "name": {
-        "ko": "주전부리식품",
-        "en": "Jujeonburi Foods"
+        "ko": "오롯식품",
+        "en": "Orot Foods"
       },
       "description": {
         "ko": "밀가루와 식용유, 과자 같은 가공식품을 만든다.",

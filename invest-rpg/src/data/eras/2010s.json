@@ -968,8 +968,8 @@
    "id": "2010s-semiconductor",
    "themeId": "semiconductor",
    "name": {
-    "ko": "조약돌반도체",
-    "en": "Joyakdol Semiconductor"
+    "ko": "은결반도체",
+    "en": "Eungyeol Semiconductor"
    },
    "description": {
     "ko": "서버와 스마트폰에 들어가는 D램과 낸드 메모리 칩을 만든다.",
@@ -980,8 +980,8 @@
    "id": "2010s-smartphone",
    "themeId": "smartphone",
    "name": {
-    "ko": "손바닥휴대폰",
-    "en": "Sonbadak Mobile"
+    "ko": "아토휴대폰",
+    "en": "Ato Mobile"
    },
    "description": {
     "ko": "스마트폰을 설계하고 만들어 국내외 통신사에 공급한다.",
@@ -992,8 +992,8 @@
    "id": "2010s-battery",
    "themeId": "battery",
    "name": {
-    "ko": "불씨전지",
-    "en": "Bulssi Battery"
+    "ko": "온새미전지",
+    "en": "Onsaemi Battery"
    },
    "description": {
     "ko": "전기차와 에너지 저장 장치에 들어가는 리튬이온 배터리를 만든다.",
@@ -1016,8 +1016,8 @@
    "id": "2010s-cosmetics",
    "themeId": "cosmetics",
    "name": {
-    "ko": "꽃잎화장품",
-    "en": "Kkonnip Cosmetics"
+    "ko": "꽃잠화장품",
+    "en": "Kkotjam Cosmetics"
    },
    "description": {
     "ko": "스킨케어와 색조 화장품을 만들어 국내 매장과 해외에 판다.",
@@ -1028,8 +1028,8 @@
    "id": "2010s-mobile_game",
    "themeId": "mobile_game",
    "name": {
-    "ko": "주사위게임",
-    "en": "Jusawi Games"
+    "ko": "꿈결게임",
+    "en": "Kkumgyeol Games"
    },
    "description": {
     "ko": "스마트폰으로 즐기는 퍼즐 게임과 롤플레잉 게임을 서비스한다.",
@@ -1040,8 +1040,8 @@
    "id": "2010s-messenger",
    "themeId": "messenger",
    "name": {
-    "ko": "쪽지메신저",
-    "en": "Jjokji Messenger"
+    "ko": "소곤메신저",
+    "en": "Sogon Messenger"
    },
    "description": {
     "ko": "모바일 메신저 앱을 운영하고 광고와 게임, 이모티콘으로 돈을 번다.",
@@ -1052,8 +1052,8 @@
    "id": "2010s-kpop",
    "themeId": "kpop",
    "name": {
-    "ko": "어울림엔터",
-    "en": "Eoullim Entertainment"
+    "ko": "노을엔터",
+    "en": "Noeul Entertainment"
    },
    "description": {
     "ko": "아이돌 그룹을 길러 음반과 공연, 해외 투어를 기획한다.",
@@ -1064,8 +1064,8 @@
    "id": "2010s-ecommerce",
    "themeId": "ecommerce",
    "name": {
-    "ko": "꾸러미쇼핑",
-    "en": "Kkureomi Shopping"
+    "ko": "담아쇼핑",
+    "en": "Dama Shopping"
    },
    "description": {
     "ko": "모바일 앱으로 생활용품과 식품을 팔고 직접 배송한다.",
@@ -1076,8 +1076,8 @@
    "id": "2010s-display",
    "themeId": "display",
    "name": {
-    "ko": "눈빛디스플레이",
-    "en": "Nunbit Display"
+    "ko": "빛솔디스플레이",
+    "en": "Bitsol Display"
    },
    "description": {
     "ko": "스마트폰과 TV에 들어가는 OLED 패널을 만든다.",
@@ -1100,8 +1100,8 @@
    "id": "2010s-fintech",
    "themeId": "fintech",
    "name": {
-    "ko": "척척결제",
-    "en": "Cheokcheok Pay"
+    "ko": "콕결제",
+    "en": "Kok Pay"
    },
    "description": {
     "ko": "스마트폰으로 카드 결제와 송금을 하는 간편결제 서비스를 운영한다.",
@@ -1112,8 +1112,8 @@
    "id": "2010s-travel",
    "themeId": "travel",
    "name": {
-    "ko": "길동무여행",
-    "en": "Gildongmu Travel"
+    "ko": "마실여행",
+    "en": "Masil Travel"
    },
    "description": {
     "ko": "해외 패키지 여행과 항공권, 호텔 예약 상품을 판다.",
@@ -1124,8 +1124,8 @@
    "id": "2010s-shipbuilding",
    "themeId": "shipbuilding",
    "name": {
-    "ko": "돛단배조선",
-    "en": "Dotdanbae Shipbuilding"
+    "ko": "아라조선",
+    "en": "Ara Shipbuilding"
    },
    "description": {
     "ko": "컨테이너선과 유조선, 해양 시추 설비를 만드는 조선소를 운영한다.",
@@ -1136,8 +1136,8 @@
    "id": "2010s-shipping",
    "themeId": "shipping",
    "name": {
-    "ko": "물길해운",
-    "en": "Mulgil Shipping"
+    "ko": "물비늘해운",
+    "en": "Mulbineul Shipping"
    },
    "description": {
     "ko": "컨테이너선으로 세계 항로에서 수출입 화물을 실어 나른다.",
@@ -1148,8 +1148,8 @@
    "id": "2010s-steel",
    "themeId": "steel",
    "name": {
-    "ko": "담금질철강",
-    "en": "Damgeumjil Steel"
+    "ko": "두드림철강",
+    "en": "Dudeurim Steel"
    },
    "description": {
     "ko": "철광석을 녹여 자동차·조선용 강판과 철근을 만든다.",
@@ -1160,8 +1160,8 @@
    "id": "2010s-plant",
    "themeId": "plant",
    "name": {
-    "ko": "터전플랜트",
-    "en": "Teojeon Plant"
+    "ko": "이룸플랜트",
+    "en": "Irum Plant"
    },
    "description": {
     "ko": "중동 등 해외에서 정유·화학 공장과 발전소를 지어 준다.",
@@ -1172,8 +1172,8 @@
    "id": "2010s-mart",
    "themeId": "mart",
    "name": {
-    "ko": "광주리마트",
-    "en": "Gwangjuri Mart"
+    "ko": "고루마트",
+    "en": "Goru Mart"
    },
    "description": {
     "ko": "식료품과 생활용품을 파는 대형 할인점을 전국에서 운영한다.",
@@ -1184,8 +1184,8 @@
    "id": "2010s-insurance",
    "themeId": "insurance",
    "name": {
-    "ko": "우산보험",
-    "en": "Usan Insurance"
+    "ko": "포근보험",
+    "en": "Pogeun Insurance"
    },
    "description": {
     "ko": "종신보험과 연금보험을 팔고 받은 보험료를 채권 등에 운용한다.",
@@ -1196,8 +1196,8 @@
    "id": "2010s-airline",
    "themeId": "airline",
    "name": {
-    "ko": "갈매기항공",
-    "en": "Galmaegi Air"
+    "ko": "하람항공",
+    "en": "Haram Air"
    },
    "description": {
     "ko": "국내선과 아시아·미주 국제선 여객기를 운항한다.",
@@ -1208,8 +1208,8 @@
    "id": "2010s-nuclear",
    "themeId": "nuclear",
    "name": {
-    "ko": "알맹이원전",
-    "en": "Almaengi Nuclear"
+    "ko": "온빛원전",
+    "en": "Onbit Nuclear"
    },
    "description": {
     "ko": "원자로와 증기 발생기 같은 원자력 발전소 핵심 설비를 만든다.",
@@ -1220,8 +1220,8 @@
    "id": "2010s-textile",
    "themeId": "textile",
    "name": {
-    "ko": "실타래섬유",
-    "en": "Siltarae Textiles"
+    "ko": "씨실섬유",
+    "en": "Ssisil Textiles"
    },
    "description": {
     "ko": "원단을 짜고 의류를 봉제해 해외 의류 브랜드에 납품한다.",
@@ -1232,8 +1232,8 @@
    "id": "2010s-camera",
    "themeId": "camera",
    "name": {
-    "ko": "찰칵카메라",
-    "en": "Chalkak Camera"
+    "ko": "바라봄카메라",
+    "en": "Barabom Camera"
    },
    "description": {
     "ko": "콤팩트 디지털카메라와 교환식 렌즈를 만든다.",
@@ -1244,8 +1244,8 @@
    "id": "2010s-cable",
    "themeId": "cable",
    "name": {
-    "ko": "안방방송",
-    "en": "Anbang Cable"
+    "ko": "어울림방송",
+    "en": "Eoullim Cable"
    },
    "description": {
     "ko": "지역 케이블 TV와 초고속 인터넷 서비스를 제공한다.",
@@ -1256,8 +1256,8 @@
    "id": "2010s-hotel",
    "themeId": "hotel",
    "name": {
-    "ko": "쉼터호텔",
-    "en": "Swimteo Hotels"
+    "ko": "머묾호텔",
+    "en": "Meomum Hotels"
    },
    "description": {
     "ko": "서울과 제주에서 외국인 관광객이 많이 찾는 호텔을 운영한다.",
@@ -1280,8 +1280,8 @@
    "id": "2010s-auto",
    "themeId": "auto",
    "name": {
-    "ko": "바퀴자동차",
-    "en": "Bakwi Motors"
+    "ko": "바람결자동차",
+    "en": "Baramgyeol Motors"
    },
    "description": {
     "ko": "승용차와 SUV를 만들어 국내외에 판다.",
@@ -1292,8 +1292,8 @@
    "id": "2010s-bank",
    "themeId": "bank",
    "name": {
-    "ko": "두레은행",
-    "en": "Dure Bank"
+    "ko": "진솔은행",
+    "en": "Jinsol Bank"
    },
    "description": {
     "ko": "예금을 받아 가계와 기업에 대출해 주는 시중 은행이다.",
@@ -1304,8 +1304,8 @@
    "id": "2010s-securities",
    "themeId": "securities",
    "name": {
-    "ko": "저울증권",
-    "en": "Jeoul Securities"
+    "ko": "가늠증권",
+    "en": "Ganeum Securities"
    },
    "description": {
     "ko": "주식 매매를 중개하고 펀드와 채권 상품을 판다.",
@@ -1316,8 +1316,8 @@
    "id": "2010s-housing",
    "themeId": "housing",
    "name": {
-    "ko": "처마건설",
-    "en": "Cheoma Homes"
+    "ko": "뜰안건설",
+    "en": "Tteuran Homes"
    },
    "description": {
     "ko": "아파트를 지어 분양하는 주택 건설사다.",
@@ -1328,8 +1328,8 @@
    "id": "2010s-refining",
    "themeId": "refining",
    "name": {
-    "ko": "등잔정유",
-    "en": "Deungjan Refining"
+    "ko": "샘결정유",
+    "en": "Saemgyeol Refining"
    },
    "description": {
     "ko": "수입한 원유로 휘발유와 경유, 항공유를 만든다.",
@@ -1340,8 +1340,8 @@
    "id": "2010s-telecom",
    "themeId": "telecom",
    "name": {
-    "ko": "말길통신",
-    "en": "Malgil Telecom"
+    "ko": "닿음통신",
+    "en": "Daeum Telecom"
    },
    "description": {
     "ko": "휴대폰 통화와 데이터, IPTV 서비스를 제공하는 통신사다.",
@@ -1364,8 +1364,8 @@
    "id": "2010s-food",
    "themeId": "food",
    "name": {
-    "ko": "새참식품",
-    "en": "Saecham Foods"
+    "ko": "한입식품",
+    "en": "Hanip Foods"
    },
    "description": {
     "ko": "라면과 과자, 맥주 같은 가공식품을 만든다.",
@@ -1376,8 +1376,8 @@
    "id": "2010s-defense",
    "themeId": "defense",
    "name": {
-    "ko": "버팀목방산",
-    "en": "Beotimmok Defense"
+    "ko": "버팀방산",
+    "en": "Beotim Defense"
    },
    "description": {
     "ko": "자주포와 미사일 부품을 만들어 군에 납품하고 수출한다.",
@@ -1388,8 +1388,8 @@
    "id": "2010s-crypto",
    "themeId": "crypto",
    "name": {
-    "ko": "돈꿰미거래소",
-    "en": "Donkkwemi Exchange"
+    "ko": "바꿈거래소",
+    "en": "Bakkum Exchange"
    },
    "description": {
     "ko": "비트코인 같은 가상화폐를 사고파는 거래소를 운영한다.",
