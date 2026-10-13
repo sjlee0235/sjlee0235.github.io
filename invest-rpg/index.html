@@ -4,8 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
     <meta name="theme-color" content="#0c0818" />
-    <!-- 휴대폰 브라우저의 "사이트에 어두운 테마 적용"이 도트 그림·버튼 색을 뒤집지 않게 (게임이 밤/낮 색을 직접 정한다) -->
-    <meta name="color-scheme" content="only light" />
+    <!--
+      휴대폰 브라우저의 강제 어두운 테마(크롬 "사이트에 어두운 테마 적용", 삼성 인터넷 다크 모드)가
+      도트 그림·버튼 색을 뒤집지 않게 한다. 게임이 밤/낮 색을 직접 정하므로 "어두운 테마도 스스로 지원한다"고 알린다.
+      ("only light"는 크롬은 따르지만 삼성 인터넷은 무시한다)
+    -->
+    <meta name="color-scheme" content="light dark" />
     <title>역전의 방</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

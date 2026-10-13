@@ -35,8 +35,11 @@ describe('GitHub Pages 배포가 멈추지 않게', () => {
     expect(bad).toEqual([]);
   });
 
-  it('휴대폰 브라우저의 강제 어두운 테마가 게임 색을 뒤집지 않게 color-scheme을 "only light"로 정한다', () => {
-    expect(fs.readFileSync('index.html', 'utf8')).toContain('<meta name="color-scheme" content="only light" />');
-    expect(fs.readFileSync('src/ui/style.css', 'utf8')).toContain(':root { color-scheme: only light; }');
+  it('휴대폰 브라우저의 강제 어두운 테마가 게임 색을 뒤집지 않게 "어두운 테마도 지원"이라고 알린다', () => {
+    // "only light"는 크롬만 따르고 삼성 인터넷은 무시해서(11차), 삼성 인터넷도 따르는 "light dark" + prefers-color-scheme을 쓴다
+    expect(fs.readFileSync('index.html', 'utf8')).toContain('<meta name="color-scheme" content="light dark" />');
+    const css = fs.readFileSync('src/ui/style.css', 'utf8');
+    expect(css).toContain(':root { color-scheme: light dark; }');
+    expect(css).toContain('@media (prefers-color-scheme: dark) { :root { color-scheme: dark; } }');
   });
 });
