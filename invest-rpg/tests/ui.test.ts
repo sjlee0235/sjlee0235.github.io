@@ -12,7 +12,7 @@ import { displayRemaining, fmtNum, fmtPct, fmtTime } from '../src/ui/format.ts';
 import { dollHitRect } from '../src/ui/screens/workshop.ts';
 import { GameLoop, type Clock } from '../src/ui/loop.ts';
 import {
-  accountSummary, chartView, chooseSide, clearSide, dirClass, finalView, holdingRows, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
+  accountSummary, chartView, chooseSide, isSamsungInternet, clearSide, dirClass, finalView, holdingRows, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
   settlementView, sparkPoints, stepQuantity, stockRows, upgradeView, workshopView,
 } from '../src/ui/viewModels.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
@@ -501,5 +501,12 @@ describe('주식창 내 계좌', () => {
     expect(rows[0]!.avg).toBe(fmtNum(Math.round(p.holdings[0]!.avgPrice)));
     expect(Math.round(p.holdings[0]!.avgPrice)).toBeGreaterThanOrEqual(Math.round(s.price)); // 수수료 포함 평단가
     expect(accountSummary(p, 'ko')).toEqual({ cash: fmtNum(p.cash), stockValue: fmtNum(p.holdings[0]!.marketValue), count: 1 });
+  });
+});
+
+describe('삼성 인터넷 판별 (11차: 다크 모드 안내)', () => {
+  it('사용자 에이전트에 SamsungBrowser/가 있으면 삼성 인터넷', () => {
+    expect(isSamsungInternet('Mozilla/5.0 (Linux; Android 14; SM-S921N) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/27.0 Chrome/125.0.0.0 Mobile Safari/537.36')).toBe(true);
+    expect(isSamsungInternet('Mozilla/5.0 (Linux; Android 14; SM-S921N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Mobile Safari/537.36')).toBe(false);
   });
 });

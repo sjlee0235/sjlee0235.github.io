@@ -426,6 +426,7 @@ const music = new MusicPlayer(tracks, backend, createPresentationRng(seed, 'musi
 ### 11차 (2026-10-13, GitHub Pages 배포)
 113. 🆕 **강제 어두운 테마 막기**: 휴대폰 크롬의 "사이트에 어두운 테마 적용"(또는 삼성 인터넷 다크 모드)이 켜져 있으면 브라우저가 페이지 색을 자동으로 뒤집어, 버튼이 갈색이 되고 제목·그림 색이 달라졌다. 게임은 밤/낮 색을 직접 정하므로 브라우저에 "이 페이지는 어두운 테마도 스스로 지원한다"고 알려 색을 바꾸지 않게 했다: `<meta name="color-scheme" content="light dark">`, CSS `:root { color-scheme: light dark; }` + `@media (prefers-color-scheme: dark)`. 처음에 쓴 `only light`는 크롬은 따랐지만 삼성 인터넷은 무시했다. 게임 색은 모두 직접 정해서 시스템이 다크 모드여도 화면은 같다(기본 모양을 쓰는 체크박스·슬라이더·고르기 칸은 `color-scheme: light`로 밝은 모양 고정).
 114. 🆕 GitHub Pages 배포가 PR #2부터 실패하던 원인(기획서 문서 속 Liquid 틀 문법 글자)을 고치고, 문서 검사 테스트를 넣었다 (`tests/pagesBuild.test.ts`).
+115. 🆕 **삼성 인터넷 다크 모드 안내**: 삼성 인터넷은 다크 모드가 켜져 있으면 페이지의 color-scheme 표시를 무시하고 색을 바꾼다(기본 설정에서는 페이지 쪽에서 막을 방법이 없다고 삼성도 밝힘). 다크 모드가 켜졌는지도 페이지에서 알 수 없어서, 사용자 에이전트에 `SamsungBrowser/`가 있으면 첫 화면에 안내 창을 **한 번** 띄운다(다크 모드를 끄거나 다른 브라우저로 열면 원래 색). [확인]을 누르면 다시 보이지 않는다(기기 저장소 `invest-rpg.samsungDarkNoticeSeen`).
 
 ---
 

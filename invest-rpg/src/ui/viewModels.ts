@@ -416,3 +416,10 @@ export function orderMessage(
     }),
   };
 }
+
+// ───────── 브라우저 ─────────
+
+/** 삼성 인터넷인가 (사용자 에이전트에 "SamsungBrowser/"가 들어 있다) */
+export function isSamsungInternet(userAgent: string): boolean {
+  return /SamsungBrowser\//.test(userAgent);
+}

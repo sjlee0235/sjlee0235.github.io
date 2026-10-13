@@ -328,5 +328,11 @@
       "keywords": "Pandemic · Batteries · Rate hikes · AI chips",
       "recall": "The pandemic, inflation and rates, the AI rush… recall recent news."
     }
+  },
+  "samsungDark": {
+    "title": "Using Samsung Internet?",
+    "body1": "If Samsung Internet's dark mode is on, the game may look darker and in different colors. The game can't turn this browser feature off.",
+    "body2": "To see the original colors, turn off dark mode in Samsung Internet settings, or the option that forces dark mode on web pages.",
+    "body3": "Opening the game in another browser such as Chrome also shows the original colors."
   }
 }
