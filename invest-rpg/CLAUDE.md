@@ -35,8 +35,8 @@
 2. 아티팩트 **https://claude.ai/artifact/Xf4UPG8WthJAboRJehZNat** 갱신: 새 대화에서는 먼저 Artifact `read`(url)로 읽고, 그 페이지 내용(html/head 없이 title·meta·폰트 link·css link·`<div id="app">`·module script)을 `play/index.html`의 새 파일명으로 바꿔 publish. 그림 등 다른 파일은 이미 올라가 있으므로 `files`에는 **바뀐 `assets/index-*.js`, `assets/index-*.css`, `assets/debug-*.js`만 추가하고 옛 이름은 `null`**. (`root`는 작업 폴더 기준: 저장소 최상위면 `invest-rpg/play`, `invest-rpg/` 안이면 `play`. 페이지 파일은 scratchpad에 써도 된다.)
 3. 커밋·푸시 (지정된 브랜치). GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)는 **main에 합쳐야** 반영된다 — 합치기는 사용자가 원할 때만. 합친 뒤 GitHub Actions의 "pages build and deployment"가 성공했는지 확인한다(이 작업 환경에서는 github.io 주소에 직접 접속이 막혀 있다).
 
-## 5. 지금 상태 (2026-10-13, 12차까지)
-- PR #2·#3(9차)·10차 모두 main에 합침 → GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)에 반영. 다음 작업도 지정 브랜치에 푸시하고, main 합치기는 사용자가 원할 때.
+## 5. 지금 상태 (2026-10-13, 13차까지)
+- 12차(인생 업그레이드 보상·값)까지 main에 합침 → GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)에 반영. 다음 작업도 지정 브랜치에 푸시하고, main 합치기는 사용자가 원할 때.
 - 아티팩트 = 12차 최신 빌드. GitHub Pages 배포 정상(11차부터).
 - 게임 흐름: 첫 화면(이어하기/새로하기) → 튜토리얼 5장(김역전 이야기 → 게임 방법 → 방 꾸미기 → 목표와 엔딩 → 플레이 기록 동의) → 시대 시작 카드 → 3시대(2000→2010→2020년대, 시대당 게임 시간 2시간) → 정산 → 최종 요약 + 엔딩.
 - 주요 규칙(값은 `config.ts`): 시작 10,000코인, 첫 3분 뉴스 없음 → 첫 뉴스는 opener 잠정 뉴스, **1틱 3초**(10차, 시대 2,400틱), **뉴스 간격 3~4분**(시대당 약 34개), 반영: 호재 즉시 75% → 3초 뒤 25% / **악재 즉시 25% → 3초 뒤 60% → 6초 뒤 15%**(10차, 손절용 절충안), 120초 뒤 주가 리포트(영향 종목 모두), 단서 쪽 결과 65%.
@@ -51,6 +51,6 @@
 ## 6. 남은 일·결정 대기
 - **10차 밸런스**: 초고속 추종이 +80%를 넘음. 사용자가 원하면 악재 즉시 몫을 조금 올려(예: 35/50/15) 다시 측정.
 - **배경음악 곡 파일**: 작업 환경 네트워크 정책이 음원 사이트를 막음(incompetech.com, upload.wikimedia.org, commons.wikimedia.org, musopen.org 등). 사용자가 허용 목록에 넣거나 mp3를 올려 주면 장르별 1곡씩 넣는다 (재즈·힙합·락은 Kevin MacLeod CC BY 4.0 후보, 클래식은 퍼블릭 도메인 녹음). `music.json`의 placeholder 항목 교체 + 증빙 + `npm run lint:audio -- --release`. 재생 흐름(LP 누르면 즉시 전환, 1곡이면 반복)은 완성.
-- **작업실 작업 종류를 시대별로**(12차 결정: 2010년대 폰 케이스 큐빅 붙이기, 2020년대 택배 상자 포장): 디자이너 그림 대기. 요청서 `docs/WORK_ART_REQUEST.md`(배경과 작업물을 나눠 받기). 그림이 오면 장면 층·문구·`WORK_TYPE`을 바꾼다.
+- **작업실 작업 종류를 시대별로**(12차 결정: 2010년대 폰 케이스 큐빅 붙이기, 2020년대 **블로그 글쓰기**(13차 변경)): 디자이너 그림 대기. 요청서 `docs/WORK_ART_REQUEST.md`(배경과 작업물을 나눠 받기). 그림이 오면 장면 층·문구·`WORK_TYPE`을 바꾼다.
 - `docs/GAME_DESIGN.md` 21장 "결정이 필요한 것" (예: D2 테마별 호재/악재 비율 기준).
 - 팩트체크 문서의 "중간·확인 필요" 항목 (특히 2020년대 최근 사건).
