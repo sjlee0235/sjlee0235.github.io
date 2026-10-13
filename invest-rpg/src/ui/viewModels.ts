@@ -10,6 +10,7 @@ import type {
   PublicFeedEntry, PublicPortfolio, PublicSettlement, PublicStockReport, PublicStockReportItem, PublicStockView,
 } from '../engine/publicView.ts';
 import { localize, t } from '../i18n/index.ts';
+import type { WorkKind } from './art.ts';
 import { fmtNum, fmtPct } from './format.ts';
 
 // ───────── 종목 목록 ─────────
@@ -321,14 +322,22 @@ export interface WorkshopView {
   doneSuffix: string;
 }
 
-/** "눈 1개 | 완성 2개" — 완성은 이번 묶음(100개)에서 만든 수, 100개가 되면 지급되고 0으로 */
-export function workshopView(w: WorkStatus, locale: Locale): WorkshopView {
+/**
+ * 시대별 작업 문구 키 (13차): 인형은 work.*, 케이스·블로그는 work.kinds.{종류}.*
+ * key: payoutNote(안내) · eyes(진행) · done(완성 수) · paid(지급 안내) · dollLabel(터치 버튼 이름)
+ */
+export function workTextKey(kind: WorkKind, key: 'payoutNote' | 'eyes' | 'done' | 'paid' | 'dollLabel'): string {
+  return kind === 'doll_eyes' ? `work.${key}` : `work.kinds.${kind}.${key}`;
+}
+
+/** "눈 1개 | 완성 2개" (케이스 "큐빅 1줄 | 완성 2개", 블로그 "작성 1/3 | 발행 2편") — 완성은 이번 묶음(100개)에서 만든 수 */
+export function workshopView(w: WorkStatus, locale: Locale, kind: WorkKind = 'doll_eyes'): WorkshopView {
   const split = (key: string, n: number) => {
     const [pre, post] = t(locale, key, { count: '\u0000' }).split('\u0000');
     return [pre ?? '', String(n), post ?? ''] as const;
   };
-  const [eyesPrefix, eyes, eyesSuffix] = split('work.eyes', w.eyes);
-  const [donePrefix, done, doneSuffix] = split('work.done', w.payoutMode === 'batch' ? w.batchDolls : w.dollsCompleted);
+  const [eyesPrefix, eyes, eyesSuffix] = split(workTextKey(kind, 'eyes'), w.eyes);
+  const [donePrefix, done, doneSuffix] = split(workTextKey(kind, 'done'), w.payoutMode === 'batch' ? w.batchDolls : w.dollsCompleted);
   return { eyesPrefix, eyes, eyesSuffix, donePrefix, done, doneSuffix };
 }
 

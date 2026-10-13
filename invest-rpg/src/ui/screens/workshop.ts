@@ -1,13 +1,15 @@
-// 작업실: 인형을 누르면 눈 하나 → 눈 둘 → 완성(+3코인은 지급 예정으로). 인형 100개를 채우면 바로 지급되고
+// 작업실: 작업물을 3번 누르면 1개 완성(보상은 지급 예정으로). 100개를 채우면 바로 지급되고
 // 지급 예정 +0, 완성 0개로 돌아간다 (엔진 'batch' 지급).
-// - 배경 그림은 눈 0·1·2개 세 칸 시트 (App 장면 층의 칸 = 지금 인형의 눈 수)
+// - 시대별 작업 (13차): 2000년대 인형 눈 붙이기 / 2010년대 폰 케이스 큐빅 붙이기 / 2020년대 블로그 글쓰기
+// - 2000년대 배경은 눈 0·1·2개 세 칸 시트 (App 장면 층의 칸 = 지금 인형의 눈 수)
+// - 2010·2020년대 배경은 작업물 자리를 비운 1칸, 작업물 그림(26×41)을 그 위에 얹는다 (진행 0·1·2, 밤 그림 따로)
 // - 진행 토스트 "눈 N개 | 완성 M개" (위 548, Lv0만 606), 안내 문구는 왼쪽 위 (사용자 요청으로 시안의 위 716에서 옮김)
 
 import type { Screen, UiContext } from '../context.ts';
 import { h } from '../dom.ts';
-import { pnl } from '../kit.ts';
-import { SCALE } from '../art.ts';
-import { workshopView } from '../viewModels.ts';
+import { inner, pnl } from '../kit.ts';
+import { hasWorkSprite, SCALE, WORK_KIND_BY_ERA, WORK_SPRITE_H, WORK_SPRITE_TOP_PAD, WORK_SPRITE_W, workSpriteFile, type WorkKind } from '../art.ts';
+import { workshopView, workTextKey } from '../viewModels.ts';
 
 /** 작업 중인 인형의 자리 (도트, 그림 원점): Lv0 박스 위 / Lv1~2 접이식 상 / Lv3부터 책상 */
 export function dollOrigin(level: number): { x: number; y: number } {
@@ -32,6 +34,10 @@ export class WorkshopScreen implements Screen {
   private readonly progress: HTMLElement;
   private readonly progressIn: HTMLElement;
   private readonly hit: HTMLButtonElement;
+  private readonly guide: HTMLElement;
+  /** 2010·2020년대 작업물 그림 (2000년대 인형은 배경 시트에 있어 숨김) */
+  private readonly sprite: HTMLElement;
+  private spriteFile = '';
   private lastPayoutSeq = 0;
 
   constructor(ctx: UiContext) {
@@ -40,13 +46,21 @@ export class WorkshopScreen implements Screen {
     this.progress = pnl('toast-pnl', this.progressIn);
     this.progress.style.height = '36px';
     // 안내 문구는 위쪽 왼쪽 (NEWS! 아래). 인테리어 0~7단계 모두 전구·공구판·시계와 겹치지 않는 빈 벽
-    const guide = pnl('work-guide', ctx.t('work.payoutNote'));
-    this.hit = h('button', { class: 'hit doll-hit', 'aria-label': ctx.t('work.dollLabel') });
+    this.guide = pnl('work-guide', '');
+    this.hit = h('button', { class: 'hit doll-hit' });
     this.hit.addEventListener('pointerdown', (e) => {
       e.preventDefault();
       this.touch();
     });
-    this.el = h('div', { class: 'view workshop' }, this.hit, this.progress, guide);
+    this.sprite = h('div', { class: 'work-sprite', 'aria-hidden': 'true' });
+    this.sprite.style.width = `${WORK_SPRITE_W * SCALE}px`;
+    this.sprite.style.height = `${WORK_SPRITE_H * SCALE}px`;
+    this.el = h('div', { class: 'view workshop' }, this.sprite, this.hit, this.progress, this.guide);
+  }
+
+  /** 지금 시대의 작업 종류 */
+  get kind(): WorkKind {
+    return WORK_KIND_BY_ERA[this.ctx.artEra()];
   }
 
   enter(): void {
@@ -58,15 +72,39 @@ export class WorkshopScreen implements Screen {
     return this.ctx.game.getWorkStatus().eyes;
   }
 
+  onSceneChanged(): void {
+    this.syncSprite();
+  }
+
+  /** 작업물 그림: 자리(dollOrigin)에서 3줄 위, 진행(0·1·2)·밤낮에 맞는 그림 */
+  private syncSprite(): void {
+    const { ctx } = this;
+    const kind = this.kind;
+    this.sprite.hidden = !hasWorkSprite(kind);
+    if (this.sprite.hidden) return;
+    const o = dollOrigin(ctx.game.interiorLevel);
+    this.sprite.style.left = `${o.x * SCALE}px`;
+    this.sprite.style.top = `${(o.y - WORK_SPRITE_TOP_PAD) * SCALE}px`;
+    const file = workSpriteFile(kind, ctx.game.getWorkStatus().eyes, ctx.tod());
+    if (file !== this.spriteFile) {
+      this.spriteFile = file;
+      this.sprite.style.backgroundImage = `url("${ctx.assetBase}${file}")`;
+    }
+  }
+
   update(): void {
     const { ctx } = this;
     const level = ctx.game.interiorLevel;
-    const v = workshopView(ctx.game.getWorkStatus(), ctx.locale());
+    const kind = this.kind;
+    const v = workshopView(ctx.game.getWorkStatus(), ctx.locale(), kind);
+    inner(this.guide).textContent = ctx.t(workTextKey(kind, 'payoutNote'));
+    this.hit.setAttribute('aria-label', ctx.t(workTextKey(kind, 'dollLabel')));
+    this.syncSprite();
     this.progressIn.replaceChildren(
       v.eyesPrefix, h('b', {}, v.eyes), v.eyesSuffix, h('span', { class: 'sep' }, '|'), v.donePrefix, h('b', {}, v.done), v.doneSuffix,
     );
     this.progress.style.top = `${level === 0 ? 606 : 548}px`;
-    // 터치 범위: 인형 그림(26×37) 가운데를 중심으로 84×92도트 (예전 42×46의 가로·세로 2배, 사용자 요청)
+    // 터치 범위: 작업물 자리(인형 그림 26×37) 가운데를 중심으로 84×92도트 (예전 42×46의 가로·세로 2배, 사용자 요청)
     const r = dollHitRect(level);
     Object.assign(this.hit.style, {
       left: `${r.x * SCALE}px`, top: `${r.y * SCALE}px`, width: `${r.w * SCALE}px`, height: `${r.h * SCALE}px`,
@@ -84,7 +122,7 @@ export class WorkshopScreen implements Screen {
       const p = ctx.game.lastWorkPayout;
       if (p && p.seq !== this.lastPayoutSeq) {
         this.lastPayoutSeq = p.seq;
-        ctx.toast(ctx.t('work.paid', { coins: p.coins }));
+        ctx.toast(ctx.t(workTextKey(this.kind, 'paid'), { coins: p.coins }));
         ctx.onCoinsChanged();
         ctx.persist();
       }

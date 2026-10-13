@@ -58,4 +58,6 @@ export interface Screen {
   leave?(): void;
   /** 배경 시트의 칸 (작업실 = 눈 수, TV = 노이즈 프레임). 없으면 0 */
   frame?(): number;
+  /** 배경 그림이 바뀌었을 때 (시대·밤낮·인테리어 단계·탭) */
+  onSceneChanged?(): void;
 }

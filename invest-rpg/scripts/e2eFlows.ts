@@ -8,6 +8,7 @@
 // 7) 작업실: 인형 100개째에 바로 지급 → 지급 예정 +0, 완성 0개
 // 8) 강아지 5번 연속 터치 → 배 까기 + 하트, 밤/낮 바꾸기
 // 9) 삼성 인터넷이면 첫 화면에 다크 모드 안내 한 번 (다른 브라우저에서는 없음)
+// 10) 시대별 작업: 2010년대 폰 케이스 큐빅, 2020년대 블로그 글쓰기 (배경 1칸 + 작업물 그림, 밤 그림), 2000년대 인형 그대로
 // 시간을 기다리지 않도록 디버그 기능(window.__debug)을 쓴다.
 
 import { chromium, type Page } from 'playwright';
@@ -417,6 +418,47 @@ try {
     await p2.waitForFunction(() => '__debug' in window);
     check(!(await p2.locator('.overlay.samsung-dark').isVisible()), '다른 브라우저에서는 안내 없음');
     await chrome.close();
+  }
+
+  // ── 10) 시대별 작업 (13차): 2010년대 폰 케이스, 2020년대 블로그 — 배경 1칸 + 작업물 그림 ──
+  {
+    const ctx = await newCtx();
+    const page = await ctx.newPage();
+    const errors = watchErrors(page);
+    const spriteBg = () => page.evaluate(() => (document.querySelector('.work-sprite') as HTMLElement | null)?.style.backgroundImage ?? '');
+    await open(page, '?debug=1&seed=5&fresh=1&nointro=1&era=1');
+    await dbg(page, 'tod', 'day');
+    await dbg(page, 'tab', 'workshop');
+    await page.waitForTimeout(300);
+    check(await page.locator('.work-sprite').isVisible() && (await spriteBg()).includes('phone_case_0.png'), '2010년대: 폰 케이스 작업물 (큐빅 0줄)');
+    check(((await page.locator('.work-guide').textContent()) ?? '').includes('케이스 100개'), '2010년대 안내: 케이스 100개');
+    await page.locator('.doll-hit').dispatchEvent('pointerdown');
+    await page.waitForTimeout(200);
+    check((await spriteBg()).includes('phone_case_1.png') && ((await page.locator('.workshop .toast-pnl').textContent()) ?? '').includes('큐빅 1줄'), '누르면 큐빅 1줄');
+    check(!(await sceneFile(page))!.includes('2000s') && (await sceneFile(page))!.includes('workshop_2010s_day_lv0'), '배경은 작업물 자리를 비운 2010년대 그림');
+    await dbg(page, 'tod', 'night');
+    await page.waitForTimeout(200);
+    check((await spriteBg()).includes('phone_case_1_night.png'), '밤에는 밤 작업물 그림');
+    await dbg(page, 'interior', 3);
+    await page.waitForTimeout(200);
+    const top = await page.evaluate(() => (document.querySelector('.work-sprite') as HTMLElement).style.top);
+    check(top === `${(133 - 3) * 3}px`, `3단계부터 책상 자리 (${top})`);
+    await open(page, '?debug=1&seed=5&fresh=1&nointro=1&era=2');
+    await dbg(page, 'tod', 'day');
+    await dbg(page, 'tab', 'workshop');
+    await page.waitForTimeout(300);
+    check((await spriteBg()).includes('blog_post_0.png') && ((await page.locator('.work-guide').textContent()) ?? '').includes('글 100편'), '2020년대: 블로그 글쓰기, 글 100편');
+    for (let i = 0; i < 3; i++) {
+      await page.locator('.doll-hit').dispatchEvent('pointerdown');
+      await page.waitForTimeout(400);
+    }
+    check(((await page.locator('.workshop .toast-pnl').textContent()) ?? '').includes('발행 1편') && (await spriteBg()).includes('blog_post_0.png'), '3번 누르면 발행 1편, 다음 글은 빈 화면');
+    await open(page, '?debug=1&seed=5&fresh=1&nointro=1');
+    await dbg(page, 'tab', 'workshop');
+    await page.waitForTimeout(300);
+    check(!(await page.locator('.work-sprite').isVisible()) && ((await page.locator('.work-guide').textContent()) ?? '').includes('인형 100개'), '2000년대는 그대로 인형 눈 붙이기 (배경 시트)');
+    check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
+    await ctx.close();
   }
 } finally {
   await browser.close();

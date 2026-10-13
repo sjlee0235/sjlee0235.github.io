@@ -26,7 +26,7 @@ import { setTelemetryConsent, type SaveData } from '../engine/save.ts';
 import type { AppEventMap, AppEventType } from '../engine/telemetry.ts';
 import { localize, t as tr } from '../i18n/index.ts';
 import { effectiveColorScheme, loadSettings, saveSettings, type AppSettings, type SettingsStorage } from '../settings/settings.ts';
-import { artEraFor, SCENE_FRAMES, sceneFile, timeOfDayAt, type SceneKind, type TimeOfDay } from './art.ts';
+import { artEraFor, sceneFile, sceneFrames, timeOfDayAt, type SceneKind, type TimeOfDay } from './art.ts';
 import { HtmlAudioBackend } from './audioBackend.ts';
 import type { Screen, UiContext } from './context.ts';
 import { clear, flash, h, setText } from './dom.ts';
@@ -346,9 +346,12 @@ export class App {
     }
     const tab = this.tabs.current;
     const kind = TAB_SCENE[tab];
-    const file = sceneFile(kind, artEraFor(this.game.eraId), this.tod, this.game.interiorLevel);
-    this.scene.show(file, SCENE_FRAMES[kind], this.screens[tab].frame?.() ?? 0, fadeMs);
+    const era = artEraFor(this.game.eraId);
+    const file = sceneFile(kind, era, this.tod, this.game.interiorLevel);
+    this.scene.show(file, sceneFrames(kind, era), this.screens[tab].frame?.() ?? 0, fadeMs);
     this.scene.setDim(tab === 'trading');
+    // 작업실 작업물 그림(2010·2020년대)도 시대·밤낮·단계에 맞춘다
+    this.screens[tab].onSceneChanged?.();
   }
 
   // ───────── 공통 ─────────

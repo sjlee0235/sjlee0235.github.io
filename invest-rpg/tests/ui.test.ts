@@ -12,7 +12,7 @@ import { displayRemaining, fmtNum, fmtPct, fmtTime } from '../src/ui/format.ts';
 import { dollHitRect } from '../src/ui/screens/workshop.ts';
 import { GameLoop, type Clock } from '../src/ui/loop.ts';
 import {
-  accountSummary, chartView, chooseSide, isSamsungInternet, clearSide, dirClass, finalView, holdingRows, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
+  accountSummary, chartView, chooseSide, isSamsungInternet, workTextKey, clearSide, dirClass, finalView, holdingRows, linePoints, needView, newOrderState, newsItems, orderMessage, parseQuantity, reportView, setMax, setQuantity,
   settlementView, sparkPoints, stepQuantity, stockRows, upgradeView, workshopView,
 } from '../src/ui/viewModels.ts';
 import { makeSpecEra } from './fixtures/makeEra.ts';
@@ -413,7 +413,7 @@ describe('정산 창·최종 요약', () => {
     expect(v.workIncome).toBe('0');
     expect(v.interior).toBe('2,000');
     expect(v.total).toBe(fmtNum(settlement!.investmentResult.coins));
-    expect(v.pendingNote).toBe('지급 예정 작업 수입 9코인은 인형 97개를 더 완성하면 지급돼요. 다음 시대로 이어져요.');
+    expect(v.pendingNote).toBe('지급 예정 작업 수입 9코인은 작업 97개를 더 완성하면 지급돼요. 다음 시대로 이어져요.');
   });
 
   it('정산 창 (시대 종료 합산 모드): 투자 결과 + 작업 수입 = 합계', () => {
@@ -508,5 +508,22 @@ describe('삼성 인터넷 판별 (11차: 다크 모드 안내)', () => {
   it('사용자 에이전트에 SamsungBrowser/가 있으면 삼성 인터넷', () => {
     expect(isSamsungInternet('Mozilla/5.0 (Linux; Android 14; SM-S921N) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/27.0 Chrome/125.0.0.0 Mobile Safari/537.36')).toBe(true);
     expect(isSamsungInternet('Mozilla/5.0 (Linux; Android 14; SM-S921N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Mobile Safari/537.36')).toBe(false);
+  });
+});
+
+describe('시대별 작업 문구 (13차)', () => {
+  it('인형은 work.*, 케이스·블로그는 work.kinds.*: 진행·완성 문구가 시대에 맞다', () => {
+    const g = newGame();
+    for (let i = 0; i < 4; i++) g.workTouch(i * 400);
+    const w = g.getWorkStatus();
+    const line = (kind: 'doll_eyes' | 'phone_case' | 'blog_post') => {
+      const v = workshopView(w, 'ko', kind);
+      return `${v.eyesPrefix}${v.eyes}${v.eyesSuffix} | ${v.donePrefix}${v.done}${v.doneSuffix}`;
+    };
+    expect(line('doll_eyes')).toBe('눈 1개 | 완성 1개');
+    expect(line('phone_case')).toBe('큐빅 1줄 | 완성 1개');
+    expect(line('blog_post')).toBe('작성 1/3 | 발행 1편');
+    expect(workTextKey('blog_post', 'payoutNote')).toBe('work.kinds.blog_post.payoutNote');
+    expect(workTextKey('doll_eyes', 'paid')).toBe('work.paid');
   });
 });
