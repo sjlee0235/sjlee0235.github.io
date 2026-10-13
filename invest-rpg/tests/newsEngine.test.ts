@@ -14,7 +14,7 @@ const activeFor = (seed: number) => applyDraw(era, drawEra(era, seed, config), c
 const scheduleFor = (seed: number, cfg = config) => buildNewsSchedule(activeFor(seed), createRng(seed), cfg);
 
 describe('뉴스 슬롯', () => {
-  it('[시드 200개] 첫 뉴스는 정확히 3분(60틱), 간격 3~4분, 평균 약 34개 (9차)', () => {
+  it('[시드 200개] 첫 뉴스는 정확히 3분(60틱), 간격 3~4분, 평균 약 25개 (14차: 시대 90분)', () => {
     let total = 0;
     for (const seed of SEEDS) {
       const slots = makeNewsSlots(rules, createRng(seed));
@@ -23,11 +23,11 @@ describe('뉴스 슬롯', () => {
         const gap = slots[i]! - slots[i - 1]!;
         if (gap < 60 || gap > 80) throw new Error(`seed ${seed}: ${gap}`);
       }
-      expect(slots.length).toBeLessThanOrEqual(40);
+      expect(slots.length).toBeLessThanOrEqual(30);
       total += slots.length;
     }
-    expect(total / 200).toBeGreaterThan(31);
-    expect(total / 200).toBeLessThan(37);
+    expect(total / 200).toBeGreaterThan(23);
+    expect(total / 200).toBeLessThan(28);
   });
 });
 
@@ -103,7 +103,8 @@ describe('스토리 규칙', () => {
   });
 
   // 9차: 간격이 3~4분으로 줄어 스토리(동시 1개, 결과는 15분 안) 사이 빈자리를 속보가 더 채운다 → 28~40% → 30~50%
-  it('[시드 200개] 슬롯 기준 속보 비율 평균 30~50%', () => {
+  // 14차: 시대가 90분이 되어 마지막 15분(새 이야기 없음)의 비중이 커져 약 51% → 30~55%
+  it('[시드 200개] 슬롯 기준 속보 비율 평균 30~55%', () => {
     let breaking = 0;
     let total = 0;
     for (const seed of SEEDS) {
@@ -112,7 +113,7 @@ describe('스토리 규칙', () => {
       breaking += s.filter((n) => n.kind === 'breaking').length;
     }
     expect(breaking / total).toBeGreaterThanOrEqual(0.3);
-    expect(breaking / total).toBeLessThanOrEqual(0.5);
+    expect(breaking / total).toBeLessThanOrEqual(0.55);
   });
 
   it('[시드 200개] 결과는 단서(leansTo)대로 약 65%, 아니면 35%', () => {

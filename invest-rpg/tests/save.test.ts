@@ -66,7 +66,7 @@ describe('세이브 데이터', () => {
 });
 
 describe('저장 → 불러오기 = 끊김 없이 진행한 결과', () => {
-  const points: Array<[number, number]> = [[0, 0], [0, 1], [0, 61], [0, 700], [0, 2399], [0, 2400], [1, 0], [1, 333], [1, 1200]];
+  const points: Array<[number, number]> = [[0, 0], [0, 1], [0, 61], [0, 700], [0, 1799], [0, 1800], [1, 0], [1, 333], [1, 1200]];
   for (const seed of [3, 17, 42]) {
     it(`[시드 ${seed}] 저장 시점 ${points.length}곳 모두: 상태 지문이 같고, 끝까지 이어 해도 같다`, () => {
       const eras = twoEras();
@@ -147,7 +147,7 @@ describe('버전이 다르면 스냅샷 가격으로 자동 정산하고 다음 
   it('이미 끝난 시대에서 저장했으면 다시 정산하지 않고 다음 시대로', () => {
     const eras = twoEras();
     const game = new Game({ eras, seed: 10 });
-    runTo(game, 0, 2400);
+    runTo(game, 0, 1800);
     expect(game.phase).toBe('era-ended');
     const save = saveGame(createSaveData(), game);
     const r = restoreGame({ ...save, game: { ...save.game!, engineVersion: 'x' } }, eras)!;

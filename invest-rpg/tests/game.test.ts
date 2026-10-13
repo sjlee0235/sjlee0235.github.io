@@ -205,7 +205,7 @@ describe('주가 리포트', () => {
     const { game, reports } = collect(3);
     const last = game.shownNews.at(-1)!;
     const made = reports.some((r) => r.newsId === last.news.id);
-    expect(made).toBe(last.tick + 40 <= 2400);
+    expect(made).toBe(last.tick + 40 <= 1800);
   });
 
   it('보관함: 뉴스·태그·강도·주가 리포트를 함께 담는다', () => {
@@ -215,7 +215,7 @@ describe('주가 리포트', () => {
     for (const a of archive) {
       expect(['breaking', 'tentative', 'outcome']).toContain(a.tag);
       for (const e of a.effects) expect([1, 2, 3]).toContain(e.strength);
-      if (a.tick + 40 <= 2400) expect(a.report?.newsId).toBe(a.news.id);
+      if (a.tick + 40 <= 1800) expect(a.report?.newsId).toBe(a.news.id);
     }
     expect(archive.some((a) => a.tag === 'tentative')).toBe(true);
     expect(archive.some((a) => a.tag === 'outcome' && a.relatedTentativeId)).toBe(true);
@@ -249,14 +249,14 @@ describe('일시정지·매매·정산', () => {
     expect(game.advanceTick().advanced).toBe(true);
   });
 
-  it('수수료 0.2%, 2400틱(3초 × 2시간)에 자동 청산, 수익률 = (최종 − 시작) ÷ 시작, 자금 이월', () => {
+  it('수수료 0.2%, 1800틱(3초 × 1시간 30분)에 자동 청산, 수익률 = (최종 − 시작) ÷ 시작, 자금 이월', () => {
     const game = newGame(5);
     const id = game.activeStocks[0]!.id;
     game.buy(id, 5);
     expect(game.account.cash).toBe(10_000 - 5000 - 10);
     runToEnd(game);
     const st = game.settlements[0]!;
-    expect(game.tick).toBe(2400);
+    expect(game.tick).toBe(1800);
     expect(game.account.getHoldings()).toEqual([]);
     expect(st.startCash).toBe(10_000);
     expect(st.returnPct).toBeCloseTo(((st.endAssets - 10_000) / 10_000) * 100, 10);

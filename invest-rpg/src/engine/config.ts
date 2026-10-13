@@ -6,6 +6,11 @@
 // - 변동률은 소수점 실수 오차를 피하려고 "0.1% 단위 정수"로 다룬다.
 //   예) 1 = 0.1%,  15 = 1.5%,  -300 = -30.0%
 
+/**
+ * 시대 1개의 길이(초, 게임 시간). 2시간(7200) → 1시간 30분(5400): 14차 사용자 결정 ("한 시대 2시간은 너무 길다").
+ * 다른 뉴스 규칙(간격 3~4분, 이야기 15분)은 그대로. 시대당 뉴스 약 34 → 25개, 이야기 8 → 6개 (README 6장)
+ */
+export const ERA_SECONDS = 5400;
 /** 1틱 길이(초). 5초 → 3초: 10차 사용자 결정 (뉴스 뒤 대응을 더 촘촘하게) */
 export const TICK_SECONDS = 3;
 /** 평소 한 틱 최대 변동폭(%) */
@@ -101,11 +106,11 @@ export const WORK_BATCH_DOLLS = 100;
 export const INTERIOR_MAX_LEVEL = 7;
 /**
  * 단계별 값(코인): [0→1단계, 1→2단계, …, 6→7단계].
- * 2,000 고정(합계 14,000, 5차 결정) → 11차: 단계마다 2,000씩 올라 2,000·4,000·…·14,000 (합계 56,000).
- * 업그레이드할수록 작업 보상이 늘어나므로(WORK_COINS_PER_TOUCH_PER_LEVEL), 터치만으로 해피 엔딩에 너무 빨리 닿지 않게
- * (2,000 고정이면 시작 자금 + 약 5분 터치로 7단계 → 이 값이면 약 50분, README 6장)
+ * 2,000 고정(합계 14,000, 5차) → 12차: 2,000·4,000·…·14,000 (합계 56,000, 작업 보상 상승과 함께)
+ * → 14차: 시대가 90분으로 줄어 2,500·3,750·5,000·…·10,000 (단계마다 +1,250, 합계 43,750).
+ * 작업 시간 비율 × 투자 실력 30가지 조합에서 3시대 끝 단계(엔딩)가 2시간·56,000 때와 모두 같은 값 (README 6장)
  */
-export const INTERIOR_COSTS: readonly number[] = [2000, 4000, 6000, 8000, 10000, 12000, 14000];
+export const INTERIOR_COSTS: readonly number[] = [2500, 3750, 5000, 6250, 7500, 8750, 10000];
 
 /**
  * 엔딩 (8차 결정): 마지막 시대가 끝났을 때의 인테리어(인생 업그레이드) 단계로 정한다.
@@ -167,7 +172,7 @@ export interface DrawRules {
 export interface GameConfig {
   /** 1틱의 길이(초). 엔진은 시계를 쓰지 않으므로 화면 쪽 타이머가 참고하는 값 */
   tickSeconds: number;
-  /** 시대 1개의 길이(초). 7200 = 2시간 */
+  /** 시대 1개의 길이(초). 5400 = 1시간 30분 */
   eraSeconds: number;
 
   /** 평소 한 틱 변동률의 최대 크기 (0.1% 단위). 15 = ±1.5% */
@@ -254,7 +259,7 @@ export interface GameConfig {
 
 export const DEFAULT_CONFIG: Readonly<GameConfig> = Object.freeze({
   tickSeconds: TICK_SECONDS,
-  eraSeconds: 7200,
+  eraSeconds: ERA_SECONDS,
   tickMaxRate: toRate(MAX_TICK_MOVE),
   windowSeconds: WINDOW_TICKS * TICK_SECONDS,
   windowMaxRate: toRate(WINDOW_CAP),
