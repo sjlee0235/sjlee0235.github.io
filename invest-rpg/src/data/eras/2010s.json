@@ -968,8 +968,8 @@
    "id": "2010s-semiconductor",
    "themeId": "semiconductor",
    "name": {
-    "ko": "은결반도체",
-    "en": "Eungyeol Semiconductor"
+    "ko": "큐비트반도체",
+    "en": "Qubit Semiconductor"
    },
    "description": {
     "ko": "서버와 스마트폰에 들어가는 D램과 낸드 메모리 칩을 만든다.",
@@ -992,8 +992,8 @@
    "id": "2010s-battery",
    "themeId": "battery",
    "name": {
-    "ko": "온새미전지",
-    "en": "Onsaemi Battery"
+    "ko": "셀로전지",
+    "en": "Cello Battery"
    },
    "description": {
     "ko": "전기차와 에너지 저장 장치에 들어가는 리튬이온 배터리를 만든다.",
@@ -1016,8 +1016,8 @@
    "id": "2010s-cosmetics",
    "themeId": "cosmetics",
    "name": {
-    "ko": "꽃잠화장품",
-    "en": "Kkotjam Cosmetics"
+    "ko": "온유화장품",
+    "en": "Onyu Cosmetics"
    },
    "description": {
     "ko": "스킨케어와 색조 화장품을 만들어 국내 매장과 해외에 판다.",
@@ -1028,8 +1028,8 @@
    "id": "2010s-mobile_game",
    "themeId": "mobile_game",
    "name": {
-    "ko": "꿈결게임",
-    "en": "Kkumgyeol Games"
+    "ko": "젤리게임",
+    "en": "Jelly Games"
    },
    "description": {
     "ko": "스마트폰으로 즐기는 퍼즐 게임과 롤플레잉 게임을 서비스한다.",
@@ -1040,8 +1040,8 @@
    "id": "2010s-messenger",
    "themeId": "messenger",
    "name": {
-    "ko": "소곤메신저",
-    "en": "Sogon Messenger"
+    "ko": "버블메신저",
+    "en": "Bubble Messenger"
    },
    "description": {
     "ko": "모바일 메신저 앱을 운영하고 광고와 게임, 이모티콘으로 돈을 번다.",
@@ -1076,8 +1076,8 @@
    "id": "2010s-display",
    "themeId": "display",
    "name": {
-    "ko": "빛솔디스플레이",
-    "en": "Bitsol Display"
+    "ko": "픽셀디스플레이",
+    "en": "Pixel Display"
    },
    "description": {
     "ko": "스마트폰과 TV에 들어가는 OLED 패널을 만든다.",
@@ -1112,8 +1112,8 @@
    "id": "2010s-travel",
    "themeId": "travel",
    "name": {
-    "ko": "마실여행",
-    "en": "Masil Travel"
+    "ko": "어라운드여행",
+    "en": "Around Travel"
    },
    "description": {
     "ko": "해외 패키지 여행과 항공권, 호텔 예약 상품을 판다.",
@@ -1136,8 +1136,8 @@
    "id": "2010s-shipping",
    "themeId": "shipping",
    "name": {
-    "ko": "물비늘해운",
-    "en": "Mulbineul Shipping"
+    "ko": "마리나해운",
+    "en": "Marina Shipping"
    },
    "description": {
     "ko": "컨테이너선으로 세계 항로에서 수출입 화물을 실어 나른다.",
@@ -1148,8 +1148,8 @@
    "id": "2010s-steel",
    "themeId": "steel",
    "name": {
-    "ko": "두드림철강",
-    "en": "Dudeurim Steel"
+    "ko": "아이론철강",
+    "en": "Iron Steel Works"
    },
    "description": {
     "ko": "철광석을 녹여 자동차·조선용 강판과 철근을 만든다.",
@@ -1172,8 +1172,8 @@
    "id": "2010s-mart",
    "themeId": "mart",
    "name": {
-    "ko": "고루마트",
-    "en": "Goru Mart"
+    "ko": "바스켓마트",
+    "en": "Basket Mart"
    },
    "description": {
     "ko": "식료품과 생활용품을 파는 대형 할인점을 전국에서 운영한다.",
@@ -1232,8 +1232,8 @@
    "id": "2010s-camera",
    "themeId": "camera",
    "name": {
-    "ko": "바라봄카메라",
-    "en": "Barabom Camera"
+    "ko": "셔터카메라",
+    "en": "Shutter Camera"
    },
    "description": {
     "ko": "콤팩트 디지털카메라와 교환식 렌즈를 만든다.",
@@ -1244,8 +1244,8 @@
    "id": "2010s-cable",
    "themeId": "cable",
    "name": {
-    "ko": "어울림방송",
-    "en": "Eoullim Cable"
+    "ko": "온에어방송",
+    "en": "On Air Cable"
    },
    "description": {
     "ko": "지역 케이블 TV와 초고속 인터넷 서비스를 제공한다.",
@@ -1280,8 +1280,8 @@
    "id": "2010s-auto",
    "themeId": "auto",
    "name": {
-    "ko": "바람결자동차",
-    "en": "Baramgyeol Motors"
+    "ko": "로드엘자동차",
+    "en": "Roadel Motors"
    },
    "description": {
     "ko": "승용차와 SUV를 만들어 국내외에 판다.",
@@ -1304,8 +1304,8 @@
    "id": "2010s-securities",
    "themeId": "securities",
    "name": {
-    "ko": "가늠증권",
-    "en": "Ganeum Securities"
+    "ko": "시그마증권",
+    "en": "Sigma Securities"
    },
    "description": {
     "ko": "주식 매매를 중개하고 펀드와 채권 상품을 판다.",
@@ -1328,8 +1328,8 @@
    "id": "2010s-refining",
    "themeId": "refining",
    "name": {
-    "ko": "샘결정유",
-    "en": "Saemgyeol Refining"
+    "ko": "오닉스정유",
+    "en": "Onyx Refining"
    },
    "description": {
     "ko": "수입한 원유로 휘발유와 경유, 항공유를 만든다.",
@@ -1364,8 +1364,8 @@
    "id": "2010s-food",
    "themeId": "food",
    "name": {
-    "ko": "한입식품",
-    "en": "Hanip Foods"
+    "ko": "델리식품",
+    "en": "Deli Foods"
    },
    "description": {
     "ko": "라면과 과자, 맥주 같은 가공식품을 만든다.",
@@ -1376,8 +1376,8 @@
    "id": "2010s-defense",
    "themeId": "defense",
    "name": {
-    "ko": "버팀방산",
-    "en": "Beotim Defense"
+    "ko": "포트리스방산",
+    "en": "Fortress Defense"
    },
    "description": {
     "ko": "자주포와 미사일 부품을 만들어 군에 납품하고 수출한다.",
@@ -1388,8 +1388,8 @@
    "id": "2010s-crypto",
    "themeId": "crypto",
    "name": {
-    "ko": "바꿈거래소",
-    "en": "Bakkum Exchange"
+    "ko": "체인온거래소",
+    "en": "Chainon Exchange"
    },
    "description": {
     "ko": "비트코인 같은 가상화폐를 사고파는 거래소를 운영한다.",

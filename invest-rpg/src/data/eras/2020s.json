@@ -1000,8 +1000,8 @@
       "id": "2020s-hbm",
       "themeId": "hbm",
       "name": {
-        "ko": "슬기반도체",
-        "en": "Seulgi Semiconductor"
+        "ko": "뉴런반도체",
+        "en": "Neuron Semiconductor"
       },
       "description": {
         "ko": "AI 서버용 고대역폭 메모리와 D램, 낸드 플래시를 만든다.",
@@ -1012,8 +1012,8 @@
       "id": "2020s-power_equip",
       "themeId": "power_equip",
       "name": {
-        "ko": "온힘전력기기",
-        "en": "Onhim Power Equipment"
+        "ko": "그리드전력기기",
+        "en": "Grid Power Equipment"
       },
       "description": {
         "ko": "초고압 변압기와 차단기 같은 송배전 설비를 만들어 국내외 전력회사에 공급한다.",
@@ -1072,8 +1072,8 @@
       "id": "2020s-kcontent",
       "themeId": "kcontent",
       "name": {
-        "ko": "모꼬지콘텐츠",
-        "en": "Mokkoji Content"
+        "ko": "프레임콘텐츠",
+        "en": "Frame Content"
       },
       "description": {
         "ko": "드라마와 예능을 제작해 방송사와 글로벌 스트리밍 서비스에 판매한다.",
@@ -1108,8 +1108,8 @@
       "id": "2020s-robot",
       "themeId": "robot",
       "name": {
-        "ko": "재주로봇",
-        "en": "Jaeju Robotics"
+        "ko": "모션로봇",
+        "en": "Motion Robotics"
       },
       "description": {
         "ko": "공장용 협동로봇과 두 발로 걷는 휴머노이드 로봇을 개발한다.",
@@ -1156,8 +1156,8 @@
       "id": "2020s-airline",
       "themeId": "airline",
       "name": {
-        "ko": "하늘결항공",
-        "en": "Haneulgyeol Airlines"
+        "ko": "스카이엘항공",
+        "en": "Skyel Airlines"
       },
       "description": {
         "ko": "국내선과 국제선 여객기, 화물기를 운항한다.",
@@ -1180,8 +1180,8 @@
       "id": "2020s-duty_free",
       "themeId": "duty_free",
       "name": {
-        "ko": "물빛면세점",
-        "en": "Mulbit Duty Free"
+        "ko": "라운지면세점",
+        "en": "Lounge Duty Free"
       },
       "description": {
         "ko": "공항과 시내에서 면세점을 운영하며 화장품과 명품을 판다.",
@@ -1216,8 +1216,8 @@
       "id": "2020s-petrochem",
       "themeId": "petrochem",
       "name": {
-        "ko": "빚음화학",
-        "en": "Bijeum Chemical"
+        "ko": "폴리온화학",
+        "en": "Polyon Chemical"
       },
       "description": {
         "ko": "나프타를 분해해 에틸렌과 플라스틱 원료를 만든다.",
@@ -1228,8 +1228,8 @@
       "id": "2020s-game",
       "themeId": "game",
       "name": {
-        "ko": "놀터게임",
-        "en": "Nolteo Games"
+        "ko": "모멘트게임",
+        "en": "Moment Games"
       },
       "description": {
         "ko": "PC와 모바일로 즐기는 온라인 롤플레잉 게임을 개발해 서비스한다.",
@@ -1276,8 +1276,8 @@
       "id": "2020s-department_store",
       "themeId": "department_store",
       "name": {
-        "ko": "아름드리백화점",
-        "en": "Areumdeuri Department Store"
+        "ko": "메종백화점",
+        "en": "Maison Department Store"
       },
       "description": {
         "ko": "도심과 교외에서 백화점과 아울렛을 운영한다.",
@@ -1288,8 +1288,8 @@
       "id": "2020s-delivery",
       "themeId": "delivery",
       "name": {
-        "ko": "총총배달",
-        "en": "Chongchong Delivery"
+        "ko": "헤이배달",
+        "en": "Hey Delivery"
       },
       "description": {
         "ko": "음식점과 손님을 잇는 배달 주문 앱과 배달 대행 서비스를 운영한다.",
@@ -1300,8 +1300,8 @@
       "id": "2020s-display",
       "themeId": "display",
       "name": {
-        "ko": "또렷디스플레이",
-        "en": "Ttoryeot Display"
+        "ko": "선명디스플레이",
+        "en": "Seonmyeong Display"
       },
       "description": {
         "ko": "TV와 노트북, 스마트폰에 들어가는 LCD·OLED 패널을 만든다.",
@@ -1312,8 +1312,8 @@
       "id": "2020s-battery",
       "themeId": "battery",
       "name": {
-        "ko": "담뿍전지",
-        "en": "Damppuk Battery"
+        "ko": "앰버전지",
+        "en": "Amber Battery"
       },
       "description": {
         "ko": "전기차용 배터리 셀과 양극재를 만들어 완성차 업체에 공급한다.",
@@ -1324,8 +1324,8 @@
       "id": "2020s-auto",
       "themeId": "auto",
       "name": {
-        "ko": "사뿐전기차",
-        "en": "Sappun EV"
+        "ko": "제로전기차",
+        "en": "Zero EV"
       },
       "description": {
         "ko": "승용차와 전기차를 만들어 국내외에 판다.",
@@ -1348,8 +1348,8 @@
       "id": "2020s-securities",
       "themeId": "securities",
       "name": {
-        "ko": "길잡이증권",
-        "en": "Giljabi Securities"
+        "ko": "컴퍼스증권",
+        "en": "Compass Securities"
       },
       "description": {
         "ko": "주식 매매를 중개하고 기업 공개와 채권 발행을 주관한다.",
@@ -1360,8 +1360,8 @@
       "id": "2020s-platform",
       "themeId": "platform",
       "name": {
-        "ko": "어울터플랫폼",
-        "en": "Eoulteo Platform"
+        "ko": "허브플랫폼",
+        "en": "Hub Platform"
       },
       "description": {
         "ko": "검색과 메신저, 간편결제 서비스를 운영하는 인터넷 회사다.",
@@ -1408,8 +1408,8 @@
       "id": "2020s-diagnostics",
       "themeId": "diagnostics",
       "name": {
-        "ko": "살핌진단",
-        "en": "Salpim Diagnostics"
+        "ko": "센스진단",
+        "en": "Sense Diagnostics"
       },
       "description": {
         "ko": "감염병 진단키트와 분자 진단 장비를 만든다.",

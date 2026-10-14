@@ -962,8 +962,8 @@
    "id": "2000s-semiconductor",
    "themeId": "semiconductor",
    "name": {
-    "ko": "새김반도체",
-    "en": "Saegim Semiconductor"
+    "ko": "실렌반도체",
+    "en": "Silen Semiconductor"
    },
    "description": {
     "ko": "PC와 휴대폰에 들어가는 메모리 반도체를 만든다.",
@@ -998,8 +998,8 @@
    "id": "2000s-handset",
    "themeId": "handset",
    "name": {
-    "ko": "도란휴대폰",
-    "en": "Doran Phones"
+    "ko": "링고휴대폰",
+    "en": "Ringo Phones"
    },
    "description": {
     "ko": "휴대폰을 설계해 국내외 통신사에 공급한다.",
@@ -1022,8 +1022,8 @@
    "id": "2000s-online_game",
    "themeId": "online_game",
    "name": {
-    "ko": "아띠게임",
-    "en": "Atti Games"
+    "ko": "퀘스타게임",
+    "en": "Questa Games"
    },
    "description": {
     "ko": "PC로 즐기는 온라인 롤플레잉 게임을 서비스한다.",
@@ -1070,8 +1070,8 @@
    "id": "2000s-machinery",
    "themeId": "machinery",
    "name": {
-    "ko": "다짐건설기계",
-    "en": "Dajim Construction Machinery"
+    "ko": "포르테건설기계",
+    "en": "Forte Construction Machinery"
    },
    "description": {
     "ko": "굴착기와 지게차를 만들어 공사 현장에 판다.",
@@ -1094,8 +1094,8 @@
    "id": "2000s-battery",
    "themeId": "battery",
    "name": {
-    "ko": "채움전지",
-    "en": "Chaeum Battery"
+    "ko": "볼타전지",
+    "en": "Volta Battery"
    },
    "description": {
     "ko": "휴대폰과 노트북에 들어가는 충전용 전지를 만든다.",
@@ -1118,8 +1118,8 @@
    "id": "2000s-card",
    "themeId": "card",
    "name": {
-    "ko": "은솔카드",
-    "en": "Eunsol Card"
+    "ko": "모노카드",
+    "en": "Mono Card"
    },
    "description": {
     "ko": "신용카드를 발급하고 할부와 현금서비스를 제공한다.",
@@ -1142,8 +1142,8 @@
    "id": "2000s-dotcom",
    "themeId": "dotcom",
    "name": {
-    "ko": "여울닷컴",
-    "en": "Yeoul Dotcom"
+    "ko": "링크스닷컴",
+    "en": "Links Dotcom"
    },
    "description": {
     "ko": "인터넷 쇼핑몰과 커뮤니티 사이트를 만드는 작은 회사다.",
@@ -1166,8 +1166,8 @@
    "id": "2000s-travel",
    "themeId": "travel",
    "name": {
-    "ko": "해랑여행",
-    "en": "Haerang Travel"
+    "ko": "노마드여행",
+    "en": "Nomad Travel"
    },
    "description": {
     "ko": "해외 패키지 여행 상품을 만들어 판다.",
@@ -1202,8 +1202,8 @@
    "id": "2000s-records",
    "themeId": "records",
    "name": {
-    "ko": "다솜음반",
-    "en": "Dasom Records"
+    "ko": "아리아음반",
+    "en": "Aria Records"
    },
    "description": {
     "ko": "가요 음반을 만들어 CD와 테이프로 판다.",
@@ -1214,8 +1214,8 @@
    "id": "2000s-pc",
    "themeId": "pc",
    "name": {
-    "ko": "로운컴퓨터",
-    "en": "Roun Computer"
+    "ko": "큐브컴퓨터",
+    "en": "Cube Computer"
    },
    "description": {
     "ko": "가정과 학교에 쓰는 데스크톱 PC를 조립해 판다.",
@@ -1238,8 +1238,8 @@
    "id": "2000s-print",
    "themeId": "print",
    "name": {
-    "ko": "글결신문",
-    "en": "Geulgyeol Daily"
+    "ko": "청람신문",
+    "en": "Cheongram Daily"
    },
    "description": {
     "ko": "일간 신문과 주간 잡지를 펴낸다.",
@@ -1274,8 +1274,8 @@
    "id": "2000s-auto",
    "themeId": "auto",
    "name": {
-    "ko": "마루자동차",
-    "en": "Maru Motors"
+    "ko": "벨로체자동차",
+    "en": "Veloce Motors"
    },
    "description": {
     "ko": "승용차와 소형 트럭을 만들어 국내외에 판다.",
@@ -1310,8 +1310,8 @@
    "id": "2000s-housing",
    "themeId": "housing",
    "name": {
-    "ko": "보듬건설",
-    "en": "Bodeum Homes"
+    "ko": "하임건설",
+    "en": "Heim Homes"
    },
    "description": {
     "ko": "아파트를 지어 분양하는 주택 건설사다.",
@@ -1322,8 +1322,8 @@
    "id": "2000s-refining",
    "themeId": "refining",
    "name": {
-    "ko": "늘샘정유",
-    "en": "Neulsaem Refining"
+    "ko": "에보니정유",
+    "en": "Ebony Refining"
    },
    "description": {
     "ko": "수입한 원유로 휘발유와 경유를 만든다.",
@@ -1334,8 +1334,8 @@
    "id": "2000s-mobile",
    "themeId": "mobile",
    "name": {
-    "ko": "두런통신",
-    "en": "Dureon Telecom"
+    "ko": "웨이브통신",
+    "en": "Wave Telecom"
    },
    "description": {
     "ko": "휴대폰 통화와 데이터 서비스를 제공하는 통신사다.",
@@ -1346,8 +1346,8 @@
    "id": "2000s-mart",
    "themeId": "mart",
    "name": {
-    "ko": "소복마트",
-    "en": "Sobok Mart"
+    "ko": "데일리마트",
+    "en": "Daily Mart"
    },
    "description": {
     "ko": "생활용품과 식료품을 파는 대형 할인점을 운영한다.",
@@ -1382,8 +1382,8 @@
    "id": "2000s-defense",
    "themeId": "defense",
    "name": {
-    "ko": "지킴방산",
-    "en": "Jikim Defense"
+    "ko": "가디언방산",
+    "en": "Guardian Defense"
    },
    "description": {
     "ko": "군용 장갑차와 포를 만들어 군에 납품한다.",
