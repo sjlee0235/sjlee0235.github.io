@@ -6,7 +6,7 @@
 ## 1. 지켜야 할 규칙 (사용자 지시)
 - 결제·광고 SDK, 서버/DB, 걷는 맵·캐릭터는 만들지 않는다.
 - 음악 파일을 **만들지(생성하지) 않는다.** 9차에서 "저작권 문제없는 곡을 찾아 넣어 달라"는 요청이 있었으므로 **찾아서 받는 것은 허용** (라이선스·출처 기록 필수, `docs/audio_sourcing.md`).
-- 기획에 없는 규칙을 임의로 추가하거나 기본값을 바꾸지 않는다. 정하지 않은 세부는 합리적인 기본값으로 하고 **README "5. 가정한 규칙"에 번호를 이어 기록**한다 (지금 136번까지, 다음은 137번, 차수별 소제목 "### 19차 (날짜, …)").
+- 기획에 없는 규칙을 임의로 추가하거나 기본값을 바꾸지 않는다. 정하지 않은 세부는 합리적인 기본값으로 하고 **README "5. 가정한 규칙"에 번호를 이어 기록**한다 (지금 137번까지, 다음은 138번, 차수별 소제목 "### 19차 (날짜, …)").
 - **테스트가 통과하지 않은 채로 "완료"라고 하지 않는다.**
 - 게임 데이터에 실존 기업·상표·인물 이름 금지 (팩트체크 문서에만 실명). 대규모 인명 피해 참사, 국내 정치(탄핵·계엄 등)는 시장 뉴스로 쓰지 않는다.
 - 플레이 기록(텔레메트리)은 기본 꺼짐(동의해야 기록), 개인 식별 정보 없음. 18차부터 실제로 보낸다: 받는 곳 = 사용자 구글 스프레드시트의 Apps Script 웹 앱(직접 만든 서버 아님), GitHub Pages에서만 전송. `docs/telemetry.md` 9·10장.
@@ -18,7 +18,7 @@
 
 ## 2. 기술·명령 (작업 폴더: `invest-rpg/`)
 - TypeScript 7, Vite 8(`base './'`, publicDir `assets`), Vitest 5, Node 22(.ts 직접 실행), Playwright(크로미움 `/opt/pw-browsers`), 화면은 바닐라 TS (프레임워크 없음).
-- `npm run check` (타입 검사 + 테스트 361개) · `npm run e2e` (브라우저 흐름 점검 152개) · `npm run playtest:report -- events.csv` (지인 테스트 기록 보고서) · `npm run shots` (스크린샷 → `shots/`, git 제외)
+- `npm run check` (타입 검사 + 테스트 362개) · `npm run e2e` (브라우저 흐름 점검 152개) · `npm run playtest:report -- events.csv` (지인 테스트 기록 보고서) · `npm run shots` (스크린샷 → `shots/`, git 제외)
 - `npm run lint:content` (시대 데이터 점검) · `node scripts/checkEra.ts src/data/eras/2010s.json 200` (시대 파일 하나: 구조·가이드·전략별 밸런스) · `node scripts/newsCount.ts` (시대당 뉴스 수) · `npm run sim:carry` (3시대 이월)
 - `node scripts/peek.ts "&era=1" "tod:day;tab:trading;shot:a"` (화면 몇 장 빨리 → `shots/peek_a.png`)
 - `npm run build:play` → `play/` (GitHub Pages용 웹 시험판, 디버그 패널 포함: 주소에 `?debug=1` 또는 `#debug`, `&seed=7&fresh=1&nointro=1&era=1`)
