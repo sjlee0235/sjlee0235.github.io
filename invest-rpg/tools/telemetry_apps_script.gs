@@ -7,7 +7,8 @@
  * 3) 웹 앱 주소(…/exec)를 게임 src/ui/telemetryConfig.ts의 TELEMETRY_ENDPOINT에 넣는다
  *
  * 코드를 바꿨을 때: 붙여 넣고 저장 → [배포] → [배포 관리] → 연필 → 버전 '새 버전' → [배포] (주소 그대로)
- *   → 위쪽 함수 선택에서 'setupSheet' 고르고 [실행] 한 번 (데이터 정보 탭·총 플레이 시간 칸을 바로 만든다)
+ *   → 웹 앱 주소를 브라우저로 열어 '코드 2판'이 보이는지 확인 (안 보이면 아직 옛 코드가 돌고 있다)
+ *   → 위쪽 함수 선택에서 'setupSheet' 고르고 [실행] 한 번 (칸이 밀린 줄 고치기, 데이터 정보 탭, 총 플레이 시간)
  *
  * 탭
  * - events     : 이벤트 한 줄씩. 칸은 이름으로 찾으므로 순서가 바뀌어도 된다.
@@ -23,6 +24,8 @@ var MAX_ROWS_PER_POST = 1000;
 var MAX_CELL = 45000; // 시트 칸 하나 한도(5만 자)보다 조금 작게
 var GAP_MIN = 3;
 var DURATION_FORMAT = '[h]"시간 "mm"분 "ss"초"';
+/** 지금 붙여 넣은 코드 판. 웹 앱 주소를 브라우저로 열면 이 값이 보여서, 새 버전이 실제로 배포됐는지 확인할 수 있다 */
+var SCRIPT_VERSION = '2판 (2026-10-16)';
 
 function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -91,6 +94,7 @@ function doPost(e) {
       return line;
     });
     sh.getRange(sh.getLastRow() + 1, 1, values.length, width).setValues(values);
+    repair_(sh);
     updateTotals_(sh);
     if (!SpreadsheetApp.getActiveSpreadsheet().getSheetByName(INFO_NAME)) writeInfo_();
     return ContentService.createTextOutput('ok ' + values.length);
@@ -101,7 +105,10 @@ function doPost(e) {
   }
 }
 
-/** pid별 총 플레이 시간을 다시 계산해 '총 플레이 시간' 칸 전체에 쓴다 */
+/**
+ * pid별 총 플레이 시간을 다시 계산해 '총 플레이 시간' 칸에 쓴다.
+ * clientMs가 숫자가 아닌 줄(칸이 밀린 줄)은 계산에서 빼고, 그 줄의 칸도 건드리지 않는다.
+ */
 function updateTotals_(sh) {
   var c = cols_(sh);
   var n = sh.getLastRow() - 1;
@@ -109,10 +116,14 @@ function updateTotals_(sh) {
   var pid = sh.getRange(2, c['pid'], n, 1).getValues();
   var sid = sh.getRange(2, c['sid'], n, 1).getValues();
   var ms = sh.getRange(2, c['clientMs'], n, 1).getValues();
+  var range = sh.getRange(2, c['총 플레이 시간'], n, 1);
+  var cur = range.getValues();
+  var ok = [];
   var bySession = {};
   for (var i = 0; i < n; i++) {
-    var t = Number(ms[i][0]);
-    if (!pid[i][0] || !isFinite(t) || t <= 0) continue;
+    var t = typeof ms[i][0] === 'number' ? ms[i][0] : NaN;
+    ok.push(isFinite(t) && t > 1e12 && !!pid[i][0]);
+    if (!ok[i]) continue;
     var key = pid[i][0] + '|' + sid[i][0];
     (bySession[key] = bySession[key] || []).push(t);
   }
@@ -129,10 +140,60 @@ function updateTotals_(sh) {
     total[p] = (total[p] || 0) + sum;
   }
   var out = [];
-  for (var r = 0; r < n; r++) out.push([pid[r][0] && total[pid[r][0]] !== undefined ? total[pid[r][0]] / 86400000 : '']);
-  var range = sh.getRange(2, c['총 플레이 시간'], n, 1);
+  for (var r = 0; r < n; r++) out.push([ok[r] ? total[pid[r][0]] / 86400000 : cur[r][0]]);
   range.setValues(out);
   range.setNumberFormat(DURATION_FORMAT);
+}
+
+/**
+ * 칸이 한 칸씩 왼쪽으로 밀린 줄 고치기.
+ * 원인: '총 플레이 시간' 칸을 끼워 넣은 뒤에도 웹 앱이 옛 코드(칸 13개: 받은 시각, 플레이 시각, pid, sid, …, data)로 쓴 줄.
+ * 알아보는 법: clientMs 칸에 숫자 대신 글자(data JSON)가 있고, tick 칸에 아주 큰 숫자(시각 ms)가 있다.
+ * pid: 옛 줄의 pid는 '총 플레이 시간' 칸 자리에 있다. 이미 지워졌으면 같은 sid의 다른 줄에서 찾아 채운다.
+ *   그래도 못 찾으면 'sid:접속번호'로 둔다 (그 접속 안에서는 계속 한 사람으로 묶인다).
+ */
+function repair_(sh) {
+  var c = cols_(sh);
+  var n = sh.getLastRow() - 1;
+  if (n <= 0 || !c['총 플레이 시간'] || !c['clientMs'] || !c['tick']) return 0;
+  var width = sh.getLastColumn();
+  var all = sh.getRange(2, 1, n, width).getValues();
+  var T = c['총 플레이 시간'] - 1;
+  var isBroken = function (row) {
+    var m = row[c['clientMs'] - 1];
+    var tk = row[c['tick'] - 1];
+    return typeof m === 'string' && m.length > 0 && typeof tk === 'number' && tk > 1e12;
+  };
+  // 옛 줄의 칸 순서 (총 플레이 시간 칸 자리부터): pid, sid, gid, build, seq, type, eraId, eraIndex, tick, clientMs, data
+  var OLD = ['pid', 'sid', 'gid', 'build', 'seq', 'type', 'eraId', 'eraIndex', 'tick', 'clientMs', 'data'];
+  var pidOfSid = {};
+  for (var i = 0; i < n; i++) {
+    var row = all[i];
+    if (isBroken(row)) {
+      var p0 = row[T];
+      if (typeof p0 === 'string' && /^[0-9a-f]{16,40}$/.test(p0)) pidOfSid[row[T + 1]] = p0;
+    } else if (c['pid'] && c['sid'] && row[c['pid'] - 1] && row[c['sid'] - 1]) {
+      pidOfSid[row[c['sid'] - 1]] = row[c['pid'] - 1];
+    }
+  }
+  var fixed = 0;
+  for (var r = 0; r < n; r++) {
+    var old = all[r];
+    if (!isBroken(old)) continue;
+    var line = old.slice();
+    for (var k = 0; k < OLD.length; k++) {
+      if (c[OLD[k]]) line[c[OLD[k]] - 1] = old[T + k];
+    }
+    var sidv = old[T + 1];
+    var pidv = old[T];
+    if (!(typeof pidv === 'string' && /^[0-9a-f]{16,40}$/.test(pidv))) pidv = pidOfSid[sidv] || ('sid:' + sidv);
+    line[c['pid'] - 1] = pidv;
+    line[T] = '';
+    all[r] = line;
+    fixed++;
+  }
+  if (fixed > 0) sh.getRange(2, 1, n, width).setValues(all);
+  return fixed;
 }
 
 /** '데이터 정보' 탭: 칸 설명 + 기록 종류(type) 설명. '시트1'·'Sheet1'이 있으면 그 탭 이름을 바꿔 쓴다 */
@@ -206,8 +267,10 @@ function writeInfo_() {
 /** 코드를 바꾼 뒤 한 번 실행: 데이터 정보 탭, 총 플레이 시간 칸 만들기·계산 */
 function setupSheet() {
   var sh = sheet_();
+  var fixed = repair_(sh);
   updateTotals_(sh);
   writeInfo_();
+  Logger.log('코드 ' + SCRIPT_VERSION + ' · 칸이 밀린 줄 ' + fixed + '개 고침');
 }
 
 /** 브라우저로 주소를 열면 살아 있는지 보여 준다. ?key=EXPORT_KEY 면 모든 기록을 JSON으로 내려준다 */
@@ -215,7 +278,7 @@ function doGet(e) {
   var sh = sheet_();
   var key = PropertiesService.getScriptProperties().getProperty('EXPORT_KEY');
   if (!key || !e || !e.parameter || e.parameter.key !== key) {
-    return ContentService.createTextOutput('역전의 방 플레이 기록을 받는 중이에요. 쌓인 줄 수: ' + Math.max(0, sh.getLastRow() - 1));
+    return ContentService.createTextOutput('역전의 방 플레이 기록을 받는 중이에요. 코드 ' + SCRIPT_VERSION + ' · 쌓인 줄 수: ' + Math.max(0, sh.getLastRow() - 1));
   }
   var c = cols_(sh);
   var values = sh.getDataRange().getValues();
