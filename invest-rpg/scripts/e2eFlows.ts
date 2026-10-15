@@ -417,6 +417,17 @@ try {
     await page.reload();
     await page.waitForFunction(() => '__debug' in window);
     check(!(await page.locator('.overlay.samsung-dark').isVisible()), '안내는 한 번만');
+    // 16차: 설정에서 다시 보기
+    await page.goto(`${url}?debug=1&seed=3&fresh=1&nointro=1`);
+    await page.waitForFunction(() => '__debug' in window);
+    await page.addStyleTag({ content: '.debug{display:none!important}' });
+    check(!(await page.locator('.overlay.samsung-dark').isVisible()), '게임 중에도 저절로 다시 뜨지 않음');
+    await page.locator('.gear-btn').click();
+    check(await page.locator('.overlay.settings .samsung-replay').isVisible(), '설정에 [화면 색이 이상할 때] 버튼 (삼성 인터넷)');
+    await page.locator('.overlay.settings .samsung-replay').click();
+    check(await page.locator('.overlay.samsung-dark').isVisible(), '누르면 다크 모드 안내가 다시 뜸');
+    await page.locator('.overlay.samsung-dark .foot .pbtn').click();
+    check(!(await page.locator('.overlay.samsung-dark').isVisible()) && (await page.locator('.overlay.settings').isVisible()), '[확인]을 누르면 설정 화면으로 돌아감');
     check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
     const chrome = await newCtx();
@@ -424,6 +435,11 @@ try {
     await p2.goto(`${url}?debug=1&seed=3`);
     await p2.waitForFunction(() => '__debug' in window);
     check(!(await p2.locator('.overlay.samsung-dark').isVisible()), '다른 브라우저에서는 안내 없음');
+    await p2.goto(`${url}?debug=1&seed=3&fresh=1&nointro=1`);
+    await p2.waitForFunction(() => '__debug' in window);
+    await p2.addStyleTag({ content: '.debug{display:none!important}' });
+    await p2.locator('.gear-btn').click();
+    check((await p2.locator('.overlay.settings').isVisible()) && (await p2.locator('.overlay.settings .samsung-replay').count()) === 0, '다른 브라우저 설정에는 다크 모드 안내 버튼 없음');
     await chrome.close();
   }
 

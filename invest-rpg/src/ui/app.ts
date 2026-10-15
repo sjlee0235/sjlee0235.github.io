@@ -708,6 +708,12 @@ export class App {
             this.saveLocked = true;
             window.location.reload();
           },
+          showSamsungNotice: isSamsungInternet(navigator.userAgent)
+            ? () => {
+                const note = samsungDarkNoticeOverlay(this.settings.locale, () => note.remove());
+                this.overlays.append(note);
+              }
+            : undefined,
           replayTutorial: () => {
             this.overlays.querySelector('.overlay.settings')?.remove();
             this.showTutorial(() => undefined);
