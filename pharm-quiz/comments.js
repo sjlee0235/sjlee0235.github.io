@@ -87,7 +87,7 @@ function renderList(items) {
   });
 }
 
-// ───── 입장 코드 확인 후 시작 ─────
+// ───── 시작 (처음 화면은 누구나 볼 수 있으므로 바로 연결) ─────
 const cfg = window.COMMENTS_CONFIG || {};
 function boot() {
 if (!cfg.apiKey || !cfg.projectId) {
@@ -104,8 +104,7 @@ if (!cfg.apiKey || !cfg.projectId) {
   });
 }
 }
-if (window.__quizUnlocked) boot();
-else window.addEventListener('quiz:unlocked', boot, { once: true });
+boot();
 
 async function connect() {
   const base = 'https://www.gstatic.com/firebasejs/' + FIREBASE_VER + '/';

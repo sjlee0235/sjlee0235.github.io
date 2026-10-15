@@ -1,9 +1,9 @@
-/* 입장 코드로 문제 데이터를 복호화한 뒤 gate.js 가 호출한다 */
-window.initQuiz = function () {
+/* 처음 화면은 누구나 볼 수 있고, '시작'을 누르면 입장 코드(gate.js)로 문제 데이터를 받아온 뒤 진행한다 */
+(function () {
   'use strict';
 
   var PARTS = window.PARTS || [];
-  var DATA = window.QUIZ_DATA || {};
+  var DATA = {};
   var PER_PART = { ox: 20, mcq: 10 };
   var TYPE_LABEL = { ox: 'O,X', mcq: '5지선다', mock: '랜덤 모의고사' };
   var STORE_KEY = 'pharmquiz-v1';
@@ -26,12 +26,15 @@ window.initQuiz = function () {
   function mockReady() { return PARTS.every(function (p) { return isReady(p.id); }); }
   function mockTotal() { return PARTS.reduce(function (s, p) { return s + p.mock; }, 0); }
 
-  // 사용할 수 없는 파트/유형이 저장돼 있으면 정리
-  state.parts = (state.parts || []).filter(isReady);
-  if (state.type === 'mock' && !mockReady()) state.type = null;
+  // 문제 데이터가 들어오면(입장 코드 확인 후) 사용할 수 없는 파트/유형 정리
+  function setData(data) {
+    DATA = data || {};
+    state.parts = (state.parts || []).filter(isReady);
+    if (state.type === 'mock' && !mockReady()) state.type = null;
+  }
 
   // ───── 화면 전환 ─────
-  var screens = ['home', 'parts', 'type', 'quiz', 'result'];
+  var screens = ['home', 'gate', 'parts', 'type', 'quiz', 'result'];
   function show(name) {
     screens.forEach(function (s) { $('screen-' + s).hidden = s !== name; });
     if (name === 'home') renderHome();
@@ -75,7 +78,17 @@ window.initQuiz = function () {
         ' (' + Math.round(state.last.score / state.last.total * 100) + '%)';
     }
   }
-  $('btn-start').addEventListener('click', function () { show('parts'); });
+  // 시작: 이미 입장한 기기면 바로 파트 선택, 아니면 입장 코드 화면
+  $('btn-start').addEventListener('click', function () {
+    if (window.__quizUnlocked) { show('parts'); return; }
+    show('gate');
+    window.dispatchEvent(new Event('quiz:gate'));
+  });
+  window.addEventListener('quiz:unlocked', function (e) {
+    setData(e.detail);
+    if (!$('screen-gate').hidden) show('parts');
+  });
+  if (window.__quizUnlocked) setData(window.QUIZ_DATA);
 
   // ───── 2. 파트 선택 ─────
   function renderParts() {
@@ -306,4 +319,4 @@ window.initQuiz = function () {
 
   // 시작
   show('home');
-};
+})();

@@ -8,29 +8,14 @@
   <meta name="theme-color" content="#6d5dfc">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <div class="bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
 
   <main id="app">
     <!-- 1. 처음 화면 -->
-    <!-- 0. 입장 코드 -->
-    <section class="screen" id="screen-gate">
-      <div class="gate">
-        <div class="pill">💊 PHARM QUIZ</div>
-        <div class="gate-lock" aria-hidden="true">🔐</div>
-        <h1 class="gate-title">입장 코드를 입력해주세요</h1>
-        <p class="gate-sub">안내받은 코드를 입력하면 바로 시작할 수 있어요</p>
-        <form class="gate-form" id="gate-form" autocomplete="off" hidden>
-          <input id="gate-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="입장 코드" aria-label="입장 코드" enterkeyhint="go">
-          <button class="btn btn-primary btn-block" id="gate-submit" type="submit">입장하기</button>
-        </form>
-        <p class="gate-msg" id="gate-msg" role="status" aria-live="polite">확인 중…</p>
-      </div>
-    </section>
-
-    <section class="screen" id="screen-home" hidden>
+    <section class="screen" id="screen-home">
       <div class="home">
         <div class="pill">💊 PHARM QUIZ</div>
         <h1 class="title">2027 국가고시 대비<br><span class="grad">약물치료학 퀴-즈</span></h1>
@@ -69,6 +54,22 @@
             모든 내용은 최신 진료지침과 함께 확인하시기를 권합니다.</p>
           <p class="sig">함께 준비하는 모든 예비약사님의 합격을 응원합니다 💊</p>
         </footer>
+      </div>
+    </section>
+
+    <!-- 0. 입장 코드 -->
+    <section class="screen" id="screen-gate" hidden>
+      <div class="gate">
+        <div class="pill">💊 PHARM QUIZ</div>
+        <div class="gate-lock" aria-hidden="true">🔐</div>
+        <h1 class="gate-title">입장 코드를 입력해주세요</h1>
+        <p class="gate-sub">안내받은 코드를 입력하면 바로 시작할 수 있어요</p>
+        <form class="gate-form" id="gate-form" autocomplete="off">
+          <input id="gate-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="입장 코드" aria-label="입장 코드" enterkeyhint="go">
+          <button class="btn btn-primary btn-block" id="gate-submit" type="submit">입장하기</button>
+        </form>
+        <p class="gate-msg" id="gate-msg" role="status" aria-live="polite"></p>
+        <button class="btn btn-ghost gate-back" data-go="home" type="button">← 처음으로</button>
       </div>
     </section>
 
@@ -158,10 +159,10 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/parts.js?v=6"></script>
-  <script src="app.js?v=6"></script>
-  <script src="gate.js?v=6"></script>
-  <script src="comments-config.js?v=6"></script>
-  <script type="module" src="comments.js?v=6"></script>
+  <script src="data/parts.js?v=7"></script>
+  <script src="gate.js?v=7"></script>
+  <script src="app.js?v=7"></script>
+  <script src="comments-config.js?v=7"></script>
+  <script type="module" src="comments.js?v=7"></script>
 </body>
 </html>
