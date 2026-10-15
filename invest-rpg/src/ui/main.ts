@@ -11,6 +11,8 @@ import { localize } from '../i18n/index.ts';
 import { App } from './app.ts';
 import { browserClock } from './loop.ts';
 import { BrowserStorage } from './storage.ts';
+import { shouldSendTelemetry, TELEMETRY_BUILD, TELEMETRY_ENDPOINT } from './telemetryConfig.ts';
+import { browserSend, describeClient, TelemetryUploader } from './telemetryUploader.ts';
 import './style.css';
 
 function virtualEra(id: string, i: number): Era {
@@ -36,11 +38,34 @@ const virtualIds = new Set(eras.filter((e) => !real.includes(e)).map((e) => e.id
 const seedParam = debug ? Number(params.get('seed')) : NaN;
 const eraParam = debug ? Number(params.get('era')) : NaN;
 
+const storage = new BrowserStorage();
+// 플레이 기록 (18차): 동의한 사람만, GitHub Pages에서만 보낸다. 무작위 설치 id 외에 개인 정보 없음
+const telemetry = new TelemetryUploader({
+  endpoint: TELEMETRY_ENDPOINT,
+  sendEnabled: shouldSendTelemetry(window.location.hostname, debug),
+  storage,
+  now: () => Date.now(),
+  send: browserSend,
+  build: TELEMETRY_BUILD,
+});
+const clientInfo = () =>
+  describeClient({
+    ua: navigator.userAgent,
+    search: window.location.search,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    standalone: window.matchMedia?.('(display-mode: standalone)').matches ?? false,
+    lang: navigator.language ?? '',
+    tzOffsetMin: -new Date().getTimezoneOffset(),
+  });
+
 const app = new App({
   root: document.getElementById('app')!,
   eras,
   seed: Number.isFinite(seedParam) && seedParam > 0 ? seedParam : randomSeed(),
-  storage: new BrowserStorage(),
+  storage,
+  telemetry,
+  clientInfo,
   clock: browserClock,
   now: () => Date.now(),
   assetBase: import.meta.env.BASE_URL,

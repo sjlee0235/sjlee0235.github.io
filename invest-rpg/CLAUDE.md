@@ -6,10 +6,10 @@
 ## 1. 지켜야 할 규칙 (사용자 지시)
 - 결제·광고 SDK, 서버/DB, 걷는 맵·캐릭터는 만들지 않는다.
 - 음악 파일을 **만들지(생성하지) 않는다.** 9차에서 "저작권 문제없는 곡을 찾아 넣어 달라"는 요청이 있었으므로 **찾아서 받는 것은 허용** (라이선스·출처 기록 필수, `docs/audio_sourcing.md`).
-- 기획에 없는 규칙을 임의로 추가하거나 기본값을 바꾸지 않는다. 정하지 않은 세부는 합리적인 기본값으로 하고 **README "5. 가정한 규칙"에 번호를 이어 기록**한다 (지금 132번까지, 다음은 133번, 차수별 소제목 "### 18차 (날짜, …)").
+- 기획에 없는 규칙을 임의로 추가하거나 기본값을 바꾸지 않는다. 정하지 않은 세부는 합리적인 기본값으로 하고 **README "5. 가정한 규칙"에 번호를 이어 기록**한다 (지금 135번까지, 다음은 136번, 차수별 소제목 "### 19차 (날짜, …)").
 - **테스트가 통과하지 않은 채로 "완료"라고 하지 않는다.**
 - 게임 데이터에 실존 기업·상표·인물 이름 금지 (팩트체크 문서에만 실명). 대규모 인명 피해 참사, 국내 정치(탄핵·계엄 등)는 시장 뉴스로 쓰지 않는다.
-- 플레이 기록(텔레메트리)은 기본 꺼짐, 개인 식별 정보 없음.
+- 플레이 기록(텔레메트리)은 기본 꺼짐(동의해야 기록), 개인 식별 정보 없음. 18차부터 실제로 보낸다: 받는 곳 = 사용자 구글 스프레드시트의 Apps Script 웹 앱(직접 만든 서버 아님), GitHub Pages에서만 전송. `docs/telemetry.md` 9·10장.
 - 코드로 그린 임시 그림은 채택하지 않는다(그림은 기획자 디자인). UI(HTML/CSS) 요소는 괜찮다.
 - 커밋·PR에 모델 이름을 넣지 않는다. 커밋 끝에는 세션이 알려주는 Co-Authored-By/세션 줄을 붙인다.
 - **수정할 때마다 웹 버전(아티팩트)에 바로 반영**한다 (아래 4장).
@@ -18,7 +18,7 @@
 
 ## 2. 기술·명령 (작업 폴더: `invest-rpg/`)
 - TypeScript 7, Vite 8(`base './'`, publicDir `assets`), Vitest 5, Node 22(.ts 직접 실행), Playwright(크로미움 `/opt/pw-browsers`), 화면은 바닐라 TS (프레임워크 없음).
-- `npm run check` (타입 검사 + 테스트 348개) · `npm run e2e` (브라우저 흐름 점검 146개) · `npm run shots` (스크린샷 → `shots/`, git 제외)
+- `npm run check` (타입 검사 + 테스트 360개) · `npm run e2e` (브라우저 흐름 점검 152개) · `npm run playtest:report -- events.csv` (지인 테스트 기록 보고서) · `npm run shots` (스크린샷 → `shots/`, git 제외)
 - `npm run lint:content` (시대 데이터 점검) · `node scripts/checkEra.ts src/data/eras/2010s.json 200` (시대 파일 하나: 구조·가이드·전략별 밸런스) · `node scripts/newsCount.ts` (시대당 뉴스 수) · `npm run sim:carry` (3시대 이월)
 - `node scripts/peek.ts "&era=1" "tod:day;tab:trading;shot:a"` (화면 몇 장 빨리 → `shots/peek_a.png`)
 - `npm run build:play` → `play/` (GitHub Pages용 웹 시험판, 디버그 패널 포함: 주소에 `?debug=1` 또는 `#debug`, `&seed=7&fresh=1&nointro=1&era=1`)
@@ -35,8 +35,9 @@
 2. 아티팩트 **https://claude.ai/artifact/Xf4UPG8WthJAboRJehZNat** 갱신: 새 대화에서는 먼저 Artifact `read`(url)로 읽고, 그 페이지 내용(html/head 없이 title·meta·폰트 link·css link·`<div id="app">`·module script)을 `play/index.html`의 새 파일명으로 바꿔 publish. 그림 등 다른 파일은 이미 올라가 있으므로 `files`에는 **바뀐 `assets/index-*.js`, `assets/index-*.css`, `assets/debug-*.js`만 추가하고 옛 이름은 `null`**. (`root`는 작업 폴더 기준: 저장소 최상위면 `invest-rpg/play`, `invest-rpg/` 안이면 `play`. 페이지 파일은 scratchpad에 써도 된다.)
 3. 커밋·푸시 (지정된 브랜치). GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)는 **main에 합쳐야** 반영된다 — 합치기는 사용자가 원할 때만. 합친 뒤 GitHub Actions의 "pages build and deployment"가 성공했는지 확인한다(이 작업 환경에서는 github.io 주소에 직접 접속이 막혀 있다).
 
-## 5. 지금 상태 (2026-10-15, 17차까지 — 삼성 인터넷 안내 다시 보기, 양옆 빈 곳 채우기)
+## 5. 지금 상태 (2026-10-15, 18차까지 — 지인 테스트 플레이 기록 수집)
 - 17차(삼성 인터넷 안내 다시 보기, 양옆 빈 곳 흐린 배경, 작업 코인 글자 금색)까지 main에 합침(16차까지 PR #12, 17차 PR #13) → GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)에 반영. 다음 작업도 지정 브랜치에 푸시하고, main 합치기는 사용자가 원할 때.
+- 18차: 플레이 기록 전송 (`src/ui/telemetryUploader.ts`, `src/ui/telemetryConfig.ts`의 `TELEMETRY_ENDPOINT` = 시트 웹 앱 주소, `tools/telemetry_apps_script.gs`, `scripts/playtestReport.ts`). 주소가 비어 있으면 기기에 쌓아 두었다가 주소가 생긴 뒤 다음 접속 때 보낸다.
 - 17차 위치: 무대 밖 흐린 배경 = `app.ts` setBackdrop/layoutBackdrop·`.backdrop`, 작업 '+코인' 글자 금색 = `.fly`, 다크 모드 안내 다시 보기 = 설정 `.samsung-replay`. 아티팩트 = 17차 최신 빌드. GitHub Pages 배포 정상(11차부터).
 - 게임 흐름: 첫 화면(이어하기/새로하기) → 튜토리얼 5장(김역전 이야기 → 게임 방법 → 방 꾸미기 → 목표와 엔딩 → 플레이 기록 동의) → 시대 시작 카드 → 3시대(2000→2010→2020년대, 시대당 게임 시간 **1시간 30분**(14차, 이전 2시간)) → 정산 → 최종 요약 + 엔딩.
 - 주요 규칙(값은 `config.ts`): 시작 10,000코인, 첫 3분 뉴스 없음 → 첫 뉴스는 opener 잠정 뉴스, **1틱 3초**(10차, 시대 1,800틱), **뉴스 간격 3~4분**(시대당 약 25개, 이야기 6개), 반영: 호재 즉시 75% → 3초 뒤 25% / **악재 즉시 25% → 3초 뒤 60% → 6초 뒤 15%**(10차, 손절용 절충안), 120초 뒤 주가 리포트(영향 종목 모두), 단서 쪽 결과 65%.
@@ -50,6 +51,7 @@
 - 밸런스(시드 200, 14차 90분): 초고속 추종 +63~64%(10차에 넘던 상한 안으로), 나머지 목표 안. 단, **잠정 정방향이 2020년대 +18.6%로 하한(+25%) 아래**(2010년대 +25.0% 하한). 속보 비율 약 51%. 엔딩 난이도는 2시간 때와 같게 맞춤(README 6장 "14차").
 
 ## 6. 남은 일·결정 대기
+- **플레이 기록 주소**: 사용자가 구글 시트에 Apps Script를 배포해 웹 앱 주소를 주면 `TELEMETRY_ENDPOINT`에 넣고 다시 배포(main 합치기). 기록이 쌓이면 시트 CSV로 `npm run playtest:report`.
 - **14차 밸런스**: 잠정 정방향(단서대로 미리 사기)이 2020년대에서 하한 아래. 사용자와 상의해 맞출지 정한다(후보: 2020년대 잠정 뉴스 단서를 더 분명하게, 새 이야기 금지 구간 15분 → 12분).
 - **배경음악 곡 파일**: 작업 환경 네트워크 정책이 음원 사이트를 막음(incompetech.com, upload.wikimedia.org, commons.wikimedia.org, musopen.org 등). 사용자가 허용 목록에 넣거나 mp3를 올려 주면 장르별 1곡씩 넣는다 (재즈·힙합·락은 Kevin MacLeod CC BY 4.0 후보, 클래식은 퍼블릭 도메인 녹음). `music.json`의 placeholder 항목 교체 + 증빙 + `npm run lint:audio -- --release`. 재생 흐름(LP 누르면 즉시 전환, 1곡이면 반복)은 완성.
 - `docs/GAME_DESIGN.md` 21장 "결정이 필요한 것" (예: D2 테마별 호재/악재 비율 기준).

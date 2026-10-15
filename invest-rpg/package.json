@@ -13,6 +13,7 @@
     "sim:repeat": "node scripts/simRepeat.ts",
     "sim:carry": "node scripts/simCarry.ts",
     "telemetry:report": "node scripts/telemetryReport.ts",
+    "playtest:report": "node scripts/playtestReport.ts",
     "lint:content": "node scripts/lintContent.ts",
     "check": "npm run typecheck && npm test",
     "lint:audio": "node scripts/lintAudio.ts",

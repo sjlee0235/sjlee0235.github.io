@@ -242,6 +242,32 @@ export interface AppEventMap {
   tutorial_step: { step: string; action: 'enter' | 'skip' | 'replay' | 'complete' };
   /** 클라이언트 오류 */
   client_error: { code: string; message?: string };
+  /**
+   * 접속 한 번(페이지를 열 때)마다 한 번 (18차). 재방문·유입 경로·기기 분류용. 기기 고유 정보는 담지 않는다.
+   * entry: new = 새로하기, continue = 이어하기, resume = 바로 이어짐(점검용), consent = 이번 접속 중에 동의함
+   */
+  session_begin: {
+    entry: 'new' | 'continue' | 'resume' | 'consent';
+    /** 이 브라우저에서 몇 번째 접속인가 (1부터) */
+    sessionIndex: number;
+    /** 처음 연 날로부터 지난 날 수 */
+    daysSinceFirst: number;
+    build: string;
+    /** 유입: ?src= / utm_source, 없으면 앱 안 브라우저(instagram·kakao…) 또는 direct */
+    source: string;
+    inApp: string;
+    os: string;
+    browser: string;
+    mobile: boolean;
+    /** 화면 크기(CSS px, 20 단위로 뭉갬) */
+    screenW: number;
+    screenH: number;
+    standalone: boolean;
+    lang: string;
+    tzOffsetMin: number;
+  };
+  /** 최종 요약(엔딩) 화면을 봄 (18차) */
+  ending_view: { ending: string; finalCoins: number; cumulativeReturnPct: number; interiorLevel: number; totalWorkIncome: number };
 }
 
 export type EventMap = EngineEventMap & AppEventMap;
