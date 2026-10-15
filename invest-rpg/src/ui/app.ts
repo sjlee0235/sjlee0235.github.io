@@ -48,6 +48,8 @@ import { isSamsungInternet } from './viewModels.ts';
 
 export const STAGE_W = 390;
 export const STAGE_H = 844;
+/** 무대 밖 흐린 배경이 화면 가장자리까지 번지도록 바깥으로 넓히는 폭 (CSS .backdrop의 inset과 같게) */
+const BACKDROP_PAD = 40;
 /** 플레이 기록 동의를 물은 적이 있는가 (게임 세이브와 따로) */
 export const FIRST_RUN_KEY = 'invest-rpg.introSeen';
 /** 삼성 인터넷 다크 모드 안내를 보여 줬는가 (11차) */
@@ -84,6 +86,10 @@ export class App {
   readonly music: MusicPlayer;
   settings: AppSettings;
   readonly scene: SceneLayer;
+  /** 무대 밖 빈 곳을 채우는 흐린 배경 (17차) */
+  private readonly backdrop: HTMLElement;
+  private backdropFile: string | null = null;
+  private backdropFrames = 1;
   private save: SaveData;
   private readonly opts: AppOptions;
   private readonly stage: HTMLElement;
@@ -126,6 +132,7 @@ export class App {
       this.settings.music,
       this.settings.masterVolume,
     );
+    this.backdrop = h('div', { class: 'backdrop', 'aria-hidden': 'true' });
     this.scene = new SceneLayer(opts.assetBase);
     this.viewHost = h('div', { class: 'view-host' });
 
@@ -158,7 +165,7 @@ export class App {
       if (!this.music.getNowPlaying().unlocked) this.music.unlock();
     });
     clear(opts.root);
-    opts.root.append(this.stage);
+    opts.root.append(this.backdrop, this.stage);
   }
 
   // ───────── 시작 ─────────
@@ -328,6 +335,29 @@ export class App {
     const hgt = window.innerHeight;
     const k = Math.min(w / STAGE_W, hgt / STAGE_H);
     this.stage.style.transform = `translate(${Math.round((w - STAGE_W * k) / 2)}px, ${Math.round((hgt - STAGE_H * k) / 2)}px) scale(${k})`;
+    this.layoutBackdrop();
+  }
+
+  /**
+   * 무대 밖 빈 곳(양옆·위아래) 채우기 (17차): 지금 장면 그림을 화면을 덮을 만큼 키워 흐리고 어둡게 깐다.
+   * 장면 그림이 여러 칸(작업실 시트)이어도 첫 칸만 보이게 크기·위치를 직접 정한다.
+   */
+  private setBackdrop(file: string, frames: number): void {
+    if (this.backdropFile === file) return;
+    this.backdropFile = file;
+    this.backdropFrames = frames;
+    this.backdrop.style.backgroundImage = `url("${this.opts.assetBase}${file}")`;
+    this.layoutBackdrop();
+  }
+
+  private layoutBackdrop(): void {
+    const w = window.innerWidth;
+    const hgt = window.innerHeight;
+    const pad = BACKDROP_PAD;
+    const bw = Math.max(w, (hgt * STAGE_W) / STAGE_H) * 1.1;
+    const fh = (bw * STAGE_H) / STAGE_W;
+    this.backdrop.style.backgroundSize = `${Math.round(bw)}px ${Math.round(fh * this.backdropFrames)}px`;
+    this.backdrop.style.backgroundPosition = `${Math.round((w - bw) / 2 + pad)}px ${Math.round((hgt - fh) / 2 + pad)}px`;
   }
 
   private applyTod(fade: boolean): void {
@@ -349,6 +379,7 @@ export class App {
     // 첫 화면: 처음 상태(Lv0)의 거실
     if (!this.game) {
       this.scene.show(sceneFile('living', '2000s', this.tod, 0), 1, 0, fadeMs);
+      this.setBackdrop(sceneFile('living', '2000s', this.tod, 0), 1);
       this.scene.setDim(false);
       this.lpScene = { era: '2000s', level: 0 };
       this.renderLp();
@@ -359,6 +390,7 @@ export class App {
     const era = artEraFor(this.game.eraId);
     const file = sceneFile(kind, era, this.tod, this.game.interiorLevel);
     this.scene.show(file, sceneFrames(kind, era), this.screens[tab].frame?.() ?? 0, fadeMs);
+    this.setBackdrop(file, sceneFrames(kind, era));
     this.scene.setDim(tab === 'trading');
     // 거실 배경(거실 탭·주식창)에는 LP 그림을 얹는다 (15차: 배경에서는 옛 LP를 지웠다)
     this.lpScene = kind === 'living' ? { era, level: this.game.interiorLevel } : null;
@@ -708,6 +740,12 @@ export class App {
             this.saveLocked = true;
             window.location.reload();
           },
+          showSamsungNotice: isSamsungInternet(navigator.userAgent)
+            ? () => {
+                const note = samsungDarkNoticeOverlay(this.settings.locale, () => note.remove());
+                this.overlays.append(note);
+              }
+            : undefined,
           replayTutorial: () => {
             this.overlays.querySelector('.overlay.settings')?.remove();
             this.showTutorial(() => undefined);

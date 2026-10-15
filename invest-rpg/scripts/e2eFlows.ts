@@ -417,6 +417,17 @@ try {
     await page.reload();
     await page.waitForFunction(() => '__debug' in window);
     check(!(await page.locator('.overlay.samsung-dark').isVisible()), '안내는 한 번만');
+    // 16차: 설정에서 다시 보기
+    await page.goto(`${url}?debug=1&seed=3&fresh=1&nointro=1`);
+    await page.waitForFunction(() => '__debug' in window);
+    await page.addStyleTag({ content: '.debug{display:none!important}' });
+    check(!(await page.locator('.overlay.samsung-dark').isVisible()), '게임 중에도 저절로 다시 뜨지 않음');
+    await page.locator('.gear-btn').click();
+    check(await page.locator('.overlay.settings .samsung-replay').isVisible(), '설정에 [화면 색이 이상할 때] 버튼 (삼성 인터넷)');
+    await page.locator('.overlay.settings .samsung-replay').click();
+    check(await page.locator('.overlay.samsung-dark').isVisible(), '누르면 다크 모드 안내가 다시 뜸');
+    await page.locator('.overlay.samsung-dark .foot .pbtn').click();
+    check(!(await page.locator('.overlay.samsung-dark').isVisible()) && (await page.locator('.overlay.settings').isVisible()), '[확인]을 누르면 설정 화면으로 돌아감');
     check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
     await ctx.close();
     const chrome = await newCtx();
@@ -424,7 +435,31 @@ try {
     await p2.goto(`${url}?debug=1&seed=3`);
     await p2.waitForFunction(() => '__debug' in window);
     check(!(await p2.locator('.overlay.samsung-dark').isVisible()), '다른 브라우저에서는 안내 없음');
+    await p2.goto(`${url}?debug=1&seed=3&fresh=1&nointro=1`);
+    await p2.waitForFunction(() => '__debug' in window);
+    await p2.addStyleTag({ content: '.debug{display:none!important}' });
+    await p2.locator('.gear-btn').click();
+    check((await p2.locator('.overlay.settings').isVisible()) && (await p2.locator('.overlay.settings .samsung-replay').count()) === 0, '다른 브라우저 설정에는 다크 모드 안내 버튼 없음');
     await chrome.close();
+  }
+
+  // ── 9-2) 무대 밖 빈 곳 채우기 (17차): 화면이 무대보다 넓으면 양옆에 지금 장면을 흐리게 깐다 ──
+  {
+    const ctx = await browser.newContext({ viewport: { width: 412, height: 700 } });
+    const page = await ctx.newPage();
+    const errors = watchErrors(page);
+    await page.goto(`${url}?debug=1&seed=3&fresh=1&nointro=1`);
+    await page.waitForFunction(() => '__debug' in window);
+    const bg = () => page.locator('.backdrop').evaluate((el) => (el as HTMLElement).style.backgroundImage);
+    const stageBox = await page.locator('.stage').boundingBox();
+    check(stageBox !== null && stageBox.x > 10, `세로가 짧은 화면이면 무대 양옆에 빈 곳 (${Math.round(stageBox?.x ?? 0)}px)`);
+    check(await page.locator('.backdrop').isVisible(), '빈 곳에는 흐린 배경');
+    check((await bg()).includes('art/scene/'), '흐린 배경 = 장면 그림');
+    await page.evaluate(() => (window as any).__debug.tab('workshop'));
+    await page.waitForTimeout(300);
+    check((await bg()).includes('workshop_'), '탭을 바꾸면 흐린 배경도 그 장면으로');
+    check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
+    await ctx.close();
   }
 
   // ── 10) 시대별 작업 (13차): 2010년대 폰 케이스, 2020년대 블로그 — 배경 1칸 + 작업물 그림 ──
@@ -455,10 +490,13 @@ try {
     await dbg(page, 'tab', 'workshop');
     await page.waitForTimeout(300);
     check((await spriteBg()).includes('blog_post_0.png') && ((await page.locator('.work-guide').textContent()) ?? '').includes('글 100편'), '2020년대: 블로그 글쓰기, 글 100편');
+    let flyColor = '';
     for (let i = 0; i < 3; i++) {
       await page.locator('.doll-hit').dispatchEvent('pointerdown');
+      if (i === 2) flyColor = await page.locator('.fly').first().evaluate((el) => getComputedStyle(el).color);
       await page.waitForTimeout(400);
     }
+    check(flyColor === 'rgb(242, 176, 46)', `3번 누르면 뜨는 '+코인' 글자는 코인 금색 (낮, ${flyColor})`);
     check(((await page.locator('.workshop .toast-pnl').textContent()) ?? '').includes('발행 1편') && (await spriteBg()).includes('blog_post_0.png'), '3번 누르면 발행 1편, 다음 글은 빈 화면');
     await open(page, '?debug=1&seed=5&fresh=1&nointro=1');
     await dbg(page, 'tab', 'workshop');

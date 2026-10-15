@@ -130,7 +130,7 @@ export function titleScreen(locale: Locale, hasSave: boolean, handlers: { contin
 }
 
 /**
- * 삼성 인터넷으로 열었을 때 첫 화면에서 한 번 보여 주는 안내 (11차).
+ * 삼성 인터넷으로 열었을 때 첫 화면에서 한 번 보여 주는 안내 (11차). 설정의 [화면 색이 이상할 때]로 다시 볼 수 있다 (16차).
  * 삼성 인터넷의 다크 모드는 페이지 쪽에서 막거나 켜졌는지 알아낼 방법이 없어서, 삼성 인터넷 사용자 모두에게 한 번 알린다.
  */
 export function samsungDarkNoticeOverlay(locale: Locale, onClose: () => void): HTMLElement {
@@ -267,6 +267,8 @@ export interface SettingsHandlers {
   replayTutorial(): void;
   /** 저장하고 첫 화면으로 */
   saveAndExit(): void;
+  /** 삼성 인터넷일 때만: 다크 모드 안내 다시 보기 (16차) */
+  showSamsungNotice?: () => void;
 }
 
 export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTMLElement {
@@ -308,6 +310,13 @@ export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTM
   intro.style.height = '34px';
   intro.addEventListener('click', handlers.replayTutorial);
 
+  const samsung = handlers.showSamsungNotice;
+  const samsungBtn = samsung ? pbtn('samsung-replay', t('samsungDark.replay')) : null;
+  if (samsungBtn && samsung) {
+    samsungBtn.style.height = '34px';
+    samsungBtn.addEventListener('click', samsung);
+  }
+
   const close = pbtn('accent', t('common.close'));
   close.addEventListener('click', handlers.close);
   const exit = pbtn('save-exit', t('settings.saveExit'));
@@ -325,6 +334,7 @@ export function settingsOverlay(s: AppSettings, handlers: SettingsHandlers): HTM
       row(t('music.mute'), mute),
       row(t('settings.telemetry'), consent),
       intro,
+      ...(samsungBtn ? [samsungBtn] : []),
       h(
         'details',
         { class: 'box note' },
