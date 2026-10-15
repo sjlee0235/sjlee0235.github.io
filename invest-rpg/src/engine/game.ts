@@ -628,6 +628,8 @@ export class Game {
           dollsCompleted: this.work.dollsCompleted,
           finalTotal: settlement.finalTotal,
           brokeTimeSec: settlement.brokeTimeSec,
+          interiorLevelStart: this._eraStart.interiorLevel,
+          interiorLevel: this._interior,
         });
       }
     }
