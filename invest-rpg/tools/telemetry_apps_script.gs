@@ -7,7 +7,7 @@
  * 3) 웹 앱 주소(…/exec)를 게임 src/ui/telemetryConfig.ts의 TELEMETRY_ENDPOINT에 넣는다
  *
  * 코드를 바꿨을 때: 붙여 넣고 저장 → [배포] → [배포 관리] → 연필 → 버전 '새 버전' → [배포] (주소 그대로)
- *   → 웹 앱 주소를 브라우저로 열어 '코드 4판'이 보이는지 확인 (안 보이면 아직 옛 코드가 돌고 있다)
+ *   → 웹 앱 주소를 브라우저로 열어 '코드 5판'이 보이는지 확인 (안 보이면 아직 옛 코드가 돌고 있다)
  *   → 위쪽 함수 선택에서 'setupSheet' 고르고 [실행] 한 번 (칸이 밀린 줄 고치기, 데이터 정보 탭, 총 플레이 시간)
  *
  * 탭
@@ -26,7 +26,7 @@ var MAX_CELL = 45000; // 시트 칸 하나 한도(5만 자)보다 조금 작게
 var GAP_MIN = 3;
 var DURATION_FORMAT = '[h]"시간 "mm"분 "ss"초"';
 /** 지금 붙여 넣은 코드 판. 웹 앱 주소를 브라우저로 열면 이 값이 보여서, 새 버전이 실제로 배포됐는지 확인할 수 있다 */
-var SCRIPT_VERSION = '4판 (2026-10-16)';
+var SCRIPT_VERSION = '5판 (2026-10-16)';
 var ERA_NAME = '시대별 결과';
 
 function sheet_() {
@@ -262,7 +262,7 @@ function rebuildEraResults_(sh) {
   var n = sh.getLastRow() - 1;
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var out = ss.getSheetByName(ERA_NAME) || ss.insertSheet(ERA_NAME);
-  var head = ['유저 번호', '시대', '끝난 시각', '주식 수익률(%)', '인생 업그레이드 단계', '시대 시작 단계', '매매 수', '작업 수입(코인)', '시대 끝 코인', '단계 출처', 'pid', 'gid'];
+  var head = ['유저 번호', '시대', '끝난 시각', '주식 수익률(%)', '인생 업그레이드 단계', '시대 시작 단계', '매매 수', '작업 수입(코인)', '작업 터치 수', '시대 끝 코인', '단계 출처', 'pid', 'gid'];
   out.clear();
   out.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold').setBackground('#f3e6c4');
   out.setFrozenRows(1);
@@ -317,6 +317,7 @@ function rebuildEraResults_(sh) {
       typeof d.interiorLevelStart === 'number' ? d.interiorLevelStart : '',
       typeof d.trades === 'number' ? d.trades : '',
       typeof d.workIncome === 'number' ? d.workIncome : '',
+      typeof d.workTouches === 'number' ? d.workTouches : '',
       typeof d.finalTotal === 'number' ? d.finalTotal : '',
       from,
       pid,
@@ -324,7 +325,7 @@ function rebuildEraResults_(sh) {
       era,
     ]);
   }
-  lines.sort(function (a, b) { return (Number(a[0]) || 1e9) - (Number(b[0]) || 1e9) || a[12] - b[12] || a[2] - b[2]; });
+  lines.sort(function (a, b) { return (Number(a[0]) || 1e9) - (Number(b[0]) || 1e9) || a[13] - b[13] || a[2] - b[2]; });
   if (lines.length === 0) return;
   var values = lines.map(function (l) { return l.slice(0, head.length); });
   out.getRange(2, 1, values.length, head.length).setValues(values);
@@ -369,7 +370,7 @@ function writeInfo_() {
     ['favorite_toggled', '관심 종목 별 켜기/끄기', 'stockId · on'],
     ['paused / resumed', '일시정지 / 다시 시작', 'reason: background 앱을 나감 / tutorial 튜토리얼'],
     ['speed_changed', '배속 바꿈', 'speed 1 또는 2'],
-    ['asset_snapshot', '게임 시간 1분마다 자산 상태', 'cash 현금 · holdingsValue 주식 평가액 · positions 보유 종목 수'],
+    ['asset_snapshot', '게임 시간 1분마다 자산 상태 (주기적으로 남는 기록)', 'cash 현금 · holdingsValue 주식 평가액 · positions 보유 종목 수 · workEarned 이번 시대에 지금까지 작업으로 번 코인(지급 예정 포함) · workTouches 이번 시대에 지금까지 작업 터치 수 · workRejectedTouches 너무 빨라 무시된 터치 수 (작업 값은 시대가 바뀌면 0부터)'],
     ['work_credit / work_payout', '작업(터치)으로 완성 / 100개마다 보상 지급', 'dolls 완성 수 · coins 코인'],
     ['interior_upgrade', '인생 업그레이드', 'level 새 단계 · cost 낸 코인'],
     ['interior_insufficient', '코인이 부족해서 업그레이드를 못 함', 'level · cash'],
@@ -385,7 +386,7 @@ function writeInfo_() {
     ['setting_changed', '설정 바꿈', 'key · value'],
     ['client_error', '게임 오류', 'code · message'],
     ['', '', ''],
-    ['시대별 결과 탭', '시대가 끝날 때마다 한 줄: 유저 번호, 시대, 주식 수익률(%), 인생 업그레이드 단계(끝)·시작 단계, 매매 수, 작업 수입, 시대 끝 코인', "단계 출처 '기록' = 게임이 보낸 값, '추정' = 예전 기록이라 업그레이드 기록으로 계산한 값. 새 시대 끝 기록이 올 때마다 다시 만들어요"],
+    ['시대별 결과 탭', '시대가 끝날 때마다 한 줄: 유저 번호, 시대, 주식 수익률(%), 인생 업그레이드 단계(끝)·시작 단계, 매매 수, 작업 수입, 작업 터치 수, 시대 끝 코인', "단계 출처 '기록' = 게임이 보낸 값, '추정' = 예전 기록이라 업그레이드 기록으로 계산한 값. 새 시대 끝 기록이 올 때마다 다시 만들어요"],
     ['참고', '동의한 사람만 기록돼요. 이름·연락처·IP·기기 고유 번호는 모으지 않아요.', '분석: 이 시트를 [파일] → [다운로드] → CSV (events 탭)'],
   ];
   sh.getRange(1, 1, rows.length, 3).setValues(rows);

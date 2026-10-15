@@ -176,7 +176,16 @@ export interface EngineEventMap {
   /** 배속 변경 (1배 / 2배) */
   speed_changed: { speed: 1 | 2 };
   /** 1분마다 자산 상태 (그래프·이탈 분석용) */
-  asset_snapshot: { cash: number; holdingsValue: number; positions: number };
+  asset_snapshot: {
+    cash: number;
+    holdingsValue: number;
+    positions: number;
+    /** (18차) 이번 시대에 지금까지 작업으로 번 코인 (지급 예정 포함, 시대가 바뀌면 0부터) */
+    workEarned?: number;
+    /** (18차) 이번 시대에 지금까지 받아들인 작업 터치 수 / 너무 빨라 무시된 터치 수 */
+    workTouches?: number;
+    workRejectedTouches?: number;
+  };
   /** 시대 종료 정산 */
   era_end: {
     endAssets: number;

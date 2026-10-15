@@ -1242,6 +1242,9 @@ export class Game {
         cash: this.account.cash,
         holdingsValue: assets - this.account.cash,
         positions: holdings.length,
+        workEarned: this.work.earned,
+        workTouches: this.work.touches,
+        workRejectedTouches: this.work.rejectedTouches,
       });
     }
   }

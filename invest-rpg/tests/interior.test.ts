@@ -201,3 +201,22 @@ describe('시대 끝 기록의 인생 업그레이드 단계 (18차)', () => {
   });
 });
 
+describe('1분 자산 기록의 작업 수입·터치 수 (18차)', () => {
+  it('asset_snapshot에 이번 시대 작업으로 번 코인과 터치 수가 쌓여 남는다', () => {
+    const era = makeSpecEra({ seed: 4 });
+    const buf = new TelemetryBuffer();
+    const g = new Game({ eras: [era], seed: 2, telemetry: buf, telemetryConsent: true });
+    let ms = 0;
+    for (let i = 0; i < 9; i++) g.workTouch((ms += 500)); // 3터치 = 1개 → 3개 완성
+    while (g.tick < 40) g.advanceTick();
+    for (let i = 0; i < 3; i++) g.workTouch((ms += 500));
+    while (g.tick < 60) g.advanceTick();
+    const snaps = buf.peek().filter((e) => e.type === 'asset_snapshot').map((e) => e.data as { workEarned?: number; workTouches?: number; workRejectedTouches?: number });
+    const per = DEFAULT_CONFIG.work.touchesPerDoll;
+    expect(snaps[0]).toMatchObject({ workTouches: 9, workRejectedTouches: 0 });
+    expect(snaps[0]!.workEarned).toBe((9 / per) * g.getWorkStatus().coinsPerDoll);
+    expect(snaps[2]).toMatchObject({ workTouches: 12 });
+    expect(snaps[2]!.workEarned).toBe((12 / per) * g.getWorkStatus().coinsPerDoll);
+  });
+});
+
