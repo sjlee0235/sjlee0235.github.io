@@ -7,12 +7,13 @@
  * 3) 웹 앱 주소(…/exec)를 게임 src/ui/telemetryConfig.ts의 TELEMETRY_ENDPOINT에 넣는다
  *
  * 코드를 바꿨을 때: 붙여 넣고 저장 → [배포] → [배포 관리] → 연필 → 버전 '새 버전' → [배포] (주소 그대로)
- *   → 웹 앱 주소를 브라우저로 열어 '코드 3판'이 보이는지 확인 (안 보이면 아직 옛 코드가 돌고 있다)
+ *   → 웹 앱 주소를 브라우저로 열어 '코드 4판'이 보이는지 확인 (안 보이면 아직 옛 코드가 돌고 있다)
  *   → 위쪽 함수 선택에서 'setupSheet' 고르고 [실행] 한 번 (칸이 밀린 줄 고치기, 데이터 정보 탭, 총 플레이 시간)
  *
  * 탭
  * - events     : 이벤트 한 줄씩. 칸은 이름으로 찾으므로 순서가 바뀌어도 된다.
  * - 데이터 정보 : 칸·기록 종류 설명 ('시트1'이 있으면 이름을 바꿔 쓴다)
+ * - 시대별 결과 : 시대가 끝날 때마다 한 줄 (유저 번호, 주식 투자로만 얻은 수익률, 인생 업그레이드 마지막 단계 …)
  * 총 플레이 시간 = 같은 pid의 기록을 접속(sid)별로 시간순으로 놓고, 기록 사이 간격을 더한 값.
  *   간격이 GAP_MIN분보다 길면 그동안은 쉰 것으로 보고 뺀다. 같은 pid 줄에는 모두 같은 값.
  */
@@ -25,7 +26,8 @@ var MAX_CELL = 45000; // 시트 칸 하나 한도(5만 자)보다 조금 작게
 var GAP_MIN = 3;
 var DURATION_FORMAT = '[h]"시간 "mm"분 "ss"초"';
 /** 지금 붙여 넣은 코드 판. 웹 앱 주소를 브라우저로 열면 이 값이 보여서, 새 버전이 실제로 배포됐는지 확인할 수 있다 */
-var SCRIPT_VERSION = '3판 (2026-10-16)';
+var SCRIPT_VERSION = '4판 (2026-10-16)';
+var ERA_NAME = '시대별 결과';
 
 function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -104,6 +106,7 @@ function doPost(e) {
     repair_(sh);
     updateTotals_(sh);
     updateUserNumbers_(sh);
+    if (rows.some(function (r) { return r.type === 'era_end'; }) || !SpreadsheetApp.getActiveSpreadsheet().getSheetByName(ERA_NAME)) rebuildEraResults_(sh);
     if (!SpreadsheetApp.getActiveSpreadsheet().getSheetByName(INFO_NAME)) writeInfo_();
     return ContentService.createTextOutput('ok ' + values.length);
   } catch (err) {
@@ -249,6 +252,86 @@ function updateUserNumbers_(sh) {
   sh.getRange(2, c['유저 번호'], n, 1).setValues(out);
 }
 
+/**
+ * '시대별 결과' 탭: events의 era_end(시대 끝 정산) 한 번 = 한 줄. 매번 통째로 다시 만든다.
+ * 주식 수익률 = era_end.returnPct: 그 시대 주식 투자로만 늘거나 준 비율(%). 작업 수입·인생 업그레이드로 들어오고 나간 코인은 빼고 계산한 값.
+ * 인생 업그레이드 단계 = era_end.interiorLevel (게임 18차 이후). 그 전 기록은 그 판의 업그레이드 기록으로 추정한다.
+ */
+function rebuildEraResults_(sh) {
+  var c = cols_(sh);
+  var n = sh.getLastRow() - 1;
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var out = ss.getSheetByName(ERA_NAME) || ss.insertSheet(ERA_NAME);
+  var head = ['유저 번호', '시대', '끝난 시각', '주식 수익률(%)', '인생 업그레이드 단계', '시대 시작 단계', '매매 수', '작업 수입(코인)', '시대 끝 코인', '단계 출처', 'pid', 'gid'];
+  out.clear();
+  out.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold').setBackground('#f3e6c4');
+  out.setFrozenRows(1);
+  if (n <= 0) return;
+  var need = ['pid', 'gid', 'type', 'eraId', 'eraIndex', 'clientMs', 'data'];
+  for (var q = 0; q < need.length; q++) if (!c[need[q]]) return;
+  var all = sh.getRange(2, 1, n, sh.getLastColumn()).getValues();
+  var get = function (row, name) { return row[c[name] - 1]; };
+  var parse = function (t) { try { return JSON.parse(t); } catch (x) { return null; } };
+  var props = PropertiesService.getScriptProperties().getProperties();
+  // 판(pid|gid)별: 업그레이드 기록, 기록 시작 때 단계
+  var ups = {};
+  var starts = {};
+  var ends = {};
+  for (var i = 0; i < n; i++) {
+    var row = all[i];
+    var type = get(row, 'type');
+    var ms = get(row, 'clientMs');
+    if (typeof ms !== 'number') continue;
+    var key = get(row, 'pid') + '|' + get(row, 'gid');
+    if (type === 'interior_upgrade') {
+      var d1 = parse(get(row, 'data'));
+      if (d1 && typeof d1.level === 'number') (ups[key] = ups[key] || []).push({ era: get(row, 'eraIndex'), ms: ms, level: d1.level });
+    } else if (type === 'game_start') {
+      var d2 = parse(get(row, 'data'));
+      if (d2 && typeof d2.interiorLevel === 'number') (starts[key] = starts[key] || []).push({ era: get(row, 'eraIndex'), level: d2.interiorLevel });
+    } else if (type === 'era_end') {
+      var id = key + '|' + get(row, 'eraId');
+      if (!ends[id]) ends[id] = { row: row, ms: ms, key: key, data: parse(get(row, 'data')) || {} };
+    }
+  }
+  var lines = [];
+  for (var e in ends) {
+    var it = ends[e];
+    var d = it.data;
+    var era = get(it.row, 'eraIndex');
+    var level = typeof d.interiorLevel === 'number' ? d.interiorLevel : null;
+    var from = '기록';
+    if (level === null) {
+      from = '추정';
+      level = 0;
+      (starts[it.key] || []).forEach(function (s0) { if (s0.era <= era) level = Math.max(level, s0.level); });
+      (ups[it.key] || []).forEach(function (u) { if (u.era < era || (u.era === era && u.ms <= it.ms)) level = Math.max(level, u.level); });
+    }
+    var pid = get(it.row, 'pid');
+    lines.push([
+      Number(props['U:' + pid]) || '',
+      get(it.row, 'eraId'),
+      new Date(it.ms),
+      typeof d.returnPct === 'number' ? d.returnPct : '',
+      level,
+      typeof d.interiorLevelStart === 'number' ? d.interiorLevelStart : '',
+      typeof d.trades === 'number' ? d.trades : '',
+      typeof d.workIncome === 'number' ? d.workIncome : '',
+      typeof d.finalTotal === 'number' ? d.finalTotal : '',
+      from,
+      pid,
+      get(it.row, 'gid'),
+      era,
+    ]);
+  }
+  lines.sort(function (a, b) { return (Number(a[0]) || 1e9) - (Number(b[0]) || 1e9) || a[12] - b[12] || a[2] - b[2]; });
+  if (lines.length === 0) return;
+  var values = lines.map(function (l) { return l.slice(0, head.length); });
+  out.getRange(2, 1, values.length, head.length).setValues(values);
+  out.getRange(2, 4, values.length, 1).setNumberFormat('0.0"%"');
+  out.getRange(2, 3, values.length, 1).setNumberFormat('yyyy. m. d hh:mm');
+}
+
 /** '데이터 정보' 탭: 칸 설명 + 기록 종류(type) 설명. '시트1'·'Sheet1'이 있으면 그 탭 이름을 바꿔 쓴다 */
 function writeInfo_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -291,7 +374,7 @@ function writeInfo_() {
     ['interior_upgrade', '인생 업그레이드', 'level 새 단계 · cost 낸 코인'],
     ['interior_insufficient', '코인이 부족해서 업그레이드를 못 함', 'level · cash'],
     ['deposit', '코인 입금', 'amount · source'],
-    ['era_end', '시대 끝 정산', 'returnPct 수익률(%) · trades 매매 수 · maxDrawdownPct 최고점 대비 최대 하락 · investedShare 주식을 들고 있던 시간 비율 · workIncome 작업 수입 · brokeTimeSec 돈이 없어 아무것도 못 한 시간(초) · finalTotal 최종 코인'],
+    ['era_end', '시대 끝 정산 (시대별 결과 탭에 한 줄씩 정리)', 'returnPct 주식 투자로만 얻은 수익률(%, 작업 수입·업그레이드로 오간 코인은 빼고 계산) · interiorLevelStart / interiorLevel 이 시대 시작 / 끝 인생 업그레이드 단계 · trades 매매 수 · maxDrawdownPct 최고점 대비 최대 하락 · investedShare 주식을 들고 있던 시간 비율 · workIncome 작업 수입 · brokeTimeSec 돈이 없어 아무것도 못 한 시간(초) · finalTotal 최종 코인'],
     ['ending_view', '엔딩 화면을 봄', 'ending 엔딩 · finalCoins · cumulativeReturnPct 누적 수익률 · interiorLevel 마지막 단계'],
     ['app_session', '앱을 나감 / 돌아옴', 'phase: background / foreground'],
     ['tab_switch', '아래 탭 이동', 'from → to · dwellMs 앞 탭에 머문 시간(밀리초, 1000 = 1초)'],
@@ -302,6 +385,7 @@ function writeInfo_() {
     ['setting_changed', '설정 바꿈', 'key · value'],
     ['client_error', '게임 오류', 'code · message'],
     ['', '', ''],
+    ['시대별 결과 탭', '시대가 끝날 때마다 한 줄: 유저 번호, 시대, 주식 수익률(%), 인생 업그레이드 단계(끝)·시작 단계, 매매 수, 작업 수입, 시대 끝 코인', "단계 출처 '기록' = 게임이 보낸 값, '추정' = 예전 기록이라 업그레이드 기록으로 계산한 값. 새 시대 끝 기록이 올 때마다 다시 만들어요"],
     ['참고', '동의한 사람만 기록돼요. 이름·연락처·IP·기기 고유 번호는 모으지 않아요.', '분석: 이 시트를 [파일] → [다운로드] → CSV (events 탭)'],
   ];
   sh.getRange(1, 1, rows.length, 3).setValues(rows);
@@ -324,6 +408,7 @@ function setupSheet() {
   var fixed = repair_(sh);
   updateTotals_(sh);
   updateUserNumbers_(sh);
+  rebuildEraResults_(sh);
   writeInfo_();
   Logger.log('코드 ' + SCRIPT_VERSION + ' · 칸이 밀린 줄 ' + fixed + '개 고침');
 }

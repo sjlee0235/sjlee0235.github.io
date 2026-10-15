@@ -203,6 +203,9 @@ export interface EngineEventMap {
     finalTotal: number;
     /** 파산 대기 시간(초): 현금 < 가장 싼 종목 1주 값이고 보유 종목도 없던 시간 */
     brokeTimeSec: number;
+    /** (18차) 인생 업그레이드(인테리어) 단계: 이 시대를 시작할 때 / 끝날 때 */
+    interiorLevelStart?: number;
+    interiorLevel?: number;
   };
 }
 

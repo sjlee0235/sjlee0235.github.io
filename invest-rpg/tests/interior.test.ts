@@ -176,3 +176,28 @@ describe('세이브와 기록', () => {
     expect(rp.game.settlements[0]!.finalTotal).toBe(g.settlements[0]!.finalTotal);
   });
 });
+
+describe('시대 끝 기록의 인생 업그레이드 단계 (18차)', () => {
+  it('era_end에 시작·끝 단계가 남고, 업그레이드에 쓴 코인은 주식 수익률(returnPct)에 들어가지 않는다', () => {
+    const era = makeSpecEra({ seed: 3 });
+    const run = (upgrade: boolean) => {
+      const buf = new TelemetryBuffer();
+      const g = new Game({ eras: [era], seed: 9, startCash: 20_000, telemetry: buf, telemetryConsent: true });
+      while (g.phase !== 'era-ended') {
+        g.advanceTick();
+        if (upgrade && g.tick === 100) {
+          expect(g.upgradeInterior().ok).toBe(true);
+          expect(g.upgradeInterior().ok).toBe(true);
+        }
+      }
+      return buf.peek().find((e) => e.type === 'era_end')!.data as { returnPct: number; interiorLevelStart?: number; interiorLevel?: number };
+    };
+    const up = run(true);
+    const none = run(false);
+    expect(up).toMatchObject({ interiorLevelStart: 0, interiorLevel: 2 });
+    expect(none).toMatchObject({ interiorLevelStart: 0, interiorLevel: 0 });
+    // 매매를 안 했으니 둘 다 0% (업그레이드로 현금이 줄어도 투자 수익률은 그대로)
+    expect(up.returnPct).toBe(none.returnPct);
+  });
+});
+
