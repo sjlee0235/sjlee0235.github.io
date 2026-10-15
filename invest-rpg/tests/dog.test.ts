@@ -65,7 +65,7 @@ describe('돌아다니기', () => {
     const e = env();
     const d: DogState = { ...newDog(e), mode: 'JUMP_UP', t: 0.3, jump: { from: { x: 70, footY: 210 }, to: { x: 78, footY: 172 } } };
     const sp = dogSprite(d, 'pup');
-    expect(sp.top + 38).toBe(Math.round((210 + 172) / 2 - 14));
+    expect(sp.top + 37).toBe(Math.round((210 + 172) / 2 - 14));
     expect(stepDog(d, 0.31, e).mode).toBe('SIT_SOFA');
   });
 
@@ -135,10 +135,10 @@ describe('터치 반응', () => {
     expect(stepDog(r.state, 2.6, e).mode).toBe('SIT_FLOOR');
   });
 
-  it('왼쪽을 보면 하트 오버레이를 6도트 왼쪽으로', () => {
+  it('하트 오버레이는 강아지와 같은 자리 (15차 새 그림은 하트·강아지 캔버스가 같아 왼쪽을 봐도 옮기지 않는다)', () => {
     const e = env();
     let d: DogState = { ...newDog(e), flip: true, x: 50 };
     for (let i = 0; i < 5; i++) d = touchDog(d, i * 100, e).state;
-    expect(dogSprite(d, 'pup').hearts!.x).toBe(44);
+    expect(dogSprite(d, 'pup').hearts!.x).toBe(50);
   });
 });

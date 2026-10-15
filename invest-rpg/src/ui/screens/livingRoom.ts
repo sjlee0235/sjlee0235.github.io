@@ -5,15 +5,18 @@
 
 import type { MusicGenre } from '../../audio/music.ts';
 import { createPresentationRng, type Rng } from '../../engine/rng.ts';
-import { dogFile, dogStageFor, DOG_POSES, heartsFile, SCALE, type DogArtStage } from '../art.ts';
+import { DOG_DRAW_DX, dogFile, dogStageFor, DOG_POSES, heartsFile, lpPos, SCALE, type DogArtStage } from '../art.ts';
 import type { Screen, UiContext } from '../context.ts';
 import { flash, h, setText } from '../dom.ts';
 import { dogSprite, newDog, stepDog, touchDog, type DogEnv, type DogState } from '../dogBrain.ts';
 import { face, ico, pbtn } from '../kit.ts';
 import { upgradeView } from '../viewModels.ts';
 
-/** LP 플레이어 자리 (도트): Lv0~2 상자 위 (9,127), Lv3부터 서랍장 위 (13,129). 39×25 */
-const lpRect = (level: number) => ({ x: level < 3 ? 9 : 13, y: level < 3 ? 127 : 129, w: 39, h: 25 });
+/** LP 터치 범위 (도트): 15차 LP 그림(44×64)의 플레이어 몸통 — 그림 왼쪽 위 + (3, 22), 38×40 */
+const lpRect = (level: number) => {
+  const p = lpPos(level);
+  return { x: p.x + 3, y: p.y + 22, w: 38, h: 40 };
+};
 
 export class LivingRoomScreen implements Screen {
   readonly el: HTMLElement;
@@ -161,20 +164,20 @@ export class LivingRoomScreen implements Screen {
       this.shownPose = sp.pose;
       this.dogEl.style.backgroundImage = `url("${base}${dogFile(this.dogStage, sp.pose)}")`;
     }
-    const left = sp.x * SCALE;
+    const left = (sp.x + DOG_DRAW_DX) * SCALE;
     const top = sp.top * SCALE;
     this.dogEl.style.left = `${left}px`;
     this.dogEl.style.top = `${top}px`;
     this.dogEl.classList.toggle('flip', sp.flip);
-    // 터치 범위: 그림 칸(42×40)보다 조금 작게, 몸통 쪽으로
-    Object.assign(this.dogHit.style, { left: `${left + 6}px`, top: `${top + 24}px`, width: '114px', height: '96px' });
+    // 터치 범위: 그림 칸(48×40)보다 조금 작게, 몸통 쪽으로 (옛 42폭 그림 때와 같은 자리)
+    Object.assign(this.dogHit.style, { left: `${left + 15}px`, top: `${top + 21}px`, width: '114px', height: '96px' });
     if (sp.hearts) {
       this.heartsEl.hidden = false;
       if (sp.hearts.frame !== this.shownHearts) {
         this.shownHearts = sp.hearts.frame;
         this.heartsEl.style.backgroundImage = `url("${base}${heartsFile(sp.hearts.frame)}")`;
       }
-      this.heartsEl.style.left = `${sp.hearts.x * SCALE}px`;
+      this.heartsEl.style.left = `${(sp.hearts.x + DOG_DRAW_DX) * SCALE}px`;
       this.heartsEl.style.top = `${top}px`;
       this.heartsEl.classList.toggle('flip', sp.flip);
     } else if (!this.heartsEl.hidden) {

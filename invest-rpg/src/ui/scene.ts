@@ -11,6 +11,9 @@ const FRAME_PX = SCENE_H * SCALE; // 843
 export class SceneLayer {
   readonly el: HTMLElement;
   private readonly flashEl: HTMLElement;
+  /** 배경 위에 얹는 그림 하나 (15차: 거실 LP). 배경과 같이 어두워진다 (주식창·첫 화면) */
+  private readonly overlayEl: HTMLElement;
+  private overlayFile = '';
   private current: { file: string; div: HTMLElement; frames: number } | null = null;
   private pending: string | null = null;
   private frame = 0;
@@ -19,7 +22,8 @@ export class SceneLayer {
   constructor(base: string) {
     this.base = base;
     this.flashEl = h('div', { class: 'scene-flash' });
-    this.el = h('div', { class: 'scene' }, this.flashEl);
+    this.overlayEl = h('div', { class: 'scene-ovl', hidden: true });
+    this.el = h('div', { class: 'scene' }, this.overlayEl, this.flashEl);
   }
 
   /** 지금 보이는 파일 */
@@ -46,13 +50,13 @@ export class SceneLayer {
       this.current = { file, div, frames };
       this.place(div, frames);
       if (!old || fadeMs <= 0) {
-        this.el.insertBefore(div, this.flashEl);
+        this.el.insertBefore(div, this.overlayEl);
         old?.div.remove();
         return;
       }
       div.style.opacity = '0';
       div.style.setProperty('--fade', `${fadeMs}ms`);
-      this.el.insertBefore(div, this.flashEl);
+      this.el.insertBefore(div, this.overlayEl);
       void div.offsetWidth;
       div.style.opacity = '1';
       window.setTimeout(() => old.div.remove(), fadeMs + 50);
@@ -67,6 +71,22 @@ export class SceneLayer {
   setFrame(frame: number): void {
     this.frame = frame;
     if (this.current) this.place(this.current.div, this.current.frames);
+  }
+
+  /**
+   * 배경 위에 그림 하나를 얹는다 (장면 도트 좌표·크기). file = null이면 숨긴다.
+   * 같은 파일이면 그림을 다시 불러오지 않는다 (LP 재생 프레임은 자주 바뀐다)
+   */
+  setOverlay(o: { file: string; x: number; y: number; w: number; h: number } | null): void {
+    this.overlayEl.hidden = o === null;
+    if (!o) return;
+    Object.assign(this.overlayEl.style, {
+      left: `${o.x * SCALE}px`, top: `${o.y * SCALE}px`, width: `${o.w * SCALE}px`, height: `${o.h * SCALE}px`,
+    });
+    if (o.file !== this.overlayFile) {
+      this.overlayFile = o.file;
+      this.overlayEl.style.backgroundImage = `url("${this.base}${o.file}")`;
+    }
   }
 
   /** 주식창 배경: 어둡게 (밤 밝기 .4 / 낮 .5, 채도 .85) */

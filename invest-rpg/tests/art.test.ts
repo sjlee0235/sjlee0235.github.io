@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   allArtFiles, artEraFor, DOG_H, DOG_W, dogStageFor, HEART_W, SCENE_H, SCENE_W, sceneFrames, timeOfDayAt, WORK_KIND_BY_ERA, WORK_SPRITE_H,
-  WORK_SPRITE_W, workSpriteFile, type ArtEra, type SceneKind,
+  WORK_SPRITE_W, workSpriteFile, type ArtEra, type SceneKind, LP_H, LP_W, lpPos, lpTier,
 } from '../src/ui/art.ts';
 
 declare const process: {
@@ -22,10 +22,11 @@ describe('그림 파일', () => {
   const files = allArtFiles();
 
   it('목록의 파일이 모두 있고, 폴더에 목록 밖 파일이 없다', () => {
-    expect(files.length).toBe(144 + 12 + 24 + 3);
+    expect(files.length).toBe(144 + 12 + 90 + 24 + 3);
     const onDisk = [
       ...fs.readdirSync('assets/art/scene').map((f) => `art/scene/${f}`),
       ...fs.readdirSync('assets/art/work').map((f) => `art/work/${f}`),
+      ...fs.readdirSync('assets/art/lp').map((f) => `art/lp/${f}`),
       ...fs.readdirSync('assets/art/dog').map((f) => `art/dog/${f}`),
     ].sort();
     expect(onDisk).toEqual([...files].sort());
@@ -47,7 +48,15 @@ describe('그림 파일', () => {
     for (const f of work) expect(pngSize(`assets/${f}`), f).toEqual({ w: WORK_SPRITE_W, h: WORK_SPRITE_H });
   });
 
-  it('강아지 42×40, 하트 48×40', () => {
+  it('LP(15차): 3종류 × 3시대 × 밤낮 × 정지·재생 4프레임 = 90장, 44×64. 단계별 종류·자리', () => {
+    const lp = files.filter((x) => x.startsWith('art/lp/'));
+    expect(lp).toHaveLength(90);
+    for (const f of lp) expect(pngSize(`assets/${f}`), f).toEqual({ w: LP_W, h: LP_H });
+    expect([0, 2, 3, 5, 6, 7].map(lpTier)).toEqual(['worn', 'worn', 'clean', 'clean', 'walnut', 'walnut']);
+    expect([lpPos(2), lpPos(3)]).toEqual([{ x: 5, y: 91 }, { x: 9, y: 94 }]);
+  });
+
+  it('강아지 48×40(15차 새 그림), 하트 48×40', () => {
     for (const f of files.filter((x) => x.startsWith('art/dog/'))) {
       const want = f.includes('hearts_') ? { w: HEART_W, h: DOG_H } : { w: DOG_W, h: DOG_H };
       expect(pngSize(`assets/${f}`), f).toEqual(want);

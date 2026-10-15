@@ -1000,8 +1000,8 @@
       "id": "2020s-hbm",
       "themeId": "hbm",
       "name": {
-        "ko": "케일론반도체",
-        "en": "Kalon Semiconductor"
+        "ko": "뉴런반도체",
+        "en": "Neuron Semiconductor"
       },
       "description": {
         "ko": "AI 서버용 고대역폭 메모리와 D램, 낸드 플래시를 만든다.",
@@ -1012,8 +1012,8 @@
       "id": "2020s-power_equip",
       "themeId": "power_equip",
       "name": {
-        "ko": "에르반전력기기",
-        "en": "Erban Power Equipment"
+        "ko": "그리드전력기기",
+        "en": "Grid Power Equipment"
       },
       "description": {
         "ko": "초고압 변압기와 차단기 같은 송배전 설비를 만들어 국내외 전력회사에 공급한다.",
@@ -1024,8 +1024,8 @@
       "id": "2020s-shipbuilding",
       "themeId": "shipbuilding",
       "name": {
-        "ko": "네레아조선",
-        "en": "Nerea Shipbuilding"
+        "ko": "고래조선",
+        "en": "Gorae Shipbuilding"
       },
       "description": {
         "ko": "LNG 운반선과 컨테이너선, 유조선을 짓는 조선소를 운영한다.",
@@ -1036,8 +1036,8 @@
       "id": "2020s-defense",
       "themeId": "defense",
       "name": {
-        "ko": "미르텐방산",
-        "en": "Mirten Defense"
+        "ko": "참매방산",
+        "en": "Chammae Defense"
       },
       "description": {
         "ko": "전차와 자주포, 지대공 미사일을 만들어 국내외 군에 납품한다.",
@@ -1048,8 +1048,8 @@
       "id": "2020s-nuclear",
       "themeId": "nuclear",
       "name": {
-        "ko": "테리온원전",
-        "en": "Therion Nuclear"
+        "ko": "해담원전",
+        "en": "Haedam Nuclear"
       },
       "description": {
         "ko": "원자로와 증기발생기 같은 원전 주요 기기를 만들고 원전 설계를 맡는다.",
@@ -1060,8 +1060,8 @@
       "id": "2020s-kpop",
       "themeId": "kpop",
       "name": {
-        "ko": "시엘엔터",
-        "en": "Ciel Entertainment"
+        "ko": "잔별엔터",
+        "en": "Janbyeol Entertainment"
       },
       "description": {
         "ko": "아이돌 그룹을 길러 음반과 음원, 공연, 팬 상품 사업을 한다.",
@@ -1072,8 +1072,8 @@
       "id": "2020s-kcontent",
       "themeId": "kcontent",
       "name": {
-        "ko": "페이라콘텐츠",
-        "en": "Peira Content"
+        "ko": "프레임콘텐츠",
+        "en": "Frame Content"
       },
       "description": {
         "ko": "드라마와 예능을 제작해 방송사와 글로벌 스트리밍 서비스에 판매한다.",
@@ -1084,8 +1084,8 @@
       "id": "2020s-kfood",
       "themeId": "kfood",
       "name": {
-        "ko": "티노라면",
-        "en": "Tino Ramen"
+        "ko": "보글라면",
+        "en": "Bogeul Ramen"
       },
       "description": {
         "ko": "매운 볶음면과 봉지 라면을 만들어 국내외에 판다.",
@@ -1096,8 +1096,8 @@
       "id": "2020s-bio",
       "themeId": "bio",
       "name": {
-        "ko": "세렌바이오",
-        "en": "Seren Bio"
+        "ko": "이든바이오",
+        "en": "Ideun Bio"
       },
       "description": {
         "ko": "항암 신약을 개발하고 다른 제약사의 바이오의약품을 위탁생산한다.",
@@ -1108,8 +1108,8 @@
       "id": "2020s-robot",
       "themeId": "robot",
       "name": {
-        "ko": "키보로봇",
-        "en": "Kivo Robotics"
+        "ko": "모션로봇",
+        "en": "Motion Robotics"
       },
       "description": {
         "ko": "공장용 협동로봇과 두 발로 걷는 휴머노이드 로봇을 개발한다.",
@@ -1120,8 +1120,8 @@
       "id": "2020s-space",
       "themeId": "space",
       "name": {
-        "ko": "리라우주항공",
-        "en": "Lyra Aerospace"
+        "ko": "별찌우주항공",
+        "en": "Byeoljji Aerospace"
       },
       "description": {
         "ko": "소형 위성과 발사체 부품, 경공격기 동체를 만든다.",
@@ -1132,8 +1132,8 @@
       "id": "2020s-shipping",
       "themeId": "shipping",
       "name": {
-        "ko": "리겔해운",
-        "en": "Rigel Shipping"
+        "ko": "물보라해운",
+        "en": "Mulbora Shipping"
       },
       "description": {
         "ko": "대형 컨테이너선으로 아시아와 미주, 유럽 사이 화물을 실어 나른다.",
@@ -1144,8 +1144,8 @@
       "id": "2020s-cable",
       "themeId": "cable",
       "name": {
-        "ko": "피오르전선",
-        "en": "Fjord Cable"
+        "ko": "타래전선",
+        "en": "Tarae Cable"
       },
       "description": {
         "ko": "초고압 전력 케이블과 해저 케이블, 통신선을 만든다.",
@@ -1156,8 +1156,8 @@
       "id": "2020s-airline",
       "themeId": "airline",
       "name": {
-        "ko": "헤론항공",
-        "en": "Heron Airlines"
+        "ko": "스카이엘항공",
+        "en": "Skyel Airlines"
       },
       "description": {
         "ko": "국내선과 국제선 여객기, 화물기를 운항한다.",
@@ -1168,8 +1168,8 @@
       "id": "2020s-travel",
       "themeId": "travel",
       "name": {
-        "ko": "제피르여행",
-        "en": "Zephyr Travel"
+        "ko": "산들여행",
+        "en": "Sandeul Travel"
       },
       "description": {
         "ko": "해외 패키지 여행과 항공권, 호텔 예약 상품을 판다.",
@@ -1180,8 +1180,8 @@
       "id": "2020s-duty_free",
       "themeId": "duty_free",
       "name": {
-        "ko": "레나면세점",
-        "en": "Lena Duty Free"
+        "ko": "라운지면세점",
+        "en": "Lounge Duty Free"
       },
       "description": {
         "ko": "공항과 시내에서 면세점을 운영하며 화장품과 명품을 판다.",
@@ -1192,8 +1192,8 @@
       "id": "2020s-construction",
       "themeId": "construction",
       "name": {
-        "ko": "제논건설",
-        "en": "Xenon Construction"
+        "ko": "디딤건설",
+        "en": "Didim Construction"
       },
       "description": {
         "ko": "아파트를 지어 분양하고 도로와 발전소 공사를 맡는다.",
@@ -1204,8 +1204,8 @@
       "id": "2020s-steel",
       "themeId": "steel",
       "name": {
-        "ko": "세르카철강",
-        "en": "Serka Steel"
+        "ko": "모루철강",
+        "en": "Moru Steel"
       },
       "description": {
         "ko": "철광석을 녹여 자동차용 강판과 선박용 후판, 철근을 만든다.",
@@ -1216,8 +1216,8 @@
       "id": "2020s-petrochem",
       "themeId": "petrochem",
       "name": {
-        "ko": "시드라화학",
-        "en": "Sidra Chemical"
+        "ko": "폴리온화학",
+        "en": "Polyon Chemical"
       },
       "description": {
         "ko": "나프타를 분해해 에틸렌과 플라스틱 원료를 만든다.",
@@ -1228,8 +1228,8 @@
       "id": "2020s-game",
       "themeId": "game",
       "name": {
-        "ko": "키아로게임",
-        "en": "Chiaro Games"
+        "ko": "모멘트게임",
+        "en": "Moment Games"
       },
       "description": {
         "ko": "PC와 모바일로 즐기는 온라인 롤플레잉 게임을 개발해 서비스한다.",
@@ -1240,8 +1240,8 @@
       "id": "2020s-cinema",
       "themeId": "cinema",
       "name": {
-        "ko": "레비오영화관",
-        "en": "Revio Cinemas"
+        "ko": "별밤영화관",
+        "en": "Byeolbam Cinemas"
       },
       "description": {
         "ko": "전국에서 멀티플렉스 영화관을 운영하며 영화 배급도 한다.",
@@ -1252,8 +1252,8 @@
       "id": "2020s-savings_bank",
       "themeId": "savings_bank",
       "name": {
-        "ko": "케이라저축은행",
-        "en": "Kaira Savings Bank"
+        "ko": "차곡저축은행",
+        "en": "Chagok Savings Bank"
       },
       "description": {
         "ko": "서민 대출과 부동산 개발 사업 대출을 하는 저축은행이다.",
@@ -1264,8 +1264,8 @@
       "id": "2020s-solar",
       "themeId": "solar",
       "name": {
-        "ko": "리엔태양광",
-        "en": "Lien Solar"
+        "ko": "온볕태양광",
+        "en": "Onbyeot Solar"
       },
       "description": {
         "ko": "태양광 셀과 모듈을 만들고 태양광 발전소를 지어 운영한다.",
@@ -1276,8 +1276,8 @@
       "id": "2020s-department_store",
       "themeId": "department_store",
       "name": {
-        "ko": "에델백화점",
-        "en": "Edel Department Store"
+        "ko": "메종백화점",
+        "en": "Maison Department Store"
       },
       "description": {
         "ko": "도심과 교외에서 백화점과 아울렛을 운영한다.",
@@ -1288,8 +1288,8 @@
       "id": "2020s-delivery",
       "themeId": "delivery",
       "name": {
-        "ko": "히포배달",
-        "en": "Hippo Delivery"
+        "ko": "헤이배달",
+        "en": "Hey Delivery"
       },
       "description": {
         "ko": "음식점과 손님을 잇는 배달 주문 앱과 배달 대행 서비스를 운영한다.",
@@ -1300,8 +1300,8 @@
       "id": "2020s-display",
       "themeId": "display",
       "name": {
-        "ko": "레티디스플레이",
-        "en": "Reti Display"
+        "ko": "선명디스플레이",
+        "en": "Seonmyeong Display"
       },
       "description": {
         "ko": "TV와 노트북, 스마트폰에 들어가는 LCD·OLED 패널을 만든다.",
@@ -1312,8 +1312,8 @@
       "id": "2020s-battery",
       "themeId": "battery",
       "name": {
-        "ko": "테온전지",
-        "en": "Teon Battery"
+        "ko": "앰버전지",
+        "en": "Amber Battery"
       },
       "description": {
         "ko": "전기차용 배터리 셀과 양극재를 만들어 완성차 업체에 공급한다.",
@@ -1324,8 +1324,8 @@
       "id": "2020s-auto",
       "themeId": "auto",
       "name": {
-        "ko": "키네오전기차",
-        "en": "Kineo EV"
+        "ko": "제로전기차",
+        "en": "Zero EV"
       },
       "description": {
         "ko": "승용차와 전기차를 만들어 국내외에 판다.",
@@ -1336,8 +1336,8 @@
       "id": "2020s-bank",
       "themeId": "bank",
       "name": {
-        "ko": "헤스티아은행",
-        "en": "Hestia Bank"
+        "ko": "돌담은행",
+        "en": "Doldam Bank"
       },
       "description": {
         "ko": "예금을 받아 가계와 기업에 대출해 주는 시중 은행이다.",
@@ -1348,8 +1348,8 @@
       "id": "2020s-securities",
       "themeId": "securities",
       "name": {
-        "ko": "케렌증권",
-        "en": "Keren Securities"
+        "ko": "컴퍼스증권",
+        "en": "Compass Securities"
       },
       "description": {
         "ko": "주식 매매를 중개하고 기업 공개와 채권 발행을 주관한다.",
@@ -1360,8 +1360,8 @@
       "id": "2020s-platform",
       "themeId": "platform",
       "name": {
-        "ko": "이오플랫폼",
-        "en": "Io Platform"
+        "ko": "허브플랫폼",
+        "en": "Hub Platform"
       },
       "description": {
         "ko": "검색과 메신저, 간편결제 서비스를 운영하는 인터넷 회사다.",
@@ -1372,8 +1372,8 @@
       "id": "2020s-refining",
       "themeId": "refining",
       "name": {
-        "ko": "페르마정유",
-        "en": "Perma Refining"
+        "ko": "깊은샘정유",
+        "en": "Gipeunsaem Refining"
       },
       "description": {
         "ko": "수입한 원유로 휘발유와 경유, 항공유를 만든다.",
@@ -1384,8 +1384,8 @@
       "id": "2020s-crypto",
       "themeId": "crypto",
       "name": {
-        "ko": "티카코인거래소",
-        "en": "Tika Coin Exchange"
+        "ko": "한닢코인거래소",
+        "en": "Hannip Coin Exchange"
       },
       "description": {
         "ko": "비트코인 같은 가상화폐를 사고팔 수 있는 거래소를 운영한다.",
@@ -1396,8 +1396,8 @@
       "id": "2020s-cosmetics",
       "themeId": "cosmetics",
       "name": {
-        "ko": "미엘화장품",
-        "en": "Miel Cosmetics"
+        "ko": "보드레화장품",
+        "en": "Bodeure Cosmetics"
       },
       "description": {
         "ko": "스킨케어와 색조 화장품을 만들어 국내외 매장과 온라인에서 판다.",
@@ -1408,8 +1408,8 @@
       "id": "2020s-diagnostics",
       "themeId": "diagnostics",
       "name": {
-        "ko": "에피진단",
-        "en": "Epi Diagnostics"
+        "ko": "센스진단",
+        "en": "Sense Diagnostics"
       },
       "description": {
         "ko": "감염병 진단키트와 분자 진단 장비를 만든다.",
@@ -1420,8 +1420,8 @@
       "id": "2020s-food",
       "themeId": "food",
       "name": {
-        "ko": "미뇽식품",
-        "en": "Mignon Foods"
+        "ko": "오롯식품",
+        "en": "Orot Foods"
       },
       "description": {
         "ko": "밀가루와 식용유, 과자 같은 가공식품을 만든다.",

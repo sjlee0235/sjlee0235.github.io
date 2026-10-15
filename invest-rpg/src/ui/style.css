@@ -76,7 +76,10 @@ button { cursor: pointer; }
   background-repeat: no-repeat; background-size: 390px auto; image-rendering: pixelated;
   transition: opacity var(--fade, 2s) linear;
 }
-.scene.dim .scene-img { filter: brightness(var(--dim, .4)) saturate(.85); }
+.scene.dim .scene-img, .scene.dim .scene-ovl { filter: brightness(var(--dim, .4)) saturate(.85); }
+/* 15차: 배경 위에 얹는 그림 (거실 LP) */
+.scene-ovl { position: absolute; background-size: 100% 100%; background-repeat: no-repeat; image-rendering: pixelated; pointer-events: none; }
+.scene-ovl[hidden] { display: none; }
 .stage[data-tod='day'] .scene.dim { --dim: .5; }
 .scene-flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
 .scene-flash.on { animation: flash .3s linear; }
@@ -196,7 +199,7 @@ button { cursor: pointer; }
 .hit { position: absolute; background: transparent; border: 0; padding: 0; }
 .lp-hit.spin { animation: lp-wobble .5s steps(2) 3; }
 @keyframes lp-wobble { 50% { transform: translateY(-3px); } }
-.dog { position: absolute; width: 126px; height: 120px; image-rendering: pixelated; background-size: 126px 120px; pointer-events: none; }
+.dog { position: absolute; width: 144px; height: 120px; image-rendering: pixelated; background-size: 144px 120px; pointer-events: none; }
 .dog.flip { transform: scaleX(-1); }
 .dog-hearts { position: absolute; width: 144px; height: 120px; image-rendering: pixelated; background-size: 144px 120px; pointer-events: none; }
 .dog-hearts.flip { transform: scaleX(-1); }
@@ -345,7 +348,7 @@ button { cursor: pointer; }
 
 /* ───────── 첫 화면 (제목 "역전의 방" + 이어하기 / 새로하기) ───────── */
 .stage.at-title .hud, .stage.at-title .tabbar, .stage.at-title .view-host { display: none; }
-.stage.at-title .scene-img { filter: brightness(.62) saturate(.9); }
+.stage.at-title .scene-img, .stage.at-title .scene-ovl { filter: brightness(.62) saturate(.9); }
 .title-screen { position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; }
 .title-logo { margin: 120px 0 0; line-height: 0; filter: drop-shadow(0 0 10px rgba(255, 194, 74, .35)); animation: title-in .6s steps(6) both; }
 .title-logo svg { image-rendering: pixelated; }

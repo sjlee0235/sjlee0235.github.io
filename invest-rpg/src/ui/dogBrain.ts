@@ -9,7 +9,7 @@
 // 연출 난수는 시장 난수와 분리 (createPresentationRng) → 강아지는 게임 결과에 영향이 없다.
 
 import type { Rng } from '../engine/rng.ts';
-import type { DogArtStage, DogPose } from './art.ts';
+import { DOG_FOOT_OFFSET, type DogArtStage, type DogPose } from './art.ts';
 
 export type DogMode = 'LIE' | 'SIT_FLOOR' | 'SIT_SOFA' | 'WALK' | 'JUMP_UP' | 'JUMP_DOWN' | 'HAPPY' | 'BELLY';
 
@@ -50,8 +50,8 @@ export const DOG_RULES = {
   /** 연속 터치 판정 간격(ms)과 배 까기에 필요한 횟수 */
   comboMs: 1500,
   bellyTouches: 5,
-  /** 하트 오버레이: 왼쪽을 볼 때 x를 6도트 왼쪽으로 */
-  heartsFlipShift: 6,
+  /** 하트 오버레이: 왼쪽을 볼 때 x를 옮기는 양 (15차 새 그림은 하트와 강아지 캔버스가 같아 0. 옛 그림은 6) */
+  heartsFlipShift: 0,
 } as const;
 
 interface Point {
@@ -265,5 +265,5 @@ export function dogSprite(d: DogState, stage: DogArtStage): DogSprite {
       break;
     }
   }
-  return { pose, x: Math.round(x), top: Math.round(footY) - 38, flip: d.flip, hearts };
+  return { pose, x: Math.round(x), top: Math.round(footY) - DOG_FOOT_OFFSET, flip: d.flip, hearts };
 }

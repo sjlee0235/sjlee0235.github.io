@@ -7,8 +7,9 @@
 //            2010·2020년대는 작업물 자리를 비운 배경 1장 (130×281) + 작업물 그림 (13차, 디자이너 전달)
 // - 작업물: art/work/{phone_case|blog_post}_{0|1|2}[_night].png (26×41). 왼쪽 위를 (자리 x, 자리 y − 3)에 놓는다
 //   · TV: 지지직 노이즈 4프레임을 세로로 이어 붙인 시트 (130×1124)
-// - 강아지: art/dog/{pup|adult|old}_{lie|sit|walk0|walk1|happy0|happy1|belly0|belly1}.png (42×40, 오른쪽을 봄)
+// - 강아지: art/dog/{pup|adult|old}_{lie|sit|walk0|walk1|happy0|happy1|belly0|belly1}.png (48×40, 오른쪽을 봄, 15차 새 그림)
 //   하트: art/dog/hearts_{0|1|2}.png (48×40, 강아지와 같은 기준점)
+// - LP: art/lp/{worn|clean|walnut}_{era}_{night|day}_{idle|play0..3}.png (44×64, 15차). 거실 배경에서는 옛 LP를 지웠다
 // 그림을 다시 만드는 코드는 art_source/ (파이썬).
 
 export const SCENE_W = 130;
@@ -59,11 +60,36 @@ export function workSpriteFile(kind: WorkKind, step: number, tod: TimeOfDay): st
   return `art/work/${kind}_${step}${tod === 'night' ? '_night' : ''}.png`;
 }
 
-export const DOG_W = 42;
+export const DOG_W = 48;
 export const DOG_H = 40;
 export const HEART_W = 48;
-/** 스프라이트 위쪽 y = 발 y − 38.5 (8.1) → 정수 도트로는 발 y − 38 */
-export const DOG_FOOT_OFFSET = 38;
+/**
+ * 스프라이트 위쪽 y = 발 y − 37 (15차 새 그림: 발 끝이 위에서 39번째 줄. 옛 42×40 그림은 40번째 줄이라 − 38이었다)
+ */
+export const DOG_FOOT_OFFSET = 37;
+/** 새 그림(48폭)을 옛 기준(42폭, 왼쪽 x)과 가운데를 맞추려고 왼쪽으로 3도트 */
+export const DOG_DRAW_DX = -3;
+
+/** LP 플레이어 (15차): 방 단계에 따라 낡은 가방형(0~2) / 깨끗한 가방형(3~5) / 월넛 턴테이블(6~7) */
+export type LpTier = 'worn' | 'clean' | 'walnut';
+export type LpFrame = 'idle' | 'play0' | 'play1' | 'play2' | 'play3';
+export const LP_TIERS: readonly LpTier[] = ['worn', 'clean', 'walnut'];
+export const LP_FRAMES: readonly LpFrame[] = ['idle', 'play0', 'play1', 'play2', 'play3'];
+export const LP_W = 44;
+export const LP_H = 64;
+
+export function lpTier(level: number): LpTier {
+  return level < 3 ? 'worn' : level < 6 ? 'clean' : 'walnut';
+}
+
+/** LP 그림 왼쪽 위 (장면 도트): 박스 위(0~2단계) / 서랍장 위(3단계부터) */
+export function lpPos(level: number): { x: number; y: number } {
+  return level < 3 ? { x: 5, y: 91 } : { x: 9, y: 94 };
+}
+
+export function lpFile(tier: LpTier, era: ArtEra, tod: TimeOfDay, frame: LpFrame): string {
+  return `art/lp/${tier}_${era}_${tod}_${frame}.png`;
+}
 
 export function sceneFile(kind: SceneKind, era: ArtEra, tod: TimeOfDay, level: number): string {
   return `art/scene/${kind}_${era}_${tod}_lv${level}.png`;
@@ -106,6 +132,9 @@ export function allArtFiles(): string[] {
     const kind = WORK_KIND_BY_ERA[era];
     if (!hasWorkSprite(kind)) continue;
     for (const tod of TIMES_OF_DAY) for (let step = 0; step < 3; step++) out.push(workSpriteFile(kind, step, tod));
+  }
+  for (const tier of LP_TIERS) {
+    for (const era of ART_ERAS) for (const tod of TIMES_OF_DAY) for (const f of LP_FRAMES) out.push(lpFile(tier, era, tod, f));
   }
   for (const s of DOG_STAGES) for (const p of DOG_POSES) out.push(dogFile(s, p));
   for (let f = 0; f < 3; f++) out.push(heartsFile(f));
