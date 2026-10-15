@@ -7,7 +7,7 @@
  * 3) 웹 앱 주소(…/exec)를 게임 src/ui/telemetryConfig.ts의 TELEMETRY_ENDPOINT에 넣는다
  *
  * 코드를 바꿨을 때: 붙여 넣고 저장 → [배포] → [배포 관리] → 연필 → 버전 '새 버전' → [배포] (주소 그대로)
- *   → 웹 앱 주소를 브라우저로 열어 '코드 5판'이 보이는지 확인 (안 보이면 아직 옛 코드가 돌고 있다)
+ *   → 웹 앱 주소를 브라우저로 열어 '코드 6판'이 보이는지 확인 (안 보이면 아직 옛 코드가 돌고 있다)
  *   → 위쪽 함수 선택에서 'setupSheet' 고르고 [실행] 한 번 (칸이 밀린 줄 고치기, 데이터 정보 탭, 총 플레이 시간)
  *
  * 탭
@@ -26,7 +26,7 @@ var MAX_CELL = 45000; // 시트 칸 하나 한도(5만 자)보다 조금 작게
 var GAP_MIN = 3;
 var DURATION_FORMAT = '[h]"시간 "mm"분 "ss"초"';
 /** 지금 붙여 넣은 코드 판. 웹 앱 주소를 브라우저로 열면 이 값이 보여서, 새 버전이 실제로 배포됐는지 확인할 수 있다 */
-var SCRIPT_VERSION = '5판 (2026-10-16)';
+var SCRIPT_VERSION = '6판 (2026-10-16)';
 var ERA_NAME = '시대별 결과';
 
 function sheet_() {
@@ -55,6 +55,7 @@ function migrate_(sh) {
   if (head.indexOf('유저 번호') < 0) {
     sh.insertColumnBefore(1);
     sh.getRange(1, 1).setValue('유저 번호');
+    sh.getRange(1, 1, sh.getMaxRows(), 1).setNumberFormat('0');
   }
 }
 
@@ -249,7 +250,8 @@ function updateUserNumbers_(sh) {
   }
   var out = [];
   for (var r = 0; r < n; r++) out.push([pid[r][0] ? Number(saved['U:' + pid[r][0]]) : '']);
-  sh.getRange(2, c['유저 번호'], n, 1).setValues(out);
+  // 칸을 끼워 넣을 때 옆 칸(받은 시각)의 날짜 서식이 따라와 1이 '1899. 12. 31'로 보이므로, 숫자 서식으로 고정한다
+  sh.getRange(2, c['유저 번호'], n, 1).setValues(out).setNumberFormat('0').setHorizontalAlignment('center');
 }
 
 /**
