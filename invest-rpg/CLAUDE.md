@@ -36,9 +36,9 @@
 3. 커밋·푸시 (지정된 브랜치). GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)는 **main에 합쳐야** 반영된다 — 합치기는 사용자가 원할 때만. 합친 뒤 GitHub Actions의 "pages build and deployment"가 성공했는지 확인한다(이 작업 환경에서는 github.io 주소에 직접 접속이 막혀 있다).
 
 ## 5. 지금 상태 (2026-10-15, 18차까지 — 지인 테스트 플레이 기록 수집)
-- 17차(삼성 인터넷 안내 다시 보기, 양옆 빈 곳 흐린 배경, 작업 코인 글자 금색)까지 main에 합침(16차까지 PR #12, 17차 PR #13) → GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)에 반영. 다음 작업도 지정 브랜치에 푸시하고, main 합치기는 사용자가 원할 때.
-- 18차: 플레이 기록 전송 (`src/ui/telemetryUploader.ts`, `src/ui/telemetryConfig.ts`의 `TELEMETRY_ENDPOINT` = 시트 웹 앱 주소, `tools/telemetry_apps_script.gs`, `scripts/playtestReport.ts`). 주소가 비어 있으면 기기에 쌓아 두었다가 주소가 생긴 뒤 다음 접속 때 보낸다.
-- 17차 위치: 무대 밖 흐린 배경 = `app.ts` setBackdrop/layoutBackdrop·`.backdrop`, 작업 '+코인' 글자 금색 = `.fly`, 다크 모드 안내 다시 보기 = 설정 `.samsung-replay`. 아티팩트 = 17차 최신 빌드. GitHub Pages 배포 정상(11차부터).
+- 18차(지인 테스트 플레이 기록 수집)까지 main에 합침(16차까지 PR #12, 17차 PR #13, 18차 PR #14) → GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)에 반영. 다음 작업도 지정 브랜치에 푸시하고, main 합치기는 사용자가 원할 때.
+- 18차: 플레이 기록 전송 (`src/ui/telemetryUploader.ts`, `src/ui/telemetryConfig.ts`의 `TELEMETRY_ENDPOINT` = 시트 웹 앱 주소, `tools/telemetry_apps_script.gs`, `scripts/playtestReport.ts`). 주소가 비어 있으면 기기에 쌓아 두었다가 주소가 생긴 뒤 다음 접속 때 보낸다. **주소 연결함** (사용자 구글 시트 웹 앱, 2026-10-15). 시트 쪽 코드를 고칠 때는 [배포 관리]에서 '새 버전'으로 해야 주소가 그대로다.
+- 17차 위치: 무대 밖 흐린 배경 = `app.ts` setBackdrop/layoutBackdrop·`.backdrop`, 작업 '+코인' 글자 금색 = `.fly`, 다크 모드 안내 다시 보기 = 설정 `.samsung-replay`. 아티팩트 = 18차 최신 빌드. GitHub Pages 배포 정상(11차부터).
 - 게임 흐름: 첫 화면(이어하기/새로하기) → 튜토리얼 5장(김역전 이야기 → 게임 방법 → 방 꾸미기 → 목표와 엔딩 → 플레이 기록 동의) → 시대 시작 카드 → 3시대(2000→2010→2020년대, 시대당 게임 시간 **1시간 30분**(14차, 이전 2시간)) → 정산 → 최종 요약 + 엔딩.
 - 주요 규칙(값은 `config.ts`): 시작 10,000코인, 첫 3분 뉴스 없음 → 첫 뉴스는 opener 잠정 뉴스, **1틱 3초**(10차, 시대 1,800틱), **뉴스 간격 3~4분**(시대당 약 25개, 이야기 6개), 반영: 호재 즉시 75% → 3초 뒤 25% / **악재 즉시 25% → 3초 뒤 60% → 6초 뒤 15%**(10차, 손절용 절충안), 120초 뒤 주가 리포트(영향 종목 모두), 단서 쪽 결과 65%.
 - 주식창: [매수]/[매도]를 먼저 고르고 수량·최대(방향 기준) → [매수하기/매도하기]. 내 계좌(현금·보유·평가금액·평단가·손익률, [일괄매도] 확인창). 계좌 바 "2000년대 남은 시간", 배속 버튼 옆 "진행 속도". 패널 사이 틈 없음. 보유 종목 차트에 평단가(가로 점선)·산 시점(세로 점선).
@@ -51,7 +51,7 @@
 - 밸런스(시드 200, 14차 90분): 초고속 추종 +63~64%(10차에 넘던 상한 안으로), 나머지 목표 안. 단, **잠정 정방향이 2020년대 +18.6%로 하한(+25%) 아래**(2010년대 +25.0% 하한). 속보 비율 약 51%. 엔딩 난이도는 2시간 때와 같게 맞춤(README 6장 "14차").
 
 ## 6. 남은 일·결정 대기
-- **플레이 기록 주소**: 사용자가 구글 시트에 Apps Script를 배포해 웹 앱 주소를 주면 `TELEMETRY_ENDPOINT`에 넣고 다시 배포(main 합치기). 기록이 쌓이면 시트 CSV로 `npm run playtest:report`.
+- **플레이 기록 분석**: 지인 기록이 쌓이면 사용자가 시트 CSV를 주고 `npm run playtest:report -- events.csv`로 보고서 → 난이도·사업 모델 판단 (docs/telemetry.md 10장).
 - **14차 밸런스**: 잠정 정방향(단서대로 미리 사기)이 2020년대에서 하한 아래. 사용자와 상의해 맞출지 정한다(후보: 2020년대 잠정 뉴스 단서를 더 분명하게, 새 이야기 금지 구간 15분 → 12분).
 - **배경음악 곡 파일**: 작업 환경 네트워크 정책이 음원 사이트를 막음(incompetech.com, upload.wikimedia.org, commons.wikimedia.org, musopen.org 등). 사용자가 허용 목록에 넣거나 mp3를 올려 주면 장르별 1곡씩 넣는다 (재즈·힙합·락은 Kevin MacLeod CC BY 4.0 후보, 클래식은 퍼블릭 도메인 녹음). `music.json`의 placeholder 항목 교체 + 증빙 + `npm run lint:audio -- --release`. 재생 흐름(LP 누르면 즉시 전환, 1곡이면 반복)은 완성.
 - `docs/GAME_DESIGN.md` 21장 "결정이 필요한 것" (예: D2 테마별 호재/악재 비율 기준).
