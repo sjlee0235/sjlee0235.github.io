@@ -462,6 +462,30 @@ try {
     await ctx.close();
   }
 
+  // ── 9-3) 플레이 기록 (18차): 동의 전엔 없음 → 설정에서 동의하면 판 시작·접속 정보가 쌓임. 디버그에서는 보내지 않음 ──
+  {
+    const ctx = await newCtx();
+    const page = await ctx.newPage();
+    const errors = watchErrors(page);
+    await page.goto(`${url}?debug=1&seed=3&fresh=1&nointro=1`);
+    await page.waitForFunction(() => '__debug' in window);
+    await page.addStyleTag({ content: '.debug{display:none!important}' });
+    const rows = () => page.evaluate(() => (window as any).__debug.app.telemetry.peek() as { type: string; pid: string; gid: string; data: any }[]);
+    check((await rows()).length === 0, '동의 전에는 기록이 하나도 없음');
+    await page.locator('.gear-btn').click();
+    await page.locator('.overlay.settings .set-consent').check();
+    await page.locator('.overlay.settings .foot .pbtn.accent').click();
+    const r = await rows();
+    const types = r.map((x) => x.type);
+    check(types[0] === 'game_start' && types.includes('session_begin'), `동의하면 판 시작·접속 정보 (${types.slice(0, 4).join(',')})`);
+    const sb = r.find((x) => x.type === 'session_begin')!;
+    check(sb.data.entry === 'consent' && sb.data.sessionIndex >= 1 && typeof sb.data.os === 'string' && sb.pid.length >= 16 && sb.gid === '3', '접속 정보: 동의 시점·접속 횟수·기기 분류, 무작위 pid, 판 id = 시드');
+    check(!JSON.stringify(r).includes('Mozilla'), '브라우저 전체 문자열(UA) 같은 기기 정보는 담지 않음');
+    check(!(await page.evaluate(() => (window as any).__debug.app.telemetry.canSend)), '디버그·개발 서버에서는 보내지 않음');
+    check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
+    await ctx.close();
+  }
+
   // ── 10) 시대별 작업 (13차): 2010년대 폰 케이스, 2020년대 블로그 — 배경 1칸 + 작업물 그림 ──
   {
     const ctx = await newCtx();

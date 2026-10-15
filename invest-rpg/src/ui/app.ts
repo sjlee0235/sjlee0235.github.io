@@ -45,6 +45,8 @@ import { TvShoppingScreen } from './screens/tvShopping.ts';
 import { WorkshopScreen } from './screens/workshop.ts';
 import { loadSave, SAVE_KEY, writeSave } from './storage.ts';
 import { isSamsungInternet } from './viewModels.ts';
+import type { ClientInfo, TelemetryUploader } from './telemetryUploader.ts';
+import { TELEMETRY_BUILD } from './telemetryConfig.ts';
 
 export const STAGE_W = 390;
 export const STAGE_H = 844;
@@ -77,6 +79,10 @@ export interface AppOptions {
   fresh?: boolean;
   /** (디버그·점검) 첫 화면·튜토리얼·동의 창을 건너뛰고 바로 게임 */
   skipIntro?: boolean;
+  /** 플레이 기록 전송 통 (18차). 없으면 기록하지 않는다. 동의 전에는 엔진이 아무것도 넘기지 않는다 */
+  telemetry?: TelemetryUploader;
+  /** 접속 환경 (유입 경로·기기 분류). session_begin에 담는다 */
+  clientInfo?: () => ClientInfo;
 }
 
 export class App {
@@ -90,6 +96,9 @@ export class App {
   private readonly backdrop: HTMLElement;
   private backdropFile: string | null = null;
   private backdropFrames = 1;
+  /** 이번 접속에서 session_begin을 보냈나 (동의가 켜진 판에서 한 번) */
+  private sessionBegun = false;
+  private entry: 'new' | 'continue' | 'resume' = 'continue';
   private save: SaveData;
   private readonly opts: AppOptions;
   private readonly stage: HTMLElement;
@@ -175,6 +184,16 @@ export class App {
     this.fitStage();
     this.applyTod(false);
     window.addEventListener('resize', () => this.fitStage());
+    const tel = this.opts.telemetry;
+    if (tel) {
+      // 쌓인 기록: 20초마다, 페이지를 닫을 때 보낸다. 지난 접속에서 못 보낸 것도 여기서 보낸다
+      window.setInterval(() => void tel.flush(false), 20_000);
+      window.addEventListener('pagehide', () => void tel.flush(true));
+      window.addEventListener('error', (ev) => {
+        if (this.game) this.game.track('client_error', { code: 'window_error', message: String(ev.message).slice(0, 200) }, this.opts.now());
+      });
+      void tel.flush(false);
+    }
     document.addEventListener('visibilitychange', () => this.onVisibility(document.hidden));
     window.setInterval(() => this.applyTod(true), 30_000);
     // 남은 시간은 3초 틱 사이에도 1초씩 줄어들게 (0.25초마다 다시 그림)
@@ -245,7 +264,10 @@ export class App {
       this.save = { ...this.save, game: null };
       writeSave(this.opts.storage, this.save);
     }
-    const restored = fresh ? null : restorePublicGame(this.save, this.opts.eras, undefined, { locale: this.settings.locale });
+    this.entry = this.opts.skipIntro ? 'resume' : fresh ? 'new' : 'continue';
+    const tel = this.opts.telemetry;
+    if (tel && this.save.game) tel.setGame(String(this.save.game.seed));
+    const restored = fresh ? null : restorePublicGame(this.save, this.opts.eras, undefined, { locale: this.settings.locale, ...(tel ? { telemetry: tel } : {}) });
     let pendingSettlement: PublicSettlement | null = null;
     let finishedSummary: FinalSummary | null = null;
     if (restored?.status === 'resumed' || restored?.status === 'restarted_legacy') {
@@ -257,11 +279,16 @@ export class App {
       if (restored.game) this.game = restored.game;
       else finishedSummary = restored.finalSummary;
     }
-    if (!this.game) this.game = this.newGame();
+    if (!this.game) {
+      tel?.setGame(String(this.opts.seed));
+      this.game = this.newGame();
+      if (tel) this.game.attachTelemetry(tel);
+    }
     // 끝난 판을 다시 열었을 때: 최종 요약을 보여주고, '처음부터 다시'를 누르기 전까지 새 판을 저장하지 않는다
     if (finishedSummary) this.saveLocked = true;
     this.game.locale = this.settings.locale;
     if (this.save.telemetryConsent) this.game.setConsent(true);
+    this.trackSessionBegin(this.entry);
 
     this.tabs = new TabController(this.game);
     this.loop = new GameLoop(this.game, this.opts.clock, (r) => this.onTick(r));
@@ -298,6 +325,36 @@ export class App {
     this.save = setTelemetryConsent(this.save, agree);
     this.game.setConsent(agree);
     this.opts.storage.set(FIRST_RUN_KEY, '1');
+    if (agree) this.trackSessionBegin('consent');
+  }
+
+  /** 접속 정보 한 번 (동의가 켜져 있을 때만 실제로 기록된다) */
+  private trackSessionBegin(entry: 'new' | 'continue' | 'resume' | 'consent'): void {
+    const tel = this.opts.telemetry;
+    if (this.sessionBegun || !tel || !this.game.telemetryConsent) return;
+    this.sessionBegun = true;
+    const info = this.opts.clientInfo?.();
+    this.game.track('session_begin', {
+      entry,
+      sessionIndex: tel.sessionIndex,
+      daysSinceFirst: tel.daysSinceFirst,
+      build: TELEMETRY_BUILD,
+      source: info?.source ?? 'unknown',
+      inApp: info?.inApp ?? 'none',
+      os: info?.os ?? 'other',
+      browser: info?.browser ?? 'other',
+      mobile: info?.mobile ?? false,
+      screenW: info?.screenW ?? 0,
+      screenH: info?.screenH ?? 0,
+      standalone: info?.standalone ?? false,
+      lang: info?.lang ?? '',
+      tzOffsetMin: info?.tzOffsetMin ?? 0,
+    }, this.opts.now());
+  }
+
+  /** (점검용) 플레이 기록 전송 통 */
+  get telemetry(): TelemetryUploader | undefined {
+    return this.opts.telemetry;
   }
 
   /** 처음 실행: 플레이 기록 동의 (기본 꺼짐) */
@@ -496,6 +553,8 @@ export class App {
     this.game.track('app_session', { phase: hidden ? 'background' : 'foreground' }, this.opts.now());
     if (!hidden) this.applyTod(true);
     this.persist();
+    // 화면을 떠나면(앱 전환·끄기) 쌓인 기록을 바로 보낸다
+    if (hidden) void this.opts.telemetry?.flush(true);
   }
 
   // ───────── 탭 ─────────
@@ -694,6 +753,14 @@ export class App {
         return;
       }
     }
+    this.game.track('ending_view', {
+      ending: String(summary.ending),
+      finalCoins: summary.finalCoins,
+      cumulativeReturnPct: summary.cumulativeReturnPct,
+      interiorLevel: summary.interiorLevel,
+      totalWorkIncome: summary.totalWorkIncome,
+    }, this.opts.now());
+    void this.opts.telemetry?.flush(false);
     const names: Record<string, string> = {};
     for (const e of this.opts.eras) names[e.id] = localize(e.displayName, this.settings.locale);
     this.overlays.append(
@@ -732,6 +799,7 @@ export class App {
           setConsent: (on) => {
             this.save = setTelemetryConsent(this.save, on);
             this.game.setConsent(on);
+            if (on) this.trackSessionBegin('consent');
             this.persist(true);
           },
           saveAndExit: () => {

@@ -163,7 +163,7 @@
   },
   "telemetry": {
     "consentTitle": "Play data consent",
-    "consentBody": "We'd like to collect play data (trades, screen time, etc.) to improve game balance. We never collect your name, contact info, or device IDs. You can play the same way without agreeing.",
+    "consentBody": "We'd like to collect play data (trades, screen time, device type, how you arrived, etc.) to tune difficulty and plan how the game is run (e.g. ads). We never collect your name, contact info, or device IDs. You can play the same way without agreeing, and turn it off anytime in Settings.",
     "agree": "Agree",
     "decline": "Don't agree",
     "later": "You can change this anytime in Settings."
