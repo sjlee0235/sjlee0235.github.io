@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>약물치료학 퀴-즈</title>
+  <meta name="description" content="2027 약사 국가고시 대비 약물치료학 O,X · 5지선다 예상문제 퀴즈">
+  <meta name="theme-color" content="#6d5dfc">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="style.css?v=5">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+
+  <main id="app">
+    <!-- 1. 처음 화면 -->
+    <!-- 0. 입장 코드 -->
+    <section class="screen" id="screen-gate">
+      <div class="gate">
+        <div class="pill">💊 PHARM QUIZ</div>
+        <div class="gate-lock" aria-hidden="true">🔐</div>
+        <h1 class="gate-title">입장 코드를 입력해주세요</h1>
+        <p class="gate-sub">안내받은 코드를 입력하면 바로 시작할 수 있어요</p>
+        <form class="gate-form" id="gate-form" autocomplete="off" hidden>
+          <input id="gate-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="입장 코드" aria-label="입장 코드" enterkeyhint="go">
+          <button class="btn btn-primary btn-block" id="gate-submit" type="submit">입장하기</button>
+        </form>
+        <p class="gate-msg" id="gate-msg" role="status" aria-live="polite">확인 중…</p>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-home" hidden>
+      <div class="home">
+        <div class="pill">💊 PHARM QUIZ</div>
+        <h1 class="title">2027 국가고시 대비<br><span class="grad">약물치료학 퀴-즈</span></h1>
+        <p class="subtitle">이거 본 사람들 다 붙어라 🍀</p>
+        <button class="btn btn-primary btn-xl" id="btn-start">시작</button>
+        <p class="views"><span class="dot"></span>조회수 <strong id="view-count">…</strong></p>
+
+        <div class="card recent" id="recent-card" hidden>
+          <div class="recent-row"><span class="muted">현재 설정</span><span id="recent-setting"></span></div>
+          <div class="recent-row" id="recent-result-row"><span class="muted">최근 풀이</span><span id="recent-result"></span></div>
+        </div>
+
+        <!-- 댓글 -->
+        <section class="card lounge" id="lounge" aria-labelledby="lounge-title">
+          <div class="lounge-head">
+            <h2 id="lounge-title">💬 예비약사 라운지</h2>
+            <span class="lounge-count" id="comment-count"></span>
+          </div>
+          <p class="me">오늘의 나는 <strong id="my-nick">…</strong></p>
+          <form class="comment-form" id="comment-form" autocomplete="off">
+            <textarea id="comment-input" rows="3" maxlength="300" aria-label="댓글 입력"></textarea>
+            <div class="comment-actions">
+              <span class="char" id="comment-char">0 / 300</span>
+              <button class="btn btn-primary btn-sm" id="comment-submit" type="submit">댓글 등록</button>
+            </div>
+          </form>
+          <ul class="comment-list" id="comment-list"></ul>
+          <button class="btn btn-ghost btn-block btn-sm" id="comment-more" hidden>댓글 더 보기</button>
+        </section>
+
+        <footer class="disclaimer">
+          <span class="disc-mark">NOTICE</span>
+          <p>본 서비스는 약사 국가시험을 준비하는 예비약사들의 학습을 돕고자 비영리로 운영됩니다.
+            제작자는 본 서비스를 통해 어떠한 금전적·상업적 이익도 취하지 않습니다.</p>
+          <p>수록된 문항은 학습을 위해 구성한 예상 문항으로 실제 출제 경향과 다를 수 있으며,
+            모든 내용은 최신 진료지침과 함께 확인하시기를 권합니다.</p>
+          <p class="sig">함께 준비하는 모든 예비약사님의 합격을 응원합니다 💊</p>
+        </footer>
+      </div>
+    </section>
+
+    <!-- 2. 파트 선택 -->
+    <section class="screen" id="screen-parts" hidden>
+      <header class="step-head">
+        <span class="step">STEP 1 / 2</span>
+        <h2>파트를 골라주세요</h2>
+        <p class="muted">여러 개 선택할 수 있어요</p>
+      </header>
+      <div class="part-grid" id="part-grid"></div>
+      <footer class="nav">
+        <button class="btn btn-ghost" data-go="home">이전</button>
+        <button class="btn btn-primary" id="btn-parts-next" disabled>다음</button>
+      </footer>
+    </section>
+
+    <!-- 3. 문제 유형 선택 -->
+    <section class="screen" id="screen-type" hidden>
+      <header class="step-head">
+        <span class="step">STEP 2 / 2</span>
+        <h2>문제 유형을 골라주세요</h2>
+        <p class="muted" id="type-parts-label"></p>
+      </header>
+      <div class="type-list" id="type-list">
+        <button class="type-card" data-type="ox">
+          <span class="type-icon">⭕❌</span>
+          <span class="type-body"><strong>O,X</strong><small>파트별 20문제 랜덤</small></span>
+          <span class="check" aria-hidden="true"></span>
+        </button>
+        <button class="type-card" data-type="mcq">
+          <span class="type-icon">①②③</span>
+          <span class="type-body"><strong>5지선다</strong><small>파트별 10문제 랜덤</small></span>
+          <span class="check" aria-hidden="true"></span>
+        </button>
+        <button class="type-card" data-type="mock">
+          <span class="type-icon">📝</span>
+          <span class="type-body"><strong>랜덤 모의고사</strong><small id="mock-desc">국시 비율대로 약 77문제 · 전 파트 오픈 후 이용 가능</small></span>
+          <span class="check" aria-hidden="true"></span>
+        </button>
+      </div>
+      <p class="type-summary" id="type-summary"></p>
+      <footer class="nav">
+        <button class="btn btn-ghost" data-go="parts">이전</button>
+        <button class="btn btn-primary" id="btn-type-next" disabled>다음</button>
+      </footer>
+    </section>
+
+    <!-- 4. 퀴즈 -->
+    <section class="screen" id="screen-quiz" hidden>
+      <div class="quiz-top">
+        <button class="icon-btn" id="btn-quit" aria-label="그만두기">✕</button>
+        <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+        <span class="counter" id="q-counter">1 / 20</span>
+      </div>
+      <article class="card q-card" id="q-card">
+        <div class="q-meta" id="q-meta"></div>
+        <p class="q-text" id="q-text"></p>
+        <pre class="q-box" id="q-box" hidden></pre>
+        <div class="answers" id="answers"></div>
+      </article>
+      <div class="feedback" id="feedback" hidden>
+        <div class="verdict" id="verdict"></div>
+        <div class="card exp"><span class="exp-label">해설</span><p id="exp-text"></p></div>
+        <button class="btn btn-primary btn-block" id="btn-next">다음 문제</button>
+      </div>
+    </section>
+
+    <!-- 5. 결과 -->
+    <section class="screen" id="screen-result" hidden>
+      <div class="result-head">
+        <div class="score-ring" id="score-ring"><div><strong id="score-num">0</strong><span id="score-total">/ 0</span></div></div>
+        <h2 id="result-msg">수고했어요!</h2>
+        <p class="muted" id="result-sub"></p>
+      </div>
+      <div class="card breakdown" id="breakdown"></div>
+      <details class="card review" id="review-wrap">
+        <summary>틀린 문제 다시 보기 <span id="wrong-count"></span></summary>
+        <div id="review-list"></div>
+      </details>
+      <footer class="nav nav-col">
+        <button class="btn btn-primary btn-block" id="btn-home">처음 화면으로</button>
+        <button class="btn btn-ghost btn-block" id="btn-retry">같은 설정으로 다시 풀기</button>
+      </footer>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data/parts.js?v=5"></script>
+  <script src="app.js?v=5"></script>
+  <script src="gate.js?v=5"></script>
+  <script src="comments-config.js?v=5"></script>
+  <script type="module" src="comments.js?v=5"></script>
+</body>
+</html>
