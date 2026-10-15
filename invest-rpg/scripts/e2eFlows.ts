@@ -443,6 +443,25 @@ try {
     await chrome.close();
   }
 
+  // ── 9-2) 무대 밖 빈 곳 채우기 (17차): 화면이 무대보다 넓으면 양옆에 지금 장면을 흐리게 깐다 ──
+  {
+    const ctx = await browser.newContext({ viewport: { width: 412, height: 700 } });
+    const page = await ctx.newPage();
+    const errors = watchErrors(page);
+    await page.goto(`${url}?debug=1&seed=3&fresh=1&nointro=1`);
+    await page.waitForFunction(() => '__debug' in window);
+    const bg = () => page.locator('.backdrop').evaluate((el) => (el as HTMLElement).style.backgroundImage);
+    const stageBox = await page.locator('.stage').boundingBox();
+    check(stageBox !== null && stageBox.x > 10, `세로가 짧은 화면이면 무대 양옆에 빈 곳 (${Math.round(stageBox?.x ?? 0)}px)`);
+    check(await page.locator('.backdrop').isVisible(), '빈 곳에는 흐린 배경');
+    check((await bg()).includes('art/scene/'), '흐린 배경 = 장면 그림');
+    await page.evaluate(() => (window as any).__debug.tab('workshop'));
+    await page.waitForTimeout(300);
+    check((await bg()).includes('workshop_'), '탭을 바꾸면 흐린 배경도 그 장면으로');
+    check(errors.length === 0, `브라우저 오류 없음 ${errors.join(' / ')}`);
+    await ctx.close();
+  }
+
   // ── 10) 시대별 작업 (13차): 2010년대 폰 케이스, 2020년대 블로그 — 배경 1칸 + 작업물 그림 ──
   {
     const ctx = await newCtx();

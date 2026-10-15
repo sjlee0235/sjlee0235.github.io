@@ -60,9 +60,11 @@ button, input { font-family: inherit; }
 button { cursor: pointer; }
 
 #app { position: fixed; inset: 0; overflow: hidden; background: var(--app-bg, #0c0818); }
+/* 무대 밖 빈 곳(양옆·위아래): 지금 장면 그림을 크게 흐리고 어둡게 (17차). inset은 app.ts BACKDROP_PAD와 같게 */
+.backdrop { position: absolute; inset: -40px; background-repeat: no-repeat; filter: blur(14px) brightness(.35) saturate(.8); pointer-events: none; }
 .stage {
   position: absolute; left: 0; top: 0; width: 390px; height: 844px; overflow: hidden;
-  transform-origin: 0 0; background: var(--bg); color: var(--text);
+  transform-origin: 0 0; background: var(--bg); color: var(--text); box-shadow: 0 0 24px #0009;
   font-family: 'IBM Plex Sans KR', system-ui, sans-serif; font-variant-numeric: tabular-nums;
 }
 .num { font-variant-numeric: tabular-nums; }

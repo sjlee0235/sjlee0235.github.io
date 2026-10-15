@@ -6,7 +6,7 @@
 ## 1. 지켜야 할 규칙 (사용자 지시)
 - 결제·광고 SDK, 서버/DB, 걷는 맵·캐릭터는 만들지 않는다.
 - 음악 파일을 **만들지(생성하지) 않는다.** 9차에서 "저작권 문제없는 곡을 찾아 넣어 달라"는 요청이 있었으므로 **찾아서 받는 것은 허용** (라이선스·출처 기록 필수, `docs/audio_sourcing.md`).
-- 기획에 없는 규칙을 임의로 추가하거나 기본값을 바꾸지 않는다. 정하지 않은 세부는 합리적인 기본값으로 하고 **README "5. 가정한 규칙"에 번호를 이어 기록**한다 (지금 130번까지, 다음은 131번, 차수별 소제목 "### 18차 (날짜, …)").
+- 기획에 없는 규칙을 임의로 추가하거나 기본값을 바꾸지 않는다. 정하지 않은 세부는 합리적인 기본값으로 하고 **README "5. 가정한 규칙"에 번호를 이어 기록**한다 (지금 131번까지, 다음은 132번, 차수별 소제목 "### 18차 (날짜, …)").
 - **테스트가 통과하지 않은 채로 "완료"라고 하지 않는다.**
 - 게임 데이터에 실존 기업·상표·인물 이름 금지 (팩트체크 문서에만 실명). 대규모 인명 피해 참사, 국내 정치(탄핵·계엄 등)는 시장 뉴스로 쓰지 않는다.
 - 플레이 기록(텔레메트리)은 기본 꺼짐, 개인 식별 정보 없음.
@@ -18,7 +18,7 @@
 
 ## 2. 기술·명령 (작업 폴더: `invest-rpg/`)
 - TypeScript 7, Vite 8(`base './'`, publicDir `assets`), Vitest 5, Node 22(.ts 직접 실행), Playwright(크로미움 `/opt/pw-browsers`), 화면은 바닐라 TS (프레임워크 없음).
-- `npm run check` (타입 검사 + 테스트 348개) · `npm run e2e` (브라우저 흐름 점검 140개) · `npm run shots` (스크린샷 → `shots/`, git 제외)
+- `npm run check` (타입 검사 + 테스트 348개) · `npm run e2e` (브라우저 흐름 점검 145개) · `npm run shots` (스크린샷 → `shots/`, git 제외)
 - `npm run lint:content` (시대 데이터 점검) · `node scripts/checkEra.ts src/data/eras/2010s.json 200` (시대 파일 하나: 구조·가이드·전략별 밸런스) · `node scripts/newsCount.ts` (시대당 뉴스 수) · `npm run sim:carry` (3시대 이월)
 - `node scripts/peek.ts "&era=1" "tod:day;tab:trading;shot:a"` (화면 몇 장 빨리 → `shots/peek_a.png`)
 - `npm run build:play` → `play/` (GitHub Pages용 웹 시험판, 디버그 패널 포함: 주소에 `?debug=1` 또는 `#debug`, `&seed=7&fresh=1&nointro=1&era=1`)
@@ -35,9 +35,9 @@
 2. 아티팩트 **https://claude.ai/artifact/Xf4UPG8WthJAboRJehZNat** 갱신: 새 대화에서는 먼저 Artifact `read`(url)로 읽고, 그 페이지 내용(html/head 없이 title·meta·폰트 link·css link·`<div id="app">`·module script)을 `play/index.html`의 새 파일명으로 바꿔 publish. 그림 등 다른 파일은 이미 올라가 있으므로 `files`에는 **바뀐 `assets/index-*.js`, `assets/index-*.css`, `assets/debug-*.js`만 추가하고 옛 이름은 `null`**. (`root`는 작업 폴더 기준: 저장소 최상위면 `invest-rpg/play`, `invest-rpg/` 안이면 `play`. 페이지 파일은 scratchpad에 써도 된다.)
 3. 커밋·푸시 (지정된 브랜치). GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)는 **main에 합쳐야** 반영된다 — 합치기는 사용자가 원할 때만. 합친 뒤 GitHub Actions의 "pages build and deployment"가 성공했는지 확인한다(이 작업 환경에서는 github.io 주소에 직접 접속이 막혀 있다).
 
-## 5. 지금 상태 (2026-10-15, 17차까지 — 삼성 인터넷 안내 다시 보기)
+## 5. 지금 상태 (2026-10-15, 17차까지 — 삼성 인터넷 안내 다시 보기, 양옆 빈 곳 채우기)
 - 16차(강아지·LP 새 그림, 종목명 다시 짓기)까지 main에 합침(PR #12) → GitHub Pages(https://sjlee0235.github.io/invest-rpg/play/)에 반영. 다음 작업도 지정 브랜치에 푸시하고, main 합치기는 사용자가 원할 때.
-- 17차(설정에 다크 모드 안내 다시 보기)는 브랜치에만 있음. 아티팩트 = 17차 최신 빌드. GitHub Pages 배포 정상(11차부터).
+- 17차(설정에 다크 모드 안내 다시 보기, 무대 밖 빈 곳을 흐린 장면 그림으로 채움 — `app.ts` setBackdrop/layoutBackdrop, `.backdrop`)는 브랜치에만 있음. 아티팩트 = 17차 최신 빌드. GitHub Pages 배포 정상(11차부터).
 - 게임 흐름: 첫 화면(이어하기/새로하기) → 튜토리얼 5장(김역전 이야기 → 게임 방법 → 방 꾸미기 → 목표와 엔딩 → 플레이 기록 동의) → 시대 시작 카드 → 3시대(2000→2010→2020년대, 시대당 게임 시간 **1시간 30분**(14차, 이전 2시간)) → 정산 → 최종 요약 + 엔딩.
 - 주요 규칙(값은 `config.ts`): 시작 10,000코인, 첫 3분 뉴스 없음 → 첫 뉴스는 opener 잠정 뉴스, **1틱 3초**(10차, 시대 1,800틱), **뉴스 간격 3~4분**(시대당 약 25개, 이야기 6개), 반영: 호재 즉시 75% → 3초 뒤 25% / **악재 즉시 25% → 3초 뒤 60% → 6초 뒤 15%**(10차, 손절용 절충안), 120초 뒤 주가 리포트(영향 종목 모두), 단서 쪽 결과 65%.
 - 주식창: [매수]/[매도]를 먼저 고르고 수량·최대(방향 기준) → [매수하기/매도하기]. 내 계좌(현금·보유·평가금액·평단가·손익률, [일괄매도] 확인창). 계좌 바 "2000년대 남은 시간", 배속 버튼 옆 "진행 속도". 패널 사이 틈 없음. 보유 종목 차트에 평단가(가로 점선)·산 시점(세로 점선).
