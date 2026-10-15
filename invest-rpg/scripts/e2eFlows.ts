@@ -490,10 +490,13 @@ try {
     await dbg(page, 'tab', 'workshop');
     await page.waitForTimeout(300);
     check((await spriteBg()).includes('blog_post_0.png') && ((await page.locator('.work-guide').textContent()) ?? '').includes('글 100편'), '2020년대: 블로그 글쓰기, 글 100편');
+    let flyColor = '';
     for (let i = 0; i < 3; i++) {
       await page.locator('.doll-hit').dispatchEvent('pointerdown');
+      if (i === 2) flyColor = await page.locator('.fly').first().evaluate((el) => getComputedStyle(el).color);
       await page.waitForTimeout(400);
     }
+    check(flyColor === 'rgb(242, 176, 46)', `3번 누르면 뜨는 '+코인' 글자는 코인 금색 (낮, ${flyColor})`);
     check(((await page.locator('.workshop .toast-pnl').textContent()) ?? '').includes('발행 1편') && (await spriteBg()).includes('blog_post_0.png'), '3번 누르면 발행 1편, 다음 글은 빈 화면');
     await open(page, '?debug=1&seed=5&fresh=1&nointro=1');
     await dbg(page, 'tab', 'workshop');

@@ -213,7 +213,9 @@ button { cursor: pointer; }
 .work-sprite { position: absolute; z-index: 2; pointer-events: none; background-size: 100% 100%; background-repeat: no-repeat; image-rendering: pixelated; }
 .work-sprite[hidden] { display: none; }
 .workshop .toast-pnl, .workshop .work-guide { pointer-events: none; }
-.fly { position: absolute; z-index: 40; font-size: 18px; font-weight: 700; color: var(--accent); text-shadow: 0 2px 0 var(--bd); pointer-events: none; transition: transform .6s cubic-bezier(.4, 0, .6, 1), opacity .6s; }
+.fly { position: absolute; z-index: 40; font-size: 18px; font-weight: 700; color: var(--coin-fly, #ffc24a); text-shadow: 0 2px 0 var(--bd), 1px 0 0 var(--bd), -1px 0 0 var(--bd), 0 -1px 0 var(--bd); pointer-events: none; transition: transform .6s cubic-bezier(.4, 0, .6, 1), opacity .6s; }
+/* 작업 '+코인' 글자는 코인 아이콘과 같은 금색 (17차, 이전에는 시대 강조색) */
+.stage[data-tod='day'] .fly { --coin-fly: #f2b02e; }
 
 /* ───────── TV 홈쇼핑 ───────── */
 .tv-text { position: absolute; left: 0; width: 390px; top: 392px; text-align: center; font-size: 16px; font-weight: 500; letter-spacing: .06em; color: #fff; line-height: 20px; text-shadow: 0 0 3px #000, 0 2px 0 #000; pointer-events: none; }
