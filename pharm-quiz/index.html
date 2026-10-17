@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>약물치료학 퀴-즈</title>
-  <meta name="description" content="2027 약사 국가고시 대비 약물치료학 O,X · 5지선다 예상문제 퀴즈">
+  <title>국가고시 퀴-즈</title>
+  <meta name="description" content="2027 약사 국가고시 대비 약물치료학 · 합성학 퀴즈">
   <meta name="theme-color" content="#6d5dfc">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <div class="bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
@@ -18,7 +18,7 @@
     <section class="screen" id="screen-home">
       <div class="home">
         <div class="pill">💊 PHARM QUIZ</div>
-        <h1 class="title">2027 국가고시 대비<br><span class="grad">약물치료학 퀴-즈</span></h1>
+        <h1 class="title">2027 국가고시 대비<br><span class="grad">퀴-즈</span></h1>
         <p class="subtitle">이거 본 사람들 다 붙어라 🍀</p>
         <button class="btn btn-primary btn-xl" id="btn-start">시작</button>
         <p class="views"><span class="dot"></span>조회수 <strong id="view-count">…</strong></p>
@@ -73,16 +73,66 @@
       </div>
     </section>
 
+    <!-- 과목 선택 -->
+    <section class="screen" id="screen-subject" hidden>
+      <header class="step-head">
+        <span class="step">과목 선택</span>
+        <h2>어떤 과목을 풀까요?</h2>
+        <p class="muted">언제든 처음 화면에서 바꿀 수 있어요</p>
+      </header>
+      <div class="type-list">
+        <button class="type-card subject-card" data-subject="pharm">
+          <span class="type-icon">💊</span>
+          <span class="type-body"><strong>약물치료학</strong><small>파트별 O,X · 5지선다 · 랜덤 모의고사</small></span>
+          <span class="go" aria-hidden="true">›</span>
+        </button>
+        <button class="type-card subject-card" data-subject="synth">
+          <span class="type-icon">⚗️</span>
+          <span class="type-body"><strong>합성학</strong><small>구조 보고 이름 맞추기 · 이름 보고 구조 맞추기</small></span>
+          <span class="go" aria-hidden="true">›</span>
+        </button>
+      </div>
+      <footer class="nav">
+        <button class="btn btn-ghost" data-go="home">이전</button>
+      </footer>
+    </section>
+
+    <!-- 합성학 유형 선택 -->
+    <section class="screen" id="screen-syn" hidden>
+      <header class="step-head">
+        <span class="step">합성학</span>
+        <h2>문제 유형을 골라주세요</h2>
+        <p class="muted" id="syn-count"></p>
+      </header>
+      <div class="type-list">
+        <button class="type-card syn-card" data-syn="name">
+          <span class="type-icon">🔍</span>
+          <span class="type-body"><strong>이름 맞추기</strong><small>구조를 보고 5개 이름 중 고르기</small></span>
+          <span class="check" aria-hidden="true"></span>
+        </button>
+        <button class="type-card syn-card" data-syn="struct">
+          <span class="type-icon">🧬</span>
+          <span class="type-body"><strong>구조 맞추기</strong><small>이름을 보고 5개 구조 중 고르기</small></span>
+          <span class="check" aria-hidden="true"></span>
+        </button>
+      </div>
+      <p class="type-summary" id="syn-summary"></p>
+      <footer class="nav">
+        <button class="btn btn-ghost" data-go="subject">이전</button>
+        <button class="btn btn-primary" id="btn-syn-next" disabled>다음</button>
+      </footer>
+    </section>
+
     <!-- 2. 파트 선택 -->
     <section class="screen" id="screen-parts" hidden>
       <header class="step-head">
-        <span class="step">STEP 1 / 2</span>
+        <span class="step">약물치료학 · STEP 1 / 2</span>
         <h2>파트를 골라주세요</h2>
         <p class="muted">여러 개 선택할 수 있어요</p>
       </header>
       <div class="part-grid" id="part-grid"></div>
       <footer class="nav">
-        <button class="btn btn-ghost" data-go="home">이전</button>
+        <button class="btn btn-ghost" data-go="subject">이전</button>
         <button class="btn btn-primary" id="btn-parts-next" disabled>다음</button>
       </footer>
     </section>
@@ -90,7 +140,7 @@
     <!-- 3. 문제 유형 선택 -->
     <section class="screen" id="screen-type" hidden>
       <header class="step-head">
-        <span class="step">STEP 2 / 2</span>
+        <span class="step">약물치료학 · STEP 2 / 2</span>
         <h2>문제 유형을 골라주세요</h2>
         <p class="muted" id="type-parts-label"></p>
       </header>
@@ -129,11 +179,12 @@
         <div class="q-meta" id="q-meta"></div>
         <p class="q-text" id="q-text"></p>
         <pre class="q-box" id="q-box" hidden></pre>
+        <div class="struct-box" id="q-struct" hidden></div>
         <div class="answers" id="answers"></div>
       </article>
       <div class="feedback" id="feedback" hidden>
         <div class="verdict" id="verdict"></div>
-        <div class="card exp"><span class="exp-label">해설</span><p id="exp-text"></p></div>
+        <div class="card exp"><span class="exp-label">해설</span><p id="exp-text"></p><p class="exp-detail" id="exp-detail" hidden></p></div>
         <button class="btn btn-primary btn-block" id="btn-next">다음 문제</button>
       </div>
     </section>
@@ -159,10 +210,10 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/parts.js?v=8"></script>
-  <script src="gate.js?v=8"></script>
-  <script src="app.js?v=8"></script>
-  <script src="comments-config.js?v=8"></script>
-  <script type="module" src="comments.js?v=8"></script>
+  <script src="data/parts.js?v=9"></script>
+  <script src="gate.js?v=9"></script>
+  <script src="app.js?v=9"></script>
+  <script src="comments-config.js?v=9"></script>
+  <script type="module" src="comments.js?v=9"></script>
 </body>
 </html>

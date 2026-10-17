@@ -8,7 +8,9 @@
 (function () {
   'use strict';
 
-  var VAULT_URL = 'data/vault.json?v=8';
+  var VAULT_URL = 'data/vault.json?v=9';
+  var SYN_URL = 'data/vault-syn.json?v=9'; // 합성학 (구조식 이미지 포함, gzip 압축 후 암호화)
+  var currentCode = null;
   var CODE_KEY = 'pharmquiz-code';
   // 조회수: 페이지를 열 때마다 1씩 증가 (같은 사람이 3번 열면 +3)
   var COUNTER_URL = 'https://abacus.jasoncameron.dev/hit/sjlee0235-pharmquiz/visits';
@@ -25,21 +27,26 @@
   function getSaved() { try { return localStorage.getItem(CODE_KEY); } catch (e) { return null; } }
   function setSaved(v) { try { if (v) localStorage.setItem(CODE_KEY, v); else localStorage.removeItem(CODE_KEY); } catch (e) { /* 무시 */ } }
 
-  var vault = null;
-  function getVault() {
-    if (!vault) {
-      vault = fetch(VAULT_URL, { cache: 'no-cache' }).then(function (r) {
+  var vaults = {};
+  function getVault(url) {
+    if (!vaults[url]) {
+      vaults[url] = fetch(url, { cache: 'no-cache' }).then(function (r) {
         if (!r.ok) throw new Error('vault ' + r.status);
         return r.json();
       });
-      vault.catch(function () { vault = null; }); // 실패하면 다음에 다시 받기
+      vaults[url].catch(function () { delete vaults[url]; }); // 실패하면 다음에 다시 받기
     }
-    return vault;
+    return vaults[url];
   }
 
-  function unlock(code) {
+  function gunzip(buf) {
+    if (typeof DecompressionStream === 'undefined') return Promise.reject(new Error('vault gzip'));
+    return new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  }
+
+  function decryptVault(url, code) {
     var enc = new TextEncoder();
-    return getVault().then(function (v) {
+    return getVault(url).then(function (v) {
       return crypto.subtle.importKey('raw', enc.encode(normalize(code)), 'PBKDF2', false, ['deriveKey'])
         .then(function (base) {
           return crypto.subtle.deriveKey(
@@ -47,9 +54,24 @@
             base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
         })
         .then(function (key) { return crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(v.iv) }, key, fromB64(v.ct)); })
+        .then(function (buf) { return v.z === 'gzip' ? gunzip(buf) : buf; })
         .then(function (buf) { return JSON.parse(new TextDecoder().decode(buf)); });
     });
   }
+  function unlock(code) {
+    return decryptVault(VAULT_URL, code).then(function (data) { currentCode = normalize(code); return data; });
+  }
+
+  // 합성학 데이터: 입장 후에 필요할 때만 받아서 같은 코드로 푼다
+  var synPromise = null;
+  window.loadSynth = function () {
+    if (!currentCode) return Promise.reject(new Error('locked'));
+    if (!synPromise) {
+      synPromise = decryptVault(SYN_URL, currentCode);
+      synPromise.catch(function () { synPromise = null; });
+    }
+    return synPromise;
+  };
 
   function enter(data) {
     window.QUIZ_DATA = data;
@@ -90,7 +112,7 @@
   // 입장 코드 화면이 열릴 때
   window.addEventListener('quiz:gate', function () {
     showMsg('');
-    getVault().catch(function () {});
+    getVault(VAULT_URL).catch(function () {});
     setTimeout(function () { input.focus(); }, 50);
   });
 

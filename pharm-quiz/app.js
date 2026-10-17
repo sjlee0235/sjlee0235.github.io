@@ -6,12 +6,16 @@
   var DATA = {};
   var PER_PART = { ox: 20, mcq: 10 };
   var TYPE_LABEL = { ox: 'O,X', mcq: '5지선다', mock: '랜덤 모의고사' };
+  var SYN_LABEL = { name: '이름 맞추기', struct: '구조 맞추기' };
+  var SYN_COUNT = 20; // 합성학 1회 문항 수
+  var SYN = null;      // 합성학 데이터 (입장 후 필요할 때 로드)
   var STORE_KEY = 'pharmquiz-v1';
 
   var $ = function (id) { return document.getElementById(id); };
 
   // ───── 상태 (설정·최근 결과는 브라우저에 저장되어 처음 화면으로 돌아와도 유지) ─────
   var state = load() || { parts: [], type: null, last: null };
+  state.subject = state.subject || 'pharm';
   var session = null;
 
   function load() {
@@ -34,12 +38,13 @@
   }
 
   // ───── 화면 전환 ─────
-  var screens = ['home', 'gate', 'parts', 'type', 'quiz', 'result'];
+  var screens = ['home', 'gate', 'subject', 'syn', 'parts', 'type', 'quiz', 'result'];
   function show(name) {
     screens.forEach(function (s) { $('screen-' + s).hidden = s !== name; });
     if (name === 'home') renderHome();
     if (name === 'parts') renderParts();
     if (name === 'type') renderType();
+    if (name === 'syn') renderSyn();
     window.scrollTo(0, 0);
   }
   document.querySelectorAll('[data-go]').forEach(function (b) {
@@ -68,26 +73,60 @@
   // ───── 1. 처음 화면 ─────
   function renderHome() {
     var hasSetting = state.parts.length && state.type;
+    if (state.subject === 'synth') hasSetting = !!state.synMode;
     $('recent-card').hidden = !(hasSetting || state.last);
-    $('recent-setting').textContent = state.type === 'mock'
-      ? '랜덤 모의고사'
-      : (state.parts.length ? partNames(state.parts) : '-') + (state.type ? ' · ' + TYPE_LABEL[state.type] : '');
+    $('recent-setting').textContent = state.subject === 'synth'
+      ? '합성학' + (state.synMode ? ' · ' + SYN_LABEL[state.synMode] : '')
+      : state.type === 'mock'
+        ? '랜덤 모의고사'
+        : (state.parts.length ? partNames(state.parts) : '-') + (state.type ? ' · ' + TYPE_LABEL[state.type] : '');
     $('recent-result-row').hidden = !state.last;
     if (state.last) {
       $('recent-result').textContent = state.last.label + ' · ' + state.last.score + '/' + state.last.total +
         ' (' + Math.round(state.last.score / state.last.total * 100) + '%)';
     }
   }
-  // 시작: 이미 입장한 기기면 바로 파트 선택, 아니면 입장 코드 화면
+  // 시작: 이미 입장한 기기면 바로 과목 선택, 아니면 입장 코드 화면
   $('btn-start').addEventListener('click', function () {
-    if (window.__quizUnlocked) { show('parts'); return; }
+    if (window.__quizUnlocked) { show('subject'); return; }
     show('gate');
     window.dispatchEvent(new Event('quiz:gate'));
   });
   window.addEventListener('quiz:unlocked', function (e) {
     setData(e.detail);
-    if (!$('screen-gate').hidden) show('parts');
+    if (!$('screen-gate').hidden) show('subject');
   });
+
+  // ───── 과목 선택 ─────
+  document.querySelectorAll('.subject-card').forEach(function (c) {
+    c.addEventListener('click', function () {
+      var sub = c.getAttribute('data-subject');
+      if (sub === 'pharm') { state.subject = 'pharm'; save(); show('parts'); return; }
+      if (SYN) { state.subject = 'synth'; save(); show('syn'); return; }
+      c.disabled = true;
+      toast('합성학 문제를 불러오는 중…');
+      window.loadSynth().then(function (data) {
+        SYN = data.drugs;
+        state.subject = 'synth'; save(); show('syn');
+      }).catch(function (err) {
+        toast(err && /gzip/.test(err.message) ? '이 브라우저에서는 열 수 없어요. 최신 크롬/사파리로 열어주세요' : '합성학 문제를 불러오지 못했어요. 잠시 후 다시 시도해주세요');
+      }).then(function () { c.disabled = false; });
+    });
+  });
+
+  // ───── 합성학 유형 선택 ─────
+  function renderSyn() {
+    $('syn-count').textContent = '총 ' + SYN.length + '개 약물 중 ' + SYN_COUNT + '문제 랜덤';
+    document.querySelectorAll('.syn-card').forEach(function (c) {
+      c.classList.toggle('selected', state.synMode === c.getAttribute('data-syn'));
+    });
+    $('syn-summary').textContent = state.synMode ? SYN_LABEL[state.synMode] + ' · 5지선다 ' + SYN_COUNT + '문제' : '';
+    $('btn-syn-next').disabled = !state.synMode;
+  }
+  document.querySelectorAll('.syn-card').forEach(function (c) {
+    c.addEventListener('click', function () { state.synMode = c.getAttribute('data-syn'); save(); renderSyn(); });
+  });
+  $('btn-syn-next').addEventListener('click', function () { if (state.synMode) startQuiz(); });
   if (window.__quizUnlocked) setData(window.QUIZ_DATA);
 
   // ───── 2. 파트 선택 ─────
@@ -121,7 +160,7 @@
     $('mock-desc').textContent = mockOk
       ? '전 파트 · 국시 비율대로 ' + mockTotal() + '문제 (선택한 파트와 무관)'
       : '국시 비율대로 약 ' + mockTotal() + '문제 · 전 파트 오픈 후 이용 가능';
-    document.querySelectorAll('.type-card').forEach(function (c) {
+    document.querySelectorAll('.type-card[data-type]').forEach(function (c) {
       var t = c.getAttribute('data-type');
       c.disabled = t === 'mock' && !mockOk;
       c.classList.toggle('selected', state.type === t);
@@ -138,7 +177,7 @@
   function countFor(type) {
     return state.parts.reduce(function (s, id) { return s + Math.min(PER_PART[type], DATA[id][type].length); }, 0);
   }
-  document.querySelectorAll('.type-card').forEach(function (c) {
+  document.querySelectorAll('.type-card[data-type]').forEach(function (c) {
     c.addEventListener('click', function () {
       if (c.disabled) return;
       state.type = c.getAttribute('data-type');
@@ -148,7 +187,23 @@
   $('btn-type-next').addEventListener('click', function () { if (state.type) startQuiz(); });
 
   // ───── 4. 퀴즈 ─────
+  // 합성학: 오답 보기는 구조가 비슷한 약물(near, 유사도 상위 8개)에서 4개를 뽑는다
+  function buildSynth() {
+    return shuffle(SYN.map(function (_, i) { return i; })).slice(0, Math.min(SYN_COUNT, SYN.length)).map(function (i) {
+      var d = SYN[i];
+      var opts = shuffle([i].concat(shuffle(d.near).slice(0, 4)));
+      var q = {
+        q: state.synMode === 'name' ? '다음 구조를 가진 약물의 이름은?' : '다음 약물의 구조로 옳은 것은?',
+        name: d.name, svg: d.svg, opts: opts.map(function (j) { return SYN[j]; }), a: opts.indexOf(i),
+        exp: d.head, detail: d.detail, ch: d.ch, cls: d.cls
+      };
+      q.c = q.opts.map(function (o) { return o.name; });
+      return { part: d.ch, kind: state.synMode === 'name' ? 'syn-name' : 'syn-struct', q: q };
+    });
+  }
+
   function buildQuestions() {
+    if (state.subject === 'synth') return buildSynth();
     var list = [];
     if (state.type === 'mock') {
       // 파트 순서대로, 각 파트에서 국시 비율만큼 5지선다 랜덤 선정
@@ -179,20 +234,38 @@
     $('q-counter').textContent = (session.idx + 1) + ' / ' + total;
     $('progress-bar').style.width = (session.idx / total * 100) + '%';
 
-    var p = partById(it.part);
-    var meta = '<span class="tag">' + p.emoji + ' ' + esc(p.name) + '</span>';
-    if (q.tag === 'red') meta += '<span class="tag red">🆕 2026 개정</span>';
-    if (q.tag === 'hl') meta += '<span class="tag hl">⭐ 중요</span>';
+    var syn = it.kind === 'syn-name' || it.kind === 'syn-struct';
+    var meta;
+    if (syn) {
+      meta = '<span class="tag">⚗️ ' + esc(q.ch) + '</span>';
+    } else {
+      var p = partById(it.part);
+      meta = '<span class="tag">' + p.emoji + ' ' + esc(p.name) + '</span>';
+      if (q.tag === 'red') meta += '<span class="tag red">🆕 2026 개정</span>';
+      if (q.tag === 'hl') meta += '<span class="tag hl">⭐ 중요</span>';
+    }
     $('q-meta').innerHTML = meta;
 
     $('q-text').textContent = q.q;
-    $('q-box').hidden = !q.box;
-    $('q-box').textContent = q.box || '';
+    $('q-box').hidden = !q.box && it.kind !== 'syn-struct';
+    $('q-box').className = 'q-box' + (it.kind === 'syn-struct' ? ' q-name' : '');
+    $('q-box').textContent = it.kind === 'syn-struct' ? q.name : (q.box || '');
+    $('q-struct').hidden = it.kind !== 'syn-name';
+    $('q-struct').innerHTML = it.kind === 'syn-name' ? q.svg : '';
 
     var box = $('answers');
     box.innerHTML = '';
-    box.className = 'answers' + (it.kind === 'ox' ? ' ox' : '');
-    if (it.kind === 'ox') {
+    box.className = 'answers' + (it.kind === 'ox' ? ' ox' : '') + (it.kind === 'syn-struct' ? ' structs' : '');
+    if (it.kind === 'syn-struct') {
+      q.opts.forEach(function (o, i) {
+        var b = document.createElement('button');
+        b.className = 'ans struct';
+        b.setAttribute('aria-label', (i + 1) + '번 구조');
+        b.innerHTML = '<span class="num">' + (i + 1) + '</span><span class="svg">' + o.svg + '</span>';
+        b.addEventListener('click', function () { answer(i, b); });
+        box.appendChild(b);
+      });
+    } else if (it.kind === 'ox') {
       [['O', true, 'o-btn'], ['X', false, 'x-btn']].forEach(function (o) {
         var b = document.createElement('button');
         b.className = 'ans ' + o[2];
@@ -232,7 +305,9 @@
     var v = $('verdict');
     v.className = 'verdict ' + (correct ? 'ok' : 'bad');
     v.innerHTML = correct ? '⭕ 정답이에요!' : '❌ 오답이에요 <small>정답 ' + ansLabel + '</small>';
-    $('exp-text').textContent = q.exp;
+    $('exp-text').textContent = (it.kind === 'syn-name' || it.kind === 'syn-struct') ? q.name + ' : ' + q.exp : q.exp;
+    $('exp-detail').hidden = !q.detail;
+    $('exp-detail').textContent = q.detail || '';
     $('btn-next').textContent = session.idx === session.items.length - 1 ? '결과 보기' : '다음 문제';
     $('feedback').hidden = false;
 
@@ -280,7 +355,9 @@
     $('score-total').textContent = '/ ' + total;
     $('score-ring').style.setProperty('--p', pct);
     $('result-msg').textContent = pct >= 90 ? '완벽해요! 합격 각 🎉' : pct >= 70 ? '잘하고 있어요! 💪' : pct >= 50 ? '조금만 더! 🔥' : '틀린 문제 복습하면 오를 거예요 📚';
-    var label = state.type === 'mock' ? '랜덤 모의고사' : partNames(state.parts) + ' · ' + TYPE_LABEL[state.type];
+    var isSyn = session.items[0] && /^syn/.test(session.items[0].kind);
+    var label = isSyn ? '합성학 · ' + SYN_LABEL[state.synMode]
+      : state.type === 'mock' ? '랜덤 모의고사' : partNames(state.parts) + ' · ' + TYPE_LABEL[state.type];
     $('result-sub').textContent = label + ' · 정답률 ' + pct + '%';
 
     // 파트별 정답률
@@ -289,9 +366,12 @@
       var b = by[r.item.part] || (by[r.item.part] = { s: 0, t: 0 });
       b.t++; if (r.correct) b.s++;
     });
-    $('breakdown').innerHTML = PARTS.filter(function (p) { return by[p.id]; }).map(function (p) {
+    var rowsSrc = isSyn
+      ? Object.keys(by).sort(function (x, y) { return parseInt(x, 10) - parseInt(y, 10); }).map(function (k) { return { id: k, label: '⚗️ ' + k }; })
+      : PARTS.filter(function (p) { return by[p.id]; }).map(function (p) { return { id: p.id, label: p.emoji + ' ' + p.name }; });
+    $('breakdown').innerHTML = rowsSrc.map(function (p) {
       var b = by[p.id];
-      return '<div class="bd-row"><span>' + p.emoji + ' ' + esc(p.name) + '</span><span class="bd-bar"><i style="width:' +
+      return '<div class="bd-row"><span>' + esc(p.label) + '</span><span class="bd-bar"><i style="width:' +
         Math.round(b.s / b.t * 100) + '%"></i></span><b>' + b.s + ' / ' + b.t + '</b></div>';
     }).join('');
 
@@ -302,6 +382,11 @@
     $('review-wrap').open = false;
     $('review-list').innerHTML = wrong.map(function (r) {
       var q = r.item.q, isOx = r.item.kind === 'ox';
+      if (/^syn/.test(r.item.kind)) {
+        return '<div class="rv-item"><p class="rv-q">' + esc(q.name) + '</p><div class="struct-box small">' + q.svg + '</div>' +
+          '<p class="rv-a">내 답 <span class="bad">' + esc(CIRCLED[r.choice] + ' ' + q.opts[r.choice].name) + '</span> · 정답 <span class="ok">' + esc(CIRCLED[q.a] + ' ' + q.name) + '</span></p>' +
+          '<p class="rv-exp"><b>' + esc(q.exp) + '</b><br>' + esc(q.detail) + '</p></div>';
+      }
       var mine = isOx ? (r.choice ? 'O' : 'X') : CIRCLED[r.choice] + ' ' + q.c[r.choice];
       var right = isOx ? (q.a ? 'O' : 'X') : CIRCLED[q.a] + ' ' + q.c[q.a];
       return '<div class="rv-item"><p class="rv-q">' + esc(q.q) + (q.box ? '\n' + esc(q.box) : '') + '</p>' +
