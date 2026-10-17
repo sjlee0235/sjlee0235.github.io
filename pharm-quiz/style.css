@@ -339,3 +339,32 @@ button { font: inherit; color: inherit; }
 @keyframes shake { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
 @media (prefers-reduced-motion: reduce) { .shake { animation: none; } }
 .gate-back { margin-top: 18px; padding: 10px 18px; font-size: 14px; }
+
+/* 과목 선택 */
+.subject-card .go { margin-left: auto; font-size: 26px; color: var(--muted); line-height: 1; }
+
+/* 합성학: 구조식 (다크 모드에서도 흰 타일 위에 그대로 표시) */
+.struct-box {
+  background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 8px;
+  margin: 0 0 16px; display: grid; place-items: center;
+}
+.struct-box svg { width: 100%; max-width: 380px; height: auto; display: block; }
+.struct-box.small svg { max-width: 260px; }
+.q-box.q-name {
+  font-size: 22px; font-weight: 800; text-align: center; letter-spacing: -0.01em;
+  border-style: solid; padding: 18px 12px; overflow-wrap: anywhere;
+}
+.answers.structs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.answers.structs .ans.struct:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 5px); }
+.ans.struct {
+  position: relative; display: block; padding: 6px; background: #fff; border-radius: 14px; aspect-ratio: 7 / 5;
+}
+.ans.struct .num { position: absolute; top: 6px; left: 6px; margin: 0; z-index: 1; }
+.ans.struct .svg { display: grid; place-items: center; width: 100%; height: 100%; }
+.ans.struct svg { width: 100%; height: 100%; display: block; }
+.ans.struct.correct { background: #fff; box-shadow: 0 0 0 3px var(--ok-border) inset; }
+.ans.struct.wrong { background: #fff; box-shadow: 0 0 0 3px var(--bad-border) inset; }
+.exp-detail { margin: 8px 0 0 !important; font-size: 14px !important; color: var(--muted); line-height: 1.7 !important; }
+
+.exp-detail, .rv-exp.syn { white-space: pre-line; }
+.subject-note { margin: 18px 4px 0; text-align: center; font-size: 13.5px; color: var(--muted); }
