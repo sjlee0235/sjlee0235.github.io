@@ -189,10 +189,11 @@
   // ───── 4. 퀴즈 ─────
   // 합성학 해설: "Ketamine(케타민) · 1장 전신마취약물" + 두 자료의 이야기
   function synExp(d) {
+    // 현재는 이야기 제목만 공개 (세부 이야기·합성 반응 암기는 데이터에 넣지 않음)
     var parts = ['📖 ' + d.head + (d.detail ? '\n' + d.detail : '')];
-    if (d.head2 || d.steps2) parts.push('📖 ' + (d.head2 ? d.head2 + '\n' : '') + d.steps2);
+    if (d.head2 || d.steps2) parts.push('📖 ' + [d.head2, d.steps2].filter(Boolean).join('\n'));
     if (d.rxn2) parts.push('🧪 ' + d.rxn2);
-    return parts.join('\n\n');
+    return parts.join('\n');
   }
   // 합성학: 오답 보기는 비슷한 약물에서 뽑는다 (구조 맞추기 = 구조가 비슷한 약물, 이름 맞추기 = 이름·구조가 비슷한 약물)
   function buildSynth() {
