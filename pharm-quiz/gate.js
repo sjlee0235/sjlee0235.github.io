@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var VAULT_URL = 'data/vault.json?v=7';
+  var VAULT_URL = 'data/vault.json?v=8';
   var CODE_KEY = 'pharmquiz-code';
   // 조회수: 페이지를 열 때마다 1씩 증가 (같은 사람이 3번 열면 +3)
   var COUNTER_URL = 'https://abacus.jasoncameron.dev/hit/sjlee0235-pharmquiz/visits';
