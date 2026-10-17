@@ -7,7 +7,7 @@
   var PER_PART = { ox: 20, mcq: 10 };
   var TYPE_LABEL = { ox: 'O,X', mcq: '5지선다', mock: '랜덤 모의고사' };
   var SYN_LABEL = { name: '이름 맞추기', struct: '구조 맞추기' };
-  var SYN_COUNT = 20; // 합성학 1회 문항 수
+  var SYN_COUNT = 30; // 합성학 1회 문항 수
   var SYN = null;      // 합성학 데이터 (입장 후 필요할 때 로드)
   var STORE_KEY = 'pharmquiz-v1';
 
@@ -187,15 +187,23 @@
   $('btn-type-next').addEventListener('click', function () { if (state.type) startQuiz(); });
 
   // ───── 4. 퀴즈 ─────
-  // 합성학: 오답 보기는 구조가 비슷한 약물(near, 유사도 상위 8개)에서 4개를 뽑는다
+  // 합성학 해설: "Ketamine(케타민) · 1장 전신마취약물" + 두 자료의 이야기
+  function synExp(d) {
+    var parts = ['📖 ' + d.head + (d.detail ? '\n' + d.detail : '')];
+    if (d.head2 || d.steps2) parts.push('📖 ' + (d.head2 ? d.head2 + '\n' : '') + d.steps2);
+    if (d.rxn2) parts.push('🧪 ' + d.rxn2);
+    return parts.join('\n\n');
+  }
+  // 합성학: 오답 보기는 비슷한 약물에서 뽑는다 (구조 맞추기 = 구조가 비슷한 약물, 이름 맞추기 = 이름·구조가 비슷한 약물)
   function buildSynth() {
     return shuffle(SYN.map(function (_, i) { return i; })).slice(0, Math.min(SYN_COUNT, SYN.length)).map(function (i) {
       var d = SYN[i];
-      var opts = shuffle([i].concat(shuffle(d.near).slice(0, 4)));
+      var pool = (state.synMode === 'name' ? d.nearN : d.near) || d.near;
+      var opts = shuffle([i].concat(shuffle(pool.slice(0, 6)).slice(0, 4)));
       var q = {
         q: state.synMode === 'name' ? '다음 구조를 가진 약물의 이름은?' : '다음 약물의 구조로 옳은 것은?',
         name: d.name, svg: d.svg, opts: opts.map(function (j) { return SYN[j]; }), a: opts.indexOf(i),
-        exp: d.head, detail: d.detail, ch: d.ch, cls: d.cls
+        exp: d.name + '(' + d.ko + ') · ' + d.ch, detail: synExp(d), ch: d.ch, cls: d.cls
       };
       q.c = q.opts.map(function (o) { return o.name; });
       return { part: d.ch, kind: state.synMode === 'name' ? 'syn-name' : 'syn-struct', q: q };
@@ -305,7 +313,7 @@
     var v = $('verdict');
     v.className = 'verdict ' + (correct ? 'ok' : 'bad');
     v.innerHTML = correct ? '⭕ 정답이에요!' : '❌ 오답이에요 <small>정답 ' + ansLabel + '</small>';
-    $('exp-text').textContent = (it.kind === 'syn-name' || it.kind === 'syn-struct') ? q.name + ' : ' + q.exp : q.exp;
+    $('exp-text').textContent = q.exp;
     $('exp-detail').hidden = !q.detail;
     $('exp-detail').textContent = q.detail || '';
     $('btn-next').textContent = session.idx === session.items.length - 1 ? '결과 보기' : '다음 문제';
@@ -385,7 +393,7 @@
       if (/^syn/.test(r.item.kind)) {
         return '<div class="rv-item"><p class="rv-q">' + esc(q.name) + '</p><div class="struct-box small">' + q.svg + '</div>' +
           '<p class="rv-a">내 답 <span class="bad">' + esc(CIRCLED[r.choice] + ' ' + q.opts[r.choice].name) + '</span> · 정답 <span class="ok">' + esc(CIRCLED[q.a] + ' ' + q.name) + '</span></p>' +
-          '<p class="rv-exp"><b>' + esc(q.exp) + '</b><br>' + esc(q.detail) + '</p></div>';
+          '<p class="rv-exp syn"><b>' + esc(q.exp) + '</b>\n' + esc(q.detail) + '</p></div>';
       }
       var mine = isOx ? (r.choice ? 'O' : 'X') : CIRCLED[r.choice] + ' ' + q.c[r.choice];
       var right = isOx ? (q.a ? 'O' : 'X') : CIRCLED[q.a] + ' ' + q.c[q.a];

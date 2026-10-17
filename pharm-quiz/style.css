@@ -365,3 +365,6 @@ button { font: inherit; color: inherit; }
 .ans.struct.correct { background: #fff; box-shadow: 0 0 0 3px var(--ok-border) inset; }
 .ans.struct.wrong { background: #fff; box-shadow: 0 0 0 3px var(--bad-border) inset; }
 .exp-detail { margin: 8px 0 0 !important; font-size: 14px !important; color: var(--muted); line-height: 1.7 !important; }
+
+.exp-detail, .rv-exp.syn { white-space: pre-line; }
+.subject-note { margin: 18px 4px 0; text-align: center; font-size: 13.5px; color: var(--muted); }
