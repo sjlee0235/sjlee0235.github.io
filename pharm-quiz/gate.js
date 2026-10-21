@@ -8,8 +8,9 @@
 (function () {
   'use strict';
 
-  var VAULT_URL = 'data/vault.json?v=14';
-  var SYN_URL = 'data/vault-syn.json?v=14'; // 합성학 (구조식 이미지 포함, gzip 압축 후 암호화)
+  var VAULT_URL = 'data/vault.json?v=15';
+  var SYN_URL = 'data/vault-syn.json?v=15'; // 합성학 (구조식 이미지 포함, gzip 압축 후 암호화)
+  var HERB_URL = 'data/vault-herb.json?v=15'; // 생약학 (gzip 압축 후 암호화)
   var currentCode = null;
   var CODE_KEY = 'pharmquiz-code';
   // 조회수: 페이지를 열 때마다 1씩 증가 (같은 사람이 3번 열면 +3)
@@ -62,16 +63,18 @@
     return decryptVault(VAULT_URL, code).then(function (data) { currentCode = normalize(code); return data; });
   }
 
-  // 합성학 데이터: 입장 후에 필요할 때만 받아서 같은 코드로 푼다
-  var synPromise = null;
-  window.loadSynth = function () {
+  // 합성학·생약학 데이터: 입장 후에 필요할 때만 받아서 같은 코드로 푼다
+  var extra = {};
+  function loadExtra(url) {
     if (!currentCode) return Promise.reject(new Error('locked'));
-    if (!synPromise) {
-      synPromise = decryptVault(SYN_URL, currentCode);
-      synPromise.catch(function () { synPromise = null; });
+    if (!extra[url]) {
+      extra[url] = decryptVault(url, currentCode);
+      extra[url].catch(function () { delete extra[url]; });
     }
-    return synPromise;
-  };
+    return extra[url];
+  }
+  window.loadSynth = function () { return loadExtra(SYN_URL); };
+  window.loadHerb = function () { return loadExtra(HERB_URL); };
 
   function enter(data) {
     window.QUIZ_DATA = data;

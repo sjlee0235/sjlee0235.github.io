@@ -1,8 +1,8 @@
 // 문제 데이터 암호화/복호화 도구 (Node 18+)
 //
-//   VAULT_CODE='입장코드' node tools/vault.mjs decrypt   # data/vault.json → src-data/<파트>.js, data/vault-syn.json → src-data/synth.json
+//   VAULT_CODE='입장코드' node tools/vault.mjs decrypt   # data/vault.json → src-data/<파트>.js, vault-syn.json → synth.json, vault-herb.json → herb.json
 //   (src-data/ 의 파일을 수정하거나 새 파트 파일 추가)
-//   VAULT_CODE='입장코드' node tools/vault.mjs encrypt   # src-data/*.js → data/vault.json, src-data/synth.json → data/vault-syn.json(gzip)
+//   VAULT_CODE='입장코드' node tools/vault.mjs encrypt   # src-data/*.js → data/vault.json, synth.json → vault-syn.json(gzip), herb.json → vault-herb.json(gzip)
 //
 // src-data/ 는 평문이므로 .gitignore 로 커밋되지 않는다. 입장 코드는 저장소에 적지 않는다.
 // 코드를 바꾸려면: 기존 코드로 decrypt → 새 코드로 encrypt.
@@ -18,6 +18,8 @@ const SRC = path.join(ROOT, 'src-data');
 const OUT = path.join(ROOT, 'data', 'vault.json');
 const SYN_SRC = path.join(SRC, 'synth.json');
 const SYN_OUT = path.join(ROOT, 'data', 'vault-syn.json');
+const HERB_SRC = path.join(SRC, 'herb.json');
+const HERB_OUT = path.join(ROOT, 'data', 'vault-herb.json');
 const ITER = 250000;
 
 const cmd = process.argv[2];
@@ -73,6 +75,17 @@ if (cmd === 'encrypt') {
     await seal(new TextEncoder().encode(JSON.stringify(syn)), SYN_OUT, true);
     console.log(`합성학: 약물 ${syn.drugs.length}개 → data/vault-syn.json 저장 완료`);
   }
+  if (fs.existsSync(HERB_SRC)) {
+    const hb = JSON.parse(fs.readFileSync(HERB_SRC, 'utf8'));
+    for (const p of hb.parts) {
+      const d = hb.data[p.id];
+      if (!d || !d.ox.length || !d.blank.length) throw new Error('생약학 ' + p.id + ': 문제가 없습니다');
+      d.blank.forEach((q, i) => { if (q.c.length !== 5 || !(q.a >= 0 && q.a < 5)) throw new Error(`생약학 ${p.id} 빈칸 #${i} 형식 오류`); });
+      console.log(`생약학 ${p.id}: O,X ${d.ox.length} / 빈칸 넣기 ${d.blank.length}`);
+    }
+    await seal(new TextEncoder().encode(JSON.stringify(hb)), HERB_OUT, true);
+    console.log('→ data/vault-herb.json 저장 완료');
+  }
 } else {
   const data = JSON.parse(new TextDecoder().decode(await open(OUT)));
   fs.mkdirSync(SRC, { recursive: true });
@@ -84,5 +97,9 @@ if (cmd === 'encrypt') {
   if (fs.existsSync(SYN_OUT)) {
     fs.writeFileSync(SYN_SRC, await open(SYN_OUT));
     console.log('src-data/synth.json (합성학)');
+  }
+  if (fs.existsSync(HERB_OUT)) {
+    fs.writeFileSync(HERB_SRC, await open(HERB_OUT));
+    console.log('src-data/herb.json (생약학)');
   }
 }

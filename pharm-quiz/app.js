@@ -9,14 +9,61 @@
   var SYN_LABEL = { name: '이름 맞추기', struct: '구조 맞추기' };
   var SYN_COUNT = 30; // 합성학 1회 문항 수
   var SYN = null;      // 합성학 데이터 (입장 후 필요할 때 로드)
+  var HB = null;       // 생약학 데이터 { parts, data } (입장 후 필요할 때 로드)
+  var HB_PER_PART = 30;
+  var HB_LABEL = { ox: 'O,X 퀴즈', blank: '빈칸 넣기' };
   var STORE_KEY = 'pharmquiz-v1';
+  var HIST_KEY = 'pharmquiz-hist';
 
   var $ = function (id) { return document.getElementById(id); };
 
   // ───── 상태 (설정·최근 결과는 브라우저에 저장되어 처음 화면으로 돌아와도 유지) ─────
   var state = load() || { parts: [], type: null, last: null };
   state.subject = state.subject || 'pharm';
+  state.hbParts = state.hbParts || [];
   var session = null;
+
+  // ───── 다시 풀기 규칙 (모든 과목 공통) ─────
+  // 문제 묶음(과목·파트·유형)마다 최근에 본 문제와 틀린 문제를 기억해 두고,
+  // 다음에 고를 때 ① 방금 틀린 문제 → ② 아직 안 본 문제 → ③ 본 지 오래된 문제 순으로 뽑는다.
+  var hist = loadHist();
+  function loadHist() {
+    try { return JSON.parse(localStorage.getItem(HIST_KEY)) || {}; } catch (e) { return {}; }
+  }
+  function saveHist() {
+    try { localStorage.setItem(HIST_KEY, JSON.stringify(hist)); } catch (e) { /* 저장 불가 환경 무시 */ }
+  }
+  function pick(pool, ids, n) {
+    var h = hist[pool] || { seen: [], wrong: [] };
+    var has = {}; ids.forEach(function (id) { has[id] = true; });
+    var wrong = h.wrong.filter(function (id) { return has[id]; });
+    var seen = h.seen.filter(function (id) { return has[id]; }); // 오래된 것 → 최근 순
+    var inSeen = {}; seen.forEach(function (id) { inSeen[id] = true; });
+    var isWrong = {}; wrong.forEach(function (id) { isWrong[id] = true; });
+    var fresh = ids.filter(function (id) { return !inSeen[id] && !isWrong[id]; });
+    var old = seen.filter(function (id) { return !isWrong[id]; });
+    return shuffle(wrong).concat(shuffle(fresh), old).slice(0, n);
+  }
+  function recordHist(results) {
+    var byPool = {};
+    results.forEach(function (r) {
+      var it = r.item;
+      if (!it.pool) return;
+      var b = byPool[it.pool] || (byPool[it.pool] = { shown: [], wrong: [] });
+      b.shown.push(it.id);
+      if (!r.correct) b.wrong.push(it.id);
+    });
+    Object.keys(byPool).forEach(function (pool) {
+      var b = byPool[pool];
+      var h = hist[pool] || { seen: [], wrong: [] };
+      var shown = {}; b.shown.forEach(function (id) { shown[id] = true; });
+      var keep = function (id) { return !shown[id]; };
+      h.seen = h.seen.filter(keep).concat(b.shown);
+      h.wrong = h.wrong.filter(keep).concat(b.wrong);
+      hist[pool] = h;
+    });
+    saveHist();
+  }
 
   function load() {
     try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { return null; }
@@ -38,13 +85,15 @@
   }
 
   // ───── 화면 전환 ─────
-  var screens = ['home', 'gate', 'subject', 'syn', 'parts', 'type', 'quiz', 'result'];
+  var screens = ['home', 'gate', 'subject', 'syn', 'hbparts', 'hbtype', 'parts', 'type', 'quiz', 'result'];
   function show(name) {
     screens.forEach(function (s) { $('screen-' + s).hidden = s !== name; });
     if (name === 'home') renderHome();
     if (name === 'parts') renderParts();
     if (name === 'type') renderType();
     if (name === 'syn') renderSyn();
+    if (name === 'hbparts') renderHbParts();
+    if (name === 'hbtype') renderHbType();
     window.scrollTo(0, 0);
   }
   document.querySelectorAll('[data-go]').forEach(function (b) {
@@ -69,14 +118,23 @@
     clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove('show'); }, 1800);
   }
   function partNames(ids) { return ids.map(function (id) { return partById(id).name; }).join(', '); }
+  function hbPart(id) {
+    var ps = HB ? HB.parts : [];
+    for (var i = 0; i < ps.length; i++) if (ps[i].id === id) return ps[i];
+    return { id: id, name: id, emoji: '🌿' };
+  }
+  function hbNames(ids) { return ids.map(function (id) { return hbPart(id).name; }).join(', '); }
 
   // ───── 1. 처음 화면 ─────
   function renderHome() {
     var hasSetting = state.parts.length && state.type;
     if (state.subject === 'synth') hasSetting = !!state.synMode;
+    if (state.subject === 'herb') hasSetting = state.hbParts.length && state.hbType;
     $('recent-card').hidden = !(hasSetting || state.last);
     $('recent-setting').textContent = state.subject === 'synth'
       ? '합성학' + (state.synMode ? ' · ' + SYN_LABEL[state.synMode] : '')
+      : state.subject === 'herb'
+        ? '생약학' + (HB && state.hbParts.length ? ' · ' + hbNames(state.hbParts) : '') + (state.hbType ? ' · ' + HB_LABEL[state.hbType] : '')
       : state.type === 'mock'
         ? '랜덤 모의고사'
         : (state.parts.length ? partNames(state.parts) : '-') + (state.type ? ' · ' + TYPE_LABEL[state.type] : '');
@@ -102,14 +160,17 @@
     c.addEventListener('click', function () {
       var sub = c.getAttribute('data-subject');
       if (sub === 'pharm') { state.subject = 'pharm'; save(); show('parts'); return; }
-      if (SYN) { state.subject = 'synth'; save(); show('syn'); return; }
+      var cfg = sub === 'synth'
+        ? { name: '합성학', loaded: !!SYN, load: window.loadSynth, set: function (d) { SYN = d.drugs; }, screen: 'syn' }
+        : { name: '생약학', loaded: !!HB, load: window.loadHerb, set: setHerb, screen: 'hbparts' };
+      if (cfg.loaded) { state.subject = sub; save(); show(cfg.screen); return; }
       c.disabled = true;
-      toast('합성학 문제를 불러오는 중…');
-      window.loadSynth().then(function (data) {
-        SYN = data.drugs;
-        state.subject = 'synth'; save(); show('syn');
+      toast(cfg.name + ' 문제를 불러오는 중…');
+      cfg.load().then(function (data) {
+        cfg.set(data);
+        state.subject = sub; save(); show(cfg.screen);
       }).catch(function (err) {
-        toast(err && /gzip/.test(err.message) ? '이 브라우저에서는 열 수 없어요. 최신 크롬/사파리로 열어주세요' : '합성학 문제를 불러오지 못했어요. 잠시 후 다시 시도해주세요');
+        toast(err && /gzip/.test(err.message) ? '이 브라우저에서는 열 수 없어요. 최신 크롬/사파리로 열어주세요' : cfg.name + ' 문제를 불러오지 못했어요. 잠시 후 다시 시도해주세요');
       }).then(function () { c.disabled = false; });
     });
   });
@@ -128,6 +189,47 @@
   });
   $('btn-syn-next').addEventListener('click', function () { if (state.synMode) startQuiz(); });
   if (window.__quizUnlocked) setData(window.QUIZ_DATA);
+
+  // ───── 생약학 파트·유형 선택 ─────
+  function setHerb(data) {
+    HB = data;
+    var ok = {}; HB.parts.forEach(function (p) { ok[p.id] = true; });
+    state.hbParts = state.hbParts.filter(function (id) { return ok[id]; });
+  }
+  function renderHbParts() {
+    var grid = $('hb-grid');
+    grid.innerHTML = '';
+    HB.parts.forEach(function (p) {
+      var b = document.createElement('button');
+      b.className = 'part' + (state.hbParts.indexOf(p.id) > -1 ? ' selected' : '');
+      b.innerHTML = '<span class="emoji">' + p.emoji + '</span><span class="name">' + esc(p.name) + '</span>' +
+        '<span class="sub">생약 ' + p.herbs + '개</span>';
+      b.addEventListener('click', function () {
+        var i = state.hbParts.indexOf(p.id);
+        if (i > -1) state.hbParts.splice(i, 1); else state.hbParts.push(p.id);
+        state.hbParts = HB.parts.map(function (x) { return x.id; }).filter(function (id) { return state.hbParts.indexOf(id) > -1; });
+        save(); renderHbParts();
+      });
+      grid.appendChild(b);
+    });
+    $('btn-hb-next').disabled = state.hbParts.length === 0;
+  }
+  $('btn-hb-next').addEventListener('click', function () { if (state.hbParts.length) show('hbtype'); });
+  function renderHbType() {
+    $('hb-parts-label').textContent = '선택한 파트: ' + hbNames(state.hbParts);
+    document.querySelectorAll('.hb-card').forEach(function (c) {
+      c.classList.toggle('selected', state.hbType === c.getAttribute('data-hb'));
+    });
+    $('hb-summary').textContent = state.hbType ? '총 ' + hbCount() + '문제 · 순서 랜덤' : '';
+    $('btn-hbtype-next').disabled = !state.hbType;
+  }
+  function hbCount() {
+    return state.hbParts.reduce(function (s, id) { return s + Math.min(HB_PER_PART, HB.data[id][state.hbType].length); }, 0);
+  }
+  document.querySelectorAll('.hb-card').forEach(function (c) {
+    c.addEventListener('click', function () { state.hbType = c.getAttribute('data-hb'); save(); renderHbType(); });
+  });
+  $('btn-hbtype-next').addEventListener('click', function () { if (state.hbType && state.hbParts.length) startQuiz(); });
 
   // ───── 2. 파트 선택 ─────
   function renderParts() {
@@ -197,7 +299,11 @@
   }
   // 합성학: 오답 보기는 비슷한 약물에서 뽑는다 (구조 맞추기 = 구조가 비슷한 약물, 이름 맞추기 = 이름·구조가 비슷한 약물)
   function buildSynth() {
-    return shuffle(SYN.map(function (_, i) { return i; })).slice(0, Math.min(SYN_COUNT, SYN.length)).map(function (i) {
+    var pool = 'syn:' + state.synMode;
+    var idx = {}; SYN.forEach(function (d, i) { idx[d.name] = i; });
+    var names = pick(pool, SYN.map(function (d) { return d.name; }), SYN_COUNT);
+    return shuffle(names).map(function (name) {
+      var i = idx[name];
       var d = SYN[i];
       var pool = (state.synMode === 'name' ? d.nearN : d.near) || d.near;
       var opts = shuffle([i].concat(shuffle(pool.slice(0, 6)).slice(0, 4)));
@@ -207,24 +313,35 @@
         exp: d.name + '(' + d.ko + ') · ' + d.ch, detail: synExp(d), ch: d.ch, cls: d.cls
       };
       q.c = q.opts.map(function (o) { return o.name; });
-      return { part: d.ch, kind: state.synMode === 'name' ? 'syn-name' : 'syn-struct', q: q };
+      return { part: d.ch, kind: state.synMode === 'name' ? 'syn-name' : 'syn-struct', q: q, pool: pool, id: name };
     });
   }
 
+  // 한 묶음(qs)에서 n문제 고르기 (다시 풀기 규칙 적용)
+  function pickItems(pool, part, kind, qs, n) {
+    var ids = qs.map(function (_, i) { return part + ':' + kind + ':' + i; });
+    return pick(pool, ids, n).map(function (id) {
+      return { part: part, kind: kind, q: qs[+id.split(':').pop()], pool: pool, id: id };
+    });
+  }
   function buildQuestions() {
     if (state.subject === 'synth') return buildSynth();
     var list = [];
+    if (state.subject === 'herb') {
+      state.hbParts.forEach(function (id) {
+        list = list.concat(pickItems('hb:' + id + ':' + state.hbType, id, state.hbType, HB.data[id][state.hbType], HB_PER_PART));
+      });
+      return shuffle(list);
+    }
     if (state.type === 'mock') {
-      // 파트 순서대로, 각 파트에서 국시 비율만큼 5지선다 랜덤 선정
+      // 파트 순서대로, 각 파트에서 국시 비율만큼 5지선다 선정
       PARTS.forEach(function (p) {
-        shuffle(DATA[p.id].mcq).slice(0, p.mock).forEach(function (q) { list.push({ part: p.id, kind: 'mcq', q: q }); });
+        list = list.concat(shuffle(pickItems('pharm:' + p.id + ':mcq', p.id, 'mcq', DATA[p.id].mcq, p.mock)));
       });
       return list;
     }
     state.parts.forEach(function (id) {
-      shuffle(DATA[id][state.type]).slice(0, PER_PART[state.type]).forEach(function (q) {
-        list.push({ part: id, kind: state.type, q: q });
-      });
+      list = list.concat(pickItems('pharm:' + id + ':' + state.type, id, state.type, DATA[id][state.type], PER_PART[state.type]));
     });
     return shuffle(list);
   }
@@ -236,6 +353,13 @@
   }
 
   var CIRCLED = ['①', '②', '③', '④', '⑤'];
+  var MARKS = ['㉠', '㉡', '㉢', '㉣'];
+  // 빈칸 넣기 보기: "콩과 / isoflavonoid / puerarin" → ㉠ 콩과 ㉡ isoflavonoid ㉢ puerarin
+  function blankOpt(text) {
+    return '<span class="slots">' + text.split(' / ').map(function (v, i) {
+      return '<span class="slot"><i>' + MARKS[i] + '</i>' + esc(v) + '</span>';
+    }).join('') + '</span>';
+  }
   function renderQuestion() {
     var it = session.items[session.idx];
     var q = it.q;
@@ -247,6 +371,9 @@
     var meta;
     if (syn) {
       meta = '<span class="tag">⚗️ ' + esc(q.ch) + '</span>';
+    } else if (state.subject === 'herb') {
+      var hp = hbPart(it.part);
+      meta = '<span class="tag">' + hp.emoji + ' ' + esc(hp.name) + '</span>';
     } else {
       var p = partById(it.part);
       meta = '<span class="tag">' + p.emoji + ' ' + esc(p.name) + '</span>';
@@ -287,7 +414,7 @@
       q.c.forEach(function (text, i) {
         var b = document.createElement('button');
         b.className = 'ans';
-        b.innerHTML = '<span class="num">' + (i + 1) + '</span><span>' + esc(text) + '</span>';
+        b.innerHTML = '<span class="num">' + (i + 1) + '</span><span>' + (it.kind === 'blank' ? blankOpt(text) : esc(text)) + '</span>';
         b.addEventListener('click', function () { answer(i, b); });
         box.appendChild(b);
       });
@@ -365,7 +492,9 @@
     $('score-ring').style.setProperty('--p', pct);
     $('result-msg').textContent = pct >= 90 ? '완벽해요! 합격 각 🎉' : pct >= 70 ? '잘하고 있어요! 💪' : pct >= 50 ? '조금만 더! 🔥' : '틀린 문제 복습하면 오를 거예요 📚';
     var isSyn = session.items[0] && /^syn/.test(session.items[0].kind);
+    var isHb = state.subject === 'herb' && !isSyn;
     var label = isSyn ? '합성학 · ' + SYN_LABEL[state.synMode]
+      : isHb ? '생약학 · ' + hbNames(state.hbParts) + ' · ' + HB_LABEL[state.hbType]
       : state.type === 'mock' ? '랜덤 모의고사' : partNames(state.parts) + ' · ' + TYPE_LABEL[state.type];
     $('result-sub').textContent = label + ' · 정답률 ' + pct + '%';
 
@@ -377,6 +506,7 @@
     });
     var rowsSrc = isSyn
       ? Object.keys(by).sort(function (x, y) { return parseInt(x, 10) - parseInt(y, 10); }).map(function (k) { return { id: k, label: '⚗️ ' + k }; })
+      : isHb ? HB.parts.filter(function (p) { return by[p.id]; }).map(function (p) { return { id: p.id, label: p.emoji + ' ' + p.name }; })
       : PARTS.filter(function (p) { return by[p.id]; }).map(function (p) { return { id: p.id, label: p.emoji + ' ' + p.name }; });
     $('breakdown').innerHTML = rowsSrc.map(function (p) {
       var b = by[p.id];
@@ -405,6 +535,7 @@
 
     state.last = { label: label, score: score, total: total };
     save();
+    recordHist(res);
     show('result');
   }
 

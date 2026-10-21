@@ -368,3 +368,11 @@ button { font: inherit; color: inherit; }
 
 .exp-detail, .rv-exp.syn { white-space: pre-line; }
 .subject-note { margin: 18px 4px 0; text-align: center; font-size: 13.5px; color: var(--muted); }
+
+/* 생약학 */
+.hb-grid { grid-template-columns: 1fr; }
+.part .sub { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.hb-grid .part.selected::after { margin-left: 0; flex: none; }
+.slots { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.slot { display: inline-flex; align-items: baseline; gap: 5px; overflow-wrap: anywhere; }
+.slot i { font-style: normal; font-weight: 800; color: var(--primary); }

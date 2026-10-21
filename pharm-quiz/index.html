@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>국가고시 퀴-즈</title>
-  <meta name="description" content="2027 약사 국가고시 대비 약물치료학 · 합성학 퀴즈">
+  <meta name="description" content="2027 약사 국가고시 대비 약물치료학 · 합성학 · 생약학 퀴즈">
   <meta name="theme-color" content="#6d5dfc">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="style.css?v=14">
+  <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
   <div class="bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
@@ -91,6 +91,11 @@
           <span class="type-body"><strong>합성학</strong><small>구조 보고 이름 맞추기 · 이름 보고 구조 맞추기</small></span>
           <span class="go" aria-hidden="true">›</span>
         </button>
+        <button class="type-card subject-card" data-subject="herb">
+          <span class="type-icon">🌿</span>
+          <span class="type-body"><strong>생약학</strong><small>파트별 O,X 퀴즈 · 빈칸 넣기</small></span>
+          <span class="go" aria-hidden="true">›</span>
+        </button>
       </div>
       <p class="subject-note">✍️ 추가를 원하는 과목이 있다면 이전 화면에 댓글 남기기</p>
       <footer class="nav">
@@ -121,6 +126,46 @@
       <footer class="nav">
         <button class="btn btn-ghost" data-go="subject">이전</button>
         <button class="btn btn-primary" id="btn-syn-next" disabled>다음</button>
+      </footer>
+    </section>
+
+    <!-- 생약학 파트 선택 -->
+    <section class="screen" id="screen-hbparts" hidden>
+      <header class="step-head">
+        <span class="step">생약학 · STEP 1 / 2</span>
+        <h2>파트를 골라주세요</h2>
+        <p class="muted">여러 개 선택할 수 있어요</p>
+      </header>
+      <div class="part-grid hb-grid" id="hb-grid"></div>
+      <footer class="nav">
+        <button class="btn btn-ghost" data-go="subject">이전</button>
+        <button class="btn btn-primary" id="btn-hb-next" disabled>다음</button>
+      </footer>
+    </section>
+
+    <!-- 생약학 유형 선택 -->
+    <section class="screen" id="screen-hbtype" hidden>
+      <header class="step-head">
+        <span class="step">생약학 · STEP 2 / 2</span>
+        <h2>문제 유형을 골라주세요</h2>
+        <p class="muted" id="hb-parts-label"></p>
+      </header>
+      <div class="type-list">
+        <button class="type-card hb-card" data-hb="ox">
+          <span class="type-icon">⭕❌</span>
+          <span class="type-body"><strong>O,X 퀴즈</strong><small>파트별 30문제 랜덤</small></span>
+          <span class="check" aria-hidden="true"></span>
+        </button>
+        <button class="type-card hb-card" data-hb="blank">
+          <span class="type-icon">㉠㉡㉢</span>
+          <span class="type-body"><strong>빈칸 넣기</strong><small>빈칸 3개 순서대로 채우기 · 설명 보고 생약명 고르기 · 파트별 30문제 랜덤</small></span>
+          <span class="check" aria-hidden="true"></span>
+        </button>
+      </div>
+      <p class="type-summary" id="hb-summary"></p>
+      <footer class="nav">
+        <button class="btn btn-ghost" data-go="hbparts">이전</button>
+        <button class="btn btn-primary" id="btn-hbtype-next" disabled>다음</button>
       </footer>
     </section>
 
@@ -211,10 +256,10 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/parts.js?v=14"></script>
-  <script src="gate.js?v=14"></script>
-  <script src="app.js?v=14"></script>
-  <script src="comments-config.js?v=14"></script>
-  <script type="module" src="comments.js?v=14"></script>
+  <script src="data/parts.js?v=15"></script>
+  <script src="gate.js?v=15"></script>
+  <script src="app.js?v=15"></script>
+  <script src="comments-config.js?v=15"></script>
+  <script type="module" src="comments.js?v=15"></script>
 </body>
 </html>
