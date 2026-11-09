@@ -8,9 +8,9 @@
 (function () {
   'use strict';
 
-  var VAULT_URL = 'data/vault.json?v=17';
-  var SYN_URL = 'data/vault-syn.json?v=17'; // 합성학 (구조식 이미지 포함, gzip 압축 후 암호화)
-  var HERB_URL = 'data/vault-herb.json?v=17'; // 생약학 (gzip 압축 후 암호화)
+  var VAULT_URL = 'data/vault.json?v=19';
+  var SYN_URL = 'data/vault-syn.json?v=19'; // 합성학 (구조식 이미지 포함, gzip 압축 후 암호화)
+  var HERB_URL = 'data/vault-herb.json?v=19'; // 생약학 (gzip 압축 후 암호화)
   var currentCode = null;
   var CODE_KEY = 'pharmquiz-code';
   // 조회수: 페이지를 열 때마다 1씩 증가 (같은 사람이 3번 열면 +3)

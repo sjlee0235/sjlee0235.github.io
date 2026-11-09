@@ -353,6 +353,34 @@
   }
 
   var CIRCLED = ['①', '②', '③', '④', '⑤'];
+
+  // 5지선다 보기별 풀이: 정답 보기 먼저, 이어서 나머지 오답 보기 (문항에 why[] 가 있으면 사용)
+  function whyFor(it) {
+    var q = it.q;
+    if (it.kind === 'ox') return null;
+    if (/^syn/.test(it.kind)) {
+      return q.opts.map(function (o, i) {
+        return i === q.a ? o.name + '(' + o.ko + ') · ' + o.ch
+          : (it.kind === 'syn-struct' ? '이 구조는 ' : '') + o.name + '(' + o.ko + ') · ' + o.ch + (it.kind === 'syn-struct' ? '의 구조' : ' — 문제의 구조와 다른 약물');
+      });
+    }
+    return Array.isArray(q.why) && q.why.length === q.c.length ? q.why : null;
+  }
+  function optLabel(it, i) {
+    if (it.kind === 'syn-struct') return CIRCLED[i];
+    return CIRCLED[i] + ' ' + it.q.c[i];
+  }
+  function whyHtml(it, why) {
+    var q = it.q, a = q.a;
+    var h = '<div class="why ok"><div class="why-h">정답 ' + esc(optLabel(it, a)) + '</div><p>' + esc(why[a]) + '</p></div>';
+    h += '<div class="why-sub">오답 풀이</div>';
+    why.forEach(function (w, i) {
+      if (i === a) return;
+      h += '<div class="why"><div class="why-h">' + esc(optLabel(it, i)) + '</div><p>' + esc(w) + '</p></div>';
+    });
+    if (q.exp && !/^syn/.test(it.kind) && !/^✔/.test(q.exp)) h += '<div class="why-sum"><b>📌 핵심 정리</b><p>' + esc(q.exp) + '</p></div>';
+    return h;
+  }
   var MARKS = ['㉠', '㉡', '㉢', '㉣'];
   // 빈칸 넣기 보기: "콩과 / isoflavonoid / puerarin" → ㉠ 콩과 ㉡ isoflavonoid ㉢ puerarin
   function blankOpt(text) {
@@ -441,7 +469,11 @@
     var v = $('verdict');
     v.className = 'verdict ' + (correct ? 'ok' : 'bad');
     v.innerHTML = correct ? '⭕ 정답이에요!' : '❌ 오답이에요 <small>정답 ' + ansLabel + '</small>';
-    $('exp-text').textContent = q.exp;
+    var why = whyFor(it);
+    $('exp-text').hidden = !!why;
+    $('exp-text').textContent = why ? '' : q.exp;
+    $('exp-why').hidden = !why;
+    $('exp-why').innerHTML = why ? whyHtml(it, why) : '';
     $('exp-detail').hidden = !q.detail;
     $('exp-detail').textContent = q.detail || '';
     $('btn-next').textContent = session.idx === session.items.length - 1 ? '결과 보기' : '다음 문제';
@@ -528,9 +560,10 @@
       }
       var mine = isOx ? (r.choice ? 'O' : 'X') : CIRCLED[r.choice] + ' ' + q.c[r.choice];
       var right = isOx ? (q.a ? 'O' : 'X') : CIRCLED[q.a] + ' ' + q.c[q.a];
+      var why = whyFor(r.item);
       return '<div class="rv-item"><p class="rv-q">' + esc(q.q) + (q.box ? '\n' + esc(q.box) : '') + '</p>' +
         '<p class="rv-a">내 답 <span class="bad">' + esc(mine) + '</span> · 정답 <span class="ok">' + esc(right) + '</span></p>' +
-        '<p class="rv-exp">' + esc(q.exp) + '</p></div>';
+        (why ? '<div class="rv-why">' + whyHtml(r.item, why) + '</div>' : '<p class="rv-exp">' + esc(q.exp) + '</p>') + '</div>';
     }).join('');
 
     state.last = { label: label, score: score, total: total };

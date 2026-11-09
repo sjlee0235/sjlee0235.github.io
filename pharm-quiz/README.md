@@ -46,7 +46,8 @@ VAULT_CODE='입장코드' node tools/vault.mjs decrypt   # data/vault.json → s
 VAULT_CODE='입장코드' node tools/vault.mjs encrypt   # src-data/*.js → data/vault.json
 ```
 
-- O,X: `{ q, a: true/false, exp, tag }` / 5지선다: `{ q, box(선택), c: [보기 5개], a: 정답 index(0~4), exp, tag }`
+- O,X: `{ q, a: true/false, exp, tag }` / 5지선다: `{ q, box(선택), c: [보기 5개], a: 정답 index(0~4), exp, why: [보기별 풀이 5개], tag }`
+- 5지선다 풀이 화면: 정답 보기 풀이 → 오답 보기 풀이 → 핵심 정리(exp) 순서 (why가 없으면 exp만 표시)
 - `tag`: `'red'` = 2026 개정 내용, `'hl'` = 중요 표시
 - 생약학: `src-data/herb.json` = `{ parts: [{id,name,emoji,herbs}], data: { <id>: { ox: [{q,a,exp,detail}], blank: [{q,box,c,a,exp,detail}] } } }` (빈칸 보기는 `"값1 / 값2 / 값3"`)
 - 새 파트가 들어가면 해당 파트 버튼이 자동으로 활성화됩니다.
