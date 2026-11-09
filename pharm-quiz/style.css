@@ -388,3 +388,4 @@ button { font: inherit; color: inherit; }
 .why-sum { margin-top: 4px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 13.5px; }
 .why-sum p { color: var(--muted); }
 .rv-why { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; }
+.why-struct { margin-top: 8px; max-width: 260px; }

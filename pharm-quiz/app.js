@@ -359,10 +359,7 @@
     var q = it.q;
     if (it.kind === 'ox') return null;
     if (/^syn/.test(it.kind)) {
-      return q.opts.map(function (o, i) {
-        return i === q.a ? o.name + '(' + o.ko + ') · ' + o.ch
-          : (it.kind === 'syn-struct' ? '이 구조는 ' : '') + o.name + '(' + o.ko + ') · ' + o.ch + (it.kind === 'syn-struct' ? '의 구조' : ' — 문제의 구조와 다른 약물');
-      });
+      return q.opts.map(function (o) { return o.name + '(' + o.ko + ') · ' + o.ch; });
     }
     return Array.isArray(q.why) && q.why.length === q.c.length ? q.why : null;
   }
@@ -376,7 +373,8 @@
     h += '<div class="why-sub">오답 풀이</div>';
     why.forEach(function (w, i) {
       if (i === a) return;
-      h += '<div class="why"><div class="why-h">' + esc(optLabel(it, i)) + '</div><p>' + esc(w) + '</p></div>';
+      h += '<div class="why"><div class="why-h">' + esc(optLabel(it, i)) + '</div><p>' + esc(w) + '</p>' +
+        (it.kind === 'syn-name' ? '<div class="struct-box small why-struct">' + q.opts[i].svg + '</div>' : '') + '</div>';
     });
     if (q.exp && !/^syn/.test(it.kind) && !/^✔/.test(q.exp)) h += '<div class="why-sum"><b>📌 핵심 정리</b><p>' + esc(q.exp) + '</p></div>';
     return h;
