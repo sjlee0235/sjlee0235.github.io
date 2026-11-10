@@ -74,7 +74,9 @@
 
   function partById(id) { for (var i = 0; i < PARTS.length; i++) if (PARTS[i].id === id) return PARTS[i]; return null; }
   function isReady(id) { var d = DATA[id]; return !!(d && d.ox && d.ox.length && d.mcq && d.mcq.length); }
-  function mockReady() { return PARTS.every(function (p) { return isReady(p.id); }); }
+  // 랜덤 모의고사: 전 파트가 들어가도 MOCK_OPEN을 true로 바꾸기 전까지는 잠가 둔다
+  var MOCK_OPEN = false;
+  function mockReady() { return MOCK_OPEN && PARTS.every(function (p) { return isReady(p.id); }); }
   function mockTotal() { return PARTS.reduce(function (s, p) { return s + p.mock; }, 0); }
 
   // 문제 데이터가 들어오면(입장 코드 확인 후) 사용할 수 없는 파트/유형 정리
