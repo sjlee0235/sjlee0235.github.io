@@ -33,7 +33,8 @@
   function saveHist() {
     try { localStorage.setItem(HIST_KEY, JSON.stringify(hist)); } catch (e) { /* 저장 불가 환경 무시 */ }
   }
-  function pick(pool, ids, n) {
+  // prio(id)가 true인 문제(기출 기반)는 같은 단계 안에서 먼저 뽑는다
+  function pick(pool, ids, n, prio) {
     var h = hist[pool] || { seen: [], wrong: [] };
     var has = {}; ids.forEach(function (id) { has[id] = true; });
     var wrong = h.wrong.filter(function (id) { return has[id]; });
@@ -42,6 +43,10 @@
     var isWrong = {}; wrong.forEach(function (id) { isWrong[id] = true; });
     var fresh = ids.filter(function (id) { return !inSeen[id] && !isWrong[id]; });
     var old = seen.filter(function (id) { return !isWrong[id]; });
+    if (prio) {
+      var first = function (arr) { return arr.filter(prio).concat(arr.filter(function (id) { return !prio(id); })); };
+      return first(shuffle(wrong)).concat(first(shuffle(fresh)), first(old)).slice(0, n);
+    }
     return shuffle(wrong).concat(shuffle(fresh), old).slice(0, n);
   }
   function recordHist(results) {
@@ -322,7 +327,8 @@
   // 한 묶음(qs)에서 n문제 고르기 (다시 풀기 규칙 적용)
   function pickItems(pool, part, kind, qs, n) {
     var ids = qs.map(function (_, i) { return part + ':' + kind + ':' + i; });
-    return pick(pool, ids, n).map(function (id) {
+    var isPast = function (id) { var q = qs[+id.split(':').pop()]; return !!(q && q.past); };
+    return pick(pool, ids, n, isPast).map(function (id) {
       return { part: part, kind: kind, q: qs[+id.split(':').pop()], pool: pool, id: id };
     });
   }
@@ -409,6 +415,7 @@
     } else {
       var p = partById(it.part);
       meta = '<span class="tag">' + p.emoji + ' ' + esc(p.name) + '</span>';
+      if (q.past) meta += '<span class="tag past">📌 기출</span>';
       if (q.tag === 'red') meta += '<span class="tag red">🆕 2026 개정</span>';
       if (q.tag === 'hl') meta += '<span class="tag hl">⭐ 중요</span>';
     }
