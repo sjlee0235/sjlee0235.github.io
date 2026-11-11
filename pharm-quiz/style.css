@@ -389,3 +389,5 @@ button { font: inherit; color: inherit; }
 .why-sum p { color: var(--muted); }
 .rv-why { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; }
 .why-struct { margin-top: 8px; max-width: 260px; }
+.why.wrong-part { background: var(--bad-bg, rgba(225, 29, 72, 0.08)); border: 1px solid var(--bad-border, rgba(225, 29, 72, 0.3)); }
+.why.wrong-part .why-h { color: var(--bad, #e11d48); }

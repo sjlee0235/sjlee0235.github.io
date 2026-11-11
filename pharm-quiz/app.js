@@ -365,6 +365,10 @@
     }
     return Array.isArray(q.why) && q.why.length === q.c.length ? q.why : null;
   }
+  // O,X에서 정답이 X인 문항: 문장의 틀린 부분이 원래 무엇에 해당하는지
+  function wrongHtml(t) {
+    return '<div class="why wrong-part"><div class="why-h">❌ 틀린 부분</div><p>' + esc(t) + '</p></div>';
+  }
   function optLabel(it, i) {
     if (it.kind === 'syn-struct') return CIRCLED[i];
     return CIRCLED[i] + ' ' + it.q.c[i];
@@ -472,8 +476,9 @@
     var why = whyFor(it);
     $('exp-text').hidden = !!why;
     $('exp-text').textContent = why ? '' : q.exp;
-    $('exp-why').hidden = !why;
-    $('exp-why').innerHTML = why ? whyHtml(it, why) : '';
+    var wrongTxt = it.kind === 'ox' && q.wrong ? q.wrong : '';
+    $('exp-why').hidden = !why && !wrongTxt;
+    $('exp-why').innerHTML = why ? whyHtml(it, why) : (wrongTxt ? wrongHtml(wrongTxt) : '');
     $('exp-detail').hidden = !q.detail;
     $('exp-detail').textContent = q.detail || '';
     $('btn-next').textContent = session.idx === session.items.length - 1 ? '결과 보기' : '다음 문제';
@@ -563,7 +568,8 @@
       var why = whyFor(r.item);
       return '<div class="rv-item"><p class="rv-q">' + esc(q.q) + (q.box ? '\n' + esc(q.box) : '') + '</p>' +
         '<p class="rv-a">내 답 <span class="bad">' + esc(mine) + '</span> · 정답 <span class="ok">' + esc(right) + '</span></p>' +
-        (why ? '<div class="rv-why">' + whyHtml(r.item, why) + '</div>' : '<p class="rv-exp">' + esc(q.exp) + '</p>') + '</div>';
+        (why ? '<div class="rv-why">' + whyHtml(r.item, why) + '</div>' : '<p class="rv-exp">' + esc(q.exp) + '</p>' +
+          (isOx && q.wrong ? '<div class="rv-why">' + wrongHtml(q.wrong) + '</div>' : '')) + '</div>';
     }).join('');
 
     state.last = { label: label, score: score, total: total };
