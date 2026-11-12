@@ -415,7 +415,6 @@
     } else {
       var p = partById(it.part);
       meta = '<span class="tag">' + p.emoji + ' ' + esc(p.name) + '</span>';
-      if (q.past) meta += '<span class="tag past">📌 기출</span>';
       if (q.tag === 'red') meta += '<span class="tag red">🆕 2026 개정</span>';
       if (q.tag === 'hl') meta += '<span class="tag hl">⭐ 중요</span>';
     }
