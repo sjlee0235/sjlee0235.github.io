@@ -20,6 +20,8 @@ const SYN_SRC = path.join(SRC, 'synth.json');
 const SYN_OUT = path.join(ROOT, 'data', 'vault-syn.json');
 const HERB_SRC = path.join(SRC, 'herb.json');
 const HERB_OUT = path.join(ROOT, 'data', 'vault-herb.json');
+const BIO_SRC = path.join(SRC, 'biochem.json');
+const BIO_OUT = path.join(ROOT, 'data', 'vault-bio.json');
 const ITER = 250000;
 
 const cmd = process.argv[2];
@@ -86,6 +88,13 @@ if (cmd === 'encrypt') {
     await seal(new TextEncoder().encode(JSON.stringify(hb)), HERB_OUT, true);
     console.log('→ data/vault-herb.json 저장 완료');
   }
+  if (fs.existsSync(BIO_SRC)) {
+    const bc = JSON.parse(fs.readFileSync(BIO_SRC, 'utf8'));
+    bc.mcq.forEach((q, i) => { if (q.c.length !== 5 || !(q.a >= 0 && q.a < 5) || !q.why || q.why.length !== 5) throw new Error(`생화학 5지선다 #${i} 형식 오류`); });
+    bc.ox.forEach((q, i) => { if (typeof q.a !== 'boolean') throw new Error(`생화학 O,X #${i} 형식 오류`); });
+    await seal(new TextEncoder().encode(JSON.stringify(bc)), BIO_OUT, true);
+    console.log(`생화학: O,X ${bc.ox.length} / 5지선다 ${bc.mcq.length} → data/vault-bio.json 저장 완료`);
+  }
 } else {
   const data = JSON.parse(new TextDecoder().decode(await open(OUT)));
   fs.mkdirSync(SRC, { recursive: true });
@@ -101,5 +110,9 @@ if (cmd === 'encrypt') {
   if (fs.existsSync(HERB_OUT)) {
     fs.writeFileSync(HERB_SRC, await open(HERB_OUT));
     console.log('src-data/herb.json (생약학)');
+  }
+  if (fs.existsSync(BIO_OUT)) {
+    fs.writeFileSync(BIO_SRC, await open(BIO_OUT));
+    console.log('src-data/biochem.json (생화학)');
   }
 }
