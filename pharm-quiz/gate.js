@@ -8,14 +8,18 @@
 (function () {
   'use strict';
 
-  var VAULT_URL = 'data/vault.json?v=31';
-  var SYN_URL = 'data/vault-syn.json?v=31'; // 합성학 (구조식 이미지 포함, gzip 압축 후 암호화)
-  var HERB_URL = 'data/vault-herb.json?v=31'; // 생약학 (gzip 압축 후 암호화)
-  var BIO_URL = 'data/vault-bio.json?v=31'; // 생화학 (gzip 압축 후 암호화)
+  var VAULT_URL = 'data/vault.json?v=32';
+  var SYN_URL = 'data/vault-syn.json?v=32'; // 합성학 (구조식 이미지 포함, gzip 압축 후 암호화)
+  var HERB_URL = 'data/vault-herb.json?v=32'; // 생약학 (gzip 압축 후 암호화)
+  var BIO_URL = 'data/vault-bio.json?v=32'; // 생화학 (gzip 압축 후 암호화)
   var currentCode = null;
   var CODE_KEY = 'pharmquiz-code';
   // 조회수: 페이지를 열 때마다 1씩 증가 (같은 사람이 3번 열면 +3)
-  var COUNTER_URL = 'https://abacus.jasoncameron.dev/hit/sjlee0235-pharmquiz/visits';
+  // 첫 번째 카운터가 응답하지 않으면 다음 카운터로 넘어감
+  var COUNTER_URLS = [
+    'https://abacus.jasoncameron.dev/hit/sjlee0235-pharmquiz/visits',
+    'https://countapi.mileshilliard.com/api/v1/hit/sjlee0235-pharmquiz-visits'
+  ];
 
   var $ = function (id) { return document.getElementById(id); };
   var form = $('gate-form'), input = $('gate-input'), btn = $('gate-submit'), msg = $('gate-msg');
@@ -129,12 +133,23 @@
     });
   }
 
-  // 조회수
-  fetch(COUNTER_URL, { cache: 'no-store' })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (j) {
-      var n = typeof j.value === 'number' ? j.value : j.count;
-      $('view-count').textContent = typeof n === 'number' ? n.toLocaleString('ko-KR') : '-';
-    })
-    .catch(function () { $('view-count').textContent = '-'; });
+  // 조회수 (값이 숫자 또는 문자열로 와도 처리, 응답이 없으면 8초 후 다음 카운터 시도)
+  function hitCounter(url) {
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 8000);
+    return fetch(url, { cache: 'no-store', signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) {
+        if (timer) clearTimeout(timer);
+        var n = parseInt(j && (j.value != null ? j.value : j.count), 10);
+        if (isNaN(n)) throw new Error('bad count');
+        return n;
+      }, function (err) { if (timer) clearTimeout(timer); throw err; });
+  }
+  (function tryCounter(i) {
+    if (i >= COUNTER_URLS.length) { $('view-count').textContent = '-'; return; }
+    hitCounter(COUNTER_URLS[i])
+      .then(function (n) { $('view-count').textContent = n.toLocaleString('ko-KR'); })
+      .catch(function () { tryCounter(i + 1); });
+  })(0);
 })();
