@@ -11,7 +11,8 @@
   var SYN = null;      // 합성학 데이터 (입장 후 필요할 때 로드)
   var HB = null;       // 생약학 데이터 { parts, data } (입장 후 필요할 때 로드)
   var HB_PER_PART = 30;
-  var HB_LABEL = { ox: 'O,X 퀴즈', blank: '빈칸 넣기' };
+  var HB_LABEL = { ox: 'O,X 퀴즈', blank: '5지선다' };
+  var HB_EXAM = 20; // 5지선다 30문제 중 국시형(다음에서 설명하는 ~은?) 문항 수, 나머지는 빈칸 넣기
   var BC = null;       // 생화학 데이터 { topics, ox, mcq } (입장 후 필요할 때 로드)
   var BC_COUNT = { ox: 30, mcq: 20 };
   var BC_LABEL = { ox: 'O,X 퀴즈', mcq: '5지선다' };
@@ -380,7 +381,21 @@
     }
     if (state.subject === 'herb') {
       state.hbParts.forEach(function (id) {
-        list = list.concat(pickItems('hb:' + id + ':' + state.hbType, id, state.hbType, HB.data[id][state.hbType], HB_PER_PART));
+        var qs = HB.data[id][state.hbType];
+        if (state.hbType !== 'blank') {
+          list = list.concat(pickItems('hb:' + id + ':' + state.hbType, id, state.hbType, qs, HB_PER_PART));
+          return;
+        }
+        // 5지선다: 국시형 문항(x) 우선 HB_EXAM개 + 빈칸 넣기 문항으로 나머지 채움
+        var xs = [], bs = [];
+        qs.forEach(function (q, i) { (q.x ? xs : bs).push(id + ':blank:' + i); });
+        var nx = Math.min(HB_EXAM, xs.length);
+        var a = pick('hb:' + id + ':blank:x', xs, nx);
+        var b = pick('hb:' + id + ':blank', bs, HB_PER_PART - a.length);
+        var item = function (pool) {
+          return function (k) { return { part: id, kind: 'blank', q: qs[+k.split(':').pop()], pool: pool, id: k }; };
+        };
+        list = list.concat(a.map(item('hb:' + id + ':blank:x')), b.map(item('hb:' + id + ':blank')));
       });
       return shuffle(list);
     }
@@ -498,7 +513,7 @@
       q.c.forEach(function (text, i) {
         var b = document.createElement('button');
         b.className = 'ans';
-        b.innerHTML = '<span class="num">' + (i + 1) + '</span><span>' + (it.kind === 'blank' ? blankOpt(text) : esc(text)) + '</span>';
+        b.innerHTML = '<span class="num">' + (i + 1) + '</span><span>' + (it.kind === 'blank' && !q.x ? blankOpt(text) : esc(text)) + '</span>';
         b.addEventListener('click', function () { answer(i, b); });
         box.appendChild(b);
       });
