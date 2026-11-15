@@ -10,9 +10,9 @@
   var SYN_COUNT = 30; // 합성학 1회 문항 수
   var SYN = null;      // 합성학 데이터 (입장 후 필요할 때 로드)
   var HB = null;       // 생약학 데이터 { parts, data } (입장 후 필요할 때 로드)
-  var HB_PER_PART = 30;
+  var HB_PER_PART = { ox: 30, blank: 20 };
   var HB_LABEL = { ox: 'O,X 퀴즈', blank: '5지선다' };
-  var HB_EXAM = 20; // 5지선다 30문제 중 국시형(다음에서 설명하는 ~은?) 문항 수, 나머지는 빈칸 넣기
+  var HB_EXAM = 14; // 5지선다 20문제 중 국시형(다음에서 설명하는 ~은?) 문항 수, 나머지는 빈칸 넣기
   var BC = null;       // 생화학 데이터 { topics, ox, mcq } (입장 후 필요할 때 로드)
   var BC_COUNT = { ox: 30, mcq: 20 };
   var BC_LABEL = { ox: 'O,X 퀴즈', mcq: '5지선다' };
@@ -265,7 +265,7 @@
     $('btn-hbtype-next').disabled = !state.hbType;
   }
   function hbCount() {
-    return state.hbParts.reduce(function (s, id) { return s + Math.min(HB_PER_PART, HB.data[id][state.hbType].length); }, 0);
+    return state.hbParts.reduce(function (s, id) { return s + Math.min(HB_PER_PART[state.hbType], HB.data[id][state.hbType].length); }, 0);
   }
   document.querySelectorAll('.hb-card').forEach(function (c) {
     c.addEventListener('click', function () { state.hbType = c.getAttribute('data-hb'); save(); renderHbType(); });
@@ -383,7 +383,7 @@
       state.hbParts.forEach(function (id) {
         var qs = HB.data[id][state.hbType];
         if (state.hbType !== 'blank') {
-          list = list.concat(pickItems('hb:' + id + ':' + state.hbType, id, state.hbType, qs, HB_PER_PART));
+          list = list.concat(pickItems('hb:' + id + ':' + state.hbType, id, state.hbType, qs, HB_PER_PART.ox));
           return;
         }
         // 5지선다: 국시형 문항(x) 우선 HB_EXAM개 + 빈칸 넣기 문항으로 나머지 채움
@@ -391,7 +391,7 @@
         qs.forEach(function (q, i) { (q.x ? xs : bs).push(id + ':blank:' + i); });
         var nx = Math.min(HB_EXAM, xs.length);
         var a = pick('hb:' + id + ':blank:x', xs, nx);
-        var b = pick('hb:' + id + ':blank', bs, HB_PER_PART - a.length);
+        var b = pick('hb:' + id + ':blank', bs, HB_PER_PART.blank - a.length);
         var item = function (pool) {
           return function (k) { return { part: id, kind: 'blank', q: qs[+k.split(':').pop()], pool: pool, id: k }; };
         };
