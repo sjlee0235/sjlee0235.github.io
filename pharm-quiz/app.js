@@ -13,6 +13,8 @@
   var HB_PER_PART = { ox: 30, blank: 20 };
   var HB_LABEL = { ox: 'O,X 퀴즈', blank: '5지선다' };
   var HB_EXAM = 14; // 5지선다 20문제 중 국시형(다음에서 설명하는 ~은?) 문항 수, 나머지는 빈칸 넣기
+  var PC = null;       // 약제학 데이터 { topics, mcq }
+  var PC_COUNT = 20;
   var BC = null;       // 생화학 데이터 { topics, ox, mcq } (입장 후 필요할 때 로드)
   var BC_COUNT = { ox: 30, mcq: 20 };
   var BC_LABEL = { ox: 'O,X 퀴즈', mcq: '5지선다' };
@@ -101,7 +103,7 @@
   }
 
   // ───── 화면 전환 ─────
-  var screens = ['home', 'gate', 'subject', 'syn', 'hbparts', 'hbtype', 'bctype', 'parts', 'type', 'quiz', 'result'];
+  var screens = ['home', 'gate', 'subject', 'syn', 'hbparts', 'hbtype', 'bctype', 'pcstart', 'parts', 'type', 'quiz', 'result'];
   function show(name) {
     screens.forEach(function (s) { $('screen-' + s).hidden = s !== name; });
     if (name === 'home') renderHome();
@@ -111,6 +113,7 @@
     if (name === 'hbparts') renderHbParts();
     if (name === 'hbtype') renderHbType();
     if (name === 'bctype') renderBcType();
+    if (name === 'pcstart') renderPcStart();
     window.scrollTo(0, 0);
   }
   document.querySelectorAll('[data-go]').forEach(function (b) {
@@ -141,6 +144,11 @@
     return { id: id, name: id, emoji: '🌿' };
   }
   function hbNames(ids) { return ids.map(function (id) { return hbPart(id).name; }).join(', '); }
+  function pcTopic(id) {
+    var ts = PC ? PC.topics : [];
+    for (var i = 0; i < ts.length; i++) if (ts[i].id === id) return ts[i];
+    return { id: id, name: id, emoji: '⚗️' };
+  }
   function bcTopic(id) {
     var ts = BC ? BC.topics : [];
     for (var i = 0; i < ts.length; i++) if (ts[i].id === id) return ts[i];
@@ -153,11 +161,14 @@
     if (state.subject === 'synth') hasSetting = !!state.synMode;
     if (state.subject === 'herb') hasSetting = state.hbParts.length && state.hbType;
     if (state.subject === 'biochem') hasSetting = !!state.bcType;
+    if (state.subject === 'pharmaceutics') hasSetting = true;
     $('recent-card').hidden = !(hasSetting || state.last);
     $('recent-setting').textContent = state.subject === 'synth'
       ? '합성학' + (state.synMode ? ' · ' + SYN_LABEL[state.synMode] : '')
       : state.subject === 'biochem'
         ? '생화학' + (state.bcType ? ' · ' + BC_LABEL[state.bcType] : '')
+      : state.subject === 'pharmaceutics'
+        ? '약제학 · 5지선다'
       : state.subject === 'herb'
         ? '생약학' + (HB && state.hbParts.length ? ' · ' + hbNames(state.hbParts) : '') + (state.hbType ? ' · ' + HB_LABEL[state.hbType] : '')
       : state.type === 'mock'
@@ -187,6 +198,8 @@
       if (sub === 'pharm') { state.subject = 'pharm'; save(); show('parts'); return; }
       var cfg = sub === 'synth'
         ? { name: '합성학', loaded: !!SYN, load: window.loadSynth, set: function (d) { SYN = d.drugs; }, screen: 'syn' }
+        : sub === 'pharmaceutics'
+          ? { name: '약제학', loaded: !!PC, load: window.loadPharmaceutics, set: function (d) { PC = d; }, screen: 'pcstart' }
         : sub === 'biochem'
           ? { name: '생화학', loaded: !!BC, load: window.loadBiochem, set: function (d) { BC = d; }, screen: 'bctype' }
           : { name: '생약학', loaded: !!HB, load: window.loadHerb, set: setHerb, screen: 'hbparts' };
@@ -216,6 +229,13 @@
   });
   $('btn-syn-next').addEventListener('click', function () { if (state.synMode) startQuiz(); });
   if (window.__quizUnlocked) setData(window.QUIZ_DATA);
+
+  // ───── 약제학 시작 ─────
+  function renderPcStart() {
+    $('pc-count').textContent = PC.topics.length + '개 파트 · 5지선다 ' + PC.mcq.length + '문제';
+    $('pc-summary').textContent = '파트 구분 없이 ' + Math.min(PC_COUNT, PC.mcq.length) + '문제 · 순서 랜덤';
+  }
+  $('btn-pc-start').addEventListener('click', function () { if (PC) startQuiz(); });
 
   // ───── 생화학 유형 선택 ─────
   function renderBcType() {
@@ -369,6 +389,16 @@
   function buildQuestions() {
     if (state.subject === 'synth') return buildSynth();
     var list = [];
+    if (state.subject === 'pharmaceutics') {
+      var pqs = PC.mcq;
+      var pids = pqs.map(function (_, i) { return 'pc:mcq:' + i; });
+      return shuffle(pick('pc:mcq', pids, PC_COUNT, function (id) {
+        return pqs[+id.split(':').pop()].pri || 0;
+      }).map(function (id) {
+        var q = pqs[+id.split(':').pop()];
+        return { part: q.topic, kind: 'mcq', q: q, pool: 'pc:mcq', id: id };
+      }));
+    }
     if (state.subject === 'biochem') {
       var bqs = BC[state.bcType];
       var bids = bqs.map(function (_, i) { return 'bc:' + state.bcType + ':' + i; });
@@ -467,6 +497,9 @@
     var meta;
     if (syn) {
       meta = '<span class="tag">⚗️ ' + esc(q.ch) + '</span>';
+    } else if (state.subject === 'pharmaceutics') {
+      var pt = pcTopic(it.part);
+      meta = '<span class="tag">' + pt.emoji + ' ' + esc(pt.name) + '</span>';
     } else if (state.subject === 'biochem') {
       var bt = bcTopic(it.part);
       meta = '<span class="tag">' + bt.emoji + ' ' + esc(bt.name) + '</span>';
@@ -598,7 +631,9 @@
     var isSyn = session.items[0] && /^syn/.test(session.items[0].kind);
     var isHb = state.subject === 'herb' && !isSyn;
     var isBc = state.subject === 'biochem' && !isSyn;
+    var isPc = state.subject === 'pharmaceutics' && !isSyn;
     var label = isSyn ? '합성학 · ' + SYN_LABEL[state.synMode]
+      : isPc ? '약제학 · 5지선다'
       : isBc ? '생화학 · ' + BC_LABEL[state.bcType]
       : isHb ? '생약학 · ' + hbNames(state.hbParts) + ' · ' + HB_LABEL[state.hbType]
       : state.type === 'mock' ? '랜덤 모의고사' : partNames(state.parts) + ' · ' + TYPE_LABEL[state.type];
@@ -613,6 +648,7 @@
     var rowsSrc = isSyn
       ? Object.keys(by).sort(function (x, y) { return parseInt(x, 10) - parseInt(y, 10); }).map(function (k) { return { id: k, label: '⚗️ ' + k }; })
       : isHb ? HB.parts.filter(function (p) { return by[p.id]; }).map(function (p) { return { id: p.id, label: p.emoji + ' ' + p.name }; })
+      : isPc ? PC.topics.filter(function (p) { return by[p.id]; }).map(function (p) { return { id: p.id, label: p.emoji + ' ' + p.name }; })
       : isBc ? BC.topics.filter(function (p) { return by[p.id]; }).map(function (p) { return { id: p.id, label: p.emoji + ' ' + p.name }; })
       : PARTS.filter(function (p) { return by[p.id]; }).map(function (p) { return { id: p.id, label: p.emoji + ' ' + p.name }; });
     $('breakdown').innerHTML = rowsSrc.map(function (p) {
