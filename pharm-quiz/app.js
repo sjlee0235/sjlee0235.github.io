@@ -244,7 +244,7 @@
   function renderPcParts() {
     var grid = $('pc-grid');
     grid.innerHTML = '';
-    PC.parts.forEach(function (p, n) {
+    PC.parts.forEach(function (p) {
       var b = document.createElement('button');
       b.className = 'part' + (state.pcParts.indexOf(p.id) > -1 ? ' selected' : '');
       b.innerHTML = '<span class="emoji">' + p.emoji + '</span><span class="pc-name"><span class="name">파트 ' + (n + 1) + '. ' + esc(p.name) + '</span><small>' + esc(p.desc || '') + '</small></span>';
