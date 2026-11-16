@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#6d5dfc">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="style.css?v=35">
+  <link rel="stylesheet" href="style.css?v=36">
 </head>
 <body>
   <div class="bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
@@ -103,7 +103,7 @@
         </button>
         <button class="type-card subject-card" data-subject="pharmaceutics">
           <span class="type-icon">🧪</span>
-          <span class="type-body"><strong>약제학</strong><small>5지선다 20문제 · 파트 랜덤</small></span>
+          <span class="type-body"><strong>약제학</strong><small>파트별 O,X 퀴즈 · 5지선다</small></span>
           <span class="go" aria-hidden="true">›</span>
         </button>
       </div>
@@ -179,24 +179,44 @@
       </footer>
     </section>
 
-    <!-- 약제학 시작 -->
-    <section class="screen" id="screen-pcstart" hidden>
+    <!-- 약제학 파트 선택 -->
+    <section class="screen" id="screen-pcparts" hidden>
       <header class="step-head">
-        <span class="step">약제학</span>
-        <h2>5지선다로 풀어볼까요?</h2>
-        <p class="muted" id="pc-count"></p>
+        <span class="step">약제학 · STEP 1 / 2</span>
+        <h2>파트를 골라주세요</h2>
+        <p class="muted">여러 개 선택할 수 있어요</p>
+      </header>
+      <button class="btn btn-ghost btn-block select-all" id="btn-pc-all">전체 선택</button>
+      <div class="part-grid hb-grid pc-grid" id="pc-grid"></div>
+      <footer class="nav">
+        <button class="btn btn-ghost" data-go="subject">이전</button>
+        <button class="btn btn-primary" id="btn-pc-next" disabled>다음</button>
+      </footer>
+    </section>
+
+    <!-- 약제학 유형 선택 -->
+    <section class="screen" id="screen-pctype" hidden>
+      <header class="step-head">
+        <span class="step">약제학 · STEP 2 / 2</span>
+        <h2>문제 유형을 골라주세요</h2>
+        <p class="muted" id="pc-parts-label"></p>
       </header>
       <div class="type-list">
-        <div class="type-card selected">
-          <span class="type-icon">①②③</span>
-          <span class="type-body"><strong>5지선다</strong><small>전체 파트에서 20문제 랜덤 · 보기별 풀이</small></span>
+        <button class="type-card pc-card" data-pc="ox">
+          <span class="type-icon">⭕❌</span>
+          <span class="type-body"><strong>O,X 퀴즈</strong><small>파트별 20문제 랜덤</small></span>
           <span class="check" aria-hidden="true"></span>
-        </div>
+        </button>
+        <button class="type-card pc-card" data-pc="mcq">
+          <span class="type-icon">①②③</span>
+          <span class="type-body"><strong>5지선다</strong><small>파트별 10문제 랜덤 · 보기별 풀이</small></span>
+          <span class="check" aria-hidden="true"></span>
+        </button>
       </div>
       <p class="type-summary" id="pc-summary"></p>
       <footer class="nav">
-        <button class="btn btn-ghost" data-go="subject">이전</button>
-        <button class="btn btn-primary" id="btn-pc-start">시작</button>
+        <button class="btn btn-ghost" data-go="pcparts">이전</button>
+        <button class="btn btn-primary" id="btn-pctype-next" disabled>다음</button>
       </footer>
     </section>
 
@@ -313,10 +333,10 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/parts.js?v=35"></script>
-  <script src="gate.js?v=35"></script>
-  <script src="app.js?v=35"></script>
-  <script src="comments-config.js?v=35"></script>
-  <script type="module" src="comments.js?v=35"></script>
+  <script src="data/parts.js?v=36"></script>
+  <script src="gate.js?v=36"></script>
+  <script src="app.js?v=36"></script>
+  <script src="comments-config.js?v=36"></script>
+  <script type="module" src="comments.js?v=36"></script>
 </body>
 </html>

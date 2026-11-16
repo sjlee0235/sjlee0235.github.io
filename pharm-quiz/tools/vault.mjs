@@ -100,9 +100,16 @@ if (cmd === 'encrypt') {
   if (fs.existsSync(PC_SRC)) {
     const pc = JSON.parse(fs.readFileSync(PC_SRC, 'utf8'));
     const tids = new Set(pc.topics.map((t) => t.id));
-    pc.mcq.forEach((q, i) => { if (q.c.length !== 5 || !(q.a >= 0 && q.a < 5) || !q.why || q.why.length !== 5 || !tids.has(q.topic)) throw new Error(`약제학 5지선다 #${i} 형식 오류`); });
+    const pids = new Set(pc.parts.map((p) => p.id));
+    pc.mcq.forEach((q, i) => { if (q.c.length !== 5 || !(q.a >= 0 && q.a < 5) || !q.why || q.why.length !== 5 || !tids.has(q.topic) || !pids.has(q.part)) throw new Error(`약제학 5지선다 #${i} 형식 오류`); });
+    pc.ox.forEach((q, i) => { if (typeof q.a !== 'boolean' || !tids.has(q.topic) || !pids.has(q.part)) throw new Error(`약제학 O,X #${i} 형식 오류`); });
+    for (const p of pc.parts) {
+      const nm = pc.mcq.filter((q) => q.part === p.id).length, no = pc.ox.filter((q) => q.part === p.id).length;
+      if (nm < 10 || no < 20) throw new Error(`약제학 ${p.id}: 문제 수 부족`);
+      console.log(`약제학 ${p.id} ${p.name}: O,X ${no} / 5지선다 ${nm}`);
+    }
     await seal(new TextEncoder().encode(JSON.stringify(pc)), PC_OUT, true);
-    console.log(`약제학: 5지선다 ${pc.mcq.length} → data/vault-pc.json 저장 완료`);
+    console.log('→ data/vault-pc.json 저장 완료');
   }
 } else {
   const data = JSON.parse(new TextDecoder().decode(await open(OUT)));

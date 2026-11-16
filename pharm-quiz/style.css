@@ -373,6 +373,9 @@ button { font: inherit; color: inherit; }
 .hb-grid { grid-template-columns: 1fr; }
 .part .sub { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; }
 .hb-grid .part.selected::after { margin-left: 0; flex: none; }
+.select-all { margin: 0 0 10px; }
+.pc-grid .part .pc-name { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pc-grid .part .pc-name small { font-size: 12px; font-weight: 500; color: var(--muted); line-height: 1.4; }
 .slots { display: flex; flex-wrap: wrap; gap: 4px 14px; }
 .slot { display: inline-flex; align-items: baseline; gap: 5px; overflow-wrap: anywhere; }
 .slot i { font-style: normal; font-weight: 800; color: var(--primary); }
