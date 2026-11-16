@@ -247,7 +247,7 @@
     PC.parts.forEach(function (p) {
       var b = document.createElement('button');
       b.className = 'part' + (state.pcParts.indexOf(p.id) > -1 ? ' selected' : '');
-      b.innerHTML = '<span class="emoji">' + p.emoji + '</span><span class="pc-name"><span class="name">파트 ' + (n + 1) + '. ' + esc(p.name) + '</span><small>' + esc(p.desc || '') + '</small></span>';
+      b.innerHTML = '<span class="emoji">' + p.emoji + '</span><span class="pc-name"><span class="name">' + esc(p.name) + '</span><small>' + esc(p.desc || '') + '</small></span>';
       b.addEventListener('click', function () {
         var i = state.pcParts.indexOf(p.id);
         if (i > -1) state.pcParts.splice(i, 1); else state.pcParts.push(p.id);
