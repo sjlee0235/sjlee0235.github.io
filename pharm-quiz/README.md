@@ -26,7 +26,7 @@
 | `data/vault-syn.json` | 암호화된 합성학 데이터 (약물 127개, 구조식 SVG + 이야기 제목, gzip) |
 | `data/vault-herb.json` | 암호화된 생약학 데이터 (5개 파트, 파트별 O,X 100 / 5지선다 = 빈칸 넣기 100 + 생약명 고르기 + 국시형 약 60~120, gzip) |
 | `data/vault-bio.json` | 암호화된 생화학 데이터 (8개 단원, O,X 320 / 5지선다 208, gzip) |
-| `data/vault-pc.json` | 암호화된 약제학 데이터 (4개 파트·18개 단원, O,X 257 / 5지선다 174, gzip) |
+| `data/vault-pc.json` | 암호화된 약제학 데이터 (4개 파트·18개 단원, O,X 343 / 5지선다 254, gzip) |
 | `tools/vault.mjs` | 문제 암호화·복호화 도구 |
 
 ## 출제 규칙
