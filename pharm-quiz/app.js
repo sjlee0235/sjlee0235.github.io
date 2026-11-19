@@ -580,6 +580,29 @@
     if (q.exp && !/^syn/.test(it.kind) && !/^✔/.test(q.exp)) h += '<div class="why-sum"><b>📌 핵심 정리</b><p>' + esc(q.exp) + '</p></div>';
     return h;
   }
+  // 대사경로 빈칸채우기: 물질은 상자, 효소는 화살표 옆, 조효소·부산물은 반대편에 작게
+  function flowHtml(q) {
+    var h = '';
+    if (q.flow) {
+      h += '<div class="flow">';
+      q.flow.forEach(function (x) {
+        if ('n' in x) {
+          h += '<div class="fl-node' + (x.b ? ' blank' : '') + '">' + esc(x.n) + '</div>';
+        } else {
+          h += '<div class="fl-arrow"><span class="fl-co">' + esc(x.co || '') + '</span><span class="fl-ar">↓</span>' +
+            '<span class="fl-enz' + (x.b ? ' blank' : '') + '">' + esc(x.e || '') + '</span></div>';
+        }
+      });
+      h += '</div>';
+    }
+    if (q.rows) {
+      h += '<div class="fl-rows">' + q.rows.map(function (r) {
+        return '<div class="fl-row ' + esc(r[2] || '') + '"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>';
+      }).join('') + '<div class="fl-row ask"><b>효소</b><span class="fl-enz blank">( ㉠ )</span></div></div>';
+    }
+    if (q.note) h += '<div class="fl-note">' + esc(q.note) + '</div>';
+    return h;
+  }
   var MARKS = ['㉠', '㉡', '㉢', '㉣'];
   // 빈칸 넣기 보기: "콩과 / isoflavonoid / puerarin" → ㉠ 콩과 ㉡ isoflavonoid ㉢ puerarin
   function blankOpt(text) {
@@ -616,9 +639,10 @@
     $('q-meta').innerHTML = meta;
 
     $('q-text').textContent = q.q;
-    $('q-box').hidden = !q.box && it.kind !== 'syn-struct';
-    $('q-box').className = 'q-box' + (it.kind === 'syn-struct' ? ' q-name' : '');
-    $('q-box').textContent = it.kind === 'syn-struct' ? q.name : (q.box || '');
+    $('q-box').hidden = !q.box && !q.flow && !q.rows && it.kind !== 'syn-struct';
+    $('q-box').className = 'q-box' + (it.kind === 'syn-struct' ? ' q-name' : '') + (q.flow || q.rows ? ' q-flow' : '');
+    if (q.flow || q.rows) $('q-box').innerHTML = flowHtml(q);
+    else $('q-box').textContent = it.kind === 'syn-struct' ? q.name : (q.box || '');
     $('q-struct').hidden = it.kind !== 'syn-name';
     $('q-struct').innerHTML = it.kind === 'syn-name' ? q.svg : '';
 

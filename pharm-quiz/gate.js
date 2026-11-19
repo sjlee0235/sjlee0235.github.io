@@ -8,11 +8,11 @@
 (function () {
   'use strict';
 
-  var VAULT_URL = 'data/vault.json?v=42';
-  var SYN_URL = 'data/vault-syn.json?v=42'; // 합성학 (구조식 이미지 포함, gzip 압축 후 암호화)
-  var HERB_URL = 'data/vault-herb.json?v=42'; // 생약학 (gzip 압축 후 암호화)
-  var BIO_URL = 'data/vault-bio.json?v=42'; // 생화학 (gzip 압축 후 암호화)
-  var PC_URL = 'data/vault-pc.json?v=42'; // 약제학 (gzip 압축 후 암호화)
+  var VAULT_URL = 'data/vault.json?v=44';
+  var SYN_URL = 'data/vault-syn.json?v=44'; // 합성학 (구조식 이미지 포함, gzip 압축 후 암호화)
+  var HERB_URL = 'data/vault-herb.json?v=44'; // 생약학 (gzip 압축 후 암호화)
+  var BIO_URL = 'data/vault-bio.json?v=44'; // 생화학 (gzip 압축 후 암호화)
+  var PC_URL = 'data/vault-pc.json?v=44'; // 약제학 (gzip 압축 후 암호화)
   var currentCode = null;
   var CODE_KEY = 'pharmquiz-code';
   // 조회수: 페이지를 열 때마다 1씩 증가 (같은 사람이 3번 열면 +3)

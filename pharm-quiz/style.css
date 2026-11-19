@@ -394,3 +394,29 @@ button { font: inherit; color: inherit; }
 .why-struct { margin-top: 8px; max-width: 260px; }
 .why.wrong-part { background: var(--bad-bg, rgba(225, 29, 72, 0.08)); border: 1px solid var(--bad-border, rgba(225, 29, 72, 0.3)); }
 .why.wrong-part .why-h { color: var(--bad, #e11d48); }
+
+/* 생화학 대사경로 빈칸채우기 */
+.q-box.q-flow { white-space: normal; padding: 16px 12px; }
+.flow { display: flex; flex-direction: column; align-items: center; }
+.fl-node {
+  max-width: 100%; padding: 9px 16px; border-radius: 12px; background: var(--surface-solid);
+  border: 1.5px solid var(--border); font-weight: 700; font-size: 15.5px; line-height: 1.4; text-align: center; overflow-wrap: anywhere;
+}
+.fl-node.blank, .fl-enz.blank {
+  border: 2px dashed var(--primary); background: var(--primary-soft); color: var(--primary); font-weight: 800;
+}
+.fl-node.blank { min-width: 110px; }
+.fl-arrow { display: grid; grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1.7fr); align-items: center; width: 100%; min-height: 46px; padding: 4px 0; }
+.fl-ar { text-align: center; font-size: 22px; font-weight: 800; color: var(--primary); line-height: 1; }
+.fl-co { text-align: right; font-size: 12px; line-height: 1.4; color: var(--muted); overflow-wrap: break-word; }
+.fl-enz { justify-self: start; font-size: 13.5px; font-weight: 700; line-height: 1.35; color: #8b3fd9; overflow-wrap: break-word; min-width: 0; }
+.fl-enz.blank { padding: 3px 10px; border-radius: 10px; }
+.fl-rows { display: flex; flex-direction: column; gap: 8px; }
+.fl-row { display: grid; grid-template-columns: 74px 1fr; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--surface-solid); border: 1.5px solid var(--border); font-size: 14.5px; line-height: 1.45; }
+.fl-row b { font-size: 13px; }
+.fl-row.up b { color: #e11d48; }
+.fl-row.down b { color: #2563eb; }
+.fl-row.ask { background: transparent; border: none; padding: 2px 12px; }
+.fl-row.ask .fl-enz { justify-self: start; }
+.fl-note { margin-top: 12px; text-align: center; font-size: 14.5px; font-weight: 700; }
+@media (prefers-color-scheme: dark) { .fl-enz { color: #c4a5ff; } .fl-row.up b { color: #fb7185; } .fl-row.down b { color: #60a5fa; } }
