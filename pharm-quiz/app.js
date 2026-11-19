@@ -29,6 +29,7 @@
   state.subject = state.subject || 'pharm';
   state.hbParts = state.hbParts || [];
   state.pcParts = state.pcParts || [];
+  state.bcParts = state.bcParts || [];
   var session = null;
 
   // ───── 다시 풀기 규칙 (모든 과목 공통) ─────
@@ -105,7 +106,7 @@
   }
 
   // ───── 화면 전환 ─────
-  var screens = ['home', 'gate', 'subject', 'syn', 'hbparts', 'hbtype', 'bctype', 'pcparts', 'pctype', 'parts', 'type', 'quiz', 'result'];
+  var screens = ['home', 'gate', 'subject', 'syn', 'hbparts', 'hbtype', 'bctype', 'bcparts', 'pcparts', 'pctype', 'parts', 'type', 'quiz', 'result'];
   function show(name) {
     screens.forEach(function (s) { $('screen-' + s).hidden = s !== name; });
     if (name === 'home') renderHome();
@@ -116,6 +117,7 @@
     if (name === 'hbtype') renderHbType();
     if (name === 'bctype') renderBcType();
     if (name === 'pcparts') renderPcParts();
+    if (name === 'bcparts') renderBcParts();
     if (name === 'pctype') renderPcType();
     window.scrollTo(0, 0);
   }
@@ -163,13 +165,13 @@
     var hasSetting = state.parts.length && state.type;
     if (state.subject === 'synth') hasSetting = !!state.synMode;
     if (state.subject === 'herb') hasSetting = state.hbParts.length && state.hbType;
-    if (state.subject === 'biochem') hasSetting = !!state.bcType;
+    if (state.subject === 'biochem') hasSetting = !!state.bcType && (state.bcType !== 'blank' || state.bcParts.length);
     if (state.subject === 'pharmaceutics') hasSetting = state.pcParts.length && state.pcType;
     $('recent-card').hidden = !(hasSetting || state.last);
     $('recent-setting').textContent = state.subject === 'synth'
       ? '합성학' + (state.synMode ? ' · ' + SYN_LABEL[state.synMode] : '')
       : state.subject === 'biochem'
-        ? '생화학' + (state.bcType ? ' · ' + BC_LABEL[state.bcType] : '')
+        ? '생화학' + (state.bcType ? ' · ' + BC_LABEL[state.bcType] : '') + (state.bcType === 'blank' && BC && state.bcParts.length ? ' · ' + bcPartNames(state.bcParts) : '')
       : state.subject === 'pharmaceutics'
         ? '약제학' + (PC && state.pcParts.length ? ' · ' + pcNames(state.pcParts) : '') + (state.pcType ? ' · ' + PC_LABEL[state.pcType] : '')
       : state.subject === 'herb'
@@ -287,13 +289,52 @@
     document.querySelectorAll('.bc-card').forEach(function (c) {
       c.classList.toggle('selected', state.bcType === c.getAttribute('data-bc'));
     });
-    $('bc-summary').textContent = state.bcType ? BC_LABEL[state.bcType] + ' ' + BC_COUNT[state.bcType] + '문제 · 순서 랜덤' : '';
+    $('bc-summary').textContent = !state.bcType ? '' : state.bcType === 'blank' ? '빈칸채우기 · 다음 화면에서 파트 선택' : BC_LABEL[state.bcType] + ' ' + BC_COUNT[state.bcType] + '문제 · 순서 랜덤';
     $('btn-bctype-next').disabled = !state.bcType;
   }
   document.querySelectorAll('.bc-card').forEach(function (c) {
     c.addEventListener('click', function () { state.bcType = c.getAttribute('data-bc'); save(); renderBcType(); });
   });
-  $('btn-bctype-next').addEventListener('click', function () { if (state.bcType) startQuiz(); });
+  $('btn-bctype-next').addEventListener('click', function () {
+    if (!state.bcType) return;
+    if (state.bcType === 'blank') show('bcparts'); else startQuiz();
+  });
+
+  // ───── 생화학 빈칸채우기 파트 선택 (파트는 데이터의 blankParts 로 추가 가능) ─────
+  function bcPart(id) {
+    var ps = (BC && BC.blankParts) || [];
+    for (var i = 0; i < ps.length; i++) if (ps[i].id === id) return ps[i];
+    return { id: id, name: id, emoji: '🧬' };
+  }
+  function bcPartNames(ids) { return ids.map(function (id) { return bcPart(id).name; }).join(', '); }
+  function bcBlankOf(id) { return BC.blank.filter(function (q) { return q.part === id; }).length; }
+  function renderBcParts() {
+    var ok = {}; BC.blankParts.forEach(function (p) { ok[p.id] = true; });
+    state.bcParts = state.bcParts.filter(function (id) { return ok[id]; });
+    var grid = $('bc-grid');
+    grid.innerHTML = '';
+    BC.blankParts.forEach(function (p) {
+      var b = document.createElement('button');
+      b.className = 'part' + (state.bcParts.indexOf(p.id) > -1 ? ' selected' : '');
+      b.innerHTML = '<span class="emoji">' + p.emoji + '</span><span class="pc-name"><span class="name">' + esc(p.name) + '</span><small>' + esc(p.desc || '') + ' · ' + bcBlankOf(p.id) + '문제</small></span>';
+      b.addEventListener('click', function () {
+        var i = state.bcParts.indexOf(p.id);
+        if (i > -1) state.bcParts.splice(i, 1); else state.bcParts.push(p.id);
+        state.bcParts = BC.blankParts.map(function (x) { return x.id; }).filter(function (id) { return state.bcParts.indexOf(id) > -1; });
+        save(); renderBcParts();
+      });
+      grid.appendChild(b);
+    });
+    $('btn-bc-all').textContent = state.bcParts.length === BC.blankParts.length ? '전체 해제' : '전체 선택';
+    var n = state.bcParts.reduce(function (s, id) { return s + Math.min(BC_COUNT.blank, bcBlankOf(id)); }, 0);
+    $('bcparts-summary').textContent = state.bcParts.length ? '빈칸채우기 총 ' + n + '문제 · 순서 랜덤' : '';
+    $('btn-bcparts-next').disabled = state.bcParts.length === 0;
+  }
+  $('btn-bc-all').addEventListener('click', function () {
+    state.bcParts = state.bcParts.length === BC.blankParts.length ? [] : BC.blankParts.map(function (x) { return x.id; });
+    save(); renderBcParts();
+  });
+  $('btn-bcparts-next').addEventListener('click', function () { if (state.bcType === 'blank' && state.bcParts.length) startQuiz(); });
 
   // ───── 생약학 파트·유형 선택 ─────
   function setHerb(data) {
@@ -442,6 +483,19 @@
         pqs.forEach(function (q, i) { if (q.part === pid) ids.push('pc:' + pt + ':' + i); });
         list = list.concat(pick(pool, ids, PC_PER[pt], prio).map(function (id) {
           return { part: pid, kind: pt, q: pqs[+id.split(':').pop()], pool: pool, id: id };
+        }));
+      });
+      return shuffle(list);
+    }
+    if (state.subject === 'biochem' && state.bcType === 'blank') {
+      var blq = BC.blank;
+      var bprio = function (id) { return blq[+id.split(':').pop()].pri || 0; };
+      state.bcParts.forEach(function (pid) {
+        var pool = 'bc:blank:' + pid, ids = [];
+        blq.forEach(function (q, i) { if (q.part === pid) ids.push('bc:blank:' + i); });
+        list = list.concat(pick(pool, ids, BC_COUNT.blank, bprio).map(function (id) {
+          var q = blq[+id.split(':').pop()];
+          return { part: q.topic, kind: 'mcq', q: q, pool: pool, id: id };
         }));
       });
       return shuffle(list);
@@ -681,7 +735,7 @@
     var isPc = state.subject === 'pharmaceutics' && !isSyn;
     var label = isSyn ? '합성학 · ' + SYN_LABEL[state.synMode]
       : isPc ? '약제학 · ' + pcNames(state.pcParts) + ' · ' + PC_LABEL[state.pcType]
-      : isBc ? '생화학 · ' + BC_LABEL[state.bcType]
+      : isBc ? '생화학 · ' + BC_LABEL[state.bcType] + (state.bcType === 'blank' ? ' · ' + bcPartNames(state.bcParts) : '')
       : isHb ? '생약학 · ' + hbNames(state.hbParts) + ' · ' + HB_LABEL[state.hbType]
       : state.type === 'mock' ? '랜덤 모의고사' : partNames(state.parts) + ' · ' + TYPE_LABEL[state.type];
     $('result-sub').textContent = label + ' · 정답률 ' + pct + '%';

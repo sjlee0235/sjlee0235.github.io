@@ -94,7 +94,9 @@ if (cmd === 'encrypt') {
     const bc = JSON.parse(fs.readFileSync(BIO_SRC, 'utf8'));
     bc.mcq.forEach((q, i) => { if (q.c.length !== 5 || !(q.a >= 0 && q.a < 5) || !q.why || q.why.length !== 5) throw new Error(`생화학 5지선다 #${i} 형식 오류`); });
     bc.ox.forEach((q, i) => { if (typeof q.a !== 'boolean') throw new Error(`생화학 O,X #${i} 형식 오류`); });
-    (bc.blank || []).forEach((q, i) => { if (q.c.length !== 5 || new Set(q.c).size !== 5 || !(q.a >= 0 && q.a < 5) || !q.why || q.why.length !== 5) throw new Error(`생화학 빈칸채우기 #${i} 형식 오류`); });
+    const bps = new Set((bc.blankParts || []).map((p) => p.id));
+    (bc.blank || []).forEach((q, i) => { if (q.c.length !== 5 || new Set(q.c).size !== 5 || !(q.a >= 0 && q.a < 5) || !q.why || q.why.length !== 5 || !bps.has(q.part)) throw new Error(`생화학 빈칸채우기 #${i} 형식 오류`); });
+    for (const p of bc.blankParts || []) console.log(`생화학 빈칸채우기 ${p.id} ${p.name}: ${bc.blank.filter((q) => q.part === p.id).length}`);
     await seal(new TextEncoder().encode(JSON.stringify(bc)), BIO_OUT, true);
     console.log(`생화학: O,X ${bc.ox.length} / 5지선다 ${bc.mcq.length} / 빈칸채우기 ${(bc.blank || []).length} → data/vault-bio.json 저장 완료`);
   }

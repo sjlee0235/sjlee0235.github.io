@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#6d5dfc">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="style.css?v=40">
+  <link rel="stylesheet" href="style.css?v=41">
 </head>
 <body>
   <div class="bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
@@ -220,6 +220,22 @@
       </footer>
     </section>
 
+    <!-- 생화학 빈칸채우기 파트 선택 -->
+    <section class="screen" id="screen-bcparts" hidden>
+      <header class="step-head">
+        <span class="step">생화학 · 빈칸채우기</span>
+        <h2>파트를 골라주세요</h2>
+        <p class="muted">여러 개 선택할 수 있어요 · 파트별 20문제 랜덤</p>
+      </header>
+      <button class="btn btn-ghost btn-block select-all" id="btn-bc-all">전체 선택</button>
+      <div class="part-grid hb-grid pc-grid" id="bc-grid"></div>
+      <p class="type-summary" id="bcparts-summary"></p>
+      <footer class="nav">
+        <button class="btn btn-ghost" data-go="bctype">이전</button>
+        <button class="btn btn-primary" id="btn-bcparts-next" disabled>시작</button>
+      </footer>
+    </section>
+
     <!-- 생화학 유형 선택 -->
     <section class="screen" id="screen-bctype" hidden>
       <header class="step-head">
@@ -240,7 +256,7 @@
         </button>
         <button class="type-card bc-card" data-bc="blank">
           <span class="type-icon">㉠</span>
-          <span class="type-body"><strong>빈칸채우기</strong><small>대사경로 빈칸 · 20문제 랜덤 · 보기별 풀이</small></span>
+          <span class="type-body"><strong>빈칸채우기</strong><small>대사경로 빈칸 · 파트 선택 · 파트별 20문제 랜덤</small></span>
           <span class="check" aria-hidden="true"></span>
         </button>
       </div>
@@ -338,10 +354,10 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data/parts.js?v=40"></script>
-  <script src="gate.js?v=40"></script>
-  <script src="app.js?v=40"></script>
-  <script src="comments-config.js?v=40"></script>
-  <script type="module" src="comments.js?v=40"></script>
+  <script src="data/parts.js?v=41"></script>
+  <script src="gate.js?v=41"></script>
+  <script src="app.js?v=41"></script>
+  <script src="comments-config.js?v=41"></script>
+  <script type="module" src="comments.js?v=41"></script>
 </body>
 </html>
