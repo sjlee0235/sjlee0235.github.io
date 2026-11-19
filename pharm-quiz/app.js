@@ -17,8 +17,8 @@
   var PC_PER = { ox: 20, mcq: 10 }; // 약제학: 선택한 파트마다 출제 수
   var PC_LABEL = { ox: 'O,X 퀴즈', mcq: '5지선다' };
   var BC = null;       // 생화학 데이터 { topics, ox, mcq } (입장 후 필요할 때 로드)
-  var BC_COUNT = { ox: 30, mcq: 20 };
-  var BC_LABEL = { ox: 'O,X 퀴즈', mcq: '5지선다' };
+  var BC_COUNT = { ox: 30, mcq: 20, blank: 20 };
+  var BC_LABEL = { ox: 'O,X 퀴즈', mcq: '5지선다', blank: '빈칸채우기' };
   var STORE_KEY = 'pharmquiz-v1';
   var HIST_KEY = 'pharmquiz-hist';
 
@@ -283,7 +283,7 @@
 
   // ───── 생화학 유형 선택 ─────
   function renderBcType() {
-    $('bc-count').textContent = 'O,X ' + BC.ox.length + '문제 · 5지선다 ' + BC.mcq.length + '문제';
+    $('bc-count').textContent = 'O,X ' + BC.ox.length + '문제 · 5지선다 ' + BC.mcq.length + '문제' + (BC.blank ? ' · 빈칸채우기 ' + BC.blank.length + '문제' : '');
     document.querySelectorAll('.bc-card').forEach(function (c) {
       c.classList.toggle('selected', state.bcType === c.getAttribute('data-bc'));
     });
@@ -453,7 +453,7 @@
         return bqs[+id.split(':').pop()].pri || 0;
       }).map(function (id) {
         var q = bqs[+id.split(':').pop()];
-        return { part: q.topic, kind: state.bcType, q: q, pool: 'bc:' + state.bcType, id: id };
+        return { part: q.topic, kind: state.bcType === 'blank' ? 'mcq' : state.bcType, q: q, pool: 'bc:' + state.bcType, id: id };
       }));
     }
     if (state.subject === 'herb') {
