@@ -316,7 +316,7 @@
     BC.blankParts.forEach(function (p) {
       var b = document.createElement('button');
       b.className = 'part' + (state.bcParts.indexOf(p.id) > -1 ? ' selected' : '');
-      b.innerHTML = '<span class="emoji">' + p.emoji + '</span><span class="pc-name"><span class="name">' + esc(p.name) + '</span><small>' + esc(p.desc || '') + ' · ' + bcBlankOf(p.id) + '문제</small></span>';
+      b.innerHTML = '<span class="emoji">' + p.emoji + '</span><span class="pc-name"><span class="name">' + esc(p.name) + '</span></span>';
       b.addEventListener('click', function () {
         var i = state.bcParts.indexOf(p.id);
         if (i > -1) state.bcParts.splice(i, 1); else state.bcParts.push(p.id);
