@@ -797,7 +797,8 @@
       var mine = isOx ? (r.choice ? 'O' : 'X') : CIRCLED[r.choice] + ' ' + q.c[r.choice];
       var right = isOx ? (q.a ? 'O' : 'X') : CIRCLED[q.a] + ' ' + q.c[q.a];
       var why = whyFor(r.item);
-      return '<div class="rv-item"><p class="rv-q">' + esc(q.q) + (q.box ? '\n' + esc(q.box) : '') + '</p>' +
+      return '<div class="rv-item"><p class="rv-q">' + esc(q.q) + (q.flow || q.rows ? '' : q.box ? '\n' + esc(q.box) : '') + '</p>' +
+        (q.flow || q.rows ? '<div class="q-box q-flow rv-flow">' + flowHtml(q) + '</div>' : '') +
         '<p class="rv-a">내 답 <span class="bad">' + esc(mine) + '</span> · 정답 <span class="ok">' + esc(right) + '</span></p>' +
         (why ? '<div class="rv-why">' + whyHtml(r.item, why) + '</div>' : '<p class="rv-exp">' + esc(q.exp) + '</p>' +
           (isOx && q.wrong ? '<div class="rv-why">' + wrongHtml(q.wrong) + '</div>' : '')) + '</div>';
